@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card — Design Token Annotations</title>
+<style>
+  :root {
+    --token-scale-0: 0;
+    --token-scale-025: 1px;
+    --token-scale-050: 2px;
+    --token-scale-075: 3px;
+    --token-scale-100: 4px;
+    --token-scale-200: 8px;
+    --token-scale-300: 12px;
+    --token-scale-400: 16px;
+    --token-scale-600: 24px;
+    --token-scale-800: 32px;
+    --token-scale-1000: 40px;
+    --token-border-radius-0: 0;
+    --token-border-radius-100: 4px;
+    --token-border-radius-200: 8px;
+    --token-border-radius-300: 12px;
+    --token-border-radius-full: 9999px;
+    --token-border-size-0: 0;
+    --token-border-size-025: 1px;
+    --token-border-size-075: 3px;
+    --token-font-size-300: 0.75rem;
+    --token-font-size-400: 1rem;
+    --token-font-size-450: 1.125rem;
+    --token-font-size-500: 1.25rem;
+    --token-font-size-550: 1.375rem;
+    --token-font-weight-regular: 400;
+    --token-font-weight-semi-bold: 600;
+    --token-bg-surface-default: #ffffff;
+    --token-border-default: #d5d5d5;
+    --token-border-subtle: #f3f3f3;
+    --token-text-default: #242424;
+    --token-text-inverse: #ffffff;
+    --token-semantics-primary-base: #105cef;
+    --token-elevation-1: 0px 0px 4px 0px rgba(0, 0, 0, 0.04), 0px 3px 9px 0px rgba(0, 0, 0, 0.07);
+    --token-elevation-2: 0px 2px 8px 0px rgba(0, 0, 0, 0.08), 0px 8px 24px 0px rgba(0, 0, 0, 0.12);
+    --layer-local-tier-1: 1;
+    --color-primary: #9f3d8f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f4f5f7;
+    min-height: 100vh;
+    color: #111827;
+    line-height: 1.5;
+    padding: 36px 40px 100px;
+  }
+
+  .back-nav {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #6b7280;
+    text-decoration: none; margin-bottom: 24px;
+    padding: 5px 10px 5px 6px; border-radius: 8px;
+    transition: background .15s, color .15s;
+  }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+
+  .page-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
+  .badge {
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 700; padding: 4px 10px;
+    border-radius: 99px; letter-spacing: .02em; text-transform: uppercase;
+  }
+  .badge--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; color: #374151;
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 99px;
+    padding: 4px 10px 4px 6px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  .annotation-layout {
+    display: grid; grid-template-columns: 460px 1fr;
+    gap: 20px; align-items: start;
+  }
+
+  .preview-card {
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07);
+    border: 1px solid #e5e7eb; overflow: hidden;
+  }
+  .preview-card__header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa;
+  }
+  .preview-card__label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-right: auto;
+  }
+  .preview-card__body { padding: 20px; background: #f4f5f7; }
+
+  /* ─── Card component (OutSystems UI 2.29.0) ─── */
+  .card {
+    --osui-card-background: var(--token-bg-surface-default, var(--token-primitives-base-white, #ffffff));
+    --osui-card-border-color: var(--token-border-subtle, var(--token-primitives-neutral-100, #f3f3f3));
+    --osui-card-border-width: var(--token-border-size-025, var(--token-scale-025, 1px));
+    --osui-card-border-radius: var(--token-border-radius-200, var(--token-scale-200, 8px));
+    --osui-card-padding: var(--token-scale-600, 24px);
+    --osui-card-shadow: var(--token-elevation-1, 0px 0px 4px 0px rgba(0, 0, 0, 0.04), 0px 3px 9px 0px rgba(0, 0, 0, 0.07));
+    background-color: var(--osui-card-background);
+    border: var(--osui-card-border-width) solid var(--osui-card-border-color);
+    border-radius: var(--osui-card-border-radius);
+    -webkit-box-shadow: var(--osui-card-shadow);
+    box-shadow: var(--osui-card-shadow);
+    padding: var(--osui-card-padding);
+  }
+
+  .card-background {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    border-radius: var(--token-border-radius-200, var(--token-scale-200, 8px));
+    color: var(--token-text-inverse, var(--token-primitives-base-white, #ffffff));
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    overflow: hidden;
+    padding: var(--token-scale-600, 24px);
+    position: relative;
+  }
+  .card-background-content {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    width: 100%;
+    z-index: var(--layer-local-tier-1, 1);
+  }
+  .card-background-image, .card-background-color {
+    left: 0;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+  }
+  .card-background-image img {
+    height: 100%;
+    -o-object-fit: cover;
+    object-fit: cover;
+    -o-object-position: center center;
+    object-position: center center;
+    width: 100%;
+  }
+  .card-background-color {
+    opacity: 0.6;
+  }
+  .card-background-color:after {
+    background: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgb(0, 0, 0)));
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 100%);
+    content: "";
+    height: 100%;
+    left: 0;
+    opacity: 1;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: var(--layer-local-tier-1, 1);
+  }
+
+  .card-sectioned {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: var(--token-scale-0, 0);
+  }
+  .card-sectioned-top {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+  }
+  .card-image {
+    padding: var(--token-scale-600, 24px) var(--token-scale-600, 24px) var(--token-scale-0, 0);
+    overflow: hidden;
+  }
+  .card-image img {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .card-title {
+    font-size: var(--token-font-size-550, 1.375rem);
+    font-weight: var(--token-font-weight-semi-bold, 600);
+    padding: var(--token-scale-600, 24px) var(--token-scale-600, 24px) var(--token-scale-0, 0) var(--token-scale-600, 24px);
+  }
+  .card-content {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    padding: var(--token-scale-600, 24px);
+  }
+  .card-bottom {
+    padding: var(--token-scale-0, 0) var(--token-scale-600, 24px) var(--token-scale-600, 24px);
+  }
+
+  /* Utility classes */
+  .background-pink { background-color: #e91e8c; }
+  .flex-direction-column { -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; }
+  .margin-bottom-l { margin-bottom: var(--token-scale-600, 24px); }
+
+  /* Button (simplified OS UI) */
+  .btn {
+    padding: 8px 20px; border-radius: var(--token-border-radius-100, 4px);
+    border: 1px solid transparent; cursor: pointer;
+    font-size: 14px; font-weight: 600; font-family: inherit;
+    transition: opacity .15s;
+  }
+  .btn:hover { opacity: 0.85; }
+  .btn-primary {
+    background: var(--token-semantics-primary-base, #105cef);
+    border-color: var(--token-semantics-primary-base, #105cef);
+    color: #fff;
+  }
+
+  /* Annotation outlines */
+  .annotate-container { outline: 2px dashed #ef4444; outline-offset: 3px; border-radius: 8px; }
+  .annotate-title     { outline: 2px dashed #10b981; outline-offset: 2px; }
+  .annotate-content   { outline: 2px dashed #6366f1; outline-offset: 2px; }
+  .annotate-bottom    { outline: 2px dashed #f59e0b; outline-offset: 2px; }
+
+  /* ─── Token panel ─── */
+  .token-panel { display: flex; flex-direction: column; gap: 12px; }
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; letter-spacing: 0; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 155px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); transition: background .12s; }
+  .token-row:last-child { border-bottom: none; }
+  .token-row:hover { background: rgba(255,255,255,.03); }
+  .prop-name  { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; white-space: nowrap; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value{ font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; white-space: nowrap; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); vertical-align: middle; margin-right: 5px; flex-shrink: 0; }
+  .token-name-with-swatch { display: flex; align-items: center; }
+
+  .card-structure      .token-card__header { background: linear-gradient(120deg, #991b1b, #ef4444); }
+  .card-typography-tok .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+  .card-content-tok    .token-card__header { background: linear-gradient(120deg, #1e1b4b, #6366f1); }
+  .card-background-tok .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
+  .card-bottom-tok     .token-card__header { background: linear-gradient(120deg, #92400e, #f59e0b); }
+
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; font-family: inherit; transition: all .15s; white-space: nowrap; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; font-family: inherit; transition: all .15s; margin-left: 4px; white-space: nowrap; }
+  .ann-toggle:hover { color: #111827; border-color: #9ca3af; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p  { font-size: 12px; color: #6b7280; }
+  .proposal-table-wrap { overflow-x: auto; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .proposal-table tbody tr:last-child td { border-bottom: none; }
+  .proposal-table tbody tr:hover td { background: #fafafa; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; white-space: nowrap; }
+  .td-current  { color: #9ca3af; }
+  .td-proposed { font-weight: 600; color: #111827; }
+  .td-token    { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; }
+  .td-rationale{ color: #4b5563; max-width: 280px; }
+  .td-rationale strong { color: #111827; }
+
+  @media (max-width: 960px) {
+    .annotation-layout { grid-template-columns: 1fr; }
+    body { padding: 24px 20px 80px; }
+  }
+
+  /* ─── Proposed mode — Card ─── */
+  #previewWrapper.proposed-mode .card {
+    --osui-card-border-radius: var(--token-border-radius-300, 12px);
+    --osui-card-border-color: var(--token-border-default, #d5d5d5);
+    --osui-card-shadow: var(--token-elevation-2, 0px 2px 8px 0px rgba(0, 0, 0, 0.08), 0px 8px 24px 0px rgba(0, 0, 0, 0.12));
+  }
+  #previewWrapper.proposed-mode .card-title {
+    color: var(--token-text-default, #242424);
+  }
+  #previewWrapper.proposed-mode .card-background {
+    border-radius: var(--token-border-radius-300, 12px);
+  }
+
+  /* ─── Token Editor ─── */
+  .edit-fab {
+    position: fixed; bottom: 32px; right: 32px;
+    background: #9f3d8f; color: #fff; border: none;
+    padding: 10px 18px; border-radius: 99px; cursor: pointer;
+    font-size: 13px; font-weight: 600; letter-spacing: .01em;
+    box-shadow: 0 4px 16px rgba(159,61,143,.35); z-index: 200;
+    display: flex; align-items: center; gap: 7px;
+    transition: transform .15s, box-shadow .15s;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .edit-fab:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(159,61,143,.5); }
+  .token-editor {
+    position: fixed; top: 0; right: 0; width: 300px; height: 100vh;
+    background: #0f0f23; border-left: 1px solid rgba(255,255,255,.08);
+    overflow-y: auto; transform: translateX(100%);
+    transition: transform .3s cubic-bezier(.4,0,.2,1); z-index: 199;
+    display: flex; flex-direction: column;
+  }
+  .token-editor.is-open { transform: translateX(0); }
+  .te-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,.08);
+    position: sticky; top: 0; background: #0f0f23; z-index: 1;
+  }
+  .te-header h3 { font-size: 13px; font-weight: 700; color: #e2e8f0; }
+  .te-close { background: none; border: none; cursor: pointer; color: #64748b; font-size: 20px; line-height: 1; padding: 0 4px; }
+  .te-close:hover { color: #e2e8f0; }
+  .te-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 20px; }
+  .te-group { display: flex; flex-direction: column; gap: 10px; }
+  .te-group-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #475569; }
+  .te-row { display: flex; flex-direction: column; gap: 4px; }
+  .te-label { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #94a3b8; }
+  .te-controls { display: flex; align-items: center; gap: 8px; }
+  input[type="color"] {
+    width: 32px; height: 28px; border: 1px solid rgba(255,255,255,.15);
+    border-radius: 6px; background: none; cursor: pointer; padding: 2px; flex-shrink: 0;
+  }
+  input[type="range"] { flex: 1; accent-color: #9f3d8f; cursor: pointer; }
+  .te-value { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #64748b; min-width: 44px; text-align: right; }
+  .te-reset {
+    margin: 0 20px 24px; padding: 9px;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 6px; color: #94a3b8; font-size: 12px; cursor: pointer;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    transition: background .15s;
+  }
+  .te-reset:hover { background: rgba(255,255,255,.1); color: #e2e8f0; }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-nav">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  All components
+</a>
+
+<div class="page-header">
+  <h1>Card</h1>
+  <span class="badge badge--os">OutSystems UI 2.29</span>
+  <span class="badge badge--tokens">Design Tokens</span>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> Card Container</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Card Title</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#6366f1;"></span> Content Area</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> Card Bottom</div>
+</div>
+
+<div class="annotation-layout">
+
+  <!-- LEFT: Card preview -->
+  <div class="preview-card">
+    <div class="preview-card__header">
+      <span class="preview-card__label">Preview</span>
+      <div class="preview-tabs">
+        <button class="ptab ptab--active" onclick="setMode('current',this)">Current</button>
+        <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+      </div>
+      <button class="ann-toggle" onclick="toggleAnnotations(this)">Hide annotations</button>
+    </div>
+    <div class="preview-card__body">
+    <div id="previewWrapper">
+
+    <!-- Card (basic) -->
+    <div class="card card-content annotate-container margin-bottom-l">
+      <p style="color: var(--token-text-default, #242424); font-size: 14px; margin-bottom: 6px; font-weight: 600;">Card with padding</p>
+      <p style="font-size: 13px; color: #6b7280;">Uses <code style="font-family: 'SF Mono', monospace; font-size: 11px; background: #f3f4f6; padding: 1px 4px; border-radius: 3px;">.card</code> — background, border, border-radius, shadow, padding all token-driven.</p>
+    </div>
+
+    <!-- Card Background -->
+    <div class="card-background annotate-container margin-bottom-l" style="min-height: 160px;">
+      <div class="card-background-content">
+        <div>
+          <p style="font-weight: 700; font-size: 16px; margin-bottom: 4px;">Card com background</p>
+          <p style="font-size: 13px; opacity: 0.8;">Text renders over the overlay layer</p>
+        </div>
+      </div>
+      <div class="card-background-color background-pink"></div>
+    </div>
+
+    <!-- Card Sectioned -->
+    <div class="card card-sectioned flex-direction-column annotate-container">
+      <div class="card-image" style="height: 130px; background: linear-gradient(135deg, #e0e7ff, #c7d2fe); display: flex; align-items: center; justify-content: center;">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" style="color:#6366f1; opacity:.5;">
+          <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M3 15l4-4 4 4 4-6 4 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="card-sectioned-top flex-direction-column">
+        <div class="card-title annotate-title">Titulo</div>
+        <div class="card-content annotate-content" style="font-size: 14px; color: #4b5563;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae.</div>
+        <div class="card-bottom annotate-bottom">
+          <button class="btn btn-primary">Button</button>
+        </div>
+      </div>
+    </div>
+
+    </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Token cards -->
+  <div class="token-panel">
+
+    <!-- Card Container -->
+    <div class="token-card card-structure">
+      <div class="token-card__header">
+        <span class="dot" style="background:#ef4444;"></span>
+        Card Container
+        <span class="component-name">card</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-row">
+          <span class="prop-name">background</span>
+          <span class="token-name token-name-with-swatch">
+            <span class="swatch" style="background:#ffffff; border-color:#d5d5d5;"></span>
+            token-bg-surface-default
+          </span>
+          <span class="token-value">#ffffff</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">border-color</span>
+          <span class="token-name token-name-with-swatch">
+            <span class="swatch" style="background:#f3f3f3;"></span>
+            token-border-subtle
+          </span>
+          <span class="token-value">#f3f3f3</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">border-width</span>
+          <span class="token-name">token-border-size-025</span>
+          <span class="token-value">1px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">border-radius</span>
+          <span class="token-name">token-border-radius-200</span>
+          <span class="token-value">8px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">padding</span>
+          <span class="token-name">token-scale-600</span>
+          <span class="token-value">24px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">box-shadow</span>
+          <span class="token-name">token-elevation-1</span>
+          <span class="token-value">elevation level 1</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Title -->
+    <div class="token-card card-typography-tok">
+      <div class="token-card__header">
+        <span class="dot" style="background:#10b981;"></span>
+        Card Title
+        <span class="component-name">card-title</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-row">
+          <span class="prop-name">font-size</span>
+          <span class="token-name">token-font-size-550</span>
+          <span class="token-value">1.375rem · 22px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">font-weight</span>
+          <span class="token-name">token-font-weight-semi-bold</span>
+          <span class="token-value">600</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">color</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">not set</span>
+          <span class="token-value">inherited</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">padding (T/L/R)</span>
+          <span class="token-name">token-scale-600</span>
+          <span class="token-value">24px</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="token-card card-content-tok">
+      <div class="token-card__header">
+        <span class="dot" style="background:#6366f1;"></span>
+        Content Area
+        <span class="component-name">card-content</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-row">
+          <span class="prop-name">padding</span>
+          <span class="token-name">token-scale-600</span>
+          <span class="token-value">24px (all sides)</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">flex</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">1 (fills height)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Background variant -->
+    <div class="token-card card-background-tok">
+      <div class="token-card__header">
+        <span class="dot" style="background:#3b82f6;"></span>
+        Card Background
+        <span class="component-name">card-background</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-row">
+          <span class="prop-name">border-radius</span>
+          <span class="token-name">token-border-radius-200</span>
+          <span class="token-value">8px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">padding</span>
+          <span class="token-name">token-scale-600</span>
+          <span class="token-value">24px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">color</span>
+          <span class="token-name token-name-with-swatch">
+            <span class="swatch" style="background:#ffffff; border-color:#d5d5d5;"></span>
+            token-text-inverse
+          </span>
+          <span class="token-value">#ffffff</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">overlay opacity</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">0.6</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Bottom -->
+    <div class="token-card card-bottom-tok">
+      <div class="token-card__header">
+        <span class="dot" style="background:#f59e0b;"></span>
+        Card Bottom
+        <span class="component-name">card-bottom · card-image</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-row">
+          <span class="prop-name">card-bottom padding</span>
+          <span class="token-name">token-scale-600</span>
+          <span class="token-value">24px (L/R/B)</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">card-image padding</span>
+          <span class="token-name">token-scale-600</span>
+          <span class="token-value">24px (T/L/R)</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Proposal table -->
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Token Proposal</h3>
+    <p>Suggested changes to improve visual hierarchy and design system alignment.</p>
+  </div>
+  <div class="proposal-table-wrap">
+    <table class="proposal-table">
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Component</th>
+          <th>Current</th>
+          <th>Proposed</th>
+          <th>Token</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-property">border-radius</td>
+          <td class="td-property">.card, .card-background</td>
+          <td class="td-current">token-border-radius-200 (8px)</td>
+          <td class="td-proposed">token-border-radius-300 (12px)</td>
+          <td class="td-token">--token-border-radius-300</td>
+          <td class="td-rationale">The Alert component already uses 12px. Aligning cards creates a <strong>consistent container radius</strong> across the component library.</td>
+        </tr>
+        <tr>
+          <td class="td-property">border-color</td>
+          <td class="td-property">.card</td>
+          <td class="td-current">token-border-subtle (#f3f3f3)</td>
+          <td class="td-proposed">token-border-default (#d5d5d5)</td>
+          <td class="td-token">--token-border-default</td>
+          <td class="td-rationale">The subtle border is nearly invisible on white surfaces. <strong>token-border-default</strong> gives the card better definition and improves accessibility contrast.</td>
+        </tr>
+        <tr>
+          <td class="td-property">box-shadow</td>
+          <td class="td-property">.card</td>
+          <td class="td-current">token-elevation-1 (very subtle)</td>
+          <td class="td-proposed">token-elevation-2 (stronger)</td>
+          <td class="td-token">--token-elevation-2</td>
+          <td class="td-rationale">Elevation 1 is barely perceptible. A stronger shadow gives the card <strong>clearer visual hierarchy</strong> and helps it stand out from the page background.</td>
+        </tr>
+        <tr>
+          <td class="td-property">color</td>
+          <td class="td-property">.card-title</td>
+          <td class="td-current">inherited (no explicit token)</td>
+          <td class="td-proposed">token-text-default (#242424)</td>
+          <td class="td-token">--token-text-default</td>
+          <td class="td-rationale">Explicitly setting the title color ensures correct rendering across <strong>theme overrides</strong> and prevents unintentional color inheritance.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Token Editor FAB -->
+<button class="edit-fab" onclick="document.querySelector('.token-editor').classList.toggle('is-open')">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M11.5 2.5l2 2-9 9H2.5v-2l9-9z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  Edit tokens
+</button>
+
+<div class="token-editor">
+  <div class="te-header">
+    <h3>Token Editor</h3>
+    <button class="te-close" onclick="document.querySelector('.token-editor').classList.remove('is-open')">×</button>
+  </div>
+  <div class="te-body">
+
+    <div class="te-group">
+      <div class="te-group-title">Card Container</div>
+      <div class="te-row">
+        <div class="te-label">--token-bg-surface-default</div>
+        <div class="te-controls">
+          <input type="color" value="#ffffff" oninput="setToken('--token-bg-surface-default', this.value); this.nextElementSibling.textContent = this.value">
+          <div class="te-value">#ffffff</div>
+        </div>
+      </div>
+      <div class="te-row">
+        <div class="te-label">--token-border-subtle</div>
+        <div class="te-controls">
+          <input type="color" value="#f3f3f3" oninput="setToken('--token-border-subtle', this.value); this.nextElementSibling.textContent = this.value">
+          <div class="te-value">#f3f3f3</div>
+        </div>
+      </div>
+      <div class="te-row">
+        <div class="te-label">--token-border-radius-200</div>
+        <div class="te-controls">
+          <input type="range" min="0" max="24" value="8" oninput="setToken('--token-border-radius-200', this.value+'px'); this.nextElementSibling.textContent = this.value+'px'">
+          <div class="te-value">8px</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="te-group">
+      <div class="te-group-title">Spacing</div>
+      <div class="te-row">
+        <div class="te-label">--token-scale-600 (padding)</div>
+        <div class="te-controls">
+          <input type="range" min="8" max="48" value="24" oninput="setToken('--token-scale-600', this.value+'px'); this.nextElementSibling.textContent = this.value+'px'">
+          <div class="te-value">24px</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="te-group">
+      <div class="te-group-title">Primary Color</div>
+      <div class="te-row">
+        <div class="te-label">--token-semantics-primary-base</div>
+        <div class="te-controls">
+          <input type="color" value="#105cef" oninput="setToken('--token-semantics-primary-base', this.value); this.nextElementSibling.textContent = this.value">
+          <div class="te-value">#105cef</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="te-group">
+      <div class="te-group-title">Typography</div>
+      <div class="te-row">
+        <div class="te-label">--token-font-size-550</div>
+        <div class="te-controls">
+          <input type="range" min="14" max="28" value="22" oninput="setToken('--token-font-size-550', this.value+'px'); this.nextElementSibling.textContent = this.value+'px'">
+          <div class="te-value">22px</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <button class="te-reset" onclick="resetTokens()">Reset to defaults</button>
+</div>
+
+<script>
+  function setMode(mode, btn) {
+    const wrapper = document.getElementById('previewWrapper');
+    wrapper.className = mode === 'proposed' ? 'proposed-mode' : '';
+    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+    btn.classList.add('ptab--active');
+  }
+
+  function toggleAnnotations(btn) {
+    const wrapper = document.getElementById('previewWrapper');
+    const hiding = !wrapper.classList.contains('hide-annotations');
+    wrapper.classList.toggle('hide-annotations', hiding);
+    btn.textContent = hiding ? 'Show annotations' : 'Hide annotations';
+    btn.classList.toggle('ann-toggle--off', hiding);
+  }
+
+  function setToken(prop, value) {
+    document.documentElement.style.setProperty(prop, value);
+  }
+
+  const defaults = {
+    '--token-bg-surface-default': '#ffffff',
+    '--token-border-subtle': '#f3f3f3',
+    '--token-border-radius-200': '8px',
+    '--token-scale-600': '24px',
+    '--token-semantics-primary-base': '#105cef',
+    '--token-font-size-550': '1.375rem',
+  };
+
+  function resetTokens() {
+    Object.entries(defaults).forEach(([k, v]) => {
+      document.documentElement.style.setProperty(k, v);
+    });
+    document.querySelectorAll('.te-row').forEach(row => {
+      const label = row.querySelector('.te-label');
+      const valueEl = row.querySelector('.te-value');
+      const rangeInput = row.querySelector('input[type="range"]');
+      const colorInput = row.querySelector('input[type="color"]');
+      if (!label) return;
+      const key = label.textContent.split(' ')[0].trim();
+      const def = defaults[key];
+      if (!def) return;
+      if (rangeInput) {
+        rangeInput.value = parseInt(def) || 0;
+        if (valueEl) valueEl.textContent = def;
+      }
+      if (colorInput) {
+        colorInput.value = def;
+        if (valueEl) valueEl.textContent = def;
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
