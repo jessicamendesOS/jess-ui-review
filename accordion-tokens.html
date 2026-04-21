@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accordion — Design Token Annotations</title>
+<style>
+  :root {
+    --token-scale-0: 0;
+    --token-scale-025: 1px;
+    --token-scale-050: 2px;
+    --token-scale-075: 3px;
+    --token-scale-100: 4px;
+    --token-scale-200: 8px;
+    --token-scale-300: 12px;
+    --token-scale-400: 16px;
+    --token-scale-600: 24px;
+    --token-scale-800: 32px;
+    --token-border-radius-0: 0;
+    --token-border-radius-100: 4px;
+    --token-border-radius-200: 8px;
+    --token-border-radius-full: 9999px;
+    --token-border-size-0: 0;
+    --token-border-size-025: 1px;
+    --token-border-size-075: 3px;
+    --token-font-size-400: 1rem;
+    --token-font-size-450: 1.125rem;
+    --token-font-size-550: 1.375rem;
+    --token-font-weight-regular: 400;
+    --token-font-weight-semi-bold: 600;
+    --token-bg-surface-default: #ffffff;
+    --token-border-default: #d5d5d5;
+    --token-text-default: #242424;
+    --token-text-disabled: #a2a2a2;
+    --token-semantics-primary-base: #105cef;
+    --color-primary: #9f3d8f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    padding: 48px 32px;
+  }
+
+  /* ─── Page header ─── */
+  .page-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .page-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111;
+  }
+  .badge {
+    background: #ede8f3;
+    color: #9f3d8f;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 99px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  /* ─── Layout: component on left, token panel on right ─── */
+  .annotation-layout {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* ─── Accordion preview ─── */
+  .preview-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    padding: 24px;
+  }
+  .preview-card h2 {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: #888;
+    margin-bottom: 16px;
+  }
+
+  /* ─── Actual accordion styles (from OutSystems UI) ─── */
+  .osui-accordion {
+    width: 100%;
+  }
+  .osui-accordion-item {
+    --osui-accordion-item-background: var(--token-bg-surface-default);
+    --osui-accordion-item-border-color: var(--token-border-default);
+    --osui-accordion-item-border-width: var(--token-border-size-025);
+    --osui-accordion-item-border-radius: var(--token-border-radius-100);
+    --osui-accordion-item-color: var(--token-text-default);
+    --osui-accordion-item-icon-color: var(--token-semantics-primary-base);
+    background-color: var(--osui-accordion-item-background);
+    border: var(--osui-accordion-item-border-width) solid var(--osui-accordion-item-border-color);
+    border-bottom-width: 0;
+    position: relative;
+    color: var(--osui-accordion-item-color);
+  }
+  .osui-accordion-item:last-child {
+    border-bottom-width: var(--osui-accordion-item-border-width);
+    border-bottom-left-radius: var(--osui-accordion-item-border-radius);
+    border-bottom-right-radius: var(--osui-accordion-item-border-radius);
+  }
+  .osui-accordion-item:first-child {
+    border-top-left-radius: var(--osui-accordion-item-border-radius);
+    border-top-right-radius: var(--osui-accordion-item-border-radius);
+  }
+
+  /* Active top-border indicator */
+  .osui-accordion-item::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    right: -1px;
+    top: -1px;
+    height: 2px;
+    background: transparent;
+    transition: background .2s;
+  }
+  .osui-accordion-item--is-open::before {
+    background: var(--token-semantics-primary-base);
+  }
+
+  .osui-accordion-item__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--token-scale-600);
+    font-size: var(--token-font-size-450);
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+    gap: 8px;
+  }
+  .osui-accordion-item--is-open .osui-accordion-item__title {
+    font-weight: var(--token-font-weight-semi-bold);
+  }
+  .osui-accordion-item--is-disabled .osui-accordion-item__title {
+    cursor: default;
+    color: var(--token-text-disabled);
+    pointer-events: none;
+  }
+  .osui-accordion-item__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--osui-accordion-item-icon-color);
+    font-size: var(--token-font-size-550);
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    transition: transform .25s ease;
+  }
+  .osui-accordion-item--is-disabled .osui-accordion-item__icon {
+    color: var(--token-text-disabled);
+  }
+  .osui-accordion-item--is-open .osui-accordion-item__icon {
+    transform: rotate(180deg);
+  }
+  .caret-svg { display: block; }
+
+  .osui-accordion-item__content {
+    padding: 0 var(--token-scale-600);
+    font-size: var(--token-font-size-400);
+    color: var(--osui-accordion-item-color);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .3s ease, padding .3s ease;
+  }
+  .osui-accordion-item--is-open .osui-accordion-item__content {
+    max-height: 200px;
+    padding: 0 var(--token-scale-600) var(--token-scale-600);
+  }
+  .osui-accordion-item__content p {
+    line-height: 1.5;
+    font-size: 14px;
+    color: #555;
+  }
+
+  /* Highlighted areas for annotation */
+  .annotate-title { outline: 2px dashed #f59e0b; outline-offset: -2px; position: relative; }
+  .annotate-icon  { outline: 2px dashed #10b981; outline-offset: 2px; border-radius: 2px; position: relative; }
+  .annotate-content { outline: 2px dashed #6366f1; outline-offset: -2px; position: relative; }
+  .annotate-item  { outline: 2px dashed #ef4444; outline-offset: 2px; position: relative; border-radius: 4px; }
+
+  /* ─── Token panel ─── */
+  .token-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .token-card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  }
+  .token-card__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .token-card__header .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.5);
+    flex-shrink: 0;
+  }
+  .token-card__header .component-name {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    opacity: .75;
+    margin-left: auto;
+  }
+  .token-card__body {
+    background: #1a1a2e;
+    padding: 0;
+  }
+  .token-row {
+    display: grid;
+    grid-template-columns: 160px 1fr auto;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    transition: background .15s;
+  }
+  .token-row:last-child { border-bottom: none; }
+  .token-row:hover { background: rgba(255,255,255,.04); }
+
+  .prop-name {
+    font-size: 12px;
+    color: #94a3b8;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+  .token-name {
+    font-size: 12px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    color: #e2e8f0;
+    font-weight: 600;
+  }
+  .token-value {
+    font-size: 11px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    color: #64748b;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  /* Color swatches */
+  .swatch {
+    display: inline-block;
+    width: 12px; height: 12px;
+    border-radius: 3px;
+    border: 1px solid rgba(255,255,255,.15);
+    vertical-align: middle;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+  .token-name-with-swatch {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Section colors */
+  .card-item    .token-card__header { background: linear-gradient(135deg, #c0392b, #e74c3c); }
+  .card-title   .token-card__header { background: linear-gradient(135deg, #b7860a, #f59e0b); }
+  .card-icon    .token-card__header { background: linear-gradient(135deg, #047857, #10b981); }
+  .card-content .token-card__header { background: linear-gradient(135deg, #3730a3, #6366f1); }
+  .card-states  .token-card__header { background: linear-gradient(135deg, #6b21a8, #9f3d8f); }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #555;
+    font-weight: 500;
+  }
+  .legend-line {
+    width: 20px; height: 0;
+    border-top: 2px dashed;
+  }
+
+  .label-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    font-size: 11px;
+    color: #888;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  /* Token name pill */
+  .pill {
+    display: inline-block;
+    background: #1a1a2e;
+    color: #e2e8f0;
+    font-size: 11px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    padding: 2px 8px;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 900px) {
+    .annotation-layout { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Accordion</h1>
+  <span class="badge">OutSystems UI 2.29</span>
+  <span class="badge" style="background:#e8f4fd;color:#105cef;">Design Tokens</span>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-line" style="border-color:#ef4444;"></div> Accordion Item</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#f59e0b;"></div> Title</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#10b981;"></div> Icon</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#6366f1;"></div> Content</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#9f3d8f;"></div> States</div>
+</div>
+
+<div class="annotation-layout">
+
+  <!-- LEFT: Accordion preview -->
+  <div class="preview-card">
+    <h2>Component preview</h2>
+    <div class="osui-accordion">
+
+      <!-- Item 1 — open -->
+      <div class="osui-accordion-item osui-accordion-item--is-open annotate-item" onclick="this.classList.toggle('osui-accordion-item--is-open')" style="cursor:pointer">
+        <div class="osui-accordion-item__title annotate-title">
+          <span>Accordion Item 1</span>
+          <span class="osui-accordion-item__icon annotate-icon">
+            <svg class="caret-svg" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <div class="osui-accordion-item__content annotate-content">
+          <p>I'm accordion Item 1 — currently expanded. Click the title to collapse.</p>
+        </div>
+      </div>
+
+      <!-- Item 2 — closed -->
+      <div class="osui-accordion-item" onclick="this.classList.toggle('osui-accordion-item--is-open')" style="cursor:pointer">
+        <div class="osui-accordion-item__title">
+          <span>Accordion Item 2</span>
+          <span class="osui-accordion-item__icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <div class="osui-accordion-item__content">
+          <p>I'm accordion Item 2.</p>
+        </div>
+      </div>
+
+      <!-- Item 3 — disabled -->
+      <div class="osui-accordion-item osui-accordion-item--is-disabled">
+        <div class="osui-accordion-item__title">
+          <span>Accordion Item 3 (disabled)</span>
+          <span class="osui-accordion-item__icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+        <div class="osui-accordion-item__content">
+          <p>I'm accordion Item 3.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <p style="margin-top:16px;font-size:11px;color:#aaa;">Click items to toggle open/closed</p>
+  </div>
+
+  <!-- RIGHT: Token cards -->
+  <div class="token-panel">
+
+    <!-- Accordion Item -->
+    <div class="token-card card-item">
+      <div class="token-card__header">
+        <span class="dot" style="background:#ef4444;"></span>
+        Accordion Item
+        <span class="component-name">osui-accordion-item</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-row">
+          <span class="prop-name">background</span>
+          <span class="token-name token-name-with-swatch">
+            <span class="swatch" style="background:#ffffff;"></span>
+            token-bg-surface-default
+          </span>
+          <span class="token-value">#ffffff</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">border-color</span>
+          <span class="token-name token-name-with-swatch">
+            <span class="swatch" style="background:#d5d5d5;"></span>
+            token-border-default
+          </span>
+          <span class="token-value">#d5d5d5</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">border-width</span>
+          <span class="token-name">token-border-size-025</span>
+          <span class="token-value">1px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">border-radius</span>
+          <span class="token-name">token-border-radius-100</span>
+          <span class="token-value">4px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">active-indicator</span>
+          <span class="token-name token-name-with-swatch">
+            <span class="swatch" style="background:#105cef;"></span>
+            token-semantics-primary-base
+          </span>
+          <span class="token-value">#105cef · 2px top</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="token-card card-title">
+      <div class="token-card__header">
+        <span class="dot" style="background:#f59e0b;"></span>
+        Title
+        <span class="component-name">osui-accordion-item__title</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-row">
+          <span class="prop-name">font-size</span>
+          <span class="token-name">token-font-size-450</span>
+          <span class="token-value">1.125rem · 18px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">padding</span>
+          <span class="token-name">token-scale-600</span>
+          <span class="token-value">24px (all sides)</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">font-weight (open)</span>
+          <span class="token-name">token-font-weight-semi-bold</span>
+          <span class="token-value">600</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">font-weight (closed)</span>
+          <span class="token-name">token-font-weight-regular</span>
+          <span class="token-value">400</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">color</span>
+          <span class="token-name token-name-with-swatch">
+            <span class="swatch" style="background:#242424;"></span>
+            token-text-default
+          </span>
+          <span class="token-value">#242424</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Icon -->
+    <div class="token-card card-icon">
+      <div class="token-card__header">
+        <span class="dot" style="background:#10b981;"></span>
+        Icon
+        <span class="component-name">osui-accordion-item__icon</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-row">
+          <span class="prop-name">color</span>
+          <span class="token-name token-name-with-swatch">
+            <span class="swatch" style="background:#105cef;"></span>
+            token-semantics-primary-base
+          </span>
+          <span class="token-value">#105cef</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">font-size</span>
+          <span class="token-name">token-font-size-550</span>
+          <span class="token-value">1.375rem · 22px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">width</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">16px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">height</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">16px</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="token-card card-content">
+      <div class="token-card__header">
+        <span class="dot" style="background:#6366f1;"></span>
+        Content
+        <span class="component-name">osui-accordion-item__content</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-row">
+          <span class="prop-name">padding (collapsed)</span>
+          <span class="token-name">token-scale-0 / token-scale-600</span>
+          <span class="token-value">0 24px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">padding (expanded)</span>
+          <span class="token-name">token-scale-0 / token-scale-600</span>
+          <span class="token-value">0 24px 24px</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- States -->
+    <div class="token-card card-states">
+      <div class="token-card__header">
+        <span class="dot" style="background:#9f3d8f;"></span>
+        States
+        <span class="component-name">disabled · open</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-row">
+          <span class="prop-name">color (disabled)</span>
+          <span class="token-name token-name-with-swatch">
+            <span class="swatch" style="background:#a2a2a2;"></span>
+            token-text-disabled
+          </span>
+          <span class="token-value">#a2a2a2</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">icon (disabled)</span>
+          <span class="token-name token-name-with-swatch">
+            <span class="swatch" style="background:#a2a2a2;"></span>
+            token-text-disabled
+          </span>
+          <span class="token-value">#a2a2a2</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">focus ring</span>
+          <span class="token-name">token-border-size-075</span>
+          <span class="token-value">3px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">focus ring (left icon)</span>
+          <span class="token-name">token-scale-200</span>
+          <span class="token-value">8px padding-left</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
