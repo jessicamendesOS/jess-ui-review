@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OutSystems UI — Design Token Annotations</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    padding: 48px 32px;
+  }
+
+  /* ─── Header ─── */
+  .site-header {
+    margin-bottom: 48px;
+  }
+  .site-header__eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: #9f3d8f;
+    margin-bottom: 10px;
+  }
+  .site-header h1 {
+    font-size: 32px; font-weight: 800; color: #111; line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .site-header p {
+    font-size: 15px; color: #666; max-width: 480px; line-height: 1.6;
+  }
+  .badge-row { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+  .badge {
+    font-size: 11px; font-weight: 600; padding: 3px 10px;
+    border-radius: 99px; letter-spacing: .04em; text-transform: uppercase;
+  }
+  .badge-os  { background: #ede8f3; color: #9f3d8f; }
+  .badge-dt  { background: #e8f4fd; color: #105cef; }
+  .badge-cnt { background: #e8f7ef; color: #16a34a; }
+
+  /* ─── Component grid ─── */
+  .component-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .component-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.07);
+    overflow: hidden;
+    text-decoration: none;
+    display: flex; flex-direction: column;
+    transition: transform .18s, box-shadow .18s;
+  }
+  .component-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  }
+
+  .card-accent {
+    height: 4px;
+    width: 100%;
+  }
+
+  .card-body {
+    padding: 24px;
+    flex: 1;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+
+  .card-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 4px;
+  }
+
+  .card-title {
+    font-size: 18px; font-weight: 700; color: #111;
+  }
+
+  .card-desc {
+    font-size: 13px; color: #666; line-height: 1.5; flex: 1;
+  }
+
+  .card-tokens {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 4px;
+  }
+  .token-pill {
+    font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 99px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    letter-spacing: .02em;
+  }
+
+  .card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px;
+    border-top: 1px solid #f0f0f0;
+    font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .06em;
+  }
+
+  /* Component-specific colors */
+  .card--accordion .card-accent  { background: linear-gradient(90deg, #ef4444, #f59e0b); }
+  .card--accordion .card-icon    { background: #fef2f2; color: #ef4444; }
+  .card--accordion .card-footer  { color: #ef4444; }
+  .card--accordion .token-pill   { background: #fef2f2; color: #ef4444; }
+
+  .card--alert .card-accent      { background: linear-gradient(90deg, #10b981, #3b82f6); }
+  .card--alert .card-icon        { background: #f0fdf4; color: #10b981; }
+  .card--alert .card-footer      { color: #10b981; }
+  .card--alert .token-pill       { background: #f0fdf4; color: #16a34a; }
+
+  .card--columns .card-accent    { background: linear-gradient(90deg, #6366f1, #8b5cf6); }
+  .card--columns .card-icon      { background: #eef2ff; color: #6366f1; }
+  .card--columns .card-footer    { color: #6366f1; }
+  .card--columns .token-pill     { background: #eef2ff; color: #4338ca; }
+
+  .card--gallery .card-accent    { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+  .card--gallery .card-icon      { background: #fffbeb; color: #f59e0b; }
+  .card--gallery .card-footer    { color: #d97706; }
+  .card--gallery .token-pill     { background: #fffbeb; color: #92400e; }
+
+  /* ─── Footer ─── */
+  .site-footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid #e0e0e0;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .site-footer p { font-size: 12px; color: #aaa; }
+
+  @media (max-width: 600px) {
+    body { padding: 32px 16px; }
+    .site-header h1 { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header__eyebrow">Component Library</div>
+  <h1>Design Token<br>Annotations</h1>
+  <p>Interactive reference for OutSystems UI components — explore token usage, test values in real-time.</p>
+  <div class="badge-row">
+    <span class="badge badge-os">OutSystems UI 2.29</span>
+    <span class="badge badge-dt">Design Tokens</span>
+    <span class="badge badge-cnt">4 components</span>
+  </div>
+</header>
+
+<main class="component-grid">
+
+  <!-- Accordion -->
+  <a class="component-card card--accordion" href="accordion-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect x="2" y="3" width="16" height="4" rx="1.5" fill="currentColor" opacity=".3"/>
+          <rect x="2" y="9" width="16" height="4" rx="1.5" fill="currentColor"/>
+          <rect x="2" y="15" width="16" height="2.5" rx="1.25" fill="currentColor" opacity=".3"/>
+        </svg>
+      </div>
+      <div class="card-title">Accordion</div>
+      <div class="card-desc">Collapsible content panels with open/closed/disabled states and animated expand.</div>
+      <div class="card-tokens">
+        <span class="token-pill">colors</span>
+        <span class="token-pill">spacing</span>
+        <span class="token-pill">typography</span>
+        <span class="token-pill">border-radius</span>
+        <span class="token-pill">states</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      View annotations
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </div>
+  </a>
+
+  <!-- Alert -->
+  <a class="component-card card--alert" href="alert-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect x="2" y="4" width="16" height="3.5" rx="1.75" fill="currentColor" opacity=".3"/>
+          <rect x="2" y="9" width="16" height="3.5" rx="1.75" fill="currentColor"/>
+          <rect x="2" y="14" width="16" height="3.5" rx="1.75" fill="currentColor" opacity=".5"/>
+        </svg>
+      </div>
+      <div class="card-title">Alert</div>
+      <div class="card-desc">Feedback messages in four semantic variants: warning, success, info, and error.</div>
+      <div class="card-tokens">
+        <span class="token-pill">feedback colors</span>
+        <span class="token-pill">spacing</span>
+        <span class="token-pill">border-radius</span>
+        <span class="token-pill">accent border</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      View annotations
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </div>
+  </a>
+
+  <!-- Columns -->
+  <a class="component-card card--columns" href="columns-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect x="2" y="4" width="7" height="12" rx="1.5" fill="currentColor"/>
+          <rect x="11" y="4" width="7" height="12" rx="1.5" fill="currentColor" opacity=".4"/>
+        </svg>
+      </div>
+      <div class="card-title">Columns</div>
+      <div class="card-desc">Responsive grid layouts — equal (2–6 cols) and asymmetric (medium/small left/right).</div>
+      <div class="card-tokens">
+        <span class="token-pill">gap</span>
+        <span class="token-pill">grid ratios</span>
+        <span class="token-pill">responsive</span>
+        <span class="token-pill">border-radius</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      View annotations
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </div>
+  </a>
+
+  <!-- Gallery -->
+  <a class="component-card card--gallery" href="gallery-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect x="2" y="2" width="7" height="7" rx="1.5" fill="currentColor"/>
+          <rect x="11" y="2" width="7" height="7" rx="1.5" fill="currentColor" opacity=".5"/>
+          <rect x="2" y="11" width="7" height="7" rx="1.5" fill="currentColor" opacity=".5"/>
+          <rect x="11" y="11" width="7" height="7" rx="1.5" fill="currentColor" opacity=".3"/>
+        </svg>
+      </div>
+      <div class="card-title">Gallery</div>
+      <div class="card-desc">Responsive image grid with 5 gap size variants and configurable column counts per breakpoint.</div>
+      <div class="card-tokens">
+        <span class="token-pill">gap variants</span>
+        <span class="token-pill">responsive cols</span>
+        <span class="token-pill">border-radius</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      View annotations
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </div>
+  </a>
+
+</main>
+
+<footer class="site-footer">
+  <p>OutSystems UI 2.29 · Design Token Annotations</p>
+  <p>jessicamendesOS · jess-ui-review</p>
+</footer>
+
+</body>
+</html>
