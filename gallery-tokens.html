@@ -201,21 +201,10 @@
   .td-rationale strong { color: #111827; }
 
   /* ─── Proposed mode — Gallery (M3 + Radix) ─── */
-  #previewWrapper.proposed-mode { --token-border-radius-100: 12px; }
+  #previewWrapper.proposed-mode { --token-border-radius-100: 6px; }
   #previewWrapper.proposed-mode .gallery-img {
-    box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.08);
-    border: 1px solid rgba(0,0,0,.06);
-    transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s, filter .3s, border-color .3s;
-    cursor: pointer;
     position: relative;
     overflow: hidden;
-  }
-  #previewWrapper.proposed-mode .gallery-img:hover {
-    transform: scale(1.05); /* more dramatic scale */
-    box-shadow: 0 8px 24px rgba(0,0,0,.2), 0 2px 6px rgba(0,0,0,.14);
-    border-color: transparent;
-    filter: brightness(1.03) saturate(1.08);
-    z-index: 1;
   }
 
   /* ─── Token Editor ─── */
@@ -522,44 +511,23 @@
       <tr>
         <td class="td-property">.gallery-img border-radius</td>
         <td class="td-current">4px</td>
-        <td class="td-proposed">12px</td>
-        <td class="td-token">token-border-radius-100 → 12px</td>
-        <td class="td-rationale"><strong>M3 Medium shape = 12dp</strong>; also matches <strong>Radix Image</strong> defaults of 8–12px for polished media grids</td>
+        <td class="td-proposed">6px</td>
+        <td class="td-token">token-border-radius-100 → 6px</td>
+        <td class="td-rationale">Slight increase for a polished look — kept small so it stays visually consistent across all gap variants (larger gaps = smaller images)</td>
       </tr>
       <tr>
-        <td class="td-property">.gallery-img resting border</td>
+        <td class="td-property">.gallery-img border</td>
         <td class="td-current">none</td>
-        <td class="td-proposed">1px rgba(0,0,0,.06)</td>
+        <td class="td-proposed">removed</td>
         <td class="td-token">—</td>
-        <td class="td-rationale">Subtle stroke gives image tiles a crisp edge at rest — disappears on hover when scale enlarges the frame</td>
+        <td class="td-rationale">No border needed — image content provides its own visual edge</td>
       </tr>
       <tr>
-        <td class="td-property">.gallery-img resting shadow</td>
+        <td class="td-property">.gallery-img shadow</td>
         <td class="td-current">none</td>
-        <td class="td-proposed">M3 Level 1</td>
+        <td class="td-proposed">removed</td>
         <td class="td-token">—</td>
-        <td class="td-rationale"><strong>M3 Elevated Card</strong>: images start at Level 1 so the jump to Level 3 on hover is perceptible, not jarring</td>
-      </tr>
-      <tr>
-        <td class="td-property">.gallery-img:hover transform</td>
-        <td class="td-current">none</td>
-        <td class="td-proposed">scale(1.05)</td>
-        <td class="td-token">—</td>
-        <td class="td-rationale"><strong>Radix Hover Card</strong> convention: 1.05 gives a clear interactive signal while staying within grid bounds</td>
-      </tr>
-      <tr>
-        <td class="td-property">.gallery-img:hover filter</td>
-        <td class="td-current">none</td>
-        <td class="td-proposed">brightness(1.03) saturate(1.08)</td>
-        <td class="td-token">—</td>
-        <td class="td-rationale">Pairs with scale to create a 'photo lights up' feel on hover — reinforces the interactive affordance</td>
-      </tr>
-      <tr>
-        <td class="td-property">.gallery-img:hover shadow</td>
-        <td class="td-current">none</td>
-        <td class="td-proposed">M3 Level 3</td>
-        <td class="td-token">—</td>
-        <td class="td-rationale"><strong>M3 elevation Level 3</strong>: significant two-layer lift that matches the scale interaction</td>
+        <td class="td-rationale">Flat images — elevation not appropriate for a media grid</td>
       </tr>
     </tbody>
   </table>

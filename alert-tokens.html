@@ -241,26 +241,22 @@
     body { padding: 24px 20px 80px; }
   }
 
-  /* ─── Proposed mode — Alert (M3 + Radix) ─── */
-  #previewWrapper.proposed-mode { --token-border-radius-200: 14px; }
+  /* ─── Proposed mode — Alert ─── */
+  #previewWrapper.proposed-mode { --token-border-radius-200: 8px; }
   #previewWrapper.proposed-mode .alert {
     --osui-alert-border-width: 0px;
-    --osui-alert-accent-width: 5px; /* Radix callout: stronger 5px left rule */
-    gap: var(--token-scale-400);
-    padding: 14px 20px 14px 15px; /* compensate accent width */
-    box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.06);
+    --osui-alert-accent-width: 0px;
+    gap: var(--token-scale-300);
+    padding: 12px 16px;
   }
   #previewWrapper.proposed-mode .alert-icon {
-    width: 40px; height: 40px; /* M3 tonal container: 40×40 */
-    border-radius: var(--token-border-radius-full);
     flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
   }
-  /* Stronger tonal fills (22%) for clear visual distinction */
-  #previewWrapper.proposed-mode .alert-warning .alert-icon { background: rgba(217,119,6,.22); }
-  #previewWrapper.proposed-mode .alert-success .alert-icon { background: rgba(22,163,74,.22); }
-  #previewWrapper.proposed-mode .alert-info .alert-icon    { background: rgba(37,99,235,.22); }
-  #previewWrapper.proposed-mode .alert-error .alert-icon   { background: rgba(220,38,38,.22); }
+  #previewWrapper.proposed-mode .alert-message {
+    font-size: 14px;
+    font-weight: 600;
+  }
 
   /* ─── Token Editor ─── */
   .edit-fab {
@@ -687,42 +683,42 @@
         <td class="td-current">1px solid</td>
         <td class="td-proposed">removed</td>
         <td class="td-token">token-border-size-025 → 0</td>
-        <td class="td-rationale"><strong>M3 banners use no outer stroke</strong> — the tonal container background provides sufficient visual containment</td>
+        <td class="td-rationale">Tonal background provides sufficient visual containment without a stroke</td>
       </tr>
       <tr>
         <td class="td-property">border-left-width (accent)</td>
         <td class="td-current">3px</td>
-        <td class="td-proposed">5px</td>
-        <td class="td-token">token-scale-100 + 1</td>
-        <td class="td-rationale"><strong>Radix Callout</strong> standard: 4–5px left accent rule — aligns with accessible contrast thresholds for non-text indicators</td>
+        <td class="td-proposed">removed (0px)</td>
+        <td class="td-token">—</td>
+        <td class="td-rationale">Left accent removed — background alone communicates the semantic variant</td>
       </tr>
       <tr>
         <td class="td-property">border-radius</td>
         <td class="td-current">8px</td>
-        <td class="td-proposed">14px</td>
-        <td class="td-token">token-border-radius-200 → 14px</td>
-        <td class="td-rationale"><strong>M3 Medium shape = 12dp</strong>; bumped to 14px to match <strong>Radix</strong> <code>--radius-5</code> used on Card and Callout</td>
+        <td class="td-proposed">8px</td>
+        <td class="td-token">token-border-radius-200</td>
+        <td class="td-rationale">Current value retained — already appropriate for inline feedback messages</td>
       </tr>
       <tr>
         <td class="td-property">gap (icon ↔ message)</td>
         <td class="td-current">12px</td>
-        <td class="td-proposed">16px</td>
-        <td class="td-token">token-scale-400 (was scale-300)</td>
-        <td class="td-rationale"><strong>M3 Banner horizontal spacing = 16dp</strong> — standard gap between the leading icon and body content</td>
+        <td class="td-proposed">12px</td>
+        <td class="td-token">token-scale-300</td>
+        <td class="td-rationale">Existing gap retained — sufficient spacing without over-padding</td>
       </tr>
       <tr>
-        <td class="td-property">box-shadow</td>
-        <td class="td-current">none</td>
-        <td class="td-proposed">M3 Level 1</td>
+        <td class="td-property">message font-size</td>
+        <td class="td-current">16px</td>
+        <td class="td-proposed">14px</td>
         <td class="td-token">—</td>
-        <td class="td-rationale"><strong>M3 Elevated Banner</strong> variant uses Level 1 elevation to float the alert above page content</td>
+        <td class="td-rationale">Smaller text gives alerts a compact, informational feel consistent with common web patterns</td>
       </tr>
       <tr>
-        <td class="td-property">icon container</td>
-        <td class="td-current">none (transparent)</td>
-        <td class="td-proposed">40×40 circle, 22% tonal</td>
-        <td class="td-token">token-border-radius-full</td>
-        <td class="td-rationale"><strong>M3 tonal icon container</strong>: icon sits in a color-matched pill at ~22% opacity — no extra markup needed</td>
+        <td class="td-property">message font-weight</td>
+        <td class="td-current">400</td>
+        <td class="td-proposed">600</td>
+        <td class="td-token">—</td>
+        <td class="td-rationale">Semi-bold improves legibility and adds emphasis at the smaller size</td>
       </tr>
     </tbody>
   </table>

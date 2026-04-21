@@ -268,23 +268,13 @@
     margin-bottom: var(--token-scale-400);
   }
   #previewWrapper.proposed-mode .column {
-    height: 64px; /* taller = more visual presence */
-    border-radius: 10px; /* slightly more rounded */
+    height: 64px;
+    border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0,0,0,.18), 0 1px 2px rgba(0,0,0,.1);
     position: relative;
     overflow: hidden;
     transition: transform .2s cubic-bezier(.4,0,.2,1), box-shadow .2s;
   }
-  /* Subtle top-highlight shine */
-  #previewWrapper.proposed-mode .column::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 45%;
-    background: linear-gradient(180deg, rgba(255,255,255,.22), transparent);
-    pointer-events: none;
-  }
-  /* Hover lift */
   #previewWrapper.proposed-mode .columns-item:hover .column {
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0,0,0,.22), 0 2px 4px rgba(0,0,0,.12);
@@ -668,21 +658,14 @@
         <td class="td-current">40px</td>
         <td class="td-proposed">64px</td>
         <td class="td-token">—</td>
-        <td class="td-rationale"><strong>Visual presence</strong> — taller slots are more legible, allow the shine gradient to read, and give hover lift room to be perceived</td>
+        <td class="td-rationale">Taller slots give the layout more visual presence in the preview</td>
       </tr>
       <tr>
         <td class="td-property">.column box-shadow</td>
         <td class="td-current">none</td>
         <td class="td-proposed">M3 Level 1</td>
         <td class="td-token">—</td>
-        <td class="td-rationale"><strong>M3 Elevated Card Level 1</strong> — two-layer shadow makes each column slot read as a distinct contained surface</td>
-      </tr>
-      <tr>
-        <td class="td-property">.column::after shine</td>
-        <td class="td-current">none</td>
-        <td class="td-proposed">top 45% gradient</td>
-        <td class="td-token">—</td>
-        <td class="td-rationale">22% white-to-transparent gradient gives each slot an inner-highlight — adds perceived depth without extra markup</td>
+        <td class="td-rationale">Subtle elevation distinguishes each slot as a contained surface</td>
       </tr>
     </tbody>
   </table>

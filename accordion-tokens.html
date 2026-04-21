@@ -427,41 +427,38 @@
     body { padding: 24px 20px 80px; }
   }
 
-  /* ─── Proposed mode — Accordion (M3 + Radix) ─── */
+  /* ─── Proposed mode — Accordion ─── */
   #previewWrapper.proposed-mode .osui-accordion {
-    box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.1);
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid rgba(16,92,239,.14);
+    border: none;
   }
   #previewWrapper.proposed-mode .osui-accordion-item {
-    --osui-accordion-item-border-radius: var(--token-border-radius-0);
+    --osui-accordion-item-border-radius: 0;
     --osui-accordion-item-border-color: rgba(0,0,0,.07);
+    border-left: none;
+    border-right: none;
+  }
+  #previewWrapper.proposed-mode .osui-accordion-item:first-child {
+    border-top: none;
+  }
+  #previewWrapper.proposed-mode .osui-accordion-item:last-child {
+    border-bottom: none;
   }
   #previewWrapper.proposed-mode .osui-accordion-item__title {
-    padding: var(--token-scale-400) var(--token-scale-600);
-    transition: background .2s, color .15s;
+    padding: var(--token-scale-300) var(--token-scale-600);
+    font-size: var(--token-font-size-400);
   }
   #previewWrapper.proposed-mode .osui-accordion-item__title:hover {
-    background: rgba(16,92,239,.05);
+    background: rgba(0,0,0,.04);
   }
-  /* Open item: primary text only — no tonal background (web convention) */
-  #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__title {
-    color: var(--token-semantics-primary-base);
-    font-weight: var(--token-font-weight-semi-bold);
-  }
-  /* Content: left accent stripe only — no background wash */
   #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__content {
-    border-left: 3px solid rgba(16,92,239,.3);
-    padding-left: calc(var(--token-scale-600) - 3px);
+    padding: var(--token-scale-300) var(--token-scale-600) var(--token-scale-600);
   }
-  /* Icon: solid filled primary circle with white arrow */
-  #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__icon {
-    background: var(--token-semantics-primary-base);
-    color: #fff;
-    border-radius: var(--token-border-radius-full);
-    padding: 6px;
-    width: 28px; height: 28px;
+  #previewWrapper.proposed-mode .osui-accordion-item::before {
+    display: none;
+  }
+  /* Open item: bold only */
+  #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__title {
+    font-weight: var(--token-font-weight-semi-bold);
   }
 
   /* ─── Token Editor ─── */
@@ -800,53 +797,46 @@
       </thead>
       <tbody>
         <tr>
-          <td class="td-property">.osui-accordion box-shadow</td>
+          <td class="td-property">outer border / container</td>
           <td class="td-current">none</td>
-          <td class="td-proposed">0 1px 2px + 0 2px 6px</td>
+          <td class="td-proposed">removed — dividers only</td>
           <td class="td-token">—</td>
-          <td class="td-rationale"><strong>M3 elevation Level 1</strong> — two-layer shadow formula; outer umbra reads as real-world depth on light surfaces</td>
-        </tr>
-        <tr>
-          <td class="td-property">.osui-accordion border-radius</td>
-          <td class="td-current">per-item · 4px</td>
-          <td class="td-proposed">container · 12px</td>
-          <td class="td-token">—</td>
-          <td class="td-rationale"><strong>M3 Medium shape = 12dp</strong>; unified container hides internal seams — items override to border-radius-0</td>
+          <td class="td-rationale">No outer container — only row dividers remain, consistent with common web accordion patterns</td>
         </tr>
         <tr>
           <td class="td-property">divider color</td>
           <td class="td-current">#d5d5d5</td>
-          <td class="td-proposed">rgba(0,0,0,.12)</td>
+          <td class="td-proposed">rgba(0,0,0,.07)</td>
           <td class="td-token">token-border-default (override)</td>
-          <td class="td-rationale"><strong>M3 outline on surface = 12% black</strong>; adapts automatically to any surface without a fixed hex</td>
+          <td class="td-rationale">Softer alpha divider — adapts to any surface without a fixed hex</td>
         </tr>
         <tr>
           <td class="td-property">title padding</td>
           <td class="td-current">24px all sides</td>
-          <td class="td-proposed">16px 24px</td>
-          <td class="td-token">scale-400 / scale-600</td>
-          <td class="td-rationale"><strong>M3 List item: 16dp vertical, 24dp horizontal</strong> — matches Navigation List and Expansion Tile spec</td>
+          <td class="td-proposed">12px 24px</td>
+          <td class="td-token">scale-300 / scale-600</td>
+          <td class="td-rationale">Tighter vertical padding reduces row height while maintaining horizontal breathing room</td>
         </tr>
         <tr>
-          <td class="td-property">hover state layer</td>
-          <td class="td-current">none</td>
-          <td class="td-proposed">primary @ 8%</td>
-          <td class="td-token">token-semantics-primary-base</td>
-          <td class="td-rationale"><strong>M3 hover state layer = 8%</strong> of the state content color applied over the surface</td>
+          <td class="td-property">title font-size</td>
+          <td class="td-current">18px</td>
+          <td class="td-proposed">16px</td>
+          <td class="td-token">token-font-size-400</td>
+          <td class="td-rationale">Matches body text size — accordion titles are navigational labels, not headings</td>
         </tr>
         <tr>
-          <td class="td-property">open state layer</td>
+          <td class="td-property">hover state</td>
           <td class="td-current">none</td>
-          <td class="td-proposed">primary @ 12%</td>
-          <td class="td-token">token-semantics-primary-base</td>
-          <td class="td-rationale"><strong>M3 active/focus state layer = 12%</strong> — stronger than hover to communicate the open state hierarchy</td>
+          <td class="td-proposed">rgba(0,0,0,.04) neutral</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale">Subtle neutral hover provides affordance without introducing colour</td>
         </tr>
         <tr>
-          <td class="td-property">open icon container</td>
-          <td class="td-current">none</td>
-          <td class="td-proposed">32×32 circular, primary @ 12%</td>
-          <td class="td-token">border-radius-full</td>
-          <td class="td-rationale"><strong>M3 icon button</strong>: 32dp visual target, tonal container at 12% opacity — same pattern as M3 icon buttons</td>
+          <td class="td-property">open item</td>
+          <td class="td-current">no change</td>
+          <td class="td-proposed">bold title only</td>
+          <td class="td-token">token-font-weight-semi-bold</td>
+          <td class="td-rationale">Weight change communicates open state without colour or background</td>
         </tr>
       </tbody>
     </table>

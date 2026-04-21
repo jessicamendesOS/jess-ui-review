@@ -397,10 +397,9 @@
 
   /* ─── Proposed mode — Master Detail (M3 Navigation Drawer) ─── */
   #previewWrapper.proposed-mode .split-screen-wrapper {
-    box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.1);
-    border-radius: 12px;
+    border-radius: 0;
     overflow: hidden;
-    border: 1px solid rgba(0,0,0,.06);
+    border: none;
   }
   #previewWrapper.proposed-mode .list-item {
     padding: var(--token-scale-300) var(--token-scale-600);
@@ -409,28 +408,19 @@
   #previewWrapper.proposed-mode .list-item:hover {
     background: rgba(0,0,0,.05);
   }
-  /* M3 active indicator: full-width pill */
   #previewWrapper.proposed-mode .list-item.is-selected {
-    background: transparent;
+    background: rgba(16,92,239,.12);
   }
   #previewWrapper.proposed-mode .list-item.is-selected::before {
-    left: 8px; right: 8px; top: 4px; bottom: 4px;
-    width: auto;
-    border-radius: 28px;
-    background: rgba(16,92,239,.14); /* stronger tint */
+    display: none;
   }
-  /* Selected: primary color text + bold */
+  /* Selected: bold only */
   #previewWrapper.proposed-mode .list-item.is-selected .list-item-title {
-    color: var(--token-semantics-primary-base);
     font-weight: var(--token-font-weight-semi-bold);
-  }
-  /* Avatar ring: Radix pattern — clearly visible */
-  #previewWrapper.proposed-mode .list-item.is-selected .avatar {
-    box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--token-semantics-primary-base);
   }
   /* Right panel: distinct surface color */
   #previewWrapper.proposed-mode .split-right {
-    background: #f0f4ff; /* primary-tinted surface, more visible than #f3f4f9 */
+    background: #fff;
   }
 </style>
 </head>
@@ -894,60 +884,53 @@
     </thead>
     <tbody>
       <tr>
-        <td class="td-property">wrapper box-shadow</td>
+        <td class="td-property">wrapper shadow / border</td>
         <td class="td-current">none</td>
-        <td class="td-proposed">M3 Level 1</td>
+        <td class="td-proposed">removed</td>
         <td class="td-token">—</td>
-        <td class="td-rationale"><strong>M3 Elevated surface Level 1</strong> — two-layer formula distinguishes the split-screen panel from the page background</td>
+        <td class="td-rationale">No elevation or stroke — component sits flush on the page surface</td>
       </tr>
       <tr>
         <td class="td-property">wrapper border-radius</td>
         <td class="td-current">8px</td>
-        <td class="td-proposed">12px</td>
+        <td class="td-proposed">0</td>
         <td class="td-token">—</td>
-        <td class="td-rationale"><strong>M3 Medium shape = 12dp</strong> — appropriate for container-level surfaces like dialogs and panels</td>
+        <td class="td-rationale">Flat edges — full-bleed layout reads as a native section, not a floating card</td>
       </tr>
       <tr>
         <td class="td-property">list-item padding</td>
         <td class="td-current">16px all sides</td>
         <td class="td-proposed">12px 24px</td>
         <td class="td-token">scale-300 / scale-600</td>
-        <td class="td-rationale"><strong>M3 Navigation Drawer item: 12–16dp vertical, 16–24dp horizontal</strong> — fits more rows while matching the drawer spec</td>
+        <td class="td-rationale">Tighter vertical padding fits more rows; wider horizontal maintains readability</td>
       </tr>
       <tr>
         <td class="td-property">hover state</td>
         <td class="td-current">#f9fafb</td>
-        <td class="td-proposed">rgba(0,0,0,.08)</td>
+        <td class="td-proposed">rgba(0,0,0,.05)</td>
         <td class="td-token">—</td>
-        <td class="td-rationale"><strong>M3 hover state layer = 8% onSurface</strong> — neutral, works on any surface color, not locked to brand hue</td>
+        <td class="td-rationale">Neutral alpha tint — works on any surface without a fixed hex</td>
       </tr>
       <tr>
         <td class="td-property">active indicator</td>
         <td class="td-current">3px left border</td>
-        <td class="td-proposed">full-width pill (28px radius)</td>
-        <td class="td-token">border-radius-full</td>
-        <td class="td-rationale"><strong>M3 Navigation Drawer active indicator</strong> — signature M3 pattern: full-width rounded pill with secondaryContainer tint (14%)</td>
+        <td class="td-proposed">full-width tint</td>
+        <td class="td-token">—</td>
+        <td class="td-rationale">Full-width background replaces the narrow left border — clearer, more prominent selected state</td>
       </tr>
       <tr>
-        <td class="td-property">selected text color</td>
-        <td class="td-current">token-text-default</td>
-        <td class="td-proposed">token-semantics-primary-base</td>
-        <td class="td-token">token-semantics-primary-base</td>
-        <td class="td-rationale"><strong>M3 active nav item</strong>: label uses primary color to reinforce selection — matches Nav Drawer and Nav Rail specs</td>
-      </tr>
-      <tr>
-        <td class="td-property">selected avatar ring</td>
-        <td class="td-current">none</td>
-        <td class="td-proposed">white + primary ring</td>
-        <td class="td-token">token-semantics-primary-base</td>
-        <td class="td-rationale"><strong>Radix Avatar</strong> ring pattern — visually anchors the selected person and links them to the detail panel</td>
+        <td class="td-property">selected title</td>
+        <td class="td-current">default weight, default colour</td>
+        <td class="td-proposed">semi-bold, default colour</td>
+        <td class="td-token">token-font-weight-semi-bold</td>
+        <td class="td-rationale">Weight change communicates selection without introducing colour</td>
       </tr>
       <tr>
         <td class="td-property">detail panel background</td>
         <td class="td-current">#ffffff</td>
-        <td class="td-proposed">#f0f4ff</td>
+        <td class="td-proposed">#ffffff</td>
         <td class="td-token">—</td>
-        <td class="td-rationale"><strong>M3 surface-container-low</strong> — primary-tinted neutral that clearly differentiates the read-only detail area from the interactive master list</td>
+        <td class="td-rationale">White background retained — no tint needed when the selected row already provides context</td>
       </tr>
     </tbody>
   </table>
