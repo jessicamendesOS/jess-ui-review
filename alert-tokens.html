@@ -256,6 +256,55 @@
   @media (max-width: 900px) {
     .annotation-layout { grid-template-columns: 1fr; }
   }
+
+  /* ─── Token Editor ─── */
+  .edit-fab {
+    position: fixed; bottom: 32px; right: 32px;
+    background: #9f3d8f; color: #fff; border: none;
+    padding: 10px 18px; border-radius: 99px; cursor: pointer;
+    font-size: 13px; font-weight: 600; letter-spacing: .01em;
+    box-shadow: 0 4px 16px rgba(159,61,143,.35); z-index: 200;
+    display: flex; align-items: center; gap: 7px;
+    transition: transform .15s, box-shadow .15s;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .edit-fab:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(159,61,143,.5); }
+  .token-editor {
+    position: fixed; top: 0; right: 0; width: 300px; height: 100vh;
+    background: #0f0f23; border-left: 1px solid rgba(255,255,255,.08);
+    overflow-y: auto; transform: translateX(100%);
+    transition: transform .3s cubic-bezier(.4,0,.2,1); z-index: 199;
+    display: flex; flex-direction: column;
+  }
+  .token-editor.is-open { transform: translateX(0); }
+  .te-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,.08);
+    position: sticky; top: 0; background: #0f0f23; z-index: 1;
+  }
+  .te-header h3 { font-size: 13px; font-weight: 700; color: #e2e8f0; }
+  .te-close { background: none; border: none; cursor: pointer; color: #64748b; font-size: 20px; line-height: 1; padding: 0 4px; }
+  .te-close:hover { color: #e2e8f0; }
+  .te-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 20px; }
+  .te-group { display: flex; flex-direction: column; gap: 10px; }
+  .te-group-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #475569; }
+  .te-row { display: flex; flex-direction: column; gap: 4px; }
+  .te-label { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #94a3b8; }
+  .te-controls { display: flex; align-items: center; gap: 8px; }
+  input[type="color"] {
+    width: 32px; height: 28px; border: 1px solid rgba(255,255,255,.15);
+    border-radius: 6px; background: none; cursor: pointer; padding: 2px; flex-shrink: 0;
+  }
+  input[type="range"] { flex: 1; accent-color: #9f3d8f; cursor: pointer; }
+  .te-value { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #64748b; min-width: 44px; text-align: right; }
+  .te-reset {
+    margin: 0 20px 24px; padding: 9px;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 6px; color: #94a3b8; font-size: 12px; cursor: pointer;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    transition: background .15s;
+  }
+  .te-reset:hover { background: rgba(255,255,255,.1); color: #e2e8f0; }
 </style>
 </head>
 <body>
@@ -595,5 +644,132 @@
   </div>
 </div>
 
+
+<button class="edit-fab" onclick="toggleEditor()">
+  <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M11.5 1.5a1.5 1.5 0 0 1 2.121 2.121L4.5 12.743l-2.828.707.707-2.828L11.5 1.5z"/></svg>
+  Edit Tokens
+</button>
+
+<div class="token-editor" id="tokenEditor">
+  <div class="te-header">
+    <h3>Edit Tokens</h3>
+    <button class="te-close" onclick="toggleEditor()">×</button>
+  </div>
+  <div class="te-body">
+
+    <div class="te-group">
+      <div class="te-group-title">Warning</div>
+      <div class="te-row">
+        <span class="te-label">--token-color-warning-base</span>
+        <div class="te-controls">
+          <input type="color" value="#d97706" data-prop="--token-color-warning-base" data-default="#d97706" oninput="teColor(this)">
+          <span class="te-value">#d97706</span>
+        </div>
+      </div>
+      <div class="te-row">
+        <span class="te-label">--token-color-warning-lightest</span>
+        <div class="te-controls">
+          <input type="color" value="#fefce8" data-prop="--token-color-warning-lightest" data-default="#fefce8" oninput="teColor(this)">
+          <span class="te-value">#fefce8</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="te-group">
+      <div class="te-group-title">Success</div>
+      <div class="te-row">
+        <span class="te-label">--token-color-success-base</span>
+        <div class="te-controls">
+          <input type="color" value="#16a34a" data-prop="--token-color-success-base" data-default="#16a34a" oninput="teColor(this)">
+          <span class="te-value">#16a34a</span>
+        </div>
+      </div>
+      <div class="te-row">
+        <span class="te-label">--token-color-success-lightest</span>
+        <div class="te-controls">
+          <input type="color" value="#f0fdf4" data-prop="--token-color-success-lightest" data-default="#f0fdf4" oninput="teColor(this)">
+          <span class="te-value">#f0fdf4</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="te-group">
+      <div class="te-group-title">Info</div>
+      <div class="te-row">
+        <span class="te-label">--token-color-info-base</span>
+        <div class="te-controls">
+          <input type="color" value="#2563eb" data-prop="--token-color-info-base" data-default="#2563eb" oninput="teColor(this)">
+          <span class="te-value">#2563eb</span>
+        </div>
+      </div>
+      <div class="te-row">
+        <span class="te-label">--token-color-info-lightest</span>
+        <div class="te-controls">
+          <input type="color" value="#eff6ff" data-prop="--token-color-info-lightest" data-default="#eff6ff" oninput="teColor(this)">
+          <span class="te-value">#eff6ff</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="te-group">
+      <div class="te-group-title">Error</div>
+      <div class="te-row">
+        <span class="te-label">--token-color-error-base</span>
+        <div class="te-controls">
+          <input type="color" value="#dc2626" data-prop="--token-color-error-base" data-default="#dc2626" oninput="teColor(this)">
+          <span class="te-value">#dc2626</span>
+        </div>
+      </div>
+      <div class="te-row">
+        <span class="te-label">--token-color-error-lightest</span>
+        <div class="te-controls">
+          <input type="color" value="#fff1f2" data-prop="--token-color-error-lightest" data-default="#fff1f2" oninput="teColor(this)">
+          <span class="te-value">#fff1f2</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="te-group">
+      <div class="te-group-title">Spacing &amp; Shape</div>
+      <div class="te-row">
+        <span class="te-label">--token-scale-400 (padding)</span>
+        <div class="te-controls">
+          <input type="range" min="8" max="40" value="16" data-prop="--token-scale-400" data-default="16px" oninput="teRange(this)">
+          <span class="te-value">16px</span>
+        </div>
+      </div>
+      <div class="te-row">
+        <span class="te-label">--token-border-radius-200</span>
+        <div class="te-controls">
+          <input type="range" min="0" max="24" value="8" data-prop="--token-border-radius-200" data-default="8px" oninput="teRange(this)">
+          <span class="te-value">8px</span>
+        </div>
+      </div>
+      <div class="te-row">
+        <span class="te-label">--token-border-size-075 (accent)</span>
+        <div class="te-controls">
+          <input type="range" min="1" max="8" value="3" data-prop="--token-border-size-075" data-default="3px" oninput="teRange(this)">
+          <span class="te-value">3px</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <button class="te-reset" onclick="resetTokens()">↺ Reset to defaults</button>
+</div>
+
+<script>
+function teUpdate(p,v){document.documentElement.style.setProperty(p,v);}
+function teRange(i,u){const v=i.value,u2=u||'px';teUpdate(i.dataset.prop,v+u2);i.nextElementSibling.textContent=v+u2;}
+function teColor(i){teUpdate(i.dataset.prop,i.value);i.nextElementSibling.textContent=i.value;}
+function toggleEditor(){document.getElementById('tokenEditor').classList.toggle('is-open');}
+function resetTokens(){
+  document.querySelectorAll('[data-prop][data-default]').forEach(el=>{
+    document.documentElement.style.setProperty(el.dataset.prop,el.dataset.default);
+    if(el.type==='range'){el.value=parseFloat(el.dataset.default);el.nextElementSibling.textContent=el.dataset.default;}
+    else if(el.type==='color'){el.value=el.dataset.default;el.nextElementSibling.textContent=el.dataset.default;}
+  });
+}
+</script>
 </body>
 </html>
