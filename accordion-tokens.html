@@ -336,6 +336,42 @@
     .annotation-layout { grid-template-columns: 1fr; }
   }
 
+  /* ─── Current / Proposed tabs ─── */
+  .preview-tabs { display: flex; gap: 4px; padding: 4px; background: #f0f2f5; border-radius: 8px; margin-bottom: 16px; }
+  .ptab {
+    flex: 1; padding: 6px 12px; font-size: 12px; font-weight: 600;
+    border: none; border-radius: 6px; cursor: pointer;
+    background: transparent; color: #888; font-family: inherit;
+    transition: background .15s, color .15s;
+  }
+  .ptab--active { background: #fff; color: #111; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+
+  /* ─── Proposed mode — Accordion ─── */
+  #previewWrapper.proposed-mode .osui-accordion {
+    box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    border-radius: var(--token-border-radius-200);
+    overflow: hidden;
+  }
+  #previewWrapper.proposed-mode .osui-accordion-item {
+    --osui-accordion-item-border-radius: var(--token-border-radius-0);
+  }
+  #previewWrapper.proposed-mode .osui-accordion-item__title {
+    padding: var(--token-scale-400) var(--token-scale-600);
+    transition: background .15s;
+  }
+  #previewWrapper.proposed-mode .osui-accordion-item__title:hover {
+    background: rgba(16,92,239,.03);
+  }
+  #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__title {
+    background: rgba(16,92,239,.06);
+  }
+  #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__icon {
+    background: rgba(16,92,239,.1);
+    border-radius: var(--token-border-radius-full);
+    padding: 4px;
+    width: 24px; height: 24px;
+  }
+
   /* ─── Token Editor ─── */
   .edit-fab {
     position: fixed; bottom: 32px; right: 32px;
@@ -412,7 +448,11 @@
 
   <!-- LEFT: Accordion preview -->
   <div class="preview-card">
-    <h2>Component preview</h2>
+    <div class="preview-tabs">
+      <button class="ptab ptab--active" onclick="setMode('current',this)">Current</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <div id="previewWrapper">
     <div class="osui-accordion">
 
       <!-- Item 1 — open -->
@@ -463,6 +503,7 @@
     </div>
 
     <p style="margin-top:16px;font-size:11px;color:#aaa;">Click items to toggle open/closed</p>
+    </div>
   </div>
 
   <!-- RIGHT: Token cards -->
@@ -647,6 +688,70 @@
   </div>
 </div>
 
+<div style="margin-top:32px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:24px;">
+  <div style="margin-bottom:16px;">
+    <h3 style="font-size:14px;font-weight:700;color:#111;margin-bottom:4px;">Proposed changes — Accordion</h3>
+    <p style="font-size:12px;color:#888;">CSS-only. HTML structure unchanged. Uses existing tokens or overridden token defaults.</p>
+  </div>
+  <div style="overflow-x:auto;">
+  <table style="width:100%;border-collapse:collapse;font-size:12px;">
+    <thead>
+      <tr style="background:#f8f9fa;">
+        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Property</th>
+        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Current</th>
+        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Proposed</th>
+        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Token</th>
+        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;">Rationale</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.osui-accordion box-shadow</td>
+        <td style="padding:8px 12px;color:#888;">none</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">0 4px 20px rgba(0,0,0,.08)</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
+        <td style="padding:8px 12px;color:#555;">Lifts the accordion off the page surface, giving it spatial depth</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.osui-accordion border-radius</td>
+        <td style="padding:8px 12px;color:#888;">per-item · 4px</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">container · 8px</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-radius-200</td>
+        <td style="padding:8px 12px;color:#555;">Unified container radius hides internal seams; items override to border-radius-0</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">title padding</td>
+        <td style="padding:8px 12px;color:#888;">24px all sides</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">16px 24px</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">scale-400 / scale-600</td>
+        <td style="padding:8px 12px;color:#555;">Tighter vertical rhythm fits more items above the fold without crowding</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">open title background</td>
+        <td style="padding:8px 12px;color:#888;">none</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">primary-base @ 6% opacity</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-semantics-primary-base</td>
+        <td style="padding:8px 12px;color:#555;">Soft tint complements the active top-border indicator and reinforces the open state</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">hover title background</td>
+        <td style="padding:8px 12px;color:#888;">none</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">primary-base @ 3% opacity</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-semantics-primary-base</td>
+        <td style="padding:8px 12px;color:#555;">Brand-tinted hover feedback instead of a flat neutral gray</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">open icon background</td>
+        <td style="padding:8px 12px;color:#888;">none</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">circular pill · primary @ 10%</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-radius-full</td>
+        <td style="padding:8px 12px;color:#555;">Circular pill creates a clear focal point for the expand/collapse affordance</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
 
 <button class="edit-fab" onclick="toggleEditor()">
   <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M11.5 1.5a1.5 1.5 0 0 1 2.121 2.121L4.5 12.743l-2.828.707.707-2.828L11.5 1.5z"/></svg>
@@ -744,6 +849,11 @@
 </div>
 
 <script>
+function setMode(mode,btn){
+  document.getElementById('previewWrapper').classList.toggle('proposed-mode', mode==='proposed');
+  document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 function teUpdate(p,v){document.documentElement.style.setProperty(p,v);}
 function teRange(i,u){const v=i.value,u2=u||'px';teUpdate(i.dataset.prop,v+u2);i.nextElementSibling.textContent=v+u2;}
 function teColor(i){teUpdate(i.dataset.prop,i.value);i.nextElementSibling.textContent=i.value;}

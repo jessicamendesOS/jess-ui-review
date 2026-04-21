@@ -343,6 +343,41 @@
     .split-screen-wrapper { grid-template-columns: 1fr; height: auto; }
     .split-left { height: 300px; border-right: none; border-bottom: 1px solid var(--token-border-default); }
   }
+
+  /* ─── Current / Proposed tabs ─── */
+  .preview-tabs { display: flex; gap: 4px; padding: 4px; background: #f0f2f5; border-radius: 8px; margin-bottom: 16px; }
+  .ptab {
+    flex: 1; padding: 6px 12px; font-size: 12px; font-weight: 600;
+    border: none; border-radius: 6px; cursor: pointer;
+    background: transparent; color: #888; font-family: inherit;
+    transition: background .15s, color .15s;
+  }
+  .ptab--active { background: #fff; color: #111; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+
+  /* ─── Proposed mode — Master Detail ─── */
+  #previewWrapper.proposed-mode .split-screen-wrapper {
+    box-shadow: 0 4px 24px rgba(0,0,0,.1);
+    border-radius: 12px;
+  }
+  #previewWrapper.proposed-mode .list-item {
+    padding: var(--token-scale-300) var(--token-scale-600);
+    transition: background .15s;
+  }
+  #previewWrapper.proposed-mode .list-item:hover {
+    background: rgba(16,92,239,.04);
+  }
+  #previewWrapper.proposed-mode .list-item.is-selected {
+    background: rgba(16,92,239,.08);
+  }
+  #previewWrapper.proposed-mode .list-item.is-selected::before {
+    width: var(--token-scale-100);
+  }
+  #previewWrapper.proposed-mode .list-item.is-selected .avatar {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--token-semantics-primary-base);
+  }
+  #previewWrapper.proposed-mode .split-right {
+    background: #fafbff;
+  }
 </style>
 </head>
 <body>
@@ -368,7 +403,11 @@
 
 <!-- Component preview -->
 <div class="preview-card">
-  <h2>Component preview — click items to select</h2>
+  <div class="preview-tabs">
+    <button class="ptab ptab--active" onclick="setMode('current',this)">Current</button>
+    <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+  </div>
+  <div id="previewWrapper">
 
   <div class="split-screen-wrapper annotate-wrapper">
 
@@ -499,6 +538,7 @@
       </div>
     </div>
 
+  </div>
   </div>
 </div>
 
@@ -776,6 +816,84 @@
 
 </div>
 
+<div style="margin-top:32px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:24px;">
+  <div style="margin-bottom:16px;">
+    <h3 style="font-size:14px;font-weight:700;color:#111;margin-bottom:4px;">Proposed changes — Master Detail</h3>
+    <p style="font-size:12px;color:#888;">CSS-only. HTML structure unchanged. Uses existing tokens or overridden token defaults.</p>
+  </div>
+  <div style="overflow-x:auto;">
+  <table style="width:100%;border-collapse:collapse;font-size:12px;">
+    <thead>
+      <tr style="background:#f8f9fa;">
+        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Property</th>
+        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Current</th>
+        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Proposed</th>
+        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Token</th>
+        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;">Rationale</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">wrapper box-shadow</td>
+        <td style="padding:8px 12px;color:#888;">none</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">0 4px 24px rgba(0,0,0,.1)</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
+        <td style="padding:8px 12px;color:#555;">Separates the split-screen panel from the page background with clear depth</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">wrapper border-radius</td>
+        <td style="padding:8px 12px;color:#888;">8px</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">12px</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
+        <td style="padding:8px 12px;color:#555;">Larger radius feels more refined for a multi-panel surface of this size</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">list-item padding</td>
+        <td style="padding:8px 12px;color:#888;">16px all sides</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">12px 24px</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">scale-300 / scale-600</td>
+        <td style="padding:8px 12px;color:#555;">More horizontal padding echoes the detail panel; tighter vertical fits more rows</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">hover background</td>
+        <td style="padding:8px 12px;color:#888;">#f9fafb (neutral gray)</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">primary-base @ 4%</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-semantics-primary-base</td>
+        <td style="padding:8px 12px;color:#555;">Brand-tinted hover aligns with the selected state, making the interaction more coherent</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">selected background</td>
+        <td style="padding:8px 12px;color:#888;">#eef1fd (bg-primary-lightest)</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">primary-base @ 8%</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-semantics-primary-base</td>
+        <td style="padding:8px 12px;color:#555;">Slightly stronger tint gives the selected state more visual weight over the hover state</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">selected border width</td>
+        <td style="padding:8px 12px;color:#888;">3px</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">4px</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-scale-100</td>
+        <td style="padding:8px 12px;color:#555;">Slightly wider left border makes the active indicator more prominent against the tinted background</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">selected avatar ring</td>
+        <td style="padding:8px 12px;color:#888;">none</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">white + primary ring (2px + 3.5px)</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-semantics-primary-base</td>
+        <td style="padding:8px 12px;color:#555;">Avatar ring visually anchors the selected person, reinforcing their identity in the detail panel</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">detail panel background</td>
+        <td style="padding:8px 12px;color:#888;">#ffffff</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">#fafbff</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
+        <td style="padding:8px 12px;color:#555;">Subtle cool tint differentiates the read-only detail panel from the interactive master list</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
 <!-- Edit Tokens FAB -->
 <button class="edit-fab" onclick="toggleEditor()">
   <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M11.5 1.5a1.5 1.5 0 0 1 2.121 2.121L4.5 12.743l-2.828.707.707-2.828L11.5 1.5z"/></svg>
@@ -903,6 +1021,11 @@ function selectItem(id) {
   document.getElementById('detailAvatar').style.background = p.color;
 }
 
+function setMode(mode,btn){
+  document.getElementById('previewWrapper').classList.toggle('proposed-mode', mode==='proposed');
+  document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 function teUpdate(p,v){document.documentElement.style.setProperty(p,v);}
 function teRange(i,u){const v=i.value,u2=u||'px';teUpdate(i.dataset.prop,v+u2);i.nextElementSibling.textContent=v+u2;}
 function teColor(i){teUpdate(i.dataset.prop,i.value);i.nextElementSibling.textContent=i.value;}

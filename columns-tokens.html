@@ -218,6 +218,26 @@
     .annotation-layout { grid-template-columns: 1fr; }
   }
 
+  /* ─── Current / Proposed tabs ─── */
+  .preview-tabs { display: flex; gap: 4px; padding: 4px; background: #f0f2f5; border-radius: 8px; margin-bottom: 16px; }
+  .ptab {
+    flex: 1; padding: 6px 12px; font-size: 12px; font-weight: 600;
+    border: none; border-radius: 6px; cursor: pointer;
+    background: transparent; color: #888; font-family: inherit;
+    transition: background .15s, color .15s;
+  }
+  .ptab--active { background: #fff; color: #111; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+
+  /* ─── Proposed mode — Columns ─── */
+  #previewWrapper.proposed-mode .columns {
+    gap: var(--token-scale-400);
+    margin-bottom: var(--token-scale-400);
+  }
+  #previewWrapper.proposed-mode .column {
+    border-radius: var(--token-border-radius-200);
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  }
+
   /* ─── Token Editor ─── */
   .edit-fab {
     position: fixed; bottom: 32px; right: 32px;
@@ -291,7 +311,11 @@
 
   <!-- LEFT: preview -->
   <div class="preview-card">
-    <h2>Component preview</h2>
+    <div class="preview-tabs">
+      <button class="ptab ptab--active" onclick="setMode('current',this)">Current</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <div id="previewWrapper">
 
     <div class="variant-row">
       <span class="variant-label">columns2</span>
@@ -393,6 +417,7 @@
       </div>
     </div>
 
+    </div>
   </div>
 
   <!-- RIGHT: Token cards -->
@@ -549,6 +574,49 @@
   </div>
 </div>
 
+<div style="margin-top:32px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:24px;">
+  <div style="margin-bottom:16px;">
+    <h3 style="font-size:14px;font-weight:700;color:#111;margin-bottom:4px;">Proposed changes — Columns</h3>
+    <p style="font-size:12px;color:#888;">CSS-only. HTML structure unchanged. Uses existing tokens or overridden token defaults.</p>
+  </div>
+  <div style="overflow-x:auto;">
+  <table style="width:100%;border-collapse:collapse;font-size:12px;">
+    <thead>
+      <tr style="background:#f8f9fa;">
+        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Property</th>
+        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Current</th>
+        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Proposed</th>
+        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Token</th>
+        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;">Rationale</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.columns gap</td>
+        <td style="padding:8px 12px;color:#888;">8px</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">16px</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-scale-400 (was scale-200)</td>
+        <td style="padding:8px 12px;color:#555;">More generous gutters make the grid structure visually clearer and avoid columns feeling cramped</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.column border-radius</td>
+        <td style="padding:8px 12px;color:#888;">4px</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">8px</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-radius-200 (was -100)</td>
+        <td style="padding:8px 12px;color:#555;">More rounded blocks read as intentional layout slots rather than arbitrary rectangles</td>
+      </tr>
+      <tr>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.column box-shadow</td>
+        <td style="padding:8px 12px;color:#888;">none</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">0 1px 4px rgba(0,0,0,.08)</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
+        <td style="padding:8px 12px;color:#555;">Subtle lift helps each block read as a discrete content slot, improving layout legibility</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
 
 <button class="edit-fab" onclick="toggleEditor()">
   <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M11.5 1.5a1.5 1.5 0 0 1 2.121 2.121L4.5 12.743l-2.828.707.707-2.828L11.5 1.5z"/></svg>
@@ -589,6 +657,11 @@
 </div>
 
 <script>
+function setMode(mode,btn){
+  document.getElementById('previewWrapper').classList.toggle('proposed-mode', mode==='proposed');
+  document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 function teUpdate(p,v){document.documentElement.style.setProperty(p,v);}
 function teRange(i,u){const v=i.value,u2=u||'px';teUpdate(i.dataset.prop,v+u2);i.nextElementSibling.textContent=v+u2;}
 function teColor(i){teUpdate(i.dataset.prop,i.value);i.nextElementSibling.textContent=i.value;}
