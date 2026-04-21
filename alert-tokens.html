@@ -57,50 +57,64 @@
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #f0f2f5;
+    background: #f4f5f7;
     min-height: 100vh;
-    padding: 48px 32px;
+    color: #111827;
+    line-height: 1.5;
+    padding: 36px 40px 100px;
   }
+
+  .back-nav {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #6b7280;
+    text-decoration: none; margin-bottom: 24px;
+    padding: 5px 10px 5px 6px; border-radius: 8px;
+    transition: background .15s, color .15s;
+  }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
 
   .page-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 40px;
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
   }
-  .page-header h1 { font-size: 22px; font-weight: 700; color: #111; }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
   .badge {
-    background: #ede8f3;
-    color: #9f3d8f;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 99px;
-    letter-spacing: .04em;
-    text-transform: uppercase;
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 700; padding: 4px 10px;
+    border-radius: 99px; letter-spacing: .02em; text-transform: uppercase;
   }
+  .badge--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; color: #374151;
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 99px;
+    padding: 4px 10px 4px 6px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
   .annotation-layout {
-    display: grid;
-    grid-template-columns: 420px 1fr;
-    gap: 32px;
-    align-items: start;
+    display: grid; grid-template-columns: 460px 1fr;
+    gap: 20px; align-items: start;
   }
 
   .preview-card {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,.08);
-    padding: 24px;
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07);
+    border: 1px solid #e5e7eb; overflow: hidden;
   }
-  .preview-card h2 {
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: #888;
-    margin-bottom: 16px;
+  .preview-card__header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa;
   }
+  .preview-card__label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-right: auto;
+  }
+  .preview-card__body { padding: 20px; }
 
   /* ─── Alert component styles ─── */
   .alert {
@@ -174,128 +188,79 @@
   .annotate-message   { outline: 2px dashed #6366f1; outline-offset: 2px; }
 
   /* ─── Token panel ─── */
-  .token-panel { display: flex; flex-direction: column; gap: 20px; }
-
-  .token-card { border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
-  .token-card__header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    font-size: 13px;
-    font-weight: 700;
-    color: #fff;
-  }
-  .token-card__header .dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    background: rgba(255,255,255,.5);
-    flex-shrink: 0;
-  }
-  .token-card__header .component-name {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .05em;
-    text-transform: uppercase;
-    opacity: .75;
-    margin-left: auto;
-  }
-  .token-card__body { background: #1a1a2e; padding: 0; }
-
-  .token-row {
-    display: grid;
-    grid-template-columns: 160px 1fr auto;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    border-bottom: 1px solid rgba(255,255,255,.05);
-    transition: background .15s;
-  }
+  .token-panel { display: flex; flex-direction: column; gap: 12px; }
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; letter-spacing: 0; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 155px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); transition: background .12s; }
   .token-row:last-child { border-bottom: none; }
-  .token-row:hover { background: rgba(255,255,255,.04); }
-
-  .prop-name  { font-size: 12px; color: #94a3b8; font-family: 'SF Mono','Fira Code',monospace; }
-  .token-name { font-size: 12px; font-family: 'SF Mono','Fira Code',monospace; color: #e2e8f0; font-weight: 600; }
-  .token-value { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #64748b; text-align: right; white-space: nowrap; }
-
-  .swatch {
-    display: inline-block;
-    width: 12px; height: 12px;
-    border-radius: 3px;
-    border: 1px solid rgba(255,255,255,.15);
-    vertical-align: middle;
-    margin-right: 6px;
-    flex-shrink: 0;
-  }
+  .token-row:hover { background: rgba(255,255,255,.03); }
+  .prop-name  { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; white-space: nowrap; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value{ font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; white-space: nowrap; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); vertical-align: middle; margin-right: 5px; flex-shrink: 0; }
   .token-name-with-swatch { display: flex; align-items: center; }
 
-  /* Card header colors */
-  .card-base    .token-card__header { background: linear-gradient(135deg, #c0392b, #e74c3c); }
-  .card-icon    .token-card__header { background: linear-gradient(135deg, #047857, #10b981); }
-  .card-message .token-card__header { background: linear-gradient(135deg, #3730a3, #6366f1); }
-  .card-warning .token-card__header { background: linear-gradient(135deg, #92400e, #d97706); }
-  .card-success .token-card__header { background: linear-gradient(135deg, #14532d, #16a34a); }
-  .card-info    .token-card__header { background: linear-gradient(135deg, #1e3a8a, #2563eb); }
-  .card-error   .token-card__header { background: linear-gradient(135deg, #7f1d1d, #dc2626); }
+  .card-base    .token-card__header { background: linear-gradient(120deg, #991b1b, #ef4444); }
+  .card-icon    .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+  .card-message .token-card__header { background: linear-gradient(120deg, #1e1b4b, #6366f1); }
+  .card-warning .token-card__header { background: linear-gradient(120deg, #92400e, #d97706); }
+  .card-success .token-card__header { background: linear-gradient(120deg, #14532d, #16a34a); }
+  .card-info    .token-card__header { background: linear-gradient(120deg, #1e3a8a, #2563eb); }
+  .card-error   .token-card__header { background: linear-gradient(120deg, #7f1d1d, #dc2626); }
 
-  /* Legend */
-  .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; }
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #555; font-weight: 500; }
-  .legend-line { width: 20px; height: 0; border-top: 2px dashed; }
-
-  .token-section-label {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: #64748b;
-    padding: 8px 16px 4px;
-    border-bottom: 1px solid rgba(255,255,255,.05);
-  }
-
-  @media (max-width: 900px) {
-    .annotation-layout { grid-template-columns: 1fr; }
-  }
-
-  /* ─── Current / Proposed tabs ─── */
-  .preview-tabs { display: flex; gap: 4px; padding: 4px; background: #f0f2f5; border-radius: 8px; margin-bottom: 16px; }
-  .ptab {
-    flex: 1; padding: 6px 12px; font-size: 12px; font-weight: 600;
-    border: none; border-radius: 6px; cursor: pointer;
-    background: transparent; color: #888; font-family: inherit;
-    transition: background .15s, color .15s;
-  }
-  .ptab--active { background: #fff; color: #111; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
-  .ann-toggle {
-    padding: 5px 10px; font-size: 11px; font-weight: 600;
-    border: 1px solid #ddd; border-radius: 5px; cursor: pointer;
-    background: transparent; color: #888; font-family: inherit;
-    transition: all .15s; margin-left: auto; white-space: nowrap;
-  }
-  .ann-toggle:hover { color: #111; border-color: #999; }
-  .ann-toggle--off { color: #ef4444; border-color: #ef4444; background: #fff1f2; }
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; font-family: inherit; transition: all .15s; white-space: nowrap; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; font-family: inherit; transition: all .15s; margin-left: 4px; white-space: nowrap; }
+  .ann-toggle:hover { color: #111827; border-color: #9ca3af; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
   #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
 
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p  { font-size: 12px; color: #6b7280; }
+  .proposal-table-wrap { overflow-x: auto; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .proposal-table tbody tr:last-child td { border-bottom: none; }
+  .proposal-table tbody tr:hover td { background: #fafafa; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; white-space: nowrap; }
+  .td-current  { color: #9ca3af; }
+  .td-proposed { font-weight: 600; color: #111827; }
+  .td-token    { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; }
+  .td-rationale{ color: #4b5563; max-width: 280px; }
+  .td-rationale strong { color: #111827; }
+
+  @media (max-width: 960px) {
+    .annotation-layout { grid-template-columns: 1fr; }
+    body { padding: 24px 20px 80px; }
+  }
+
   /* ─── Proposed mode — Alert (M3 + Radix) ─── */
-  #previewWrapper.proposed-mode { --token-border-radius-200: 12px; } /* M3 Medium shape */
+  #previewWrapper.proposed-mode { --token-border-radius-200: 14px; }
   #previewWrapper.proposed-mode .alert {
-    --osui-alert-border-width: 0px; /* M3 banners: no outer stroke */
-    --osui-alert-accent-width: var(--token-scale-100); /* Radix callout: 4px left rule */
-    gap: var(--token-scale-400); /* M3 banner gap: 16dp */
-    /* M3 elevation Level 1 */
-    box-shadow: 0 1px 2px rgba(0,0,0,.15), 0 1px 4px rgba(0,0,0,.08);
+    --osui-alert-border-width: 0px;
+    --osui-alert-accent-width: 5px; /* Radix callout: stronger 5px left rule */
+    gap: var(--token-scale-400);
+    padding: 14px 20px 14px 15px; /* compensate accent width */
+    box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.06);
   }
   #previewWrapper.proposed-mode .alert-icon {
-    /* M3 tonal icon container: 36×36 circle */
-    width: 36px; height: 36px;
+    width: 40px; height: 40px; /* M3 tonal container: 40×40 */
     border-radius: var(--token-border-radius-full);
     flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
   }
-  #previewWrapper.proposed-mode .alert-warning .alert-icon { background: rgba(217,119,6,.16); }
-  #previewWrapper.proposed-mode .alert-success .alert-icon { background: rgba(22,163,74,.16); }
-  #previewWrapper.proposed-mode .alert-info .alert-icon    { background: rgba(37,99,235,.16); }
-  #previewWrapper.proposed-mode .alert-error .alert-icon   { background: rgba(220,38,38,.16); }
+  /* Stronger tonal fills (22%) for clear visual distinction */
+  #previewWrapper.proposed-mode .alert-warning .alert-icon { background: rgba(217,119,6,.22); }
+  #previewWrapper.proposed-mode .alert-success .alert-icon { background: rgba(22,163,74,.22); }
+  #previewWrapper.proposed-mode .alert-info .alert-icon    { background: rgba(37,99,235,.22); }
+  #previewWrapper.proposed-mode .alert-error .alert-icon   { background: rgba(220,38,38,.22); }
 
   /* ─── Token Editor ─── */
   .edit-fab {
@@ -349,32 +314,36 @@
 </head>
 <body>
 
-<a href="index.html" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#888;text-decoration:none;margin-bottom:20px;transition:color .15s;" onmouseover="this.style.color='#111'" onmouseout="this.style.color='#888'">
+<a href="index.html" class="back-nav">
   <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
   All components
 </a>
 
 <div class="page-header">
   <h1>Alert</h1>
-  <span class="badge">OutSystems UI 2.29</span>
-  <span class="badge" style="background:#e8f4fd;color:#105cef;">Design Tokens</span>
+  <span class="badge badge--os">OutSystems UI 2.29</span>
+  <span class="badge badge--tokens">Design Tokens</span>
 </div>
 
 <div class="legend">
-  <div class="legend-item"><div class="legend-line" style="border-color:#ef4444;"></div> Alert Container</div>
-  <div class="legend-item"><div class="legend-line" style="border-color:#10b981;"></div> Icon</div>
-  <div class="legend-item"><div class="legend-line" style="border-color:#6366f1;"></div> Message</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> Alert Container</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Icon</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#6366f1;"></span> Message</div>
 </div>
 
 <div class="annotation-layout">
 
   <!-- LEFT: Alert preview -->
   <div class="preview-card">
-    <div class="preview-tabs">
-      <button class="ptab ptab--active" onclick="setMode('current',this)">Current</button>
-      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    <div class="preview-card__header">
+      <span class="preview-card__label">Preview</span>
+      <div class="preview-tabs">
+        <button class="ptab ptab--active" onclick="setMode('current',this)">Current</button>
+        <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+      </div>
       <button class="ann-toggle" onclick="toggleAnnotations(this)">Hide annotations</button>
     </div>
+    <div class="preview-card__body">
     <div id="previewWrapper">
 
     <!-- Warning -->
@@ -421,6 +390,7 @@
       <div class="alert-message">Error Text</div>
     </div>
 
+    </div>
     </div>
   </div>
 
@@ -695,64 +665,64 @@
   </div>
 </div>
 
-<div style="margin-top:32px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:24px;">
-  <div style="margin-bottom:16px;">
-    <h3 style="font-size:14px;font-weight:700;color:#111;margin-bottom:4px;">Proposed changes — Alert <span style="font-weight:400;color:#888;font-size:12px;">· based on M3 + Radix</span></h3>
-    <p style="font-size:12px;color:#888;">CSS-only. HTML structure unchanged. Uses existing tokens or overridden token defaults.</p>
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Proposed changes — Alert <span style="font-weight:400;color:#888;font-size:12px;">· based on M3 + Radix</span></h3>
+    <p>CSS-only. HTML structure unchanged. Uses existing tokens or overridden token defaults.</p>
   </div>
-  <div style="overflow-x:auto;">
-  <table style="width:100%;border-collapse:collapse;font-size:12px;">
+  <div class="proposal-table-wrap">
+  <table class="proposal-table">
     <thead>
-      <tr style="background:#f8f9fa;">
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Property</th>
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Current</th>
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Proposed</th>
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Token</th>
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;">Rationale</th>
+      <tr>
+        <th>Property</th>
+        <th>Current</th>
+        <th>Proposed</th>
+        <th>Token</th>
+        <th>Rationale</th>
       </tr>
     </thead>
     <tbody>
-      <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">outer border</td>
-        <td style="padding:8px 12px;color:#888;">1px solid</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">removed</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-size-025 → 0</td>
-        <td style="padding:8px 12px;color:#555;"><strong>M3 banners use no outer stroke</strong> — the tonal container background provides sufficient visual containment</td>
-      </tr>
-      <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">border-left-width (accent)</td>
-        <td style="padding:8px 12px;color:#888;">3px</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">4px</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-scale-100</td>
-        <td style="padding:8px 12px;color:#555;"><strong>Radix Callout</strong> standard: 4px left accent rule — aligns with accessible contrast thresholds for non-text indicators</td>
-      </tr>
-      <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">border-radius</td>
-        <td style="padding:8px 12px;color:#888;">8px</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">12px</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-radius-200 → 12px</td>
-        <td style="padding:8px 12px;color:#555;"><strong>M3 Medium shape = 12dp</strong>; also matches <strong>Radix</strong> <code>--radius-5</code> (12px) used on Card and Callout</td>
-      </tr>
-      <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">gap (icon ↔ message)</td>
-        <td style="padding:8px 12px;color:#888;">12px</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">16px</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-scale-400 (was scale-300)</td>
-        <td style="padding:8px 12px;color:#555;"><strong>M3 Banner horizontal spacing = 16dp</strong> — standard gap between the leading icon and body content</td>
-      </tr>
-      <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">box-shadow</td>
-        <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">M3 Level 1</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
-        <td style="padding:8px 12px;color:#555;"><strong>M3 Elevated Banner</strong> variant uses Level 1 elevation to float the alert above page content</td>
+      <tr>
+        <td class="td-property">outer border</td>
+        <td class="td-current">1px solid</td>
+        <td class="td-proposed">removed</td>
+        <td class="td-token">token-border-size-025 → 0</td>
+        <td class="td-rationale"><strong>M3 banners use no outer stroke</strong> — the tonal container background provides sufficient visual containment</td>
       </tr>
       <tr>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">icon container</td>
-        <td style="padding:8px 12px;color:#888;">none (transparent)</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">36×36 circle, 16% tonal</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-radius-full</td>
-        <td style="padding:8px 12px;color:#555;"><strong>M3 tonal icon container</strong>: icon sits in a color-matched pill at ~16% opacity — no extra markup needed</td>
+        <td class="td-property">border-left-width (accent)</td>
+        <td class="td-current">3px</td>
+        <td class="td-proposed">5px</td>
+        <td class="td-token">token-scale-100 + 1</td>
+        <td class="td-rationale"><strong>Radix Callout</strong> standard: 4–5px left accent rule — aligns with accessible contrast thresholds for non-text indicators</td>
+      </tr>
+      <tr>
+        <td class="td-property">border-radius</td>
+        <td class="td-current">8px</td>
+        <td class="td-proposed">14px</td>
+        <td class="td-token">token-border-radius-200 → 14px</td>
+        <td class="td-rationale"><strong>M3 Medium shape = 12dp</strong>; bumped to 14px to match <strong>Radix</strong> <code>--radius-5</code> used on Card and Callout</td>
+      </tr>
+      <tr>
+        <td class="td-property">gap (icon ↔ message)</td>
+        <td class="td-current">12px</td>
+        <td class="td-proposed">16px</td>
+        <td class="td-token">token-scale-400 (was scale-300)</td>
+        <td class="td-rationale"><strong>M3 Banner horizontal spacing = 16dp</strong> — standard gap between the leading icon and body content</td>
+      </tr>
+      <tr>
+        <td class="td-property">box-shadow</td>
+        <td class="td-current">none</td>
+        <td class="td-proposed">M3 Level 1</td>
+        <td class="td-token">—</td>
+        <td class="td-rationale"><strong>M3 Elevated Banner</strong> variant uses Level 1 elevation to float the alert above page content</td>
+      </tr>
+      <tr>
+        <td class="td-property">icon container</td>
+        <td class="td-current">none (transparent)</td>
+        <td class="td-proposed">40×40 circle, 22% tonal</td>
+        <td class="td-token">token-border-radius-full</td>
+        <td class="td-rationale"><strong>M3 tonal icon container</strong>: icon sits in a color-matched pill at ~22% opacity — no extra markup needed</td>
       </tr>
     </tbody>
   </table>

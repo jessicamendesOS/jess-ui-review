@@ -43,36 +43,19 @@
   }
   .page-header h1 { font-size: 22px; font-weight: 700; color: #111; }
   .badge {
-    background: #ede8f3;
-    color: #9f3d8f;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 99px;
-    letter-spacing: .04em;
-    text-transform: uppercase;
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 10px; border-radius: 99px;
+    letter-spacing: .04em; text-transform: uppercase;
   }
+  .badge--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
 
   .annotation-layout {
     display: grid;
     grid-template-columns: 460px 1fr;
     gap: 32px;
     align-items: start;
-  }
-
-  .preview-card {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,.08);
-    padding: 24px;
-  }
-  .preview-card h2 {
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: #888;
-    margin-bottom: 16px;
   }
 
   /* ─── Columns component styles ─── */
@@ -159,7 +142,7 @@
     opacity: .75;
     margin-left: auto;
   }
-  .token-card__body { background: #1a1a2e; padding: 0; }
+  .token-card__body { background: #0f1117; padding: 0; }
 
   .token-row {
     display: grid;
@@ -174,7 +157,7 @@
   .token-row:hover { background: rgba(255,255,255,.04); }
 
   .prop-name   { font-size: 12px; color: #94a3b8; font-family: 'SF Mono','Fira Code',monospace; }
-  .token-name  { font-size: 12px; font-family: 'SF Mono','Fira Code',monospace; color: #e2e8f0; font-weight: 600; }
+  .token-name  { font-size: 12px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
   .token-value { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #64748b; text-align: right; white-space: nowrap; }
 
   .token-section-label {
@@ -196,9 +179,14 @@
   .card-responsive .token-card__header { background: linear-gradient(135deg, #6b21a8, #9f3d8f); }
 
   /* Legend */
-  .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; }
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #555; font-weight: 500; }
-  .legend-line { width: 20px; height: 0; border-top: 2px dashed; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; color: #374151;
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 99px;
+    padding: 4px 10px 4px 6px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
   /* Ratio pill inside token card */
   .ratio-pill {
@@ -218,15 +206,34 @@
     .annotation-layout { grid-template-columns: 1fr; }
   }
 
-  /* ─── Current / Proposed tabs ─── */
-  .preview-tabs { display: flex; gap: 4px; padding: 4px; background: #f0f2f5; border-radius: 8px; margin-bottom: 16px; }
-  .ptab {
-    flex: 1; padding: 6px 12px; font-size: 12px; font-weight: 600;
-    border: none; border-radius: 6px; cursor: pointer;
-    background: transparent; color: #888; font-family: inherit;
+  /* ─── Back nav ─── */
+  .back-nav {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #6b7280;
+    text-decoration: none; margin-bottom: 24px;
+    padding: 5px 10px 5px 6px; border-radius: 8px;
     transition: background .15s, color .15s;
   }
-  .ptab--active { background: #fff; color: #111; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+
+  /* ─── Preview card ─── */
+  .preview-card { background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); }
+  .preview-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+    border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-right: auto; }
+  .preview-card__body { padding: 20px; }
+
+  /* ─── Current / Proposed tabs ─── */
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab {
+    padding: 4px 12px; font-size: 11px; font-weight: 600;
+    border: none; border-radius: 7px; cursor: pointer;
+    background: transparent; color: #6b7280; font-family: inherit;
+    transition: all .15s;
+  }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
   .ann-toggle {
     padding: 5px 10px; font-size: 11px; font-weight: 600;
     border: 1px solid #ddd; border-radius: 5px; cursor: pointer;
@@ -237,15 +244,50 @@
   .ann-toggle--off { color: #ef4444; border-color: #ef4444; background: #fff1f2; }
   #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
 
+  /* ─── Proposal section ─── */
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p { font-size: 12px; color: #6b7280; }
+  .proposal-table-wrap { overflow-x: auto; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table th { text-align: left; padding: 8px 16px; color: #6b7280; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; border-bottom: 1px solid #e5e7eb; background: #f9fafb; white-space: nowrap; }
+  .proposal-table td { padding: 10px 16px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  .proposal-table tbody tr:last-child td { border-bottom: none; }
+  .proposal-table tbody tr:hover td { background: #fafafa; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; white-space: nowrap; }
+  .td-current  { color: #9ca3af; }
+  .td-proposed { font-weight: 600; color: #111827; }
+  .td-token    { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; }
+  .td-rationale{ color: #4b5563; max-width: 280px; }
+  .td-rationale strong { color: #111827; }
+
   /* ─── Proposed mode — Columns (Radix + M3) ─── */
   #previewWrapper.proposed-mode .columns {
-    gap: var(--token-scale-400); /* Radix: 16px is the 4-step in a 4dp grid */
+    gap: var(--token-scale-400);
     margin-bottom: var(--token-scale-400);
   }
   #previewWrapper.proposed-mode .column {
-    border-radius: var(--token-border-radius-200); /* Radix radius-4 / M3 Small shape = 8dp */
-    /* M3 elevation Level 1 */
-    box-shadow: 0 1px 2px rgba(0,0,0,.2), 0 2px 4px rgba(0,0,0,.1);
+    height: 64px; /* taller = more visual presence */
+    border-radius: 10px; /* slightly more rounded */
+    box-shadow: 0 2px 6px rgba(0,0,0,.18), 0 1px 2px rgba(0,0,0,.1);
+    position: relative;
+    overflow: hidden;
+    transition: transform .2s cubic-bezier(.4,0,.2,1), box-shadow .2s;
+  }
+  /* Subtle top-highlight shine */
+  #previewWrapper.proposed-mode .column::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 45%;
+    background: linear-gradient(180deg, rgba(255,255,255,.22), transparent);
+    pointer-events: none;
+  }
+  /* Hover lift */
+  #previewWrapper.proposed-mode .columns-item:hover .column {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,.22), 0 2px 4px rgba(0,0,0,.12);
   }
 
   /* ─── Token Editor ─── */
@@ -300,32 +342,36 @@
 </head>
 <body>
 
-<a href="index.html" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#888;text-decoration:none;margin-bottom:20px;transition:color .15s;" onmouseover="this.style.color='#111'" onmouseout="this.style.color='#888'">
+<a href="index.html" class="back-nav">
   <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
   All components
 </a>
 
 <div class="page-header">
   <h1>Columns</h1>
-  <span class="badge">OutSystems UI 2.29</span>
-  <span class="badge" style="background:#e8f4fd;color:#105cef;">Design Tokens</span>
+  <span class="badge badge--os">OutSystems UI 2.29</span>
+  <span class="badge badge--tokens">Design Tokens</span>
 </div>
 
 <div class="legend">
-  <div class="legend-item"><div class="legend-line" style="border-color:#ef4444;"></div> .columns (container)</div>
-  <div class="legend-item"><div class="legend-line" style="border-color:#f59e0b;"></div> .columns-item (slot)</div>
-  <div class="legend-item"><div class="legend-line" style="border-color:#10b981;"></div> .column (content)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> .columns (container)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> .columns-item (slot)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> .column (content)</div>
 </div>
 
 <div class="annotation-layout">
 
   <!-- LEFT: preview -->
   <div class="preview-card">
-    <div class="preview-tabs">
-      <button class="ptab ptab--active" onclick="setMode('current',this)">Current</button>
-      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    <div class="preview-card__header">
+      <span class="preview-card__label">Preview</span>
+      <div class="preview-tabs">
+        <button class="ptab ptab--active" onclick="setMode('current',this)">Current</button>
+        <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+      </div>
       <button class="ann-toggle" onclick="toggleAnnotations(this)">Hide annotations</button>
     </div>
+    <div class="preview-card__body">
     <div id="previewWrapper">
 
     <div class="variant-row">
@@ -428,6 +474,7 @@
       </div>
     </div>
 
+    </div>
     </div>
   </div>
 
@@ -585,43 +632,57 @@
   </div>
 </div>
 
-<div style="margin-top:32px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:24px;">
-  <div style="margin-bottom:16px;">
-    <h3 style="font-size:14px;font-weight:700;color:#111;margin-bottom:4px;">Proposed changes — Columns <span style="font-weight:400;color:#888;font-size:12px;">· based on M3 + Radix</span></h3>
-    <p style="font-size:12px;color:#888;">CSS-only. HTML structure unchanged. Uses existing tokens or overridden token defaults.</p>
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Proposed changes — Columns <span style="font-weight:400;color:#888;font-size:12px;">· based on M3 + Radix</span></h3>
+    <p>CSS-only. HTML structure unchanged. Uses existing tokens or overridden token defaults.</p>
   </div>
-  <div style="overflow-x:auto;">
-  <table style="width:100%;border-collapse:collapse;font-size:12px;">
+  <div class="proposal-table-wrap">
+  <table class="proposal-table">
     <thead>
-      <tr style="background:#f8f9fa;">
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Property</th>
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Current</th>
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Proposed</th>
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Token</th>
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;">Rationale</th>
+      <tr>
+        <th>Property</th>
+        <th>Current</th>
+        <th>Proposed</th>
+        <th>Token</th>
+        <th>Rationale</th>
       </tr>
     </thead>
     <tbody>
-      <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.columns gap</td>
-        <td style="padding:8px 12px;color:#888;">8px</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">16px</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-scale-400 (was scale-200)</td>
-        <td style="padding:8px 12px;color:#555;"><strong>Radix layout</strong>: 4dp base grid — 16px is the natural 4-step jump. <strong>M3 grid spec</strong> also recommends ≥16dp column gutters</td>
-      </tr>
-      <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.column border-radius</td>
-        <td style="padding:8px 12px;color:#888;">4px</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">8px</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-radius-200 (was -100)</td>
-        <td style="padding:8px 12px;color:#555;"><strong>Radix <code>--radius-4</code> = 8px</strong>; also matches <strong>M3 Small shape = 8dp</strong> — reads as a contained card slot</td>
+      <tr>
+        <td class="td-property">.columns gap</td>
+        <td class="td-current">8px</td>
+        <td class="td-proposed">16px</td>
+        <td class="td-token">token-scale-400 (was scale-200)</td>
+        <td class="td-rationale"><strong>Radix layout</strong>: 4dp base grid — 16px is the natural 4-step jump. <strong>M3 grid spec</strong> also recommends ≥16dp column gutters</td>
       </tr>
       <tr>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.column box-shadow</td>
-        <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">M3 Level 1</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
-        <td style="padding:8px 12px;color:#555;"><strong>M3 Elevated Card Level 1</strong> — two-layer shadow makes each column slot read as a distinct contained surface</td>
+        <td class="td-property">.column border-radius</td>
+        <td class="td-current">4px</td>
+        <td class="td-proposed">10px</td>
+        <td class="td-token">token-border-radius-200 → 10px</td>
+        <td class="td-rationale"><strong>Radix <code>--radius-4</code> = 8px</strong>; bumped to 10px to match <strong>M3 Small+ shape</strong> — reads as a contained card slot</td>
+      </tr>
+      <tr>
+        <td class="td-property">.column height</td>
+        <td class="td-current">40px</td>
+        <td class="td-proposed">64px</td>
+        <td class="td-token">—</td>
+        <td class="td-rationale"><strong>Visual presence</strong> — taller slots are more legible, allow the shine gradient to read, and give hover lift room to be perceived</td>
+      </tr>
+      <tr>
+        <td class="td-property">.column box-shadow</td>
+        <td class="td-current">none</td>
+        <td class="td-proposed">M3 Level 1</td>
+        <td class="td-token">—</td>
+        <td class="td-rationale"><strong>M3 Elevated Card Level 1</strong> — two-layer shadow makes each column slot read as a distinct contained surface</td>
+      </tr>
+      <tr>
+        <td class="td-property">.column::after shine</td>
+        <td class="td-current">none</td>
+        <td class="td-proposed">top 45% gradient</td>
+        <td class="td-token">—</td>
+        <td class="td-rationale">22% white-to-transparent gradient gives each slot an inner-highlight — adds perceived depth without extra markup</td>
       </tr>
     </tbody>
   </table>

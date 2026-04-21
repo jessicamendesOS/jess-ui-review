@@ -40,57 +40,116 @@
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #f0f2f5;
+    background: #f4f5f7;
     min-height: 100vh;
-    padding: 48px 32px;
+    color: #111827;
+    line-height: 1.5;
+    padding: 36px 40px 100px;
   }
+
+  /* ─── Back nav ─── */
+  .back-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-decoration: none;
+    margin-bottom: 24px;
+    padding: 5px 10px 5px 6px;
+    border-radius: 8px;
+    transition: background .15s, color .15s;
+  }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
 
   /* ─── Page header ─── */
   .page-header {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
   }
   .page-header h1 {
-    font-size: 22px;
-    font-weight: 700;
-    color: #111;
+    font-size: 28px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -.025em;
   }
   .badge {
-    background: #ede8f3;
-    color: #9f3d8f;
+    display: inline-flex;
+    align-items: center;
     font-size: 11px;
-    font-weight: 600;
-    padding: 3px 10px;
+    font-weight: 700;
+    padding: 4px 10px;
     border-radius: 99px;
-    letter-spacing: .04em;
+    letter-spacing: .02em;
     text-transform: uppercase;
   }
+  .badge--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
 
-  /* ─── Layout: component on left, token panel on right ─── */
+  /* ─── Legend ─── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #374151;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 99px;
+    padding: 4px 10px 4px 6px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ─── Layout ─── */
   .annotation-layout {
     display: grid;
-    grid-template-columns: 420px 1fr;
-    gap: 32px;
+    grid-template-columns: 460px 1fr;
+    gap: 20px;
     align-items: start;
   }
 
-  /* ─── Accordion preview ─── */
+  /* ─── Preview card ─── */
   .preview-card {
     background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,.08);
-    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07);
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
   }
-  .preview-card h2 {
-    font-size: 12px;
-    font-weight: 600;
+  .preview-card__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fafafa;
+  }
+  .preview-card__label {
+    font-size: 10px;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .08em;
-    color: #888;
-    margin-bottom: 16px;
+    color: #9ca3af;
+    margin-right: auto;
   }
+  .preview-card__body { padding: 20px; }
 
   /* ─── Actual accordion styles (from OutSystems UI) ─── */
   .osui-accordion {
@@ -197,190 +256,214 @@
   .annotate-item  { outline: 2px dashed #ef4444; outline-offset: 2px; position: relative; border-radius: 4px; }
 
   /* ─── Token panel ─── */
-  .token-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
+  .token-panel { display: flex; flex-direction: column; gap: 12px; }
 
   .token-card {
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06);
   }
   .token-card__header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    font-size: 13px;
+    gap: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
     font-weight: 700;
     color: #fff;
   }
   .token-card__header .dot {
-    width: 10px; height: 10px;
+    width: 8px; height: 8px;
     border-radius: 50%;
-    background: rgba(255,255,255,.5);
+    background: rgba(255,255,255,.4);
     flex-shrink: 0;
   }
   .token-card__header .component-name {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .05em;
-    text-transform: uppercase;
-    opacity: .75;
+    font-size: 10px;
+    font-weight: 500;
+    font-family: 'SF Mono','Fira Code',monospace;
+    opacity: .6;
     margin-left: auto;
+    letter-spacing: 0;
+    text-transform: none;
   }
-  .token-card__body {
-    background: #1a1a2e;
-    padding: 0;
-  }
+  .token-card__body { background: #0f1117; }
   .token-row {
     display: grid;
-    grid-template-columns: 160px 1fr auto;
+    grid-template-columns: 155px 1fr auto;
     align-items: center;
     gap: 8px;
-    padding: 10px 16px;
-    border-bottom: 1px solid rgba(255,255,255,.05);
-    transition: background .15s;
+    padding: 9px 14px;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    transition: background .12s;
   }
   .token-row:last-child { border-bottom: none; }
-  .token-row:hover { background: rgba(255,255,255,.04); }
-
+  .token-row:hover { background: rgba(255,255,255,.03); }
   .prop-name {
-    font-size: 12px;
-    color: #94a3b8;
-    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px;
+    color: #64748b;
+    font-family: 'SF Mono','Fira Code',monospace;
+    white-space: nowrap;
   }
   .token-name {
-    font-size: 12px;
-    font-family: 'SF Mono', 'Fira Code', monospace;
-    color: #e2e8f0;
+    font-size: 11px;
+    font-family: 'SF Mono','Fira Code',monospace;
+    color: #a78bfa;
     font-weight: 600;
   }
   .token-value {
-    font-size: 11px;
-    font-family: 'SF Mono', 'Fira Code', monospace;
-    color: #64748b;
+    font-size: 10px;
+    font-family: 'SF Mono','Fira Code',monospace;
+    color: #374151;
     text-align: right;
     white-space: nowrap;
   }
-
-  /* Color swatches */
   .swatch {
     display: inline-block;
-    width: 12px; height: 12px;
+    width: 11px; height: 11px;
     border-radius: 3px;
-    border: 1px solid rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.12);
     vertical-align: middle;
-    margin-right: 6px;
+    margin-right: 5px;
     flex-shrink: 0;
   }
-  .token-name-with-swatch {
+  .token-name-with-swatch { display: flex; align-items: center; }
+
+  .card-item    .token-card__header { background: linear-gradient(120deg, #991b1b, #ef4444); }
+  .card-title   .token-card__header { background: linear-gradient(120deg, #92400e, #d97706); }
+  .card-icon    .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+  .card-content .token-card__header { background: linear-gradient(120deg, #1e1b4b, #6366f1); }
+  .card-states  .token-card__header { background: linear-gradient(120deg, #581c87, #9333ea); }
+
+  /* ─── Segmented control ─── */
+  .preview-tabs {
     display: flex;
     align-items: center;
+    gap: 2px;
+    padding: 3px;
+    background: #f3f4f6;
+    border-radius: 9px;
+    border: 1px solid #e5e7eb;
   }
-
-  /* Section colors */
-  .card-item    .token-card__header { background: linear-gradient(135deg, #c0392b, #e74c3c); }
-  .card-title   .token-card__header { background: linear-gradient(135deg, #b7860a, #f59e0b); }
-  .card-icon    .token-card__header { background: linear-gradient(135deg, #047857, #10b981); }
-  .card-content .token-card__header { background: linear-gradient(135deg, #3730a3, #6366f1); }
-  .card-states  .token-card__header { background: linear-gradient(135deg, #6b21a8, #9f3d8f); }
-
-  /* Legend */
-  .legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 16px;
-  }
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  .ptab {
+    padding: 4px 12px;
     font-size: 11px;
-    color: #555;
-    font-weight: 500;
-  }
-  .legend-line {
-    width: 20px; height: 0;
-    border-top: 2px dashed;
-  }
-
-  .label-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 8px;
-    font-size: 11px;
-    color: #888;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-  }
-
-  /* Token name pill */
-  .pill {
-    display: inline-block;
-    background: #1a1a2e;
-    color: #e2e8f0;
-    font-size: 11px;
-    font-family: 'SF Mono', 'Fira Code', monospace;
-    padding: 2px 8px;
-    border-radius: 99px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    background: transparent;
+    color: #6b7280;
+    font-family: inherit;
+    transition: all .15s;
     white-space: nowrap;
   }
-
-  @media (max-width: 900px) {
-    .annotation-layout { grid-template-columns: 1fr; }
-  }
-
-  /* ─── Current / Proposed tabs ─── */
-  .preview-tabs { display: flex; gap: 4px; padding: 4px; background: #f0f2f5; border-radius: 8px; margin-bottom: 16px; }
-  .ptab {
-    flex: 1; padding: 6px 12px; font-size: 12px; font-weight: 600;
-    border: none; border-radius: 6px; cursor: pointer;
-    background: transparent; color: #888; font-family: inherit;
-    transition: background .15s, color .15s;
-  }
-  .ptab--active { background: #fff; color: #111; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
   .ann-toggle {
-    padding: 5px 10px; font-size: 11px; font-weight: 600;
-    border: 1px solid #ddd; border-radius: 5px; cursor: pointer;
-    background: transparent; color: #888; font-family: inherit;
-    transition: all .15s; margin-left: auto; white-space: nowrap;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    border: 1px solid #e5e7eb;
+    border-radius: 7px;
+    cursor: pointer;
+    background: #fff;
+    color: #6b7280;
+    font-family: inherit;
+    transition: all .15s;
+    margin-left: 4px;
+    white-space: nowrap;
   }
-  .ann-toggle:hover { color: #111; border-color: #999; }
-  .ann-toggle--off { color: #ef4444; border-color: #ef4444; background: #fff1f2; }
+  .ann-toggle:hover { color: #111827; border-color: #9ca3af; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
   #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+
+  /* ─── Proposal section ─── */
+  .proposal-section {
+    margin-top: 20px;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07);
+    overflow: hidden;
+  }
+  .proposal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fafafa;
+  }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p  { font-size: 12px; color: #6b7280; }
+  .proposal-table-wrap { overflow-x: auto; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th {
+    padding: 9px 16px;
+    background: #f9fafb;
+    text-align: left;
+    font-weight: 600;
+    color: #6b7280;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+  }
+  .proposal-table tbody td {
+    padding: 10px 16px;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .proposal-table tbody tr:last-child td { border-bottom: none; }
+  .proposal-table tbody tr:hover td { background: #fafafa; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; white-space: nowrap; }
+  .td-current  { color: #9ca3af; }
+  .td-proposed { font-weight: 600; color: #111827; }
+  .td-token    { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; }
+  .td-rationale{ color: #4b5563; max-width: 280px; }
+  .td-rationale strong { color: #111827; }
+
+  @media (max-width: 960px) {
+    .annotation-layout { grid-template-columns: 1fr; }
+    body { padding: 24px 20px 80px; }
+  }
 
   /* ─── Proposed mode — Accordion (M3 + Radix) ─── */
   #previewWrapper.proposed-mode .osui-accordion {
-    /* M3 elevation Level 1: two-layer shadow formula */
-    box-shadow: 0 1px 2px rgba(0,0,0,.2), 0 2px 6px rgba(0,0,0,.12);
-    border-radius: 12px; /* M3 Medium shape = 12dp */
+    box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.1);
+    border-radius: 12px;
     overflow: hidden;
+    border: 1px solid rgba(16,92,239,.14);
   }
   #previewWrapper.proposed-mode .osui-accordion-item {
     --osui-accordion-item-border-radius: var(--token-border-radius-0);
-    --osui-accordion-item-border-color: rgba(0,0,0,.12); /* M3 outline on surface */
+    --osui-accordion-item-border-color: rgba(0,0,0,.07);
   }
   #previewWrapper.proposed-mode .osui-accordion-item__title {
-    padding: var(--token-scale-400) var(--token-scale-600); /* M3 list: 16dp v, 24dp h */
-    transition: background .2s;
+    padding: var(--token-scale-400) var(--token-scale-600);
+    transition: background .2s, color .15s;
   }
   #previewWrapper.proposed-mode .osui-accordion-item__title:hover {
-    background: rgba(16,92,239,.08); /* M3 hover state layer = 8% */
+    background: rgba(16,92,239,.05);
   }
+  /* Open item: clear primary treatment */
   #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__title {
-    background: rgba(16,92,239,.12); /* M3 active/focus state layer = 12% */
+    background: rgba(16,92,239,.08);
+    color: var(--token-semantics-primary-base);
+    font-weight: var(--token-font-weight-semi-bold);
   }
+  /* Content: left accent stripe + subtle wash */
+  #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__content {
+    border-left: 3px solid rgba(16,92,239,.3);
+    padding-left: calc(var(--token-scale-600) - 3px);
+    background: rgba(16,92,239,.02);
+  }
+  /* Icon: solid filled primary circle with white arrow */
   #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__icon {
-    background: rgba(16,92,239,.12); /* M3 tonal icon container */
+    background: var(--token-semantics-primary-base);
+    color: #fff;
     border-radius: var(--token-border-radius-full);
-    padding: 8px;
-    width: 32px; height: 32px; /* M3 icon button target area */
+    padding: 6px;
+    width: 28px; height: 28px;
   }
 
   /* ─── Token Editor ─── */
@@ -436,34 +519,38 @@
 </head>
 <body>
 
-<a href="index.html" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#888;text-decoration:none;margin-bottom:20px;transition:color .15s;" onmouseover="this.style.color='#111'" onmouseout="this.style.color='#888'">
+<a href="index.html" class="back-nav">
   <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
   All components
 </a>
 
 <div class="page-header">
   <h1>Accordion</h1>
-  <span class="badge">OutSystems UI 2.29</span>
-  <span class="badge" style="background:#e8f4fd;color:#105cef;">Design Tokens</span>
+  <span class="badge badge--os">OutSystems UI 2.29</span>
+  <span class="badge badge--tokens">Design Tokens</span>
 </div>
 
 <div class="legend">
-  <div class="legend-item"><div class="legend-line" style="border-color:#ef4444;"></div> Accordion Item</div>
-  <div class="legend-item"><div class="legend-line" style="border-color:#f59e0b;"></div> Title</div>
-  <div class="legend-item"><div class="legend-line" style="border-color:#10b981;"></div> Icon</div>
-  <div class="legend-item"><div class="legend-line" style="border-color:#6366f1;"></div> Content</div>
-  <div class="legend-item"><div class="legend-line" style="border-color:#9f3d8f;"></div> States</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> Accordion Item</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> Title</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Icon</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#6366f1;"></span> Content</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#9333ea;"></span> States</div>
 </div>
 
 <div class="annotation-layout">
 
   <!-- LEFT: Accordion preview -->
   <div class="preview-card">
-    <div class="preview-tabs">
-      <button class="ptab ptab--active" onclick="setMode('current',this)">Current</button>
-      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    <div class="preview-card__header">
+      <span class="preview-card__label">Preview</span>
+      <div class="preview-tabs">
+        <button class="ptab ptab--active" onclick="setMode('current',this)">Current</button>
+        <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+      </div>
       <button class="ann-toggle" onclick="toggleAnnotations(this)">Hide annotations</button>
     </div>
+    <div class="preview-card__body">
     <div id="previewWrapper">
     <div class="osui-accordion">
 
@@ -515,6 +602,7 @@
     </div>
 
     <p style="margin-top:16px;font-size:11px;color:#aaa;">Click items to toggle open/closed</p>
+    </div>
     </div>
   </div>
 
@@ -700,74 +788,70 @@
   </div>
 </div>
 
-<div style="margin-top:32px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:24px;">
-  <div style="margin-bottom:16px;">
-    <h3 style="font-size:14px;font-weight:700;color:#111;margin-bottom:4px;">Proposed changes — Accordion <span style="font-weight:400;color:#888;font-size:12px;">· based on M3 + Radix</span></h3>
-    <p style="font-size:12px;color:#888;">CSS-only. HTML structure unchanged. Uses existing tokens or overridden token defaults.</p>
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Proposed changes — Accordion <span style="font-weight:400;color:#9ca3af;font-size:12px;">· based on M3 + Radix</span></h3>
+    <p>CSS-only. HTML structure unchanged. Uses existing tokens or overridden token defaults.</p>
   </div>
-  <div style="overflow-x:auto;">
-  <table style="width:100%;border-collapse:collapse;font-size:12px;">
-    <thead>
-      <tr style="background:#f8f9fa;">
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Property</th>
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Current</th>
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Proposed</th>
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Token</th>
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;">Rationale</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.osui-accordion box-shadow</td>
-        <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">0 1px 2px + 0 2px 6px</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
-        <td style="padding:8px 12px;color:#555;"><strong>M3 elevation Level 1</strong> — two-layer shadow formula; the outer umbra reads as real-world depth on light surfaces</td>
-      </tr>
-      <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.osui-accordion border-radius</td>
-        <td style="padding:8px 12px;color:#888;">per-item · 4px</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">container · 12px</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
-        <td style="padding:8px 12px;color:#555;"><strong>M3 Medium shape = 12dp</strong>; unified container hides internal seams — items override to border-radius-0</td>
-      </tr>
-      <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">divider color</td>
-        <td style="padding:8px 12px;color:#888;">#d5d5d5</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">rgba(0,0,0,.12)</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-default (override)</td>
-        <td style="padding:8px 12px;color:#555;"><strong>M3 outline on surface = 12% black</strong>; adapts automatically to any surface color without a fixed hex</td>
-      </tr>
-      <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">title padding</td>
-        <td style="padding:8px 12px;color:#888;">24px all sides</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">16px 24px</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">scale-400 / scale-600</td>
-        <td style="padding:8px 12px;color:#555;"><strong>M3 List item standard: 16dp vertical, 24dp horizontal</strong> — matches Navigation List and Expansion Tile spec</td>
-      </tr>
-      <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">hover state layer</td>
-        <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">primary @ 8%</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-semantics-primary-base</td>
-        <td style="padding:8px 12px;color:#555;"><strong>M3 hover state layer = 8%</strong> of the state content color applied over the surface</td>
-      </tr>
-      <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">open state layer</td>
-        <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">primary @ 12%</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-semantics-primary-base</td>
-        <td style="padding:8px 12px;color:#555;"><strong>M3 active/focus state layer = 12%</strong> — stronger than hover to clearly communicate the open state hierarchy</td>
-      </tr>
-      <tr>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">open icon container</td>
-        <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">32×32 circular, primary @ 12%</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">border-radius-full</td>
-        <td style="padding:8px 12px;color:#555;"><strong>M3 icon button</strong>: 40dp touch target (32dp visual), tonal container at 12% opacity — same pattern as M3 icon buttons</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="proposal-table-wrap">
+    <table class="proposal-table">
+      <thead>
+        <tr>
+          <th>Property</th><th>Current</th><th>Proposed</th><th>Token</th><th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-property">.osui-accordion box-shadow</td>
+          <td class="td-current">none</td>
+          <td class="td-proposed">0 1px 2px + 0 2px 6px</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale"><strong>M3 elevation Level 1</strong> — two-layer shadow formula; outer umbra reads as real-world depth on light surfaces</td>
+        </tr>
+        <tr>
+          <td class="td-property">.osui-accordion border-radius</td>
+          <td class="td-current">per-item · 4px</td>
+          <td class="td-proposed">container · 12px</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale"><strong>M3 Medium shape = 12dp</strong>; unified container hides internal seams — items override to border-radius-0</td>
+        </tr>
+        <tr>
+          <td class="td-property">divider color</td>
+          <td class="td-current">#d5d5d5</td>
+          <td class="td-proposed">rgba(0,0,0,.12)</td>
+          <td class="td-token">token-border-default (override)</td>
+          <td class="td-rationale"><strong>M3 outline on surface = 12% black</strong>; adapts automatically to any surface without a fixed hex</td>
+        </tr>
+        <tr>
+          <td class="td-property">title padding</td>
+          <td class="td-current">24px all sides</td>
+          <td class="td-proposed">16px 24px</td>
+          <td class="td-token">scale-400 / scale-600</td>
+          <td class="td-rationale"><strong>M3 List item: 16dp vertical, 24dp horizontal</strong> — matches Navigation List and Expansion Tile spec</td>
+        </tr>
+        <tr>
+          <td class="td-property">hover state layer</td>
+          <td class="td-current">none</td>
+          <td class="td-proposed">primary @ 8%</td>
+          <td class="td-token">token-semantics-primary-base</td>
+          <td class="td-rationale"><strong>M3 hover state layer = 8%</strong> of the state content color applied over the surface</td>
+        </tr>
+        <tr>
+          <td class="td-property">open state layer</td>
+          <td class="td-current">none</td>
+          <td class="td-proposed">primary @ 12%</td>
+          <td class="td-token">token-semantics-primary-base</td>
+          <td class="td-rationale"><strong>M3 active/focus state layer = 12%</strong> — stronger than hover to communicate the open state hierarchy</td>
+        </tr>
+        <tr>
+          <td class="td-property">open icon container</td>
+          <td class="td-current">none</td>
+          <td class="td-proposed">32×32 circular, primary @ 12%</td>
+          <td class="td-token">border-radius-full</td>
+          <td class="td-rationale"><strong>M3 icon button</strong>: 32dp visual target, tonal container at 12% opacity — same pattern as M3 icon buttons</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 

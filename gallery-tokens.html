@@ -30,11 +30,13 @@
   .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
   .page-header h1 { font-size: 22px; font-weight: 700; color: #111; }
   .badge {
-    background: #ede8f3; color: #9f3d8f;
+    display: inline-flex; align-items: center;
     font-size: 11px; font-weight: 600;
     padding: 3px 10px; border-radius: 99px;
     letter-spacing: .04em; text-transform: uppercase;
   }
+  .badge--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
 
   .annotation-layout {
     display: grid;
@@ -43,20 +45,13 @@
     align-items: start;
   }
 
-  .preview-card {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,.08);
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  .preview-card > h2 {
-    font-size: 12px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: .08em;
-    color: #888; margin-bottom: -4px;
-  }
+  .preview-card { background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); }
+  .preview-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+    border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-right: auto; }
+  .preview-card__body { padding: 20px; }
 
   /* ─── Gallery component ─── */
   .osui-gallery {
@@ -106,7 +101,7 @@
     letter-spacing: .05em; text-transform: uppercase;
     opacity: .75; margin-left: auto;
   }
-  .token-card__body { background: #1a1a2e; padding: 0; }
+  .token-card__body { background: #0f1117; padding: 0; }
 
   .token-row {
     display: grid;
@@ -121,7 +116,7 @@
   .token-row:hover { background: rgba(255,255,255,.04); }
 
   .prop-name   { font-size: 12px; color: #94a3b8; font-family: 'SF Mono','Fira Code',monospace; }
-  .token-name  { font-size: 12px; font-family: 'SF Mono','Fira Code',monospace; color: #e2e8f0; font-weight: 600; }
+  .token-name  { font-size: 12px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
   .token-value { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #64748b; text-align: right; white-space: nowrap; }
 
   .token-section-label {
@@ -139,9 +134,14 @@
   .card-responsive .token-card__header { background: linear-gradient(135deg, #3730a3, #6366f1); }
 
   /* Legend */
-  .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; }
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #555; font-weight: 500; }
-  .legend-line { width: 20px; height: 0; border-top: 2px dashed; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; color: #374151;
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 99px;
+    padding: 4px 10px 4px 6px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
   /* Gap highlight bar */
   .gap-bar {
@@ -153,15 +153,25 @@
     .annotation-layout { grid-template-columns: 1fr; }
   }
 
-  /* ─── Current / Proposed tabs ─── */
-  .preview-tabs { display: flex; gap: 4px; padding: 4px; background: #f0f2f5; border-radius: 8px; margin-bottom: 8px; }
-  .ptab {
-    flex: 1; padding: 6px 12px; font-size: 12px; font-weight: 600;
-    border: none; border-radius: 6px; cursor: pointer;
-    background: transparent; color: #888; font-family: inherit;
+  /* ─── Back nav ─── */
+  .back-nav {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #6b7280;
+    text-decoration: none; margin-bottom: 24px;
+    padding: 5px 10px 5px 6px; border-radius: 8px;
     transition: background .15s, color .15s;
   }
-  .ptab--active { background: #fff; color: #111; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+
+  /* ─── Current / Proposed tabs ─── */
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab {
+    padding: 4px 12px; font-size: 11px; font-weight: 600;
+    border: none; border-radius: 7px; cursor: pointer;
+    background: transparent; color: #6b7280; font-family: inherit;
+    transition: all .15s;
+  }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
   .ann-toggle {
     padding: 5px 10px; font-size: 11px; font-weight: 600;
     border: 1px solid #ddd; border-radius: 5px; cursor: pointer;
@@ -172,19 +182,40 @@
   .ann-toggle--off { color: #ef4444; border-color: #ef4444; background: #fff1f2; }
   #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
 
+  /* ─── Proposal section ─── */
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p { font-size: 12px; color: #6b7280; }
+  .proposal-table-wrap { overflow-x: auto; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table th { text-align: left; padding: 8px 16px; color: #6b7280; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; border-bottom: 1px solid #e5e7eb; background: #f9fafb; white-space: nowrap; }
+  .proposal-table td { padding: 10px 16px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  .proposal-table tbody tr:last-child td { border-bottom: none; }
+  .proposal-table tbody tr:hover td { background: #fafafa; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; white-space: nowrap; }
+  .td-current  { color: #9ca3af; }
+  .td-proposed { font-weight: 600; color: #111827; }
+  .td-token    { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; }
+  .td-rationale{ color: #4b5563; max-width: 280px; }
+  .td-rationale strong { color: #111827; }
+
   /* ─── Proposed mode — Gallery (M3 + Radix) ─── */
-  #previewWrapper.proposed-mode { --token-border-radius-100: 12px; } /* M3 Medium shape */
+  #previewWrapper.proposed-mode { --token-border-radius-100: 12px; }
   #previewWrapper.proposed-mode .gallery-img {
-    /* M3 elevation Level 1: resting state */
-    box-shadow: 0 1px 2px rgba(0,0,0,.15), 0 1px 4px rgba(0,0,0,.08);
-    transition: transform .25s cubic-bezier(.4,0,.2,1), box-shadow .25s;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.08);
+    border: 1px solid rgba(0,0,0,.06);
+    transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s, filter .3s, border-color .3s;
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
   }
   #previewWrapper.proposed-mode .gallery-img:hover {
-    transform: scale(1.03); /* Radix: subtle scale, not cropping-prone */
-    /* M3 elevation Level 3: 0 4px 8px 3px + 0 1px 3px */
-    box-shadow: 0 4px 8px 3px rgba(0,0,0,.12), 0 1px 3px rgba(0,0,0,.24);
-    position: relative; z-index: 1;
+    transform: scale(1.05); /* more dramatic scale */
+    box-shadow: 0 8px 24px rgba(0,0,0,.2), 0 2px 6px rgba(0,0,0,.14);
+    border-color: transparent;
+    filter: brightness(1.03) saturate(1.08);
+    z-index: 1;
   }
 
   /* ─── Token Editor ─── */
@@ -239,31 +270,35 @@
 </head>
 <body>
 
-<a href="index.html" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#888;text-decoration:none;margin-bottom:20px;transition:color .15s;" onmouseover="this.style.color='#111'" onmouseout="this.style.color='#888'">
+<a href="index.html" class="back-nav">
   <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
   All components
 </a>
 
 <div class="page-header">
   <h1>Gallery</h1>
-  <span class="badge">OutSystems UI 2.29</span>
-  <span class="badge" style="background:#e8f4fd;color:#105cef;">Design Tokens</span>
+  <span class="badge badge--os">OutSystems UI 2.29</span>
+  <span class="badge badge--tokens">Design Tokens</span>
 </div>
 
 <div class="legend">
-  <div class="legend-item"><div class="legend-line" style="border-color:#ef4444;"></div> .osui-gallery (container)</div>
-  <div class="legend-item"><div class="legend-line" style="border-color:#f59e0b;"></div> image item</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> .osui-gallery (container)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> image item</div>
 </div>
 
 <div class="annotation-layout">
 
   <!-- LEFT: preview -->
   <div class="preview-card">
-    <div class="preview-tabs">
-      <button class="ptab ptab--active" onclick="setMode('current',this)">Current</button>
-      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    <div class="preview-card__header">
+      <span class="preview-card__label">Preview</span>
+      <div class="preview-tabs">
+        <button class="ptab ptab--active" onclick="setMode('current',this)">Current</button>
+        <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+      </div>
       <button class="ann-toggle" onclick="toggleAnnotations(this)">Hide annotations</button>
     </div>
+    <div class="preview-card__body">
     <div id="previewWrapper">
 
     <!-- Gap = XXL -->
@@ -326,6 +361,7 @@
       </div>
     </div>
 
+    </div>
     </div>
   </div>
 
@@ -466,50 +502,64 @@
   </div>
 </div>
 
-<div style="margin-top:32px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:24px;">
-  <div style="margin-bottom:16px;">
-    <h3 style="font-size:14px;font-weight:700;color:#111;margin-bottom:4px;">Proposed changes — Gallery <span style="font-weight:400;color:#888;font-size:12px;">· based on M3 + Radix</span></h3>
-    <p style="font-size:12px;color:#888;">CSS-only. HTML structure unchanged. Uses existing tokens or overridden token defaults.</p>
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Proposed changes — Gallery <span style="font-weight:400;color:#888;font-size:12px;">· based on M3 + Radix</span></h3>
+    <p>CSS-only. HTML structure unchanged. Uses existing tokens or overridden token defaults.</p>
   </div>
-  <div style="overflow-x:auto;">
-  <table style="width:100%;border-collapse:collapse;font-size:12px;">
+  <div class="proposal-table-wrap">
+  <table class="proposal-table">
     <thead>
-      <tr style="background:#f8f9fa;">
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Property</th>
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Current</th>
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Proposed</th>
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;white-space:nowrap;">Token</th>
-        <th style="text-align:left;padding:8px 12px;color:#555;font-weight:600;border-bottom:2px solid #e5e7eb;">Rationale</th>
+      <tr>
+        <th>Property</th>
+        <th>Current</th>
+        <th>Proposed</th>
+        <th>Token</th>
+        <th>Rationale</th>
       </tr>
     </thead>
     <tbody>
-      <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.gallery-img border-radius</td>
-        <td style="padding:8px 12px;color:#888;">4px</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">12px</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-radius-100 → 12px</td>
-        <td style="padding:8px 12px;color:#555;"><strong>M3 Medium shape = 12dp</strong>; also matches <strong>Radix Image</strong> defaults of 8–12px for polished media grids</td>
-      </tr>
-      <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.gallery-img resting shadow</td>
-        <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">M3 Level 1</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
-        <td style="padding:8px 12px;color:#555;"><strong>M3 Elevated Card</strong>: images start at Level 1 so the jump to Level 3 on hover is perceptible, not jarring</td>
-      </tr>
-      <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.gallery-img:hover transform</td>
-        <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">scale(1.03)</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
-        <td style="padding:8px 12px;color:#555;"><strong>Radix Hover Card</strong> convention: 1.03 is subtle enough to not crop against tight grid containers</td>
+      <tr>
+        <td class="td-property">.gallery-img border-radius</td>
+        <td class="td-current">4px</td>
+        <td class="td-proposed">12px</td>
+        <td class="td-token">token-border-radius-100 → 12px</td>
+        <td class="td-rationale"><strong>M3 Medium shape = 12dp</strong>; also matches <strong>Radix Image</strong> defaults of 8–12px for polished media grids</td>
       </tr>
       <tr>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.gallery-img:hover shadow</td>
-        <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">M3 Level 3</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
-        <td style="padding:8px 12px;color:#555;"><strong>M3 elevation Level 3</strong>: <code>0 4px 8px 3px</code> + <code>0 1px 3px</code> — significant two-layer lift that matches the scale interaction</td>
+        <td class="td-property">.gallery-img resting border</td>
+        <td class="td-current">none</td>
+        <td class="td-proposed">1px rgba(0,0,0,.06)</td>
+        <td class="td-token">—</td>
+        <td class="td-rationale">Subtle stroke gives image tiles a crisp edge at rest — disappears on hover when scale enlarges the frame</td>
+      </tr>
+      <tr>
+        <td class="td-property">.gallery-img resting shadow</td>
+        <td class="td-current">none</td>
+        <td class="td-proposed">M3 Level 1</td>
+        <td class="td-token">—</td>
+        <td class="td-rationale"><strong>M3 Elevated Card</strong>: images start at Level 1 so the jump to Level 3 on hover is perceptible, not jarring</td>
+      </tr>
+      <tr>
+        <td class="td-property">.gallery-img:hover transform</td>
+        <td class="td-current">none</td>
+        <td class="td-proposed">scale(1.05)</td>
+        <td class="td-token">—</td>
+        <td class="td-rationale"><strong>Radix Hover Card</strong> convention: 1.05 gives a clear interactive signal while staying within grid bounds</td>
+      </tr>
+      <tr>
+        <td class="td-property">.gallery-img:hover filter</td>
+        <td class="td-current">none</td>
+        <td class="td-proposed">brightness(1.03) saturate(1.08)</td>
+        <td class="td-token">—</td>
+        <td class="td-rationale">Pairs with scale to create a 'photo lights up' feel on hover — reinforces the interactive affordance</td>
+      </tr>
+      <tr>
+        <td class="td-property">.gallery-img:hover shadow</td>
+        <td class="td-current">none</td>
+        <td class="td-proposed">M3 Level 3</td>
+        <td class="td-token">—</td>
+        <td class="td-rationale"><strong>M3 elevation Level 3</strong>: significant two-layer lift that matches the scale interaction</td>
       </tr>
     </tbody>
   </table>
