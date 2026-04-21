@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery — Design Token Annotations</title>
+<style>
+  :root {
+    --token-scale-200:  8px;
+    --token-scale-300:  12px;
+    --token-scale-400:  16px;
+    --token-scale-600:  24px;
+    --token-scale-800:  32px;
+    --token-scale-1000: 40px;
+    --token-scale-1200: 48px;
+    --token-border-radius-100: 4px;
+    --token-border-radius-200: 8px;
+    --color-primary: #9f3d8f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    padding: 48px 32px;
+  }
+
+  .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
+  .page-header h1 { font-size: 22px; font-weight: 700; color: #111; }
+  .badge {
+    background: #ede8f3; color: #9f3d8f;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 10px; border-radius: 99px;
+    letter-spacing: .04em; text-transform: uppercase;
+  }
+
+  .annotation-layout {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .preview-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .preview-card > h2 {
+    font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .08em;
+    color: #888; margin-bottom: -4px;
+  }
+
+  /* ─── Gallery component ─── */
+  .osui-gallery {
+    display: grid;
+    grid-template-columns: repeat(var(--gallery-desktop-items, 3), 1fr);
+    gap: var(--gallery-gap, var(--token-scale-400));
+  }
+
+  /* Placeholder image blocks */
+  .gallery-img {
+    aspect-ratio: 4/3;
+    border-radius: var(--token-border-radius-100);
+    background-size: cover;
+    background-position: center;
+  }
+  .img-a { background: linear-gradient(135deg, #f9d423, #74b9ff, #fd79a8); }
+  .img-b { background: linear-gradient(135deg, #636e72, #2d3436, #74b9ff); }
+  .img-c { background: linear-gradient(135deg, #dfe6e9, #b2bec3, #e17055); }
+  .img-d { background: linear-gradient(135deg, #00b894, #00cec9, #a29bfe); }
+
+  /* Annotation outlines */
+  .annotate-container { outline: 2px dashed #ef4444; outline-offset: 3px; border-radius: 6px; }
+  .annotate-item      { outline: 2px dashed #f59e0b; outline-offset: 2px; border-radius: 5px; }
+
+  /* Gap variant sections */
+  .variant-section { display: flex; flex-direction: column; gap: 6px; }
+  .variant-label {
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .07em;
+    color: #aaa; font-family: 'SF Mono','Fira Code',monospace;
+  }
+
+  /* ─── Token panel ─── */
+  .token-panel { display: flex; flex-direction: column; gap: 20px; }
+
+  .token-card { border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+  .token-card__header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; font-size: 13px; font-weight: 700; color: #fff;
+  }
+  .token-card__header .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(255,255,255,.5); flex-shrink: 0;
+  }
+  .token-card__header .component-name {
+    font-size: 12px; font-weight: 600;
+    letter-spacing: .05em; text-transform: uppercase;
+    opacity: .75; margin-left: auto;
+  }
+  .token-card__body { background: #1a1a2e; padding: 0; }
+
+  .token-row {
+    display: grid;
+    grid-template-columns: 160px 1fr auto;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    transition: background .15s;
+  }
+  .token-row:last-child { border-bottom: none; }
+  .token-row:hover { background: rgba(255,255,255,.04); }
+
+  .prop-name   { font-size: 12px; color: #94a3b8; font-family: 'SF Mono','Fira Code',monospace; }
+  .token-name  { font-size: 12px; font-family: 'SF Mono','Fira Code',monospace; color: #e2e8f0; font-weight: 600; }
+  .token-value { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #64748b; text-align: right; white-space: nowrap; }
+
+  .token-section-label {
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .08em;
+    color: #475569; padding: 8px 16px 4px;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    background: rgba(255,255,255,.02);
+  }
+
+  /* Card header colors */
+  .card-base       .token-card__header { background: linear-gradient(135deg, #c0392b, #e74c3c); }
+  .card-image      .token-card__header { background: linear-gradient(135deg, #b7860a, #f59e0b); }
+  .card-gap        .token-card__header { background: linear-gradient(135deg, #047857, #10b981); }
+  .card-responsive .token-card__header { background: linear-gradient(135deg, #3730a3, #6366f1); }
+
+  /* Legend */
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #555; font-weight: 500; }
+  .legend-line { width: 20px; height: 0; border-top: 2px dashed; }
+
+  /* Gap highlight bar */
+  .gap-bar {
+    height: 4px; border-radius: 2px; background: #10b981;
+    opacity: .7; margin: 2px 0;
+  }
+
+  @media (max-width: 960px) {
+    .annotation-layout { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Gallery</h1>
+  <span class="badge">OutSystems UI 2.29</span>
+  <span class="badge" style="background:#e8f4fd;color:#105cef;">Design Tokens</span>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-line" style="border-color:#ef4444;"></div> .osui-gallery (container)</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#f59e0b;"></div> image item</div>
+</div>
+
+<div class="annotation-layout">
+
+  <!-- LEFT: preview -->
+  <div class="preview-card">
+    <h2>Component preview — gap variants</h2>
+
+    <!-- Gap = XXL -->
+    <div class="variant-section">
+      <span class="variant-label">Gap = XXL · 48px</span>
+      <div class="osui-gallery annotate-container"
+           style="--gallery-desktop-items:3; --gallery-gap:var(--token-scale-1200);">
+        <div class="gallery-img img-a annotate-item"></div>
+        <div class="gallery-img img-b annotate-item"></div>
+        <div class="gallery-img img-c annotate-item"></div>
+        <div class="gallery-img img-d annotate-item"></div>
+      </div>
+    </div>
+
+    <!-- Gap = XL -->
+    <div class="variant-section">
+      <span class="variant-label">Gap = XL · 40px</span>
+      <div class="osui-gallery"
+           style="--gallery-desktop-items:3; --gallery-gap:var(--token-scale-1000);">
+        <div class="gallery-img img-a"></div>
+        <div class="gallery-img img-b"></div>
+        <div class="gallery-img img-c"></div>
+        <div class="gallery-img img-d"></div>
+      </div>
+    </div>
+
+    <!-- Gap = L -->
+    <div class="variant-section">
+      <span class="variant-label">Gap = L · 32px</span>
+      <div class="osui-gallery"
+           style="--gallery-desktop-items:3; --gallery-gap:var(--token-scale-800);">
+        <div class="gallery-img img-a"></div>
+        <div class="gallery-img img-b"></div>
+        <div class="gallery-img img-c"></div>
+        <div class="gallery-img img-d"></div>
+      </div>
+    </div>
+
+    <!-- Gap = M -->
+    <div class="variant-section">
+      <span class="variant-label">Gap = M · 24px</span>
+      <div class="osui-gallery"
+           style="--gallery-desktop-items:3; --gallery-gap:var(--token-scale-600);">
+        <div class="gallery-img img-a"></div>
+        <div class="gallery-img img-b"></div>
+        <div class="gallery-img img-c"></div>
+        <div class="gallery-img img-d"></div>
+      </div>
+    </div>
+
+    <!-- Gap = Base -->
+    <div class="variant-section">
+      <span class="variant-label">Gap = Base · 16px</span>
+      <div class="osui-gallery"
+           style="--gallery-desktop-items:3; --gallery-gap:var(--token-scale-400);">
+        <div class="gallery-img img-a"></div>
+        <div class="gallery-img img-b"></div>
+        <div class="gallery-img img-c"></div>
+        <div class="gallery-img img-d"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: Token cards -->
+  <div class="token-panel">
+
+    <!-- Base structure -->
+    <div class="token-card card-base">
+      <div class="token-card__header">
+        <span class="dot" style="background:#ef4444;"></span>
+        Container
+        <span class="component-name">osui-gallery</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-row">
+          <span class="prop-name">display</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">grid</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">grid-template-cols</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">CSS variable</span>
+          <span class="token-value">--gallery-desktop-items</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">gap</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">CSS variable</span>
+          <span class="token-value">--gallery-gap</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image item -->
+    <div class="token-card card-image">
+      <div class="token-card__header">
+        <span class="dot" style="background:#f59e0b;"></span>
+        Image Item
+        <span class="component-name">img · full-width</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-row">
+          <span class="prop-name">width</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">100% (full-width)</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">height</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">auto</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">border-radius</span>
+          <span class="token-name">token-border-radius-100</span>
+          <span class="token-value">4px</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gap variants -->
+    <div class="token-card card-gap">
+      <div class="token-card__header">
+        <span class="dot" style="background:#10b981;"></span>
+        Gap Variants
+        <span class="component-name">--gallery-gap</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-row">
+          <span class="prop-name">Gap = Base</span>
+          <span class="token-name">token-scale-400</span>
+          <span class="token-value">16px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">Gap = M</span>
+          <span class="token-name">token-scale-600</span>
+          <span class="token-value">24px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">Gap = L</span>
+          <span class="token-name">token-scale-800</span>
+          <span class="token-value">32px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">Gap = XL</span>
+          <span class="token-name">token-scale-1000</span>
+          <span class="token-value">40px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">Gap = XXL</span>
+          <span class="token-name">token-scale-1200</span>
+          <span class="token-value">48px</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Responsive -->
+    <div class="token-card card-responsive">
+      <div class="token-card__header">
+        <span class="dot" style="background:#6366f1;"></span>
+        Responsive Columns
+        <span class="component-name">CSS variables</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-section-label">Grid columns per breakpoint</div>
+        <div class="token-row">
+          <span class="prop-name">desktop</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">CSS variable</span>
+          <span class="token-value">--gallery-desktop-items</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">tablet</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">CSS variable</span>
+          <span class="token-value">--gallery-tablet-items</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">phone</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">CSS variable</span>
+          <span class="token-value">--gallery-phone-items</span>
+        </div>
+        <div class="token-section-label">Default values (from HTML)</div>
+        <div class="token-row">
+          <span class="prop-name">desktop default</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">3 cols</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">tablet default</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">3 cols</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">phone default</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">1 col</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
