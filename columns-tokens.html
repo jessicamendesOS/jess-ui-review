@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Columns — Design Token Annotations</title>
+<style>
+  :root {
+    --token-scale-0: 0;
+    --token-scale-025: 1px;
+    --token-scale-050: 2px;
+    --token-scale-075: 3px;
+    --token-scale-100: 4px;
+    --token-scale-200: 8px;
+    --token-scale-300: 12px;
+    --token-scale-400: 16px;
+    --token-scale-600: 24px;
+    --token-scale-800: 32px;
+    --token-border-radius-0: 0;
+    --token-border-radius-100: 4px;
+    --token-border-radius-200: 8px;
+    --token-border-size-025: 1px;
+    --token-font-size-400: 1rem;
+    --token-font-weight-regular: 400;
+    --token-font-weight-semi-bold: 600;
+    --color-primary: #9f3d8f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    padding: 48px 32px;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .page-header h1 { font-size: 22px; font-weight: 700; color: #111; }
+  .badge {
+    background: #ede8f3;
+    color: #9f3d8f;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 99px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  .annotation-layout {
+    display: grid;
+    grid-template-columns: 460px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .preview-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    padding: 24px;
+  }
+  .preview-card h2 {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: #888;
+    margin-bottom: 16px;
+  }
+
+  /* ─── Columns component styles ─── */
+  .columns {
+    display: grid;
+    gap: var(--token-scale-200);
+    margin-bottom: var(--token-scale-200);
+  }
+  .columns:last-child { margin-bottom: 0; }
+
+  .columns2            { grid-template-columns: repeat(2, 1fr); }
+  .columns3            { grid-template-columns: repeat(3, 1fr); }
+  .columns4            { grid-template-columns: repeat(4, 1fr); }
+  .columns5            { grid-template-columns: repeat(5, 1fr); }
+  .columns6            { grid-template-columns: repeat(6, 1fr); }
+  .columns-medium-left { grid-template-columns: 2fr 1fr; }
+  .columns-medium-right{ grid-template-columns: 1fr 2fr; }
+  .columns-small-left  { grid-template-columns: 1fr 3fr; }
+  .columns-small-right { grid-template-columns: 3fr 1fr; }
+
+  .column {
+    height: 40px;
+    border-radius: var(--token-border-radius-100);
+  }
+
+  /* Variant colors from screenshot */
+  .bg-blue   { background: #4a90d9; }
+  .bg-green  { background: #4caf50; }
+  .bg-yellow { background: #f0a830; }
+  .bg-orange { background: #e07030; }
+  .bg-red    { background: #c0392b; }
+  .bg-pink   { background: #d63071; }
+  .bg-violet { background: #6c3ec5; }
+  .bg-grape  { background: #9b3dbf; }
+  .bg-indigo { background: #4a5bd6; }
+
+  /* Annotation outlines */
+  .annotate-container { outline: 2px dashed #ef4444; outline-offset: 3px; border-radius: 4px; }
+  .annotate-item      { outline: 2px dashed #f59e0b; outline-offset: 2px; border-radius: 3px; }
+  .annotate-column    { outline: 2px dashed #10b981; outline-offset: 1px; border-radius: 4px; }
+
+  /* Variant label */
+  .variant-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .variant-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #aaa;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    white-space: nowrap;
+    width: 120px;
+    flex-shrink: 0;
+  }
+  .variant-preview { flex: 1; }
+
+  /* ─── Token panel ─── */
+  .token-panel { display: flex; flex-direction: column; gap: 20px; }
+
+  .token-card { border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+  .token-card__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .token-card__header .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.5);
+    flex-shrink: 0;
+  }
+  .token-card__header .component-name {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    opacity: .75;
+    margin-left: auto;
+  }
+  .token-card__body { background: #1a1a2e; padding: 0; }
+
+  .token-row {
+    display: grid;
+    grid-template-columns: 160px 1fr auto;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    transition: background .15s;
+  }
+  .token-row:last-child { border-bottom: none; }
+  .token-row:hover { background: rgba(255,255,255,.04); }
+
+  .prop-name   { font-size: 12px; color: #94a3b8; font-family: 'SF Mono','Fira Code',monospace; }
+  .token-name  { font-size: 12px; font-family: 'SF Mono','Fira Code',monospace; color: #e2e8f0; font-weight: 600; }
+  .token-value { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #64748b; text-align: right; white-space: nowrap; }
+
+  .token-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: #475569;
+    padding: 8px 16px 4px;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    background: rgba(255,255,255,.02);
+  }
+
+  /* Card colors */
+  .card-base     .token-card__header { background: linear-gradient(135deg, #c0392b, #e74c3c); }
+  .card-item     .token-card__header { background: linear-gradient(135deg, #b7860a, #f59e0b); }
+  .card-equal    .token-card__header { background: linear-gradient(135deg, #047857, #10b981); }
+  .card-asym     .token-card__header { background: linear-gradient(135deg, #3730a3, #6366f1); }
+  .card-responsive .token-card__header { background: linear-gradient(135deg, #6b21a8, #9f3d8f); }
+
+  /* Legend */
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #555; font-weight: 500; }
+  .legend-line { width: 20px; height: 0; border-top: 2px dashed; }
+
+  /* Ratio pill inside token card */
+  .ratio-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .ratio-box {
+    display: inline-block;
+    height: 10px;
+    border-radius: 2px;
+    background: #6366f1;
+    opacity: .8;
+  }
+
+  @media (max-width: 960px) {
+    .annotation-layout { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Columns</h1>
+  <span class="badge">OutSystems UI 2.29</span>
+  <span class="badge" style="background:#e8f4fd;color:#105cef;">Design Tokens</span>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-line" style="border-color:#ef4444;"></div> .columns (container)</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#f59e0b;"></div> .columns-item (slot)</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#10b981;"></div> .column (content)</div>
+</div>
+
+<div class="annotation-layout">
+
+  <!-- LEFT: preview -->
+  <div class="preview-card">
+    <h2>Component preview</h2>
+
+    <div class="variant-row">
+      <span class="variant-label">columns2</span>
+      <div class="variant-preview">
+        <div class="columns columns2 annotate-container">
+          <div class="columns-item annotate-item"><div class="column bg-blue annotate-column"></div></div>
+          <div class="columns-item annotate-item"><div class="column bg-blue annotate-column"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant-row">
+      <span class="variant-label">columns3</span>
+      <div class="variant-preview">
+        <div class="columns columns3">
+          <div class="columns-item"><div class="column bg-green"></div></div>
+          <div class="columns-item"><div class="column bg-green"></div></div>
+          <div class="columns-item"><div class="column bg-green"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant-row">
+      <span class="variant-label">columns4</span>
+      <div class="variant-preview">
+        <div class="columns columns4">
+          <div class="columns-item"><div class="column bg-yellow"></div></div>
+          <div class="columns-item"><div class="column bg-yellow"></div></div>
+          <div class="columns-item"><div class="column bg-yellow"></div></div>
+          <div class="columns-item"><div class="column bg-yellow"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant-row">
+      <span class="variant-label">columns5</span>
+      <div class="variant-preview">
+        <div class="columns columns5">
+          <div class="columns-item"><div class="column bg-orange"></div></div>
+          <div class="columns-item"><div class="column bg-orange"></div></div>
+          <div class="columns-item"><div class="column bg-orange"></div></div>
+          <div class="columns-item"><div class="column bg-orange"></div></div>
+          <div class="columns-item"><div class="column bg-orange"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant-row">
+      <span class="variant-label">columns6</span>
+      <div class="variant-preview">
+        <div class="columns columns6">
+          <div class="columns-item"><div class="column bg-red"></div></div>
+          <div class="columns-item"><div class="column bg-red"></div></div>
+          <div class="columns-item"><div class="column bg-red"></div></div>
+          <div class="columns-item"><div class="column bg-red"></div></div>
+          <div class="columns-item"><div class="column bg-red"></div></div>
+          <div class="columns-item"><div class="column bg-red"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant-row">
+      <span class="variant-label">medium-left</span>
+      <div class="variant-preview">
+        <div class="columns columns-medium-left">
+          <div class="columns-item"><div class="column bg-pink"></div></div>
+          <div class="columns-item"><div class="column bg-pink"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant-row">
+      <span class="variant-label">medium-right</span>
+      <div class="variant-preview">
+        <div class="columns columns-medium-right">
+          <div class="columns-item"><div class="column bg-violet"></div></div>
+          <div class="columns-item"><div class="column bg-violet"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant-row">
+      <span class="variant-label">small-left</span>
+      <div class="variant-preview">
+        <div class="columns columns-small-left">
+          <div class="columns-item"><div class="column bg-grape"></div></div>
+          <div class="columns-item"><div class="column bg-grape"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant-row">
+      <span class="variant-label">small-right</span>
+      <div class="variant-preview">
+        <div class="columns columns-small-right">
+          <div class="columns-item"><div class="column bg-indigo"></div></div>
+          <div class="columns-item"><div class="column bg-indigo"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: Token cards -->
+  <div class="token-panel">
+
+    <!-- Base container -->
+    <div class="token-card card-base">
+      <div class="token-card__header">
+        <span class="dot" style="background:#ef4444;"></span>
+        Container
+        <span class="component-name">columns</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-row">
+          <span class="prop-name">display</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">grid</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">gap (gutter-base)</span>
+          <span class="token-name">token-scale-200</span>
+          <span class="token-value">8px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">margin-bottom-s</span>
+          <span class="token-name">token-scale-200</span>
+          <span class="token-value">8px</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Column item -->
+    <div class="token-card card-item">
+      <div class="token-card__header">
+        <span class="dot" style="background:#f59e0b;"></span>
+        Column Item
+        <span class="component-name">columns-item · column</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-row">
+          <span class="prop-name">border-radius</span>
+          <span class="token-name">token-border-radius-100</span>
+          <span class="token-value">4px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">min-height</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">inherits content</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Equal columns -->
+    <div class="token-card card-equal">
+      <div class="token-card__header">
+        <span class="dot" style="background:#10b981;"></span>
+        Equal Columns
+        <span class="component-name">columns2–6</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-section-label">grid-template-columns</div>
+        <div class="token-row">
+          <span class="prop-name">columns2</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">repeat(2, 1fr)</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">columns3</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">repeat(3, 1fr)</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">columns4</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">repeat(4, 1fr)</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">columns5</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">repeat(5, 1fr)</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">columns6</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">repeat(6, 1fr)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Asymmetric columns -->
+    <div class="token-card card-asym">
+      <div class="token-card__header">
+        <span class="dot" style="background:#6366f1;"></span>
+        Asymmetric Columns
+        <span class="component-name">medium · small</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-section-label">grid-template-columns</div>
+        <div class="token-row">
+          <span class="prop-name">medium-left</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">2fr 1fr</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">medium-right</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">1fr 2fr</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">small-left</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">1fr 3fr</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">small-right</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">3fr 1fr</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Responsive -->
+    <div class="token-card card-responsive">
+      <div class="token-card__header">
+        <span class="dot" style="background:#9f3d8f;"></span>
+        Responsive Behaviour
+        <span class="component-name">tablet · phone</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-section-label">Break modifiers</div>
+        <div class="token-row">
+          <span class="prop-name">tablet-break-none</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">no token</span>
+          <span class="token-value">keeps grid on tablet</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">tablet-break-all</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">no token</span>
+          <span class="token-value">stacks on tablet</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">phone-break-none</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">no token</span>
+          <span class="token-value">keeps grid on phone</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">phone-break-all</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">no token</span>
+          <span class="token-value">stacks on phone</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
