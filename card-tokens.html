@@ -216,6 +216,40 @@
     padding: var(--token-scale-0, 0) var(--token-scale-600, 24px) var(--token-scale-600, 24px);
   }
 
+  /* ─── Card Item (OutSystems UI 2.29.0) ─── */
+  .card-detail {
+    --osui-card-detail-title-color: var(--token-text-default, var(--token-primitives-neutral-1200, #242424));
+    --osui-card-detail-text-color: var(--token-primitives-neutral-700, #777777);
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+  .card-detail-left {
+    max-width: 120px;
+    padding-right: var(--token-scale-400, 16px);
+  }
+  .card-detail-center {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+  }
+  .card-detail-right {
+    padding-left: var(--token-scale-400, 16px);
+  }
+  .card-detail-title {
+    color: var(--osui-card-detail-title-color);
+    font-size: var(--token-font-size-500, 1.25rem);
+    font-weight: var(--token-font-weight-semi-bold, 600);
+  }
+  .card-detail-text {
+    color: var(--osui-card-detail-text-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   /* Utility classes */
   .background-pink { background-color: #e91e8c; }
   .flex-direction-column { -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; }
@@ -236,10 +270,13 @@
   }
 
   /* Annotation outlines */
-  .annotate-container { outline: 2px dashed #ef4444; outline-offset: 3px; border-radius: 8px; }
-  .annotate-title     { outline: 2px dashed #10b981; outline-offset: 2px; }
-  .annotate-content   { outline: 2px dashed #6366f1; outline-offset: 2px; }
-  .annotate-bottom    { outline: 2px dashed #f59e0b; outline-offset: 2px; }
+  .annotate-container   { outline: 2px dashed #ef4444; outline-offset: 3px; border-radius: 8px; }
+  .annotate-title       { outline: 2px dashed #10b981; outline-offset: 2px; }
+  .annotate-content     { outline: 2px dashed #6366f1; outline-offset: 2px; }
+  .annotate-bottom      { outline: 2px dashed #f59e0b; outline-offset: 2px; }
+  .annotate-detail-left { outline: 2px dashed #ec4899; outline-offset: 2px; border-radius: 4px; }
+  .annotate-detail-ctr  { outline: 2px dashed #8b5cf6; outline-offset: 2px; }
+  .annotate-detail-right{ outline: 2px dashed #06b6d4; outline-offset: 2px; border-radius: 4px; }
 
   /* ─── Token panel ─── */
   .token-panel { display: flex; flex-direction: column; gap: 12px; }
@@ -262,6 +299,7 @@
   .card-content-tok    .token-card__header { background: linear-gradient(120deg, #1e1b4b, #6366f1); }
   .card-background-tok .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
   .card-bottom-tok     .token-card__header { background: linear-gradient(120deg, #92400e, #f59e0b); }
+  .card-detail-tok     .token-card__header { background: linear-gradient(120deg, #831843, #ec4899); }
 
   .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
   .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; font-family: inherit; transition: all .15s; white-space: nowrap; }
@@ -374,6 +412,9 @@
   <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Card Title</div>
   <div class="legend-item"><span class="legend-dot" style="background:#6366f1;"></span> Content Area</div>
   <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> Card Bottom</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#ec4899;"></span> Item Left</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6;"></span> Item Center</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#06b6d4;"></span> Item Right</div>
 </div>
 
 <div class="annotation-layout">
@@ -406,6 +447,20 @@
         </div>
       </div>
       <div class="card-background-color background-pink"></div>
+    </div>
+
+    <!-- Card Item (card-detail) -->
+    <div class="card card-detail annotate-container margin-bottom-l">
+      <div class="card-detail-left annotate-detail-left">
+        <img src="https://picsum.photos/seed/avatar/80/80" alt="" style="width:80px; height:80px; border-radius: var(--token-border-radius-100, 4px); display:block; object-fit:cover;">
+      </div>
+      <div class="card-detail-center annotate-detail-ctr">
+        <div class="card-detail-title">Card Title</div>
+        <div class="card-detail-text">Short description that truncates with ellipsis when it overflows</div>
+      </div>
+      <div class="card-detail-right annotate-detail-right">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="color:#9ca3af;"><path d="M7.5 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
     </div>
 
     <!-- Card Sectioned -->
@@ -558,6 +613,55 @@
           <span class="prop-name">overlay opacity</span>
           <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
           <span class="token-value">0.6</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Item / Detail -->
+    <div class="token-card card-detail-tok">
+      <div class="token-card__header">
+        <span class="dot" style="background:#ec4899;"></span>
+        Card Item
+        <span class="component-name">card-detail</span>
+      </div>
+      <div class="token-card__body">
+        <div class="token-row">
+          <span class="prop-name">title color</span>
+          <span class="token-name">token-text-default</span>
+          <span class="token-value">#242424</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">text color</span>
+          <span class="token-name token-name-with-swatch">
+            <span class="swatch" style="background:#777777;"></span>
+            primitives-neutral-700
+          </span>
+          <span class="token-value">#777777</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">title font-size</span>
+          <span class="token-name">token-font-size-500</span>
+          <span class="token-value">1.25rem · 20px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">title font-weight</span>
+          <span class="token-name">token-font-weight-semi-bold</span>
+          <span class="token-value">600</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">left max-width</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+          <span class="token-value">120px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">left padding-right</span>
+          <span class="token-name">token-scale-400</span>
+          <span class="token-value">16px</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">right padding-left</span>
+          <span class="token-name">token-scale-400</span>
+          <span class="token-value">16px</span>
         </div>
       </div>
     </div>
