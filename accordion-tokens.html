@@ -445,17 +445,15 @@
   #previewWrapper.proposed-mode .osui-accordion-item__title:hover {
     background: rgba(16,92,239,.05);
   }
-  /* Open item: clear primary treatment */
+  /* Open item: primary text only — no tonal background (web convention) */
   #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__title {
-    background: rgba(16,92,239,.08);
     color: var(--token-semantics-primary-base);
     font-weight: var(--token-font-weight-semi-bold);
   }
-  /* Content: left accent stripe + subtle wash */
+  /* Content: left accent stripe only — no background wash */
   #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__content {
     border-left: 3px solid rgba(16,92,239,.3);
     padding-left: calc(var(--token-scale-600) - 3px);
-    background: rgba(16,92,239,.02);
   }
   /* Icon: solid filled primary circle with white arrow */
   #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__icon {
