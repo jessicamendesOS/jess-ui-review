@@ -353,6 +353,15 @@
     transition: background .15s, color .15s;
   }
   .ptab--active { background: #fff; color: #111; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+  .ann-toggle {
+    padding: 5px 10px; font-size: 11px; font-weight: 600;
+    border: 1px solid #ddd; border-radius: 5px; cursor: pointer;
+    background: transparent; color: #888; font-family: inherit;
+    transition: all .15s; margin-left: auto; white-space: nowrap;
+  }
+  .ann-toggle:hover { color: #111; border-color: #999; }
+  .ann-toggle--off { color: #ef4444; border-color: #ef4444; background: #fff1f2; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
 
   /* ─── Proposed mode — Master Detail ─── */
   #previewWrapper.proposed-mode .split-screen-wrapper {
@@ -406,6 +415,7 @@
   <div class="preview-tabs">
     <button class="ptab ptab--active" onclick="setMode('current',this)">Current</button>
     <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    <button class="ann-toggle" onclick="toggleAnnotations(this)">Hide annotations</button>
   </div>
   <div id="previewWrapper">
 
@@ -1021,6 +1031,11 @@ function selectItem(id) {
   document.getElementById('detailAvatar').style.background = p.color;
 }
 
+function toggleAnnotations(btn){
+  const hidden=document.getElementById('previewWrapper').classList.toggle('hide-annotations');
+  btn.textContent=hidden?'Show annotations':'Hide annotations';
+  btn.classList.toggle('ann-toggle--off',hidden);
+}
 function setMode(mode,btn){
   document.getElementById('previewWrapper').classList.toggle('proposed-mode', mode==='proposed');
   document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('ptab--active'));
