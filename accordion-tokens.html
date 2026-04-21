@@ -151,103 +151,138 @@
   }
   .preview-card__body { padding: 20px; }
 
-  /* ─── Actual accordion styles (from OutSystems UI) ─── */
-  .osui-accordion {
-    width: 100%;
+  /* ─── Accordion (OutSystems UI 2.29.0) ─── */
+  /* 6.2.1 — Accordion wrapper — first/last child border-radius */
+  .osui-accordion > :first-child > .osui-accordion-item,
+  .osui-accordion > :first-child > .osui-accordion-item::after {
+    border-top-left-radius: var(--token-border-radius-100, 4px);
+    border-top-right-radius: var(--token-border-radius-100, 4px);
   }
+  .osui-accordion > :last-child > .osui-accordion-item {
+    border-bottom-width: var(--token-border-size-025, 1px);
+    border-bottom-left-radius: var(--token-border-radius-100, 4px);
+    border-bottom-right-radius: var(--token-border-radius-100, 4px);
+  }
+  .osui-accordion > :only-child > .osui-accordion-item {
+    border-radius: var(--token-border-radius-100, 4px);
+  }
+  .osui-accordion > * > .osui-accordion-item {
+    border-radius: 0;
+    border-bottom-width: 0;
+  }
+
+  /* 6.2.2 — Accordion Item */
   .osui-accordion-item {
-    --osui-accordion-item-background: var(--token-bg-surface-default);
-    --osui-accordion-item-border-color: var(--token-border-default);
-    --osui-accordion-item-border-width: var(--token-border-size-025);
-    --osui-accordion-item-border-radius: var(--token-border-radius-100);
-    --osui-accordion-item-color: var(--token-text-default);
-    --osui-accordion-item-icon-color: var(--token-semantics-primary-base);
+    --osui-accordion-item-background: var(--token-bg-surface-default, #ffffff);
+    --osui-accordion-item-border-color: var(--token-border-default, #d5d5d5);
+    --osui-accordion-item-border-width: var(--token-border-size-025, 1px);
+    --osui-accordion-item-border-radius: var(--token-border-radius-100, 4px);
+    --osui-accordion-item-color: var(--token-text-default, #242424);
+    --osui-accordion-item-active-indicator-color: var(--token-semantics-primary-base, #105cef);
+    --osui-accordion-item-icon-color: var(--token-semantics-primary-base, #105cef);
+    --accordion-active-border-size: 2px;
     background-color: var(--osui-accordion-item-background);
     border: var(--osui-accordion-item-border-width) solid var(--osui-accordion-item-border-color);
-    border-bottom-width: 0;
-    position: relative;
-    color: var(--osui-accordion-item-color);
-  }
-  .osui-accordion-item:last-child {
     border-bottom-width: var(--osui-accordion-item-border-width);
-    border-bottom-left-radius: var(--osui-accordion-item-border-radius);
-    border-bottom-right-radius: var(--osui-accordion-item-border-radius);
+    border-radius: var(--osui-accordion-item-border-radius);
+    position: relative;
   }
-  .osui-accordion-item:first-child {
-    border-top-left-radius: var(--osui-accordion-item-border-radius);
-    border-top-right-radius: var(--osui-accordion-item-border-radius);
-  }
-
-  /* Active top-border indicator */
-  .osui-accordion-item::before {
-    content: '';
-    position: absolute;
-    left: -1px;
-    right: -1px;
-    top: -1px;
-    height: 2px;
-    background: transparent;
-    transition: background .2s;
-  }
-  .osui-accordion-item--is-open::before {
-    background: var(--token-semantics-primary-base);
-  }
-
-  .osui-accordion-item__title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--token-scale-600);
-    font-size: var(--token-font-size-450);
-    line-height: 1;
-    cursor: pointer;
-    user-select: none;
-    gap: 8px;
-  }
-  .osui-accordion-item--is-open .osui-accordion-item__title {
-    font-weight: var(--token-font-weight-semi-bold);
-  }
-  .osui-accordion-item--is-disabled .osui-accordion-item__title {
-    cursor: default;
-    color: var(--token-text-disabled);
+  .osui-accordion-item:after {
+    background-color: transparent;
+    border-color: transparent;
+    border-style: solid;
+    border-top-left-radius: var(--token-border-radius-100, 4px);
+    border-top-right-radius: var(--token-border-radius-100, 4px);
+    border-width: var(--accordion-active-border-size) 0 0 0;
+    content: "";
+    left: 0;
+    height: 100%;
     pointer-events: none;
+    position: absolute;
+    opacity: 0;
+    top: -1px;
+    width: 100%;
   }
-  .osui-accordion-item__icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--osui-accordion-item-icon-color);
-    font-size: var(--token-font-size-550);
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-    transition: transform .25s ease;
+  .osui-accordion-item--is-open > .osui-accordion-item__title {
+    font-weight: var(--token-font-weight-semi-bold, 600);
   }
-  .osui-accordion-item--is-disabled .osui-accordion-item__icon {
-    color: var(--token-text-disabled);
-  }
-  .osui-accordion-item--is-open .osui-accordion-item__icon {
+  .osui-accordion-item--is-open > .osui-accordion-item__title > .osui-accordion-item__icon--caret {
+    -webkit-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
     transform: rotate(180deg);
   }
-  .caret-svg { display: block; }
-
-  .osui-accordion-item__content {
-    padding: 0 var(--token-scale-600);
-    font-size: var(--token-font-size-400);
-    color: var(--osui-accordion-item-color);
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height .3s ease, padding .3s ease;
+  .osui-accordion-item--is-open::after {
+    border-color: var(--osui-accordion-item-active-indicator-color);
+    opacity: 1;
+    -webkit-transition: opacity 300ms ease-in;
+    transition: opacity 300ms ease-in;
   }
-  .osui-accordion-item--is-open .osui-accordion-item__content {
-    max-height: 200px;
-    padding: 0 var(--token-scale-600) var(--token-scale-600);
+  .osui-accordion-item--is-disabled {
+    --osui-accordion-item-color: var(--token-text-disabled, #a2a2a2);
+    color: var(--osui-accordion-item-color);
+    pointer-events: none;
+  }
+  .osui-accordion-item--is-disabled .osui-accordion-item__icon {
+    color: var(--token-text-disabled, #a2a2a2);
+  }
+  .osui-accordion-item__title {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    font-size: var(--token-font-size-450, 1.125rem);
+    line-height: 1;
+    padding: var(--token-scale-600, 24px);
+    width: 100%;
+    cursor: pointer;
+    user-select: none;
+  }
+  .osui-accordion-item__title__placeholder {
+    text-overflow: ellipsis;
+    width: 100%;
+  }
+  .osui-accordion-item__icon {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: var(--osui-accordion-item-icon-color);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    font-size: var(--token-font-size-550, 1.375rem);
+    font-weight: var(--token-font-weight-regular, 400);
+    height: 16px;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-transition: all 300ms ease-in-out;
+    transition: all 300ms ease-in-out;
+    width: 16px;
+  }
+  .osui-accordion-item__content {
+    display: block;
+    overflow: hidden;
+    padding: var(--token-scale-0, 0) var(--token-scale-600, 24px);
+    font-size: var(--token-font-size-400, 1rem);
+    color: var(--osui-accordion-item-color);
+  }
+  .osui-accordion-item__content--is-collapsed {
+    height: 0;
+    visibility: hidden;
+  }
+  .osui-accordion-item__content--is-expanded {
+    height: auto;
+    padding: var(--token-scale-0, 0) var(--token-scale-600, 24px) var(--token-scale-600, 24px);
+    visibility: visible;
   }
   .osui-accordion-item__content p {
     line-height: 1.5;
     font-size: 14px;
     color: #555;
   }
+  .caret-svg { display: block; }
 
   /* Highlighted areas for annotation */
   .annotate-title { outline: 2px dashed #f59e0b; outline-offset: -2px; position: relative; }
@@ -428,20 +463,22 @@
   }
 
   /* ─── Proposed mode — Accordion ─── */
-  #previewWrapper.proposed-mode .osui-accordion {
-    border: none;
-  }
-  #previewWrapper.proposed-mode .osui-accordion-item {
-    --osui-accordion-item-border-radius: 0;
+  #previewWrapper.proposed-mode .osui-accordion > * > .osui-accordion-item {
     --osui-accordion-item-border-color: rgba(0,0,0,.07);
     border-left: none;
     border-right: none;
   }
-  #previewWrapper.proposed-mode .osui-accordion-item:first-child {
+  #previewWrapper.proposed-mode .osui-accordion > :first-child > .osui-accordion-item {
     border-top: none;
   }
-  #previewWrapper.proposed-mode .osui-accordion-item:last-child {
+  #previewWrapper.proposed-mode .osui-accordion > :last-child > .osui-accordion-item {
     border-bottom: none;
+  }
+  #previewWrapper.proposed-mode .osui-accordion > * > .osui-accordion-item,
+  #previewWrapper.proposed-mode .osui-accordion > :first-child > .osui-accordion-item,
+  #previewWrapper.proposed-mode .osui-accordion > :last-child > .osui-accordion-item,
+  #previewWrapper.proposed-mode .osui-accordion > :only-child > .osui-accordion-item {
+    border-radius: 0;
   }
   #previewWrapper.proposed-mode .osui-accordion-item__title {
     padding: var(--token-scale-300) var(--token-scale-600);
@@ -450,13 +487,12 @@
   #previewWrapper.proposed-mode .osui-accordion-item__title:hover {
     background: rgba(0,0,0,.04);
   }
-  #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__content {
+  #previewWrapper.proposed-mode .osui-accordion-item__content--is-expanded {
     padding: var(--token-scale-300) var(--token-scale-600) var(--token-scale-600);
   }
-  #previewWrapper.proposed-mode .osui-accordion-item::before {
+  #previewWrapper.proposed-mode .osui-accordion-item::after {
     display: none;
   }
-  /* Open item: bold only */
   #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__title {
     font-weight: var(--token-font-weight-semi-bold);
   }
@@ -549,48 +585,54 @@
     <div id="previewWrapper">
     <div class="osui-accordion">
 
-      <!-- Item 1 — open -->
-      <div class="osui-accordion-item osui-accordion-item--is-open annotate-item" onclick="this.classList.toggle('osui-accordion-item--is-open')" style="cursor:pointer">
-        <div class="osui-accordion-item__title annotate-title">
-          <span>Accordion Item 1</span>
-          <span class="osui-accordion-item__icon annotate-icon">
-            <svg class="caret-svg" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-        </div>
-        <div class="osui-accordion-item__content annotate-content">
-          <p>I'm accordion Item 1 — currently expanded. Click the title to collapse.</p>
+      <!-- Item 1 — open (wrapper div matches production HTML pattern) -->
+      <div>
+        <div class="osui-accordion-item osui-accordion-item--is-open annotate-item" onclick="toggleAccordion(this)" style="cursor:pointer">
+          <div class="osui-accordion-item__title osui-accordion-item__click_zone annotate-title">
+            <div class="osui-accordion-item__title__placeholder">Accordion Item 1</div>
+            <span class="osui-accordion-item__icon osui-accordion-item__icon--caret annotate-icon">
+              <svg class="caret-svg" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+          <div class="osui-accordion-item__content osui-accordion-item__content--is-expanded annotate-content">
+            <p>I'm accordion Item 1 — currently expanded. Click the title to collapse.</p>
+          </div>
         </div>
       </div>
 
       <!-- Item 2 — closed -->
-      <div class="osui-accordion-item" onclick="this.classList.toggle('osui-accordion-item--is-open')" style="cursor:pointer">
-        <div class="osui-accordion-item__title">
-          <span>Accordion Item 2</span>
-          <span class="osui-accordion-item__icon">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-        </div>
-        <div class="osui-accordion-item__content">
-          <p>I'm accordion Item 2.</p>
+      <div>
+        <div class="osui-accordion-item" onclick="toggleAccordion(this)" style="cursor:pointer">
+          <div class="osui-accordion-item__title osui-accordion-item__click_zone">
+            <div class="osui-accordion-item__title__placeholder">Accordion Item 2</div>
+            <span class="osui-accordion-item__icon osui-accordion-item__icon--caret">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+          <div class="osui-accordion-item__content osui-accordion-item__content--is-collapsed">
+            <p>I'm accordion Item 2.</p>
+          </div>
         </div>
       </div>
 
       <!-- Item 3 — disabled -->
-      <div class="osui-accordion-item osui-accordion-item--is-disabled">
-        <div class="osui-accordion-item__title">
-          <span>Accordion Item 3 (disabled)</span>
-          <span class="osui-accordion-item__icon">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-        </div>
-        <div class="osui-accordion-item__content">
-          <p>I'm accordion Item 3.</p>
+      <div>
+        <div class="osui-accordion-item osui-accordion-item--is-disabled">
+          <div class="osui-accordion-item__title">
+            <div class="osui-accordion-item__title__placeholder">Accordion Item 3 (disabled)</div>
+            <span class="osui-accordion-item__icon osui-accordion-item__icon--caret">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+          <div class="osui-accordion-item__content osui-accordion-item__content--is-collapsed">
+            <p>I'm accordion Item 3.</p>
+          </div>
         </div>
       </div>
 
@@ -949,6 +991,12 @@ function setMode(mode,btn){
   document.getElementById('previewWrapper').classList.toggle('proposed-mode', mode==='proposed');
   document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('ptab--active'));
   btn.classList.add('ptab--active');
+}
+function toggleAccordion(item){
+  const isOpen = item.classList.toggle('osui-accordion-item--is-open');
+  const content = item.querySelector('.osui-accordion-item__content');
+  content.classList.toggle('osui-accordion-item__content--is-expanded', isOpen);
+  content.classList.toggle('osui-accordion-item__content--is-collapsed', !isOpen);
 }
 function teUpdate(p,v){document.documentElement.style.setProperty(p,v);}
 function teRange(i,u){const v=i.value,u2=u||'px';teUpdate(i.dataset.prop,v+u2);i.nextElementSibling.textContent=v+u2;}

@@ -80,21 +80,28 @@
     letter-spacing: .08em; color: #9ca3af; margin-right: auto; }
   .preview-card__body { padding: 20px; }
 
-  /* ─── Split screen component ─── */
+  /* ─── Split screen component (OutSystems UI 2.29.0) ─── */
   .split-screen-wrapper {
-    display: grid;
-    grid-template-columns: var(--left-percentage) 1fr;
+    --osui-master-detail-background: var(--token-bg-surface-default, #ffffff);
+    --osui-master-detail-border-color: var(--token-border-default, #d5d5d5);
+    --osui-master-detail-border-radius: var(--token-border-radius-100, 4px);
+    background-color: var(--osui-master-detail-background);
+    border: var(--token-border-size-025, 1px) solid var(--osui-master-detail-border-color);
+    border-radius: var(--osui-master-detail-border-radius);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
     height: var(--master-detail-height);
-    border: var(--token-border-size-025) solid var(--token-border-default);
-    border-radius: var(--token-border-radius-200);
     overflow: hidden;
-    background: var(--token-bg-surface-default);
+    position: relative;
   }
 
   /* Left — master list */
   .split-left {
-    border-right: var(--token-border-size-025) solid var(--token-border-default);
     overflow-y: auto;
+    -ms-touch-action: pan-y;
+    touch-action: pan-y;
+    width: var(--left-percentage);
     scrollbar-width: thin;
     scrollbar-color: #d1d5db transparent;
   }
@@ -163,8 +170,10 @@
 
   /* Right — detail panel */
   .split-right {
-    padding: var(--token-scale-600);
+    border-left: var(--token-border-size-025, 1px) solid var(--osui-master-detail-border-color);
     overflow-y: auto;
+    padding: var(--token-scale-1000, 40px);
+    width: calc(100% - var(--left-percentage));
     background: var(--token-bg-surface-default);
   }
 
@@ -606,7 +615,7 @@
       <div class="token-row">
         <span class="prop-name">display</span>
         <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">grid</span>
+        <span class="token-value">flex</span>
       </div>
       <div class="token-row">
         <span class="prop-name">left-percentage</span>
@@ -621,15 +630,15 @@
       <div class="token-row">
         <span class="prop-name">border</span>
         <span class="token-name token-name-with-swatch">
-          <span class="swatch" style="background:#e5e7eb;"></span>
+          <span class="swatch" style="background:#d5d5d5;"></span>
           token-border-default
         </span>
-        <span class="token-value">#e5e7eb · 1px</span>
+        <span class="token-value">#d5d5d5 · 1px</span>
       </div>
       <div class="token-row">
         <span class="prop-name">border-radius</span>
-        <span class="token-name">token-border-radius-200</span>
-        <span class="token-value">8px</span>
+        <span class="token-name">token-border-radius-100</span>
+        <span class="token-value">4px</span>
       </div>
     </div>
   </div>
@@ -777,8 +786,8 @@
     <div class="token-card__body">
       <div class="token-row">
         <span class="prop-name">padding</span>
-        <span class="token-name">token-scale-600</span>
-        <span class="token-value">24px (all sides)</span>
+        <span class="token-name">token-scale-1000</span>
+        <span class="token-value">40px (all sides)</span>
       </div>
       <div class="token-row">
         <span class="prop-name">header gap</span>

@@ -29,26 +29,22 @@
     --token-font-weight-semi-bold: 600;
     --token-text-default: #242424;
 
-    /* Feedback color tokens */
-    --token-color-warning-base: #d97706;
-    --token-color-warning-lightest: #fefce8;
-    --token-color-warning-light: #fde68a;
-    --token-color-warning-darkest: #78350f;
+    /* Alert semantic color tokens (OutSystems UI 2.29.0 fallback values) */
+    --token-bg-info-subtle-default: #e9ecfc;
+    --token-text-info: #0d4bc3;
+    --token-semantics-info-base: #105cef;
 
-    --token-color-success-base: #16a34a;
-    --token-color-success-lightest: #f0fdf4;
-    --token-color-success-light: #bbf7d0;
-    --token-color-success-darkest: #14532d;
+    --token-bg-success-subtle-default: #e2f9e4;
+    --token-text-success: #126f23;
+    --token-semantics-success-base: #1ba433;
 
-    --token-color-info-base: #2563eb;
-    --token-color-info-lightest: #eff6ff;
-    --token-color-info-light: #bfdbfe;
-    --token-color-info-darkest: #1e3a8a;
+    --token-bg-danger-subtle-default: #fde1e1;
+    --token-text-danger: #991b1b;
+    --token-semantics-danger-base: #e52929;
 
-    --token-color-error-base: #dc2626;
-    --token-color-error-lightest: #fff1f2;
-    --token-color-error-light: #fecaca;
-    --token-color-error-darkest: #7f1d1d;
+    --token-bg-warning-subtle-default: #fff0c7;
+    --token-text-warning: #704b02;
+    --token-semantics-warning-base: #ffd600;
 
     --color-primary: #9f3d8f;
   }
@@ -116,70 +112,60 @@
   }
   .preview-card__body { padding: 20px; }
 
-  /* ─── Alert component styles ─── */
+  /* ─── Alert component (OutSystems UI 2.29.0) ─── */
   .alert {
-    --osui-alert-padding: var(--token-scale-400);
-    --osui-alert-border-radius: var(--token-border-radius-200);
-    --osui-alert-border-width: var(--token-border-size-025);
-    --osui-alert-accent-width: var(--token-border-size-075);
-
-    display: flex;
+    --osui-alert-background: transparent;
+    --osui-alert-color: var(--token-text-default, #242424);
+    --osui-alert-accent-color: var(--token-border-default, #d5d5d5);
+    --osui-alert-border-radius: var(--token-border-radius-300, 12px);
+    --osui-alert-padding: var(--token-scale-400, 16px);
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
-    gap: var(--token-scale-300);
-    padding: var(--osui-alert-padding);
+    background-color: var(--osui-alert-background);
+    border-left: var(--token-border-size-075, 3px) solid var(--osui-alert-accent-color);
     border-radius: var(--osui-alert-border-radius);
-    border: var(--osui-alert-border-width) solid;
-    border-left-width: var(--osui-alert-accent-width);
-    font-size: var(--token-font-size-400);
-    margin-bottom: var(--token-scale-400);
+    color: var(--osui-alert-color);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    padding: var(--osui-alert-padding);
+    margin-bottom: var(--token-scale-400, 16px);
   }
   .alert:last-child { margin-bottom: 0; }
-
-  .alert-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
+  .alert .alert-icon {
+    -ms-flex-item-align: start;
+    align-self: flex-start;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    font-size: 24px;
+    margin-right: var(--token-scale-400, 16px);
   }
-  .alert-message { flex: 1; font-size: var(--token-font-size-400); }
-
-  .alert-warning {
-    --osui-alert-bg: var(--token-color-warning-lightest);
-    --osui-alert-border-color: var(--token-color-warning-light);
-    --osui-alert-accent-color: var(--token-color-warning-base);
-    background: var(--osui-alert-bg);
-    border-color: var(--osui-alert-border-color);
-    border-left-color: var(--osui-alert-accent-color);
-    color: var(--token-color-warning-darkest);
-  }
-  .alert-success {
-    --osui-alert-bg: var(--token-color-success-lightest);
-    --osui-alert-border-color: var(--token-color-success-light);
-    --osui-alert-accent-color: var(--token-color-success-base);
-    background: var(--osui-alert-bg);
-    border-color: var(--osui-alert-border-color);
-    border-left-color: var(--osui-alert-accent-color);
-    color: var(--token-color-success-darkest);
+  .alert .alert-message {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
   }
   .alert-info {
-    --osui-alert-bg: var(--token-color-info-lightest);
-    --osui-alert-border-color: var(--token-color-info-light);
-    --osui-alert-accent-color: var(--token-color-info-base);
-    background: var(--osui-alert-bg);
-    border-color: var(--osui-alert-border-color);
-    border-left-color: var(--osui-alert-accent-color);
-    color: var(--token-color-info-darkest);
+    --osui-alert-background: var(--token-bg-info-subtle-default, #e9ecfc);
+    --osui-alert-color: var(--token-text-info, #0d4bc3);
+    --osui-alert-accent-color: var(--token-semantics-info-base, #105cef);
+  }
+  .alert-success {
+    --osui-alert-background: var(--token-bg-success-subtle-default, #e2f9e4);
+    --osui-alert-color: var(--token-text-success, #126f23);
+    --osui-alert-accent-color: var(--token-semantics-success-base, #1ba433);
   }
   .alert-error {
-    --osui-alert-bg: var(--token-color-error-lightest);
-    --osui-alert-border-color: var(--token-color-error-light);
-    --osui-alert-accent-color: var(--token-color-error-base);
-    background: var(--osui-alert-bg);
-    border-color: var(--osui-alert-border-color);
-    border-left-color: var(--osui-alert-accent-color);
-    color: var(--token-color-error-darkest);
+    --osui-alert-background: var(--token-bg-danger-subtle-default, #fde1e1);
+    --osui-alert-color: var(--token-text-danger, #991b1b);
+    --osui-alert-accent-color: var(--token-semantics-danger-base, #e52929);
+  }
+  .alert-warning {
+    --osui-alert-background: var(--token-bg-warning-subtle-default, #fff0c7);
+    --osui-alert-color: var(--token-text-warning, #704b02);
+    --osui-alert-accent-color: var(--token-semantics-warning-base, #ffd600);
   }
 
   /* Annotation outlines */
@@ -408,23 +394,23 @@
         </div>
         <div class="token-row">
           <span class="prop-name">border-radius</span>
-          <span class="token-name">token-border-radius-200</span>
-          <span class="token-value">8px</span>
+          <span class="token-name">token-border-radius-300</span>
+          <span class="token-value">12px</span>
         </div>
         <div class="token-row">
-          <span class="prop-name">border-width</span>
-          <span class="token-name">token-border-size-025</span>
-          <span class="token-value">1px</span>
+          <span class="prop-name">border</span>
+          <span class="token-name" style="color:#64748b;font-style:italic;">none</span>
+          <span class="token-value">no outer border</span>
         </div>
         <div class="token-row">
           <span class="prop-name">border-left-width</span>
           <span class="token-name">token-border-size-075</span>
-          <span class="token-value">3px (accent)</span>
+          <span class="token-value">3px (accent only)</span>
         </div>
         <div class="token-row">
-          <span class="prop-name">gap</span>
-          <span class="token-name">token-scale-300</span>
-          <span class="token-value">12px</span>
+          <span class="prop-name">icon margin-right</span>
+          <span class="token-name">token-scale-400</span>
+          <span class="token-value">16px</span>
         </div>
         <div class="token-row">
           <span class="prop-name">margin-bottom</span>
@@ -489,7 +475,7 @@
     <!-- Warning variant -->
     <div class="token-card card-warning">
       <div class="token-card__header">
-        <span class="dot" style="background:#d97706;"></span>
+        <span class="dot" style="background:#ffd600;"></span>
         Warning
         <span class="component-name">alert-warning</span>
       </div>
@@ -497,34 +483,26 @@
         <div class="token-row">
           <span class="prop-name">background</span>
           <span class="token-name token-name-with-swatch">
-            <span class="swatch" style="background:#fefce8;border-color:#fde68a;"></span>
-            token-color-warning-lightest
+            <span class="swatch" style="background:#fff0c7;"></span>
+            token-bg-warning-subtle-default
           </span>
-          <span class="token-value">#fefce8</span>
-        </div>
-        <div class="token-row">
-          <span class="prop-name">border-color</span>
-          <span class="token-name token-name-with-swatch">
-            <span class="swatch" style="background:#fde68a;"></span>
-            token-color-warning-light
-          </span>
-          <span class="token-value">#fde68a</span>
+          <span class="token-value">#fff0c7</span>
         </div>
         <div class="token-row">
           <span class="prop-name">border-left-color</span>
           <span class="token-name token-name-with-swatch">
-            <span class="swatch" style="background:#d97706;"></span>
-            token-color-warning-base
+            <span class="swatch" style="background:#ffd600;border-color:#aaa;"></span>
+            token-semantics-warning-base
           </span>
-          <span class="token-value">#d97706</span>
+          <span class="token-value">#ffd600</span>
         </div>
         <div class="token-row">
           <span class="prop-name">color (text + icon)</span>
           <span class="token-name token-name-with-swatch">
-            <span class="swatch" style="background:#78350f;"></span>
-            token-color-warning-darkest
+            <span class="swatch" style="background:#704b02;"></span>
+            token-text-warning
           </span>
-          <span class="token-value">#78350f</span>
+          <span class="token-value">#704b02</span>
         </div>
       </div>
     </div>
@@ -532,7 +510,7 @@
     <!-- Success variant -->
     <div class="token-card card-success">
       <div class="token-card__header">
-        <span class="dot" style="background:#16a34a;"></span>
+        <span class="dot" style="background:#1ba433;"></span>
         Success
         <span class="component-name">alert-success</span>
       </div>
@@ -540,34 +518,26 @@
         <div class="token-row">
           <span class="prop-name">background</span>
           <span class="token-name token-name-with-swatch">
-            <span class="swatch" style="background:#f0fdf4;border-color:#bbf7d0;"></span>
-            token-color-success-lightest
+            <span class="swatch" style="background:#e2f9e4;"></span>
+            token-bg-success-subtle-default
           </span>
-          <span class="token-value">#f0fdf4</span>
-        </div>
-        <div class="token-row">
-          <span class="prop-name">border-color</span>
-          <span class="token-name token-name-with-swatch">
-            <span class="swatch" style="background:#bbf7d0;"></span>
-            token-color-success-light
-          </span>
-          <span class="token-value">#bbf7d0</span>
+          <span class="token-value">#e2f9e4</span>
         </div>
         <div class="token-row">
           <span class="prop-name">border-left-color</span>
           <span class="token-name token-name-with-swatch">
-            <span class="swatch" style="background:#16a34a;"></span>
-            token-color-success-base
+            <span class="swatch" style="background:#1ba433;"></span>
+            token-semantics-success-base
           </span>
-          <span class="token-value">#16a34a</span>
+          <span class="token-value">#1ba433</span>
         </div>
         <div class="token-row">
           <span class="prop-name">color (text + icon)</span>
           <span class="token-name token-name-with-swatch">
-            <span class="swatch" style="background:#14532d;"></span>
-            token-color-success-darkest
+            <span class="swatch" style="background:#126f23;"></span>
+            token-text-success
           </span>
-          <span class="token-value">#14532d</span>
+          <span class="token-value">#126f23</span>
         </div>
       </div>
     </div>
@@ -575,7 +545,7 @@
     <!-- Info variant -->
     <div class="token-card card-info">
       <div class="token-card__header">
-        <span class="dot" style="background:#2563eb;"></span>
+        <span class="dot" style="background:#105cef;"></span>
         Info
         <span class="component-name">alert-info</span>
       </div>
@@ -583,34 +553,26 @@
         <div class="token-row">
           <span class="prop-name">background</span>
           <span class="token-name token-name-with-swatch">
-            <span class="swatch" style="background:#eff6ff;border-color:#bfdbfe;"></span>
-            token-color-info-lightest
+            <span class="swatch" style="background:#e9ecfc;"></span>
+            token-bg-info-subtle-default
           </span>
-          <span class="token-value">#eff6ff</span>
-        </div>
-        <div class="token-row">
-          <span class="prop-name">border-color</span>
-          <span class="token-name token-name-with-swatch">
-            <span class="swatch" style="background:#bfdbfe;"></span>
-            token-color-info-light
-          </span>
-          <span class="token-value">#bfdbfe</span>
+          <span class="token-value">#e9ecfc</span>
         </div>
         <div class="token-row">
           <span class="prop-name">border-left-color</span>
           <span class="token-name token-name-with-swatch">
-            <span class="swatch" style="background:#2563eb;"></span>
-            token-color-info-base
+            <span class="swatch" style="background:#105cef;"></span>
+            token-semantics-info-base
           </span>
-          <span class="token-value">#2563eb</span>
+          <span class="token-value">#105cef</span>
         </div>
         <div class="token-row">
           <span class="prop-name">color (text + icon)</span>
           <span class="token-name token-name-with-swatch">
-            <span class="swatch" style="background:#1e3a8a;"></span>
-            token-color-info-darkest
+            <span class="swatch" style="background:#0d4bc3;"></span>
+            token-text-info
           </span>
-          <span class="token-value">#1e3a8a</span>
+          <span class="token-value">#0d4bc3</span>
         </div>
       </div>
     </div>
@@ -618,7 +580,7 @@
     <!-- Error variant -->
     <div class="token-card card-error">
       <div class="token-card__header">
-        <span class="dot" style="background:#dc2626;"></span>
+        <span class="dot" style="background:#e52929;"></span>
         Error
         <span class="component-name">alert-error</span>
       </div>
@@ -626,34 +588,26 @@
         <div class="token-row">
           <span class="prop-name">background</span>
           <span class="token-name token-name-with-swatch">
-            <span class="swatch" style="background:#fff1f2;border-color:#fecaca;"></span>
-            token-color-error-lightest
+            <span class="swatch" style="background:#fde1e1;"></span>
+            token-bg-danger-subtle-default
           </span>
-          <span class="token-value">#fff1f2</span>
-        </div>
-        <div class="token-row">
-          <span class="prop-name">border-color</span>
-          <span class="token-name token-name-with-swatch">
-            <span class="swatch" style="background:#fecaca;"></span>
-            token-color-error-light
-          </span>
-          <span class="token-value">#fecaca</span>
+          <span class="token-value">#fde1e1</span>
         </div>
         <div class="token-row">
           <span class="prop-name">border-left-color</span>
           <span class="token-name token-name-with-swatch">
-            <span class="swatch" style="background:#dc2626;"></span>
-            token-color-error-base
+            <span class="swatch" style="background:#e52929;"></span>
+            token-semantics-danger-base
           </span>
-          <span class="token-value">#dc2626</span>
+          <span class="token-value">#e52929</span>
         </div>
         <div class="token-row">
           <span class="prop-name">color (text + icon)</span>
           <span class="token-name token-name-with-swatch">
-            <span class="swatch" style="background:#7f1d1d;"></span>
-            token-color-error-darkest
+            <span class="swatch" style="background:#991b1b;"></span>
+            token-text-danger
           </span>
-          <span class="token-value">#7f1d1d</span>
+          <span class="token-value">#991b1b</span>
         </div>
       </div>
     </div>

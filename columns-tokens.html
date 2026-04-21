@@ -58,23 +58,93 @@
     align-items: start;
   }
 
-  /* ─── Columns component styles ─── */
+  /* ─── Columns component (OutSystems UI 2.29.0) ─── */
   .columns {
-    display: grid;
-    gap: var(--token-scale-200);
-    margin-bottom: var(--token-scale-200);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
   }
-  .columns:last-child { margin-bottom: 0; }
-
-  .columns2            { grid-template-columns: repeat(2, 1fr); }
-  .columns3            { grid-template-columns: repeat(3, 1fr); }
-  .columns4            { grid-template-columns: repeat(4, 1fr); }
-  .columns5            { grid-template-columns: repeat(5, 1fr); }
-  .columns6            { grid-template-columns: repeat(6, 1fr); }
-  .columns-medium-left { grid-template-columns: 2fr 1fr; }
-  .columns-medium-right{ grid-template-columns: 1fr 2fr; }
-  .columns-small-left  { grid-template-columns: 1fr 3fr; }
-  .columns-small-right { grid-template-columns: 3fr 1fr; }
+  .columns > .columns-item {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    word-break: break-word;
+  }
+  .columns > .columns-item > .card { height: 100%; }
+  .columns:not(.gutter-none) > .columns-item { min-width: 0; }
+  .columns.columns-small-left > .columns-item:last-child,
+  .columns.columns-small-right > .columns-item:first-child {
+    -webkit-box-flex: 3;
+    -ms-flex: 3;
+    flex: 3;
+  }
+  .columns.columns-medium-left > .columns-item:last-child,
+  .columns.columns-medium-right > .columns-item:first-child {
+    -webkit-box-flex: 2;
+    -ms-flex: 2;
+    flex: 2;
+  }
+  .columns.gutter-none { margin-left: 0; margin-right: 0; }
+  .columns.gutter-none > .columns-item { margin-bottom: 0; padding: 0; }
+  .columns.gutter-xs {
+    margin-left: calc(-1 * var(--token-scale-100, 4px) / 2);
+    margin-right: calc(-1 * var(--token-scale-100, 4px) / 2);
+  }
+  .columns.gutter-xs > .columns-item {
+    margin-bottom: var(--token-scale-100, 4px);
+    padding: 0 calc(var(--token-scale-100, 4px) / 2);
+  }
+  .columns.gutter-s {
+    margin-left: calc(-1 * var(--token-scale-200, 8px) / 2);
+    margin-right: calc(-1 * var(--token-scale-200, 8px) / 2);
+  }
+  .columns.gutter-s > .columns-item {
+    margin-bottom: var(--token-scale-200, 8px);
+    padding: 0 calc(var(--token-scale-200, 8px) / 2);
+  }
+  .columns.gutter-base {
+    margin-left: calc(-1 * var(--token-scale-400, 16px) / 2);
+    margin-right: calc(-1 * var(--token-scale-400, 16px) / 2);
+  }
+  .columns.gutter-base > .columns-item {
+    margin-bottom: var(--token-scale-400, 16px);
+    padding: 0 calc(var(--token-scale-400, 16px) / 2);
+  }
+  .columns.gutter-m {
+    margin-left: calc(-1 * var(--token-scale-600, 24px) / 2);
+    margin-right: calc(-1 * var(--token-scale-600, 24px) / 2);
+  }
+  .columns.gutter-m > .columns-item {
+    margin-bottom: var(--token-scale-600, 24px);
+    padding: 0 calc(var(--token-scale-600, 24px) / 2);
+  }
+  .columns.gutter-l {
+    margin-left: calc(-1 * var(--token-scale-800, 32px) / 2);
+    margin-right: calc(-1 * var(--token-scale-800, 32px) / 2);
+  }
+  .columns.gutter-l > .columns-item {
+    margin-bottom: var(--token-scale-800, 32px);
+    padding: 0 calc(var(--token-scale-800, 32px) / 2);
+  }
+  .columns.gutter-xl {
+    margin-left: calc(-1 * var(--token-scale-1000, 40px) / 2);
+    margin-right: calc(-1 * var(--token-scale-1000, 40px) / 2);
+  }
+  .columns.gutter-xl > .columns-item {
+    margin-bottom: var(--token-scale-1000, 40px);
+    padding: 0 calc(var(--token-scale-1000, 40px) / 2);
+  }
+  .columns.gutter-xxl {
+    margin-left: calc(-1 * var(--token-scale-1200, 48px) / 2);
+    margin-right: calc(-1 * var(--token-scale-1200, 48px) / 2);
+  }
+  .columns.gutter-xxl > .columns-item {
+    margin-bottom: var(--token-scale-1200, 48px);
+    padding: 0 calc(var(--token-scale-1200, 48px) / 2);
+  }
+  .columns:only-child > .columns-item { margin-bottom: 0; }
 
   .column {
     height: 40px;
@@ -264,8 +334,12 @@
 
   /* ─── Proposed mode — Columns (Radix + M3) ─── */
   #previewWrapper.proposed-mode .columns {
-    gap: var(--token-scale-400);
-    margin-bottom: var(--token-scale-400);
+    margin-left: calc(-1 * var(--token-scale-400, 16px) / 2);
+    margin-right: calc(-1 * var(--token-scale-400, 16px) / 2);
+  }
+  #previewWrapper.proposed-mode .columns > .columns-item {
+    margin-bottom: var(--token-scale-400, 16px);
+    padding: 0 calc(var(--token-scale-400, 16px) / 2);
   }
   #previewWrapper.proposed-mode .column {
     height: 64px;
@@ -365,9 +439,9 @@
     <div id="previewWrapper">
 
     <div class="variant-row">
-      <span class="variant-label">columns2</span>
+      <span class="variant-label">2 equal cols</span>
       <div class="variant-preview">
-        <div class="columns columns2 annotate-container">
+        <div class="columns gutter-s annotate-container">
           <div class="columns-item annotate-item"><div class="column bg-blue annotate-column"></div></div>
           <div class="columns-item annotate-item"><div class="column bg-blue annotate-column"></div></div>
         </div>
@@ -375,9 +449,9 @@
     </div>
 
     <div class="variant-row">
-      <span class="variant-label">columns3</span>
+      <span class="variant-label">3 equal cols</span>
       <div class="variant-preview">
-        <div class="columns columns3">
+        <div class="columns gutter-s">
           <div class="columns-item"><div class="column bg-green"></div></div>
           <div class="columns-item"><div class="column bg-green"></div></div>
           <div class="columns-item"><div class="column bg-green"></div></div>
@@ -386,9 +460,9 @@
     </div>
 
     <div class="variant-row">
-      <span class="variant-label">columns4</span>
+      <span class="variant-label">4 equal cols</span>
       <div class="variant-preview">
-        <div class="columns columns4">
+        <div class="columns gutter-s">
           <div class="columns-item"><div class="column bg-yellow"></div></div>
           <div class="columns-item"><div class="column bg-yellow"></div></div>
           <div class="columns-item"><div class="column bg-yellow"></div></div>
@@ -398,9 +472,9 @@
     </div>
 
     <div class="variant-row">
-      <span class="variant-label">columns5</span>
+      <span class="variant-label">5 equal cols</span>
       <div class="variant-preview">
-        <div class="columns columns5">
+        <div class="columns gutter-s">
           <div class="columns-item"><div class="column bg-orange"></div></div>
           <div class="columns-item"><div class="column bg-orange"></div></div>
           <div class="columns-item"><div class="column bg-orange"></div></div>
@@ -411,9 +485,9 @@
     </div>
 
     <div class="variant-row">
-      <span class="variant-label">columns6</span>
+      <span class="variant-label">6 equal cols</span>
       <div class="variant-preview">
-        <div class="columns columns6">
+        <div class="columns gutter-s">
           <div class="columns-item"><div class="column bg-red"></div></div>
           <div class="columns-item"><div class="column bg-red"></div></div>
           <div class="columns-item"><div class="column bg-red"></div></div>
@@ -427,7 +501,7 @@
     <div class="variant-row">
       <span class="variant-label">medium-left</span>
       <div class="variant-preview">
-        <div class="columns columns-medium-left">
+        <div class="columns columns-medium-left gutter-s">
           <div class="columns-item"><div class="column bg-pink"></div></div>
           <div class="columns-item"><div class="column bg-pink"></div></div>
         </div>
@@ -437,7 +511,7 @@
     <div class="variant-row">
       <span class="variant-label">medium-right</span>
       <div class="variant-preview">
-        <div class="columns columns-medium-right">
+        <div class="columns columns-medium-right gutter-s">
           <div class="columns-item"><div class="column bg-violet"></div></div>
           <div class="columns-item"><div class="column bg-violet"></div></div>
         </div>
@@ -447,7 +521,7 @@
     <div class="variant-row">
       <span class="variant-label">small-left</span>
       <div class="variant-preview">
-        <div class="columns columns-small-left">
+        <div class="columns columns-small-left gutter-s">
           <div class="columns-item"><div class="column bg-grape"></div></div>
           <div class="columns-item"><div class="column bg-grape"></div></div>
         </div>
@@ -457,7 +531,7 @@
     <div class="variant-row">
       <span class="variant-label">small-right</span>
       <div class="variant-preview">
-        <div class="columns columns-small-right">
+        <div class="columns columns-small-right gutter-s">
           <div class="columns-item"><div class="column bg-indigo"></div></div>
           <div class="columns-item"><div class="column bg-indigo"></div></div>
         </div>
@@ -482,17 +556,22 @@
         <div class="token-row">
           <span class="prop-name">display</span>
           <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-          <span class="token-value">grid</span>
+          <span class="token-value">flex · flex-wrap</span>
         </div>
         <div class="token-row">
-          <span class="prop-name">gap (gutter-base)</span>
+          <span class="prop-name">gutter-s (col gap)</span>
           <span class="token-name">token-scale-200</span>
-          <span class="token-value">8px</span>
+          <span class="token-value">8px (±4px padding)</span>
         </div>
         <div class="token-row">
-          <span class="prop-name">margin-bottom-s</span>
-          <span class="token-name">token-scale-200</span>
-          <span class="token-value">8px</span>
+          <span class="prop-name">gutter-base (col gap)</span>
+          <span class="token-name">token-scale-400</span>
+          <span class="token-value">16px (±8px padding)</span>
+        </div>
+        <div class="token-row">
+          <span class="prop-name">gutter-m (col gap)</span>
+          <span class="token-name">token-scale-600</span>
+          <span class="token-value">24px (±12px padding)</span>
         </div>
       </div>
     </div>

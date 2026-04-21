@@ -53,11 +53,17 @@
     letter-spacing: .08em; color: #9ca3af; margin-right: auto; }
   .preview-card__body { padding: 20px; }
 
-  /* ─── Gallery component ─── */
+  /* ─── Gallery component (OutSystems UI 2.29.0) ─── */
   .osui-gallery {
     display: grid;
-    grid-template-columns: repeat(var(--gallery-desktop-items, 3), 1fr);
-    gap: var(--gallery-gap, var(--token-scale-400));
+    grid-gap: var(--gallery-gap);
+    grid-template-columns: repeat(var(--gallery-desktop-items), minmax(0, 1fr));
+  }
+  .osui-gallery > * {
+    margin-top: 0;
+  }
+  .osui-gallery > img {
+    object-fit: cover;
   }
 
   /* Placeholder image blocks */
