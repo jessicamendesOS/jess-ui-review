@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Detail — Design Token Annotations</title>
+<style>
+  :root {
+    --token-scale-025: 1px;
+    --token-scale-100: 4px;
+    --token-scale-200: 8px;
+    --token-scale-300: 12px;
+    --token-scale-400: 16px;
+    --token-scale-600: 24px;
+    --token-scale-800: 32px;
+    --token-scale-1000: 40px;
+    --token-scale-1200: 48px;
+    --token-border-radius-0: 0;
+    --token-border-radius-100: 4px;
+    --token-border-radius-200: 8px;
+    --token-border-radius-full: 9999px;
+    --token-border-size-025: 1px;
+    --token-border-size-050: 2px;
+    --token-border-size-075: 3px;
+    --token-font-size-300: 0.75rem;
+    --token-font-size-400: 1rem;
+    --token-font-size-450: 1.125rem;
+    --token-font-size-550: 1.375rem;
+    --token-font-weight-regular: 400;
+    --token-font-weight-semi-bold: 600;
+    --token-bg-surface-default: #ffffff;
+    --token-border-default: #e5e7eb;
+    --token-text-default: #111827;
+    --token-text-subtle: #6b7280;
+    --token-semantics-primary-base: #105cef;
+    --token-bg-primary-lightest: #eef1fd;
+    --token-color-neutral-4: #e5e7eb;
+    --token-color-neutral-7: #6b7280;
+    --avatar-medium-size: 40px;
+    --left-percentage: 40%;
+    --master-detail-height: 460px;
+    --color-primary: #9f3d8f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    padding: 48px 32px;
+  }
+
+  .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
+  .page-header h1 { font-size: 22px; font-weight: 700; color: #111; }
+  .badge {
+    background: #ede8f3; color: #9f3d8f;
+    font-size: 11px; font-weight: 600; padding: 3px 10px;
+    border-radius: 99px; letter-spacing: .04em; text-transform: uppercase;
+  }
+
+  /* ─── Legend ─── */
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #555; font-weight: 500; }
+  .legend-line { width: 20px; height: 0; border-top: 2px dashed; }
+
+  /* ─── Preview card ─── */
+  .preview-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    padding: 20px;
+    margin-bottom: 32px;
+  }
+  .preview-card h2 {
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .08em; color: #888; margin-bottom: 16px;
+  }
+
+  /* ─── Split screen component ─── */
+  .split-screen-wrapper {
+    display: grid;
+    grid-template-columns: var(--left-percentage) 1fr;
+    height: var(--master-detail-height);
+    border: var(--token-border-size-025) solid var(--token-border-default);
+    border-radius: var(--token-border-radius-200);
+    overflow: hidden;
+    background: var(--token-bg-surface-default);
+  }
+
+  /* Left — master list */
+  .split-left {
+    border-right: var(--token-border-size-025) solid var(--token-border-default);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent;
+  }
+
+  .list-item {
+    display: flex;
+    align-items: center;
+    gap: var(--token-scale-300);
+    padding: var(--token-scale-400);
+    border-bottom: var(--token-border-size-025) solid var(--token-border-default);
+    cursor: pointer;
+    transition: background .12s;
+    position: relative;
+  }
+  .list-item:last-child { border-bottom: none; }
+  .list-item:hover { background: #f9fafb; }
+  .list-item.is-selected {
+    background: var(--token-bg-primary-lightest);
+  }
+  .list-item.is-selected::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: var(--token-border-size-075);
+    background: var(--token-semantics-primary-base);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .avatar {
+    width: var(--avatar-medium-size);
+    height: var(--avatar-medium-size);
+    border-radius: var(--token-border-radius-full);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: #fff;
+    letter-spacing: .02em;
+  }
+  .avatar-lg {
+    width: 48px; height: 48px;
+    border-radius: var(--token-border-radius-full);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; color: #fff;
+  }
+
+  .list-item-center { flex: 1; min-width: 0; }
+  .list-item-title {
+    font-size: var(--token-font-size-400);
+    font-weight: var(--token-font-weight-semi-bold);
+    color: var(--token-text-default);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .list-item-subtitle {
+    font-size: var(--token-font-size-300);
+    color: var(--token-text-subtle);
+    margin-top: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .caret-icon {
+    color: var(--token-color-neutral-7);
+    flex-shrink: 0;
+    display: flex; align-items: center;
+  }
+  .is-selected .caret-icon { color: var(--token-semantics-primary-base); }
+
+  /* Right — detail panel */
+  .split-right {
+    padding: var(--token-scale-600);
+    overflow-y: auto;
+    background: var(--token-bg-surface-default);
+  }
+
+  .detail-header {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; margin-bottom: var(--token-scale-800);
+  }
+  .detail-header-left { display: flex; align-items: center; gap: var(--token-scale-300); }
+  .detail-name {
+    font-size: var(--token-font-size-450);
+    font-weight: var(--token-font-weight-semi-bold);
+    color: var(--token-text-default);
+  }
+  .detail-title {
+    font-size: var(--token-font-size-400);
+    color: var(--token-text-subtle);
+    margin-top: 2px;
+  }
+  .edit-link {
+    font-size: var(--token-font-size-300);
+    color: var(--token-semantics-primary-base);
+    text-decoration: none; white-space: nowrap;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .edit-link:hover { text-decoration: underline; }
+
+  .section-label {
+    font-size: var(--token-font-size-400);
+    font-weight: var(--token-font-weight-semi-bold);
+    color: var(--token-text-default);
+    margin-bottom: var(--token-scale-200);
+  }
+  .section-value {
+    font-size: var(--token-font-size-400);
+    color: var(--token-text-subtle);
+    line-height: 1.5;
+  }
+
+  .separator {
+    height: var(--token-border-size-025);
+    background: var(--token-color-neutral-4);
+    margin: var(--token-scale-600) 0;
+  }
+
+  .contacts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--token-scale-400);
+    margin-top: var(--token-scale-300);
+  }
+  .contact-item label {
+    display: block;
+    font-size: var(--token-font-size-300);
+    color: var(--token-text-subtle);
+    margin-bottom: 2px;
+  }
+  .contact-item span {
+    font-size: var(--token-font-size-400);
+    color: var(--token-text-default);
+  }
+
+  /* Annotation outlines */
+  .annotate-wrapper  { outline: 2px dashed #ef4444; outline-offset: 3px; border-radius: 10px; }
+  .annotate-left     { outline: 2px dashed #f59e0b; outline-offset: 0; }
+  .annotate-item     { outline: 2px dashed #10b981; outline-offset: -2px; }
+  .annotate-avatar   { outline: 2px dashed #6366f1; outline-offset: 2px; border-radius: 9999px; }
+  .annotate-right    { outline: 2px dashed #9f3d8f; outline-offset: 0; }
+
+  /* ─── Token grid ─── */
+  .token-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .token-card { border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+  .token-card__header {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; font-size: 13px; font-weight: 700; color: #fff;
+  }
+  .token-card__header .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: rgba(255,255,255,.5); flex-shrink: 0;
+  }
+  .token-card__header .component-name {
+    font-size: 11px; font-weight: 600; letter-spacing: .05em;
+    text-transform: uppercase; opacity: .7; margin-left: auto;
+  }
+  .token-card__body { background: #1a1a2e; padding: 0; }
+
+  .token-row {
+    display: grid;
+    grid-template-columns: 150px 1fr auto;
+    align-items: center; gap: 8px;
+    padding: 9px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    transition: background .15s;
+  }
+  .token-row:last-child { border-bottom: none; }
+  .token-row:hover { background: rgba(255,255,255,.04); }
+
+  .prop-name   { font-size: 11px; color: #94a3b8; font-family: 'SF Mono','Fira Code',monospace; }
+  .token-name  { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #e2e8f0; font-weight: 600; }
+  .token-value { font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #64748b; text-align: right; white-space: nowrap; }
+
+  .swatch {
+    display: inline-block; width: 10px; height: 10px;
+    border-radius: 2px; border: 1px solid rgba(255,255,255,.15);
+    vertical-align: middle; margin-right: 5px; flex-shrink: 0;
+  }
+  .token-name-with-swatch { display: flex; align-items: center; }
+
+  .token-section-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: #475569;
+    padding: 7px 16px 3px;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    background: rgba(255,255,255,.02);
+  }
+
+  /* Card colors */
+  .card-layout   .token-card__header { background: linear-gradient(135deg, #c0392b, #e74c3c); }
+  .card-list     .token-card__header { background: linear-gradient(135deg, #b7860a, #f59e0b); }
+  .card-selected .token-card__header { background: linear-gradient(135deg, #047857, #10b981); }
+  .card-avatar   .token-card__header { background: linear-gradient(135deg, #3730a3, #6366f1); }
+  .card-detail   .token-card__header { background: linear-gradient(135deg, #6b21a8, #9f3d8f); }
+  .card-type     .token-card__header { background: linear-gradient(135deg, #0e7490, #06b6d4); }
+
+  /* ─── Token Editor ─── */
+  .edit-fab {
+    position: fixed; bottom: 32px; right: 32px;
+    background: #9f3d8f; color: #fff; border: none;
+    padding: 10px 18px; border-radius: 99px; cursor: pointer;
+    font-size: 13px; font-weight: 600; letter-spacing: .01em;
+    box-shadow: 0 4px 16px rgba(159,61,143,.35); z-index: 200;
+    display: flex; align-items: center; gap: 7px;
+    transition: transform .15s, box-shadow .15s;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .edit-fab:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(159,61,143,.5); }
+  .token-editor {
+    position: fixed; top: 0; right: 0; width: 300px; height: 100vh;
+    background: #0f0f23; border-left: 1px solid rgba(255,255,255,.08);
+    overflow-y: auto; transform: translateX(100%);
+    transition: transform .3s cubic-bezier(.4,0,.2,1); z-index: 199;
+    display: flex; flex-direction: column;
+  }
+  .token-editor.is-open { transform: translateX(0); }
+  .te-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,.08);
+    position: sticky; top: 0; background: #0f0f23; z-index: 1;
+  }
+  .te-header h3 { font-size: 13px; font-weight: 700; color: #e2e8f0; }
+  .te-close { background: none; border: none; cursor: pointer; color: #64748b; font-size: 20px; line-height: 1; padding: 0 4px; }
+  .te-close:hover { color: #e2e8f0; }
+  .te-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 20px; }
+  .te-group { display: flex; flex-direction: column; gap: 10px; }
+  .te-group-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #475569; }
+  .te-row { display: flex; flex-direction: column; gap: 4px; }
+  .te-label { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #94a3b8; }
+  .te-controls { display: flex; align-items: center; gap: 8px; }
+  input[type="color"] {
+    width: 32px; height: 28px; border: 1px solid rgba(255,255,255,.15);
+    border-radius: 6px; background: none; cursor: pointer; padding: 2px; flex-shrink: 0;
+  }
+  input[type="range"] { flex: 1; accent-color: #9f3d8f; cursor: pointer; }
+  .te-value { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #64748b; min-width: 44px; text-align: right; }
+  .te-reset {
+    margin: 0 20px 24px; padding: 9px;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 6px; color: #94a3b8; font-size: 12px; cursor: pointer;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    transition: background .15s;
+  }
+  .te-reset:hover { background: rgba(255,255,255,.1); color: #e2e8f0; }
+
+  @media (max-width: 900px) {
+    .token-grid { grid-template-columns: 1fr; }
+    .split-screen-wrapper { grid-template-columns: 1fr; height: auto; }
+    .split-left { height: 300px; border-right: none; border-bottom: 1px solid var(--token-border-default); }
+  }
+</style>
+</head>
+<body>
+
+<a href="index.html" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#888;text-decoration:none;margin-bottom:20px;transition:color .15s;" onmouseover="this.style.color='#111'" onmouseout="this.style.color='#888'">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  All components
+</a>
+
+<div class="page-header">
+  <h1>Master Detail</h1>
+  <span class="badge">OutSystems UI 2.29</span>
+  <span class="badge" style="background:#e8f4fd;color:#105cef;">Design Tokens</span>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-line" style="border-color:#ef4444;"></div> split-screen-wrapper</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#f59e0b;"></div> split-left (master)</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#10b981;"></div> list-item (selected)</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#6366f1;"></div> avatar</div>
+  <div class="legend-item"><div class="legend-line" style="border-color:#9f3d8f;"></div> split-right (detail)</div>
+</div>
+
+<!-- Component preview -->
+<div class="preview-card">
+  <h2>Component preview — click items to select</h2>
+
+  <div class="split-screen-wrapper annotate-wrapper">
+
+    <!-- Left: master list -->
+    <div class="split-left annotate-left" id="masterList">
+
+      <div class="list-item is-selected annotate-item" data-id="0" onclick="selectItem(0)">
+        <div class="avatar annotate-avatar" style="background:#1d4ed8;">AT</div>
+        <div class="list-item-center">
+          <div class="list-item-title">Amos Tesen</div>
+          <div class="list-item-subtitle">Content Marketing Consultant</div>
+        </div>
+        <div class="caret-icon">
+          <svg width="8" height="12" viewBox="0 0 8 12" fill="currentColor"><path d="M1.5 1l5 5-5 5"/></svg>
+        </div>
+      </div>
+
+      <div class="list-item" data-id="1" onclick="selectItem(1)">
+        <div class="avatar" style="background:#b45309;">AM</div>
+        <div class="list-item-center">
+          <div class="list-item-title">Andrea Mccarthy</div>
+          <div class="list-item-subtitle">Services Manager West</div>
+        </div>
+        <div class="caret-icon">
+          <svg width="8" height="12" viewBox="0 0 8 12" fill="currentColor"><path d="M1.5 1l5 5-5 5"/></svg>
+        </div>
+      </div>
+
+      <div class="list-item" data-id="2" onclick="selectItem(2)">
+        <div class="avatar" style="background:#d97706;">AO</div>
+        <div class="list-item-center">
+          <div class="list-item-title">Ann Olivarria</div>
+          <div class="list-item-subtitle">Services Representative</div>
+        </div>
+        <div class="caret-icon">
+          <svg width="8" height="12" viewBox="0 0 8 12" fill="currentColor"><path d="M1.5 1l5 5-5 5"/></svg>
+        </div>
+      </div>
+
+      <div class="list-item" data-id="3" onclick="selectItem(3)">
+        <div class="avatar" style="background:#be123c;">AS</div>
+        <div class="list-item-center">
+          <div class="list-item-title">Antonia Saulter</div>
+          <div class="list-item-subtitle">Marketing Manager</div>
+        </div>
+        <div class="caret-icon">
+          <svg width="8" height="12" viewBox="0 0 8 12" fill="currentColor"><path d="M1.5 1l5 5-5 5"/></svg>
+        </div>
+      </div>
+
+      <div class="list-item" data-id="4" onclick="selectItem(4)">
+        <div class="avatar" style="background:#374151;">AJ</div>
+        <div class="list-item-center">
+          <div class="list-item-title">Ashton James</div>
+          <div class="list-item-subtitle">Front-End Developer</div>
+        </div>
+        <div class="caret-icon">
+          <svg width="8" height="12" viewBox="0 0 8 12" fill="currentColor"><path d="M1.5 1l5 5-5 5"/></svg>
+        </div>
+      </div>
+
+      <div class="list-item" data-id="5" onclick="selectItem(5)">
+        <div class="avatar" style="background:#7c3aed;">AB</div>
+        <div class="list-item-center">
+          <div class="list-item-title">Audrey Below</div>
+          <div class="list-item-subtitle">Human Resources Consultant West</div>
+        </div>
+        <div class="caret-icon">
+          <svg width="8" height="12" viewBox="0 0 8 12" fill="currentColor"><path d="M1.5 1l5 5-5 5"/></svg>
+        </div>
+      </div>
+
+      <div class="list-item" data-id="6" onclick="selectItem(6)">
+        <div class="avatar" style="background:#065f46;">AC</div>
+        <div class="list-item-center">
+          <div class="list-item-title">Aurora Currey</div>
+          <div class="list-item-subtitle">Solutions Architect</div>
+        </div>
+        <div class="caret-icon">
+          <svg width="8" height="12" viewBox="0 0 8 12" fill="currentColor"><path d="M1.5 1l5 5-5 5"/></svg>
+        </div>
+      </div>
+
+      <div class="list-item" data-id="7" onclick="selectItem(7)">
+        <div class="avatar" style="background:#0369a1;">AG</div>
+        <div class="list-item-center">
+          <div class="list-item-title">Avery Grey</div>
+          <div class="list-item-subtitle">Full-Stack Developer</div>
+        </div>
+        <div class="caret-icon">
+          <svg width="8" height="12" viewBox="0 0 8 12" fill="currentColor"><path d="M1.5 1l5 5-5 5"/></svg>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: detail panel -->
+    <div class="split-right annotate-right" id="detailPanel">
+      <div class="detail-header">
+        <div class="detail-header-left">
+          <div class="avatar-lg" id="detailAvatar" style="background:#1d4ed8;">AT</div>
+          <div>
+            <div class="detail-name" id="detailName">Amos Tesen</div>
+            <div class="detail-title" id="detailTitle">Content Marketing Consultant</div>
+          </div>
+        </div>
+        <a href="#" class="edit-link">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M11.5 1.5a1.5 1.5 0 0 1 2.121 2.121L4.5 12.743l-2.828.707.707-2.828L11.5 1.5z"/></svg>
+          Edit Profile
+        </a>
+      </div>
+
+      <div class="section-label">Bio</div>
+      <div class="section-value" id="detailBio">No available data to display</div>
+
+      <div class="separator"></div>
+
+      <div class="section-label">Contacts</div>
+      <div class="contacts-grid">
+        <div class="contact-item">
+          <label>Email</label>
+          <span id="detailEmail">amos.tesen@example.com</span>
+        </div>
+        <div class="contact-item">
+          <label>Phone</label>
+          <span id="detailPhone">1-555-445-1521</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Token cards grid -->
+<div class="token-grid">
+
+  <!-- Split Layout -->
+  <div class="token-card card-layout">
+    <div class="token-card__header">
+      <span class="dot" style="background:#ef4444;"></span>
+      Split Layout
+      <span class="component-name">split-screen-wrapper</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">display</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+        <span class="token-value">grid</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">left-percentage</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">CSS variable</span>
+        <span class="token-value">--left-percentage: 40%</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">height</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">CSS variable</span>
+        <span class="token-value">--master-detail-height</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">border</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#e5e7eb;"></span>
+          token-border-default
+        </span>
+        <span class="token-value">#e5e7eb · 1px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">border-radius</span>
+        <span class="token-name">token-border-radius-200</span>
+        <span class="token-value">8px</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- List Item -->
+  <div class="token-card card-list">
+    <div class="token-card__header">
+      <span class="dot" style="background:#f59e0b;"></span>
+      List Item
+      <span class="component-name">list-item</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">padding</span>
+        <span class="token-name">token-scale-400</span>
+        <span class="token-value">16px (all sides)</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">gap</span>
+        <span class="token-name">token-scale-300</span>
+        <span class="token-value">12px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">border-bottom</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#e5e7eb;"></span>
+          token-border-default
+        </span>
+        <span class="token-value">#e5e7eb · 1px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">title font-size</span>
+        <span class="token-name">token-font-size-400</span>
+        <span class="token-value">1rem · 16px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">title font-weight</span>
+        <span class="token-name">token-font-weight-semi-bold</span>
+        <span class="token-value">600</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">subtitle font-size</span>
+        <span class="token-name">token-font-size-300</span>
+        <span class="token-value">0.75rem · 12px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">subtitle color</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#6b7280;"></span>
+          token-text-subtle
+        </span>
+        <span class="token-value">#6b7280</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">caret color</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#6b7280;"></span>
+          token-color-neutral-7
+        </span>
+        <span class="token-value">#6b7280</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Selected State -->
+  <div class="token-card card-selected">
+    <div class="token-card__header">
+      <span class="dot" style="background:#10b981;"></span>
+      Selected State
+      <span class="component-name">list-item-selected</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">background</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#eef1fd;border-color:#c7d2fe;"></span>
+          token-bg-primary-lightest
+        </span>
+        <span class="token-value">#eef1fd</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">left-border color</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#105cef;"></span>
+          token-semantics-primary-base
+        </span>
+        <span class="token-value">#105cef</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">left-border width</span>
+        <span class="token-name">token-border-size-075</span>
+        <span class="token-value">3px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">caret color</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#105cef;"></span>
+          token-semantics-primary-base
+        </span>
+        <span class="token-value">#105cef</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Avatar -->
+  <div class="token-card card-avatar">
+    <div class="token-card__header">
+      <span class="dot" style="background:#6366f1;"></span>
+      Avatar
+      <span class="component-name">avatar · avatar-medium</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-section-label">List (avatar-medium)</div>
+      <div class="token-row">
+        <span class="prop-name">width / height</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+        <span class="token-value">40px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">border-radius</span>
+        <span class="token-name">token-border-radius-full</span>
+        <span class="token-value">9999px</span>
+      </div>
+      <div class="token-section-label">Detail (avatar-large)</div>
+      <div class="token-row">
+        <span class="prop-name">width / height</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+        <span class="token-value">48px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">border-radius</span>
+        <span class="token-name">token-border-radius-full</span>
+        <span class="token-value">9999px</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Panel -->
+  <div class="token-card card-detail">
+    <div class="token-card__header">
+      <span class="dot" style="background:#9f3d8f;"></span>
+      Detail Panel
+      <span class="component-name">split-right</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">padding</span>
+        <span class="token-name">token-scale-600</span>
+        <span class="token-value">24px (all sides)</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">header gap</span>
+        <span class="token-name">token-scale-300</span>
+        <span class="token-value">12px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">name font-size</span>
+        <span class="token-name">token-font-size-450</span>
+        <span class="token-value">1.125rem · 18px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">name font-weight</span>
+        <span class="token-name">token-font-weight-semi-bold</span>
+        <span class="token-value">600</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">separator color</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#e5e7eb;"></span>
+          token-color-neutral-4
+        </span>
+        <span class="token-value">#e5e7eb · 1px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">separator margin</span>
+        <span class="token-name">token-scale-600</span>
+        <span class="token-value">24px top/bottom</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">edit link color</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#105cef;"></span>
+          token-semantics-primary-base
+        </span>
+        <span class="token-value">#105cef</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Typography & Colors -->
+  <div class="token-card card-type">
+    <div class="token-card__header">
+      <span class="dot" style="background:#06b6d4;"></span>
+      Typography &amp; Colors
+      <span class="component-name">shared tokens</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-section-label">Text colors</div>
+      <div class="token-row">
+        <span class="prop-name">text-default</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#111827;"></span>
+          token-text-default
+        </span>
+        <span class="token-value">#111827</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">text-subtle</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#6b7280;"></span>
+          token-text-subtle
+        </span>
+        <span class="token-value">#6b7280</span>
+      </div>
+      <div class="token-section-label">Surface colors</div>
+      <div class="token-row">
+        <span class="prop-name">bg-surface-default</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#ffffff;border-color:#e5e7eb;"></span>
+          token-bg-surface-default
+        </span>
+        <span class="token-value">#ffffff</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">bg-primary-lightest</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#eef1fd;border-color:#c7d2fe;"></span>
+          token-bg-primary-lightest
+        </span>
+        <span class="token-value">#eef1fd</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Edit Tokens FAB -->
+<button class="edit-fab" onclick="toggleEditor()">
+  <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M11.5 1.5a1.5 1.5 0 0 1 2.121 2.121L4.5 12.743l-2.828.707.707-2.828L11.5 1.5z"/></svg>
+  Edit Tokens
+</button>
+
+<div class="token-editor" id="tokenEditor">
+  <div class="te-header">
+    <h3>Edit Tokens</h3>
+    <button class="te-close" onclick="toggleEditor()">×</button>
+  </div>
+  <div class="te-body">
+
+    <div class="te-group">
+      <div class="te-group-title">Colors</div>
+      <div class="te-row">
+        <span class="te-label">--token-semantics-primary-base</span>
+        <div class="te-controls">
+          <input type="color" value="#105cef" data-prop="--token-semantics-primary-base" data-default="#105cef" oninput="teColor(this)">
+          <span class="te-value">#105cef</span>
+        </div>
+      </div>
+      <div class="te-row">
+        <span class="te-label">--token-bg-primary-lightest</span>
+        <div class="te-controls">
+          <input type="color" value="#eef1fd" data-prop="--token-bg-primary-lightest" data-default="#eef1fd" oninput="teColor(this)">
+          <span class="te-value">#eef1fd</span>
+        </div>
+      </div>
+      <div class="te-row">
+        <span class="te-label">--token-border-default</span>
+        <div class="te-controls">
+          <input type="color" value="#e5e7eb" data-prop="--token-border-default" data-default="#e5e7eb" oninput="teColor(this)">
+          <span class="te-value">#e5e7eb</span>
+        </div>
+      </div>
+      <div class="te-row">
+        <span class="te-label">--token-text-subtle</span>
+        <div class="te-controls">
+          <input type="color" value="#6b7280" data-prop="--token-text-subtle" data-default="#6b7280" oninput="teColor(this)">
+          <span class="te-value">#6b7280</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="te-group">
+      <div class="te-group-title">Layout</div>
+      <div class="te-row">
+        <span class="te-label">--left-percentage</span>
+        <div class="te-controls">
+          <input type="range" min="20" max="60" value="40" data-prop="--left-percentage" data-default="40%" oninput="teRange(this,'%')">
+          <span class="te-value">40%</span>
+        </div>
+      </div>
+      <div class="te-row">
+        <span class="te-label">--master-detail-height</span>
+        <div class="te-controls">
+          <input type="range" min="300" max="700" value="460" data-prop="--master-detail-height" data-default="460px" oninput="teRange(this)">
+          <span class="te-value">460px</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="te-group">
+      <div class="te-group-title">Spacing</div>
+      <div class="te-row">
+        <span class="te-label">--token-scale-400 (item padding)</span>
+        <div class="te-controls">
+          <input type="range" min="8" max="32" value="16" data-prop="--token-scale-400" data-default="16px" oninput="teRange(this)">
+          <span class="te-value">16px</span>
+        </div>
+      </div>
+      <div class="te-row">
+        <span class="te-label">--token-scale-600 (detail padding)</span>
+        <div class="te-controls">
+          <input type="range" min="12" max="48" value="24" data-prop="--token-scale-600" data-default="24px" oninput="teRange(this)">
+          <span class="te-value">24px</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="te-group">
+      <div class="te-group-title">Avatar</div>
+      <div class="te-row">
+        <span class="te-label">--avatar-medium-size</span>
+        <div class="te-controls">
+          <input type="range" min="24" max="64" value="40" data-prop="--avatar-medium-size" data-default="40px" oninput="teRange(this)">
+          <span class="te-value">40px</span>
+        </div>
+      </div>
+      <div class="te-row">
+        <span class="te-label">--token-border-radius-full</span>
+        <div class="te-controls">
+          <input type="range" min="0" max="9999" value="9999" data-prop="--token-border-radius-full" data-default="9999px" oninput="teRange(this)">
+          <span class="te-value">9999px</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <button class="te-reset" onclick="resetTokens()">↺ Reset to defaults</button>
+</div>
+
+<script>
+const people = [
+  { name:'Amos Tesen',       title:'Content Marketing Consultant',      email:'amos.tesen@example.com',       phone:'1-555-445-1521', initials:'AT', color:'#1d4ed8' },
+  { name:'Andrea Mccarthy',  title:'Services Manager West',             email:'andrea.mccarthy@example.com',  phone:'1-555-312-4821', initials:'AM', color:'#b45309' },
+  { name:'Ann Olivarria',    title:'Services Representative',           email:'ann.olivarria@example.com',    phone:'1-555-873-2341', initials:'AO', color:'#d97706' },
+  { name:'Antonia Saulter',  title:'Marketing Manager',                 email:'antonia.saulter@example.com',  phone:'1-555-221-8743', initials:'AS', color:'#be123c' },
+  { name:'Ashton James',     title:'Front-End Developer',               email:'ashton.james@example.com',     phone:'1-555-671-2231', initials:'AJ', color:'#374151' },
+  { name:'Audrey Below',     title:'Human Resources Consultant West',   email:'audrey.below@example.com',     phone:'1-555-441-9123', initials:'AB', color:'#7c3aed' },
+  { name:'Aurora Currey',    title:'Solutions Architect',               email:'aurora.currey@example.com',    phone:'1-555-332-7612', initials:'AC', color:'#065f46' },
+  { name:'Avery Grey',       title:'Full-Stack Developer',              email:'avery.grey@example.com',       phone:'1-555-189-4521', initials:'AG', color:'#0369a1' },
+];
+
+function selectItem(id) {
+  document.querySelectorAll('.list-item').forEach(el => el.classList.remove('is-selected'));
+  document.querySelector(`[data-id="${id}"]`).classList.add('is-selected');
+  const p = people[id];
+  document.getElementById('detailName').textContent = p.name;
+  document.getElementById('detailTitle').textContent = p.title;
+  document.getElementById('detailEmail').textContent = p.email;
+  document.getElementById('detailPhone').textContent = p.phone;
+  document.getElementById('detailAvatar').textContent = p.initials;
+  document.getElementById('detailAvatar').style.background = p.color;
+}
+
+function teUpdate(p,v){document.documentElement.style.setProperty(p,v);}
+function teRange(i,u){const v=i.value,u2=u||'px';teUpdate(i.dataset.prop,v+u2);i.nextElementSibling.textContent=v+u2;}
+function teColor(i){teUpdate(i.dataset.prop,i.value);i.nextElementSibling.textContent=i.value;}
+function toggleEditor(){document.getElementById('tokenEditor').classList.toggle('is-open');}
+function resetTokens(){
+  document.querySelectorAll('[data-prop][data-default]').forEach(el=>{
+    document.documentElement.style.setProperty(el.dataset.prop,el.dataset.default);
+    if(el.type==='range'){el.value=parseFloat(el.dataset.default);el.nextElementSibling.textContent=el.dataset.default;}
+    else if(el.type==='color'){el.value=el.dataset.default;el.nextElementSibling.textContent=el.dataset.default;}
+  });
+}
+</script>
+
+</body>
+</html>
