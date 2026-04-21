@@ -276,21 +276,26 @@
   .ann-toggle--off { color: #ef4444; border-color: #ef4444; background: #fff1f2; }
   #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
 
-  /* ─── Proposed mode — Alert ─── */
-  #previewWrapper.proposed-mode { --token-border-radius-200: 12px; }
+  /* ─── Proposed mode — Alert (M3 + Radix) ─── */
+  #previewWrapper.proposed-mode { --token-border-radius-200: 12px; } /* M3 Medium shape */
   #previewWrapper.proposed-mode .alert {
-    --osui-alert-accent-width: var(--token-scale-100);
-    gap: var(--token-scale-400);
-    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    --osui-alert-border-width: 0px; /* M3 banners: no outer stroke */
+    --osui-alert-accent-width: var(--token-scale-100); /* Radix callout: 4px left rule */
+    gap: var(--token-scale-400); /* M3 banner gap: 16dp */
+    /* M3 elevation Level 1 */
+    box-shadow: 0 1px 2px rgba(0,0,0,.15), 0 1px 4px rgba(0,0,0,.08);
   }
   #previewWrapper.proposed-mode .alert-icon {
-    width: 32px; height: 32px;
+    /* M3 tonal icon container: 36×36 circle */
+    width: 36px; height: 36px;
     border-radius: var(--token-border-radius-full);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
   }
-  #previewWrapper.proposed-mode .alert-warning .alert-icon { background: rgba(217,119,6,.12); }
-  #previewWrapper.proposed-mode .alert-success .alert-icon { background: rgba(22,163,74,.12); }
-  #previewWrapper.proposed-mode .alert-info .alert-icon    { background: rgba(37,99,235,.12); }
-  #previewWrapper.proposed-mode .alert-error .alert-icon   { background: rgba(220,38,38,.12); }
+  #previewWrapper.proposed-mode .alert-warning .alert-icon { background: rgba(217,119,6,.16); }
+  #previewWrapper.proposed-mode .alert-success .alert-icon { background: rgba(22,163,74,.16); }
+  #previewWrapper.proposed-mode .alert-info .alert-icon    { background: rgba(37,99,235,.16); }
+  #previewWrapper.proposed-mode .alert-error .alert-icon   { background: rgba(220,38,38,.16); }
 
   /* ─── Token Editor ─── */
   .edit-fab {
@@ -692,7 +697,7 @@
 
 <div style="margin-top:32px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:24px;">
   <div style="margin-bottom:16px;">
-    <h3 style="font-size:14px;font-weight:700;color:#111;margin-bottom:4px;">Proposed changes — Alert</h3>
+    <h3 style="font-size:14px;font-weight:700;color:#111;margin-bottom:4px;">Proposed changes — Alert <span style="font-weight:400;color:#888;font-size:12px;">· based on M3 + Radix</span></h3>
     <p style="font-size:12px;color:#888;">CSS-only. HTML structure unchanged. Uses existing tokens or overridden token defaults.</p>
   </div>
   <div style="overflow-x:auto;">
@@ -708,39 +713,46 @@
     </thead>
     <tbody>
       <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">border-radius</td>
-        <td style="padding:8px 12px;color:#888;">8px</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">12px</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-radius-200 (default → 12px)</td>
-        <td style="padding:8px 12px;color:#555;">More rounded corners feel friendlier and match modern alert patterns</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">outer border</td>
+        <td style="padding:8px 12px;color:#888;">1px solid</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">removed</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-size-025 → 0</td>
+        <td style="padding:8px 12px;color:#555;"><strong>M3 banners use no outer stroke</strong> — the tonal container background provides sufficient visual containment</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">border-left-width (accent)</td>
         <td style="padding:8px 12px;color:#888;">3px</td>
         <td style="padding:8px 12px;color:#111;font-weight:500;">4px</td>
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-scale-100</td>
-        <td style="padding:8px 12px;color:#555;">Slightly wider accent makes the variant color more legible at a glance</td>
+        <td style="padding:8px 12px;color:#555;"><strong>Radix Callout</strong> standard: 4px left accent rule — aligns with accessible contrast thresholds for non-text indicators</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">border-radius</td>
+        <td style="padding:8px 12px;color:#888;">8px</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">12px</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-radius-200 → 12px</td>
+        <td style="padding:8px 12px;color:#555;"><strong>M3 Medium shape = 12dp</strong>; also matches <strong>Radix</strong> <code>--radius-5</code> (12px) used on Card and Callout</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">gap (icon ↔ message)</td>
         <td style="padding:8px 12px;color:#888;">12px</td>
         <td style="padding:8px 12px;color:#111;font-weight:500;">16px</td>
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-scale-400 (was scale-300)</td>
-        <td style="padding:8px 12px;color:#555;">Extra breathing room between icon and text improves readability</td>
+        <td style="padding:8px 12px;color:#555;"><strong>M3 Banner horizontal spacing = 16dp</strong> — standard gap between the leading icon and body content</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">box-shadow</td>
         <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">0 2px 8px rgba(0,0,0,.06)</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">M3 Level 1</td>
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
-        <td style="padding:8px 12px;color:#555;">Subtle elevation distinguishes alerts from the flat page background</td>
+        <td style="padding:8px 12px;color:#555;"><strong>M3 Elevated Banner</strong> variant uses Level 1 elevation to float the alert above page content</td>
       </tr>
       <tr>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">icon background</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">icon container</td>
         <td style="padding:8px 12px;color:#888;">none (transparent)</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">variant color @ 12% in circle</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">36×36 circle, 16% tonal</td>
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-radius-full</td>
-        <td style="padding:8px 12px;color:#555;">Tinted pill reinforces semantic color on the icon without adding new markup</td>
+        <td style="padding:8px 12px;color:#555;"><strong>M3 tonal icon container</strong>: icon sits in a color-matched pill at ~16% opacity — no extra markup needed</td>
       </tr>
     </tbody>
   </table>

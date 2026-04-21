@@ -355,30 +355,32 @@
   .ann-toggle--off { color: #ef4444; border-color: #ef4444; background: #fff1f2; }
   #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
 
-  /* ─── Proposed mode — Accordion ─── */
+  /* ─── Proposed mode — Accordion (M3 + Radix) ─── */
   #previewWrapper.proposed-mode .osui-accordion {
-    box-shadow: 0 4px 20px rgba(0,0,0,.08);
-    border-radius: var(--token-border-radius-200);
+    /* M3 elevation Level 1: two-layer shadow formula */
+    box-shadow: 0 1px 2px rgba(0,0,0,.2), 0 2px 6px rgba(0,0,0,.12);
+    border-radius: 12px; /* M3 Medium shape = 12dp */
     overflow: hidden;
   }
   #previewWrapper.proposed-mode .osui-accordion-item {
     --osui-accordion-item-border-radius: var(--token-border-radius-0);
+    --osui-accordion-item-border-color: rgba(0,0,0,.12); /* M3 outline on surface */
   }
   #previewWrapper.proposed-mode .osui-accordion-item__title {
-    padding: var(--token-scale-400) var(--token-scale-600);
-    transition: background .15s;
+    padding: var(--token-scale-400) var(--token-scale-600); /* M3 list: 16dp v, 24dp h */
+    transition: background .2s;
   }
   #previewWrapper.proposed-mode .osui-accordion-item__title:hover {
-    background: rgba(16,92,239,.03);
+    background: rgba(16,92,239,.08); /* M3 hover state layer = 8% */
   }
   #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__title {
-    background: rgba(16,92,239,.06);
+    background: rgba(16,92,239,.12); /* M3 active/focus state layer = 12% */
   }
   #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__icon {
-    background: rgba(16,92,239,.1);
+    background: rgba(16,92,239,.12); /* M3 tonal icon container */
     border-radius: var(--token-border-radius-full);
-    padding: 4px;
-    width: 24px; height: 24px;
+    padding: 8px;
+    width: 32px; height: 32px; /* M3 icon button target area */
   }
 
   /* ─── Token Editor ─── */
@@ -700,7 +702,7 @@
 
 <div style="margin-top:32px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:24px;">
   <div style="margin-bottom:16px;">
-    <h3 style="font-size:14px;font-weight:700;color:#111;margin-bottom:4px;">Proposed changes — Accordion</h3>
+    <h3 style="font-size:14px;font-weight:700;color:#111;margin-bottom:4px;">Proposed changes — Accordion <span style="font-weight:400;color:#888;font-size:12px;">· based on M3 + Radix</span></h3>
     <p style="font-size:12px;color:#888;">CSS-only. HTML structure unchanged. Uses existing tokens or overridden token defaults.</p>
   </div>
   <div style="overflow-x:auto;">
@@ -718,44 +720,51 @@
       <tr style="border-bottom:1px solid #f0f0f0;">
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.osui-accordion box-shadow</td>
         <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">0 4px 20px rgba(0,0,0,.08)</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">0 1px 2px + 0 2px 6px</td>
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
-        <td style="padding:8px 12px;color:#555;">Lifts the accordion off the page surface, giving it spatial depth</td>
+        <td style="padding:8px 12px;color:#555;"><strong>M3 elevation Level 1</strong> — two-layer shadow formula; the outer umbra reads as real-world depth on light surfaces</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.osui-accordion border-radius</td>
         <td style="padding:8px 12px;color:#888;">per-item · 4px</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">container · 8px</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-radius-200</td>
-        <td style="padding:8px 12px;color:#555;">Unified container radius hides internal seams; items override to border-radius-0</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">container · 12px</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
+        <td style="padding:8px 12px;color:#555;"><strong>M3 Medium shape = 12dp</strong>; unified container hides internal seams — items override to border-radius-0</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">divider color</td>
+        <td style="padding:8px 12px;color:#888;">#d5d5d5</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">rgba(0,0,0,.12)</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-default (override)</td>
+        <td style="padding:8px 12px;color:#555;"><strong>M3 outline on surface = 12% black</strong>; adapts automatically to any surface color without a fixed hex</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">title padding</td>
         <td style="padding:8px 12px;color:#888;">24px all sides</td>
         <td style="padding:8px 12px;color:#111;font-weight:500;">16px 24px</td>
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">scale-400 / scale-600</td>
-        <td style="padding:8px 12px;color:#555;">Tighter vertical rhythm fits more items above the fold without crowding</td>
+        <td style="padding:8px 12px;color:#555;"><strong>M3 List item standard: 16dp vertical, 24dp horizontal</strong> — matches Navigation List and Expansion Tile spec</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">open title background</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">hover state layer</td>
         <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">primary-base @ 6% opacity</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">primary @ 8%</td>
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-semantics-primary-base</td>
-        <td style="padding:8px 12px;color:#555;">Soft tint complements the active top-border indicator and reinforces the open state</td>
+        <td style="padding:8px 12px;color:#555;"><strong>M3 hover state layer = 8%</strong> of the state content color applied over the surface</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">hover title background</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">open state layer</td>
         <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">primary-base @ 3% opacity</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">primary @ 12%</td>
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-semantics-primary-base</td>
-        <td style="padding:8px 12px;color:#555;">Brand-tinted hover feedback instead of a flat neutral gray</td>
+        <td style="padding:8px 12px;color:#555;"><strong>M3 active/focus state layer = 12%</strong> — stronger than hover to clearly communicate the open state hierarchy</td>
       </tr>
       <tr>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">open icon background</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">open icon container</td>
         <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">circular pill · primary @ 10%</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-radius-full</td>
-        <td style="padding:8px 12px;color:#555;">Circular pill creates a clear focal point for the expand/collapse affordance</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">32×32 circular, primary @ 12%</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">border-radius-full</td>
+        <td style="padding:8px 12px;color:#555;"><strong>M3 icon button</strong>: 40dp touch target (32dp visual), tonal container at 12% opacity — same pattern as M3 icon buttons</td>
       </tr>
     </tbody>
   </table>

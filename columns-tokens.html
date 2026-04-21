@@ -237,14 +237,15 @@
   .ann-toggle--off { color: #ef4444; border-color: #ef4444; background: #fff1f2; }
   #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
 
-  /* ─── Proposed mode — Columns ─── */
+  /* ─── Proposed mode — Columns (Radix + M3) ─── */
   #previewWrapper.proposed-mode .columns {
-    gap: var(--token-scale-400);
+    gap: var(--token-scale-400); /* Radix: 16px is the 4-step in a 4dp grid */
     margin-bottom: var(--token-scale-400);
   }
   #previewWrapper.proposed-mode .column {
-    border-radius: var(--token-border-radius-200);
-    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    border-radius: var(--token-border-radius-200); /* Radix radius-4 / M3 Small shape = 8dp */
+    /* M3 elevation Level 1 */
+    box-shadow: 0 1px 2px rgba(0,0,0,.2), 0 2px 4px rgba(0,0,0,.1);
   }
 
   /* ─── Token Editor ─── */
@@ -586,7 +587,7 @@
 
 <div style="margin-top:32px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:24px;">
   <div style="margin-bottom:16px;">
-    <h3 style="font-size:14px;font-weight:700;color:#111;margin-bottom:4px;">Proposed changes — Columns</h3>
+    <h3 style="font-size:14px;font-weight:700;color:#111;margin-bottom:4px;">Proposed changes — Columns <span style="font-weight:400;color:#888;font-size:12px;">· based on M3 + Radix</span></h3>
     <p style="font-size:12px;color:#888;">CSS-only. HTML structure unchanged. Uses existing tokens or overridden token defaults.</p>
   </div>
   <div style="overflow-x:auto;">
@@ -606,21 +607,21 @@
         <td style="padding:8px 12px;color:#888;">8px</td>
         <td style="padding:8px 12px;color:#111;font-weight:500;">16px</td>
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-scale-400 (was scale-200)</td>
-        <td style="padding:8px 12px;color:#555;">More generous gutters make the grid structure visually clearer and avoid columns feeling cramped</td>
+        <td style="padding:8px 12px;color:#555;"><strong>Radix layout</strong>: 4dp base grid — 16px is the natural 4-step jump. <strong>M3 grid spec</strong> also recommends ≥16dp column gutters</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.column border-radius</td>
         <td style="padding:8px 12px;color:#888;">4px</td>
         <td style="padding:8px 12px;color:#111;font-weight:500;">8px</td>
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-radius-200 (was -100)</td>
-        <td style="padding:8px 12px;color:#555;">More rounded blocks read as intentional layout slots rather than arbitrary rectangles</td>
+        <td style="padding:8px 12px;color:#555;"><strong>Radix <code>--radius-4</code> = 8px</strong>; also matches <strong>M3 Small shape = 8dp</strong> — reads as a contained card slot</td>
       </tr>
       <tr>
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.column box-shadow</td>
         <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">0 1px 4px rgba(0,0,0,.08)</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">M3 Level 1</td>
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
-        <td style="padding:8px 12px;color:#555;">Subtle lift helps each block read as a discrete content slot, improving layout legibility</td>
+        <td style="padding:8px 12px;color:#555;"><strong>M3 Elevated Card Level 1</strong> — two-layer shadow makes each column slot read as a distinct contained surface</td>
       </tr>
     </tbody>
   </table>

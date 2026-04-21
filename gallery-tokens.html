@@ -172,15 +172,18 @@
   .ann-toggle--off { color: #ef4444; border-color: #ef4444; background: #fff1f2; }
   #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
 
-  /* ─── Proposed mode — Gallery ─── */
-  #previewWrapper.proposed-mode { --token-border-radius-100: 12px; }
+  /* ─── Proposed mode — Gallery (M3 + Radix) ─── */
+  #previewWrapper.proposed-mode { --token-border-radius-100: 12px; } /* M3 Medium shape */
   #previewWrapper.proposed-mode .gallery-img {
+    /* M3 elevation Level 1: resting state */
+    box-shadow: 0 1px 2px rgba(0,0,0,.15), 0 1px 4px rgba(0,0,0,.08);
     transition: transform .25s cubic-bezier(.4,0,.2,1), box-shadow .25s;
     cursor: pointer;
   }
   #previewWrapper.proposed-mode .gallery-img:hover {
-    transform: scale(1.04);
-    box-shadow: 0 8px 24px rgba(0,0,0,.18);
+    transform: scale(1.03); /* Radix: subtle scale, not cropping-prone */
+    /* M3 elevation Level 3: 0 4px 8px 3px + 0 1px 3px */
+    box-shadow: 0 4px 8px 3px rgba(0,0,0,.12), 0 1px 3px rgba(0,0,0,.24);
     position: relative; z-index: 1;
   }
 
@@ -465,7 +468,7 @@
 
 <div style="margin-top:32px;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.08);padding:24px;">
   <div style="margin-bottom:16px;">
-    <h3 style="font-size:14px;font-weight:700;color:#111;margin-bottom:4px;">Proposed changes — Gallery</h3>
+    <h3 style="font-size:14px;font-weight:700;color:#111;margin-bottom:4px;">Proposed changes — Gallery <span style="font-weight:400;color:#888;font-size:12px;">· based on M3 + Radix</span></h3>
     <p style="font-size:12px;color:#888;">CSS-only. HTML structure unchanged. Uses existing tokens or overridden token defaults.</p>
   </div>
   <div style="overflow-x:auto;">
@@ -484,22 +487,29 @@
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.gallery-img border-radius</td>
         <td style="padding:8px 12px;color:#888;">4px</td>
         <td style="padding:8px 12px;color:#111;font-weight:500;">12px</td>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-radius-100 (default → 12px)</td>
-        <td style="padding:8px 12px;color:#555;">More pronounced rounding gives images a polished, card-like quality that feels modern</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">token-border-radius-100 → 12px</td>
+        <td style="padding:8px 12px;color:#555;"><strong>M3 Medium shape = 12dp</strong>; also matches <strong>Radix Image</strong> defaults of 8–12px for polished media grids</td>
+      </tr>
+      <tr style="border-bottom:1px solid #f0f0f0;">
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.gallery-img resting shadow</td>
+        <td style="padding:8px 12px;color:#888;">none</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">M3 Level 1</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
+        <td style="padding:8px 12px;color:#555;"><strong>M3 Elevated Card</strong>: images start at Level 1 so the jump to Level 3 on hover is perceptible, not jarring</td>
       </tr>
       <tr style="border-bottom:1px solid #f0f0f0;">
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.gallery-img:hover transform</td>
         <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">scale(1.04)</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">scale(1.03)</td>
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
-        <td style="padding:8px 12px;color:#555;">Interaction feedback signals that images are tappable/zoomable; common gallery convention</td>
+        <td style="padding:8px 12px;color:#555;"><strong>Radix Hover Card</strong> convention: 1.03 is subtle enough to not crop against tight grid containers</td>
       </tr>
       <tr>
-        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.gallery-img:hover box-shadow</td>
+        <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#333;">.gallery-img:hover shadow</td>
         <td style="padding:8px 12px;color:#888;">none</td>
-        <td style="padding:8px 12px;color:#111;font-weight:500;">0 8px 24px rgba(0,0,0,.18)</td>
+        <td style="padding:8px 12px;color:#111;font-weight:500;">M3 Level 3</td>
         <td style="padding:8px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:#6366f1;">—</td>
-        <td style="padding:8px 12px;color:#555;">Combined with scale, creates a clear "lift" effect that reinforces hover intent</td>
+        <td style="padding:8px 12px;color:#555;"><strong>M3 elevation Level 3</strong>: <code>0 4px 8px 3px</code> + <code>0 1px 3px</code> — significant two-layer lift that matches the scale interaction</td>
       </tr>
     </tbody>
   </table>
