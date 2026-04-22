@@ -53,11 +53,11 @@
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #f4f5f7;
+    background: #f0f2f5;
     min-height: 100vh;
     color: #111827;
     line-height: 1.5;
-    padding: 36px 40px 100px;
+    padding: 48px 32px;
   }
 
   .back-nav {
@@ -92,15 +92,13 @@
   }
   .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
-  .annotation-layout {
-    display: grid; grid-template-columns: 460px 1fr;
-    gap: 20px; align-items: start;
-  }
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 
   .preview-card {
     background: #fff; border-radius: 16px;
     box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07);
     border: 1px solid #e5e7eb; overflow: hidden;
+    margin-bottom: 32px;
   }
   .preview-card__header {
     display: flex; align-items: center; gap: 8px;
@@ -223,8 +221,8 @@
   .td-rationale strong { color: #111827; }
 
   @media (max-width: 960px) {
-    .annotation-layout { grid-template-columns: 1fr; }
-    body { padding: 24px 20px 80px; }
+    .token-grid { grid-template-columns: 1fr; }
+    body { padding: 24px 20px 60px; }
   }
 
   /* ─── Proposed mode — Alert ─── */
@@ -313,8 +311,6 @@
   <div class="legend-item"><span class="legend-dot" style="background:#6366f1;"></span> Message</div>
 </div>
 
-<div class="annotation-layout">
-
   <!-- LEFT: Alert preview -->
   <div class="preview-card">
     <div class="preview-card__header">
@@ -377,7 +373,7 @@
   </div>
 
   <!-- RIGHT: Token cards -->
-  <div class="token-panel">
+  <div class="token-grid">
 
     <!-- Base / Structure -->
     <div class="token-card card-base">
@@ -613,7 +609,6 @@
     </div>
 
   </div>
-</div>
 
 <div class="proposal-section">
   <div class="proposal-header">

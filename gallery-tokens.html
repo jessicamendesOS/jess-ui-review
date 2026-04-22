@@ -38,15 +38,10 @@
   .badge--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
   .badge--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
 
-  .annotation-layout {
-    display: grid;
-    grid-template-columns: 420px 1fr;
-    gap: 32px;
-    align-items: start;
-  }
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 
   .preview-card { background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); }
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); margin-bottom: 32px; }
   .preview-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px;
     border-bottom: 1px solid #f0f0f0; background: #fafafa; }
   .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase;
@@ -156,7 +151,8 @@
   }
 
   @media (max-width: 960px) {
-    .annotation-layout { grid-template-columns: 1fr; }
+    .token-grid { grid-template-columns: 1fr; }
+    body { padding: 24px 20px 60px; }
   }
 
   /* ─── Back nav ─── */
@@ -281,8 +277,6 @@
   <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> image item</div>
 </div>
 
-<div class="annotation-layout">
-
   <!-- LEFT: preview -->
   <div class="preview-card">
     <div class="preview-card__header">
@@ -361,7 +355,7 @@
   </div>
 
   <!-- RIGHT: Token cards -->
-  <div class="token-panel">
+  <div class="token-grid">
 
     <!-- Base structure -->
     <div class="token-card card-base">
@@ -495,7 +489,6 @@
     </div>
 
   </div>
-</div>
 
 <div class="proposal-section">
   <div class="proposal-header">
