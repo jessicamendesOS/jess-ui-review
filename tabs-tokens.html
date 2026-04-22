@@ -152,10 +152,47 @@
     border-top: 1px solid var(--token-border-subtle, #f3f3f3);
   }
 
+  /* ─── Vertical layout ─── */
+  .osui-tabs--is-vertical {
+    grid-template-rows: none;
+    grid-template-columns: auto 1fr;
+  }
+
+  .osui-tabs--is-vertical .osui-tabs__header {
+    flex-direction: column;
+    border-right: 1px solid var(--token-border-subtle, #f3f3f3);
+    min-width: 120px;
+  }
+
+  .osui-tabs--is-vertical .osui-tabs__header-item {
+    flex: none;
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .osui-tabs--is-vertical .osui-tabs__header__indicator {
+    top: 0;
+    right: 0;
+    left: auto;
+    bottom: auto;
+    width: 2px;
+    height: calc(100% / var(--tabs-header-items));
+    transform: translateY(var(--tabs-indicator-transform));
+  }
+
+  .osui-tabs--is-vertical .osui-tabs__content {
+    border-top: none;
+    padding-left: var(--token-scale-600, 24px);
+  }
+
   .osui-tabs__content-item {
     display: none;
     overflow: var(--tabs-content-item-overflow);
     padding: var(--token-scale-600, 24px) var(--token-scale-0, 0);
+  }
+
+  .osui-tabs--is-vertical .osui-tabs__content-item {
+    padding: var(--token-scale-0, 0);
   }
 
   .osui-tabs__content-item.osui-tabs--is-active {
@@ -256,7 +293,7 @@
 
 #previewWrapper.current-mode .osui-tabs__header-item.osui-tabs--is-active {
   color: var(--text-color-neutral-10, #101213);
-  font-weight: var(--font-semi-bold, 600);
+  font-weight: 400;
   text-shadow: 0 0 0.5px currentColor;
 }
 
@@ -270,6 +307,22 @@
 
 #previewWrapper.current-mode .osui-tabs__content-item {
   padding: var(--space-m, 24px) var(--space-none, 0);
+}
+
+#previewWrapper.current-mode .osui-tabs--is-vertical .osui-tabs__header {
+  border-right: 1px solid var(--border-color-neutral-5, #ced4da);
+}
+
+#previewWrapper.current-mode .osui-tabs--is-vertical .osui-tabs__header__indicator {
+  background-color: var(--background-color-primary, #1068eb);
+}
+
+#previewWrapper.current-mode .osui-tabs--is-vertical .osui-tabs__content {
+  border-top: none;
+}
+
+#previewWrapper.current-mode .osui-tabs--is-vertical .osui-tabs__content-item {
+  padding: var(--space-none, 0) var(--space-m, 24px);
 }
 
 /* ─── Proposed mode — Tabs ─── */
@@ -296,6 +349,20 @@
 
 #previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__content {
   border-top: 1px solid var(--token-border-default, #d5d5d5);
+}
+
+#previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header {
+  border-right: 1px solid var(--token-border-default, #d5d5d5);
+}
+
+#previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header__indicator {
+  width: 3px;
+  border-radius: 3px 0 0 3px;
+  height: calc(100% / var(--tabs-header-items));
+}
+
+#previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header-item {
+  border-radius: var(--token-border-radius-100, 4px) 0 0 var(--token-border-radius-100, 4px);
 }
 </style>
 </head>
@@ -365,7 +432,40 @@
 
     <hr class="variant-sep">
 
-    <!-- Variant 2: Horizontal, 4 tabs with icons -->
+    <!-- Variant 2: Vertical -->
+    <p class="variant-label">Vertical</p>
+
+    <div id="tabs-wrap-v" data-block="OutSystemsUI.Tabs">
+      <div class="osui-tabs osui-tabs--is-vertical" id="osui-tabs-v" name="osui-tabs-v">
+        <div class="osui-tabs__header">
+          <div class="osui-tabs__header-item osui-tabs--is-active"
+               id="osui-tabv-h1" name="osui-tabv-h1" role="tab">Overview</div>
+          <div class="osui-tabs__header-item"
+               id="osui-tabv-h2" name="osui-tabv-h2" role="tab">Details</div>
+          <div class="osui-tabs__header-item"
+               id="osui-tabv-h3" name="osui-tabv-h3" role="tab">Settings</div>
+          <span class="osui-tabs__header__indicator" aria-hidden="true"></span>
+        </div>
+        <div class="osui-tabs__content">
+          <div class="osui-tabs__content-item osui-tabs--is-active"
+               id="osui-tabv-c1" name="osui-tabv-c1" role="tabpanel">
+            <p class="tab-content-placeholder">Overview of the component. This area renders the active panel content.</p>
+          </div>
+          <div class="osui-tabs__content-item"
+               id="osui-tabv-c2" name="osui-tabv-c2" role="tabpanel">
+            <p class="tab-content-placeholder">Detailed specifications and configuration options.</p>
+          </div>
+          <div class="osui-tabs__content-item"
+               id="osui-tabv-c3" name="osui-tabv-c3" role="tabpanel">
+            <p class="tab-content-placeholder">Settings and advanced preferences.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="variant-sep">
+
+    <!-- Variant 3: Horizontal with icons -->
     <p class="variant-label">Horizontal — With icons</p>
 
     <div id="tabs-wrap-2" data-block="OutSystemsUI.Tabs">
@@ -478,11 +578,11 @@
       <div class="token-row">
         <span class="prop-name">font-weight</span>
         <span class="token-name">token-font-weight-semi-bold</span>
-        <span class="token-value">600</span>
+        <span class="token-value">600 (2.29+)</span>
       </div>
       <div class="token-row">
         <span class="prop-name">text-shadow</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">2.28 only</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">2.28 — no reflow</span>
         <span class="token-value">0 0 0.5px currentColor</span>
       </div>
     </div>
