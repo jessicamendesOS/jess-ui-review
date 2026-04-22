@@ -326,29 +326,59 @@
 }
 
 /* ─── Proposed mode — Tabs ─── */
-#previewWrapper.proposed-mode .osui-tabs__header-item {
+
+/* Horizontal: natural-width tabs, flush container so separator spans full width */
+#previewWrapper.proposed-mode .osui-tabs--is-horizontal {
+  padding: 0;
+}
+
+#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__header-item {
+  flex: none;
   color: var(--token-text-subtle, #6b7280);
   transition: color 150ms ease, background-color 150ms ease;
   border-radius: var(--token-border-radius-100, 4px) var(--token-border-radius-100, 4px) 0 0;
 }
 
-#previewWrapper.proposed-mode .osui-tabs__header-item:hover:not(.osui-tabs--is-active) {
+#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__header-item:hover:not(.osui-tabs--is-active) {
   background-color: rgba(0, 0, 0, .04);
   color: var(--token-text-default, #242424);
 }
 
-#previewWrapper.proposed-mode .osui-tabs__header-item.osui-tabs--is-active {
+#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__header-item.osui-tabs--is-active {
   color: var(--token-semantics-primary-base, #105cef);
 }
 
-#previewWrapper.proposed-mode .osui-tabs__header__indicator {
-  background-color: var(--token-semantics-primary-base, #105cef);
-  height: 3px;
-  border-radius: 3px 3px 0 0;
+#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__content-item {
+  padding: var(--token-scale-600, 24px) var(--token-scale-400, 16px);
 }
 
 #previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__content {
   border-top: 1px solid var(--token-border-default, #d5d5d5);
+}
+
+/* Indicator: tracks actual tab width (set by JS), smooth on both position and width */
+#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__header__indicator {
+  background-color: var(--token-semantics-primary-base, #105cef);
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  width: 0;
+  transition: transform 300ms cubic-bezier(.77, 0, .18, 1), width 300ms cubic-bezier(.77, 0, .18, 1);
+}
+
+/* Vertical proposed: same indicator style, hover bg */
+#previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header-item {
+  color: var(--token-text-subtle, #6b7280);
+  transition: color 150ms ease, background-color 150ms ease;
+  border-radius: var(--token-border-radius-100, 4px) 0 0 var(--token-border-radius-100, 4px);
+}
+
+#previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header-item:hover:not(.osui-tabs--is-active) {
+  background-color: rgba(0, 0, 0, .04);
+  color: var(--token-text-default, #242424);
+}
+
+#previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header-item.osui-tabs--is-active {
+  color: var(--token-semantics-primary-base, #105cef);
 }
 
 #previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header {
@@ -356,13 +386,10 @@
 }
 
 #previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header__indicator {
+  background-color: var(--token-semantics-primary-base, #105cef);
   width: 3px;
   border-radius: 3px 0 0 3px;
   height: calc(100% / var(--tabs-header-items));
-}
-
-#previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header-item {
-  border-radius: var(--token-border-radius-100, 4px) 0 0 var(--token-border-radius-100, 4px);
 }
 </style>
 </head>
@@ -726,11 +753,46 @@
 </div>
 
 <script>
+  const tabsInstances = [];
+
   function initTabsInteractive(tabsEl) {
     const headerItems = tabsEl.querySelectorAll('.osui-tabs__header-item');
     const contentItems = tabsEl.querySelectorAll('.osui-tabs__content-item');
-    const count = headerItems.length;
-    tabsEl.style.setProperty('--tabs-header-items', count);
+    const indicator = tabsEl.querySelector('.osui-tabs__header__indicator');
+    const isHoriz = tabsEl.classList.contains('osui-tabs--is-horizontal');
+    tabsEl.style.setProperty('--tabs-header-items', headerItems.length);
+
+    let activeIdx = Array.from(headerItems).findIndex(h => h.classList.contains('osui-tabs--is-active'));
+    if (activeIdx < 0) activeIdx = 0;
+
+    function isProposed() {
+      return document.getElementById('previewWrapper').classList.contains('proposed-mode');
+    }
+
+    function positionByRect(idx, animate) {
+      if (!indicator || !isHoriz) return;
+      const item = headerItems[idx];
+      const hRect = tabsEl.querySelector('.osui-tabs__header').getBoundingClientRect();
+      const iRect = item.getBoundingClientRect();
+      if (!animate) indicator.style.transition = 'none';
+      indicator.style.width = iRect.width + 'px';
+      indicator.style.transform = 'translateX(' + (iRect.left - hRect.left) + 'px)';
+      if (!animate) requestAnimationFrame(() => { indicator.style.transition = ''; });
+    }
+
+    function positionByPercent(idx) {
+      if (!indicator) return;
+      indicator.style.width = '';
+      indicator.style.transform = '';
+      tabsEl.style.setProperty('--tabs-indicator-transform', (idx * 100) + '%');
+    }
+
+    function updateIndicator(idx, animate) {
+      if (isProposed()) positionByRect(idx, animate);
+      else positionByPercent(idx);
+    }
+
+    tabsInstances.push({ refresh: () => updateIndicator(activeIdx, false) });
 
     headerItems.forEach((item, i) => {
       item.addEventListener('click', () => {
@@ -738,9 +800,12 @@
         contentItems.forEach(c => c.classList.remove('osui-tabs--is-active'));
         item.classList.add('osui-tabs--is-active');
         if (contentItems[i]) contentItems[i].classList.add('osui-tabs--is-active');
-        tabsEl.style.setProperty('--tabs-indicator-transform', (i * 100) + '%');
+        activeIdx = i;
+        updateIndicator(i, true);
       });
     });
+
+    updateIndicator(activeIdx, false);
   }
 
   document.querySelectorAll('.osui-tabs').forEach(el => initTabsInteractive(el));
@@ -751,6 +816,7 @@
     w.classList.toggle('current-mode', mode === 'legacy');
     document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
     btn.classList.add('ptab--active');
+    requestAnimationFrame(() => tabsInstances.forEach(inst => inst.refresh()));
   }
 
   function toggleAnnotations(btn) {
