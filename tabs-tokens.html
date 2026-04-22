@@ -123,7 +123,7 @@
     cursor: pointer;
     display: flex;
     flex: 1;
-    font-size: 14px;
+    font-size: 13px;
     justify-content: center;
     min-height: 42px;
     padding: var(--token-scale-200, 8px) var(--token-scale-400, 16px);
@@ -344,6 +344,7 @@
 
 #previewWrapper.proposed-mode .osui-tabs__header-item {
   color: var(--token-text-subtle, #6b7280);
+  font-weight: 500;
   transition: color 150ms ease, background-color 150ms ease;
 }
 
@@ -360,21 +361,26 @@
   color: var(--token-semantics-primary-base, #105cef);
 }
 
+#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__header {
+  overflow: visible;
+}
+
 #previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__content {
-  border-top: 1px solid var(--token-border-default, #d5d5d5);
+  border-top: 1px solid var(--token-border-subtle, #f3f3f3);
+}
+
+#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__header__indicator {
+  bottom: -1px;
 }
 
 #previewWrapper.proposed-mode .osui-tabs__header__indicator {
   background-color: var(--token-semantics-primary-base, #105cef);
-  height: 3px;
-}
-
-#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__header__indicator {
-  border-radius: 3px 3px 0 0;
+  z-index: 1;
 }
 
 #previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header {
-  border-right: 1px solid var(--token-border-default, #d5d5d5);
+  border-right: 1px solid var(--token-border-subtle, #f3f3f3);
+  overflow: visible;
 }
 
 #previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header-item {
@@ -382,8 +388,7 @@
 }
 
 #previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header__indicator {
-  width: 3px;
-  border-radius: 3px 0 0 3px;
+  right: -1px;
 }
 </style>
 </head>
@@ -692,20 +697,12 @@
           <td class="td-rationale">The 2.28 neutral-8 is darker than needed — <strong>token-text-subtle</strong> is the standard secondary text color, creating the right contrast hierarchy against the active tab without being too heavy.</td>
         </tr>
         <tr>
-          <td class="td-property">height</td>
-          <td class="td-property">.osui-tabs__header__indicator</td>
-          <td class="td-current">2px (hardcoded)</td>
-          <td class="td-proposed">3px (hardcoded)</td>
+          <td class="td-property">font-weight</td>
+          <td class="td-property">.osui-tabs__header-item</td>
+          <td class="td-current">400 (inactive) / 600 (active)</td>
+          <td class="td-proposed">500 (all states)</td>
           <td class="td-token">—</td>
-          <td class="td-rationale">A 3px indicator is more visible at desktop densities and matches common design system conventions (Material, Fluent, Carbon). Still thin enough not to feel heavy.</td>
-        </tr>
-        <tr>
-          <td class="td-property">border-radius</td>
-          <td class="td-property">.osui-tabs__header__indicator</td>
-          <td class="td-current">none</td>
-          <td class="td-proposed">3px 3px 0 0</td>
-          <td class="td-token">—</td>
-          <td class="td-rationale">Slight rounding on the indicator top corners softens the edge without breaking the flush-to-border-top appearance. Complements the increased height.</td>
+          <td class="td-rationale">A single medium weight across all states avoids layout shift when switching tabs, while giving the header row more visual presence than regular weight. Active state is communicated by color alone.</td>
         </tr>
         <tr>
           <td class="td-property">hover background</td>
@@ -716,12 +713,12 @@
           <td class="td-rationale">No hover feedback makes inactive tabs feel unresponsive. A subtle background fill on hover provides clear affordance that tabs are interactive, matching button and list-item patterns.</td>
         </tr>
         <tr>
-          <td class="td-property">border-top color</td>
+          <td class="td-property">separator color</td>
           <td class="td-property">.osui-tabs__content</td>
           <td class="td-current">border-color-neutral-5 (#ced4da)</td>
-          <td class="td-proposed">token-border-default (#d5d5d5)</td>
-          <td class="td-token">--token-border-default</td>
-          <td class="td-rationale"><strong>token-border-default</strong> is the standard separator token, ensuring the tab content divider stays consistent with table rows, card footers, and other divider surfaces.</td>
+          <td class="td-proposed">token-border-subtle (#f3f3f3)</td>
+          <td class="td-token">--token-border-subtle</td>
+          <td class="td-rationale"><strong>token-border-subtle</strong> keeps the header/content divider light and unobtrusive — the active indicator already draws the eye, so the separator doesn't need to compete.</td>
         </tr>
       </tbody>
     </table>
