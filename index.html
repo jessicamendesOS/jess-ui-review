@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OutSystems UI — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -136,6 +137,11 @@
   .card--card .card-footer    { color: #d97706; }
   .card--card .token-pill     { background: #fef3c7; color: #92400e; }
 
+  .card--blankstate .card-accent    { background: linear-gradient(90deg, #8b5cf6, #acacac); }
+  .card--blankstate .card-icon      { background: #f5f3ff; color: #8b5cf6; }
+  .card--blankstate .card-footer    { color: #8b5cf6; }
+  .card--blankstate .token-pill     { background: #f5f3ff; color: #6d28d9; }
+
   /* ─── Footer ─── */
   .site-footer {
     margin-top: 56px;
@@ -161,7 +167,7 @@
   <div class="badge-row">
     <span class="badge badge-os">OutSystems UI 2.29</span>
     <span class="badge badge-dt">Design Tokens</span>
-    <span class="badge badge-cnt">6 components</span>
+    <span class="badge badge-cnt">7 components</span>
   </div>
 </header>
 
@@ -315,6 +321,27 @@
         <span class="token-pill">surface</span>
         <span class="token-pill">elevation</span>
         <span class="token-pill">border-radius</span>
+        <span class="token-pill">spacing</span>
+        <span class="token-pill">typography</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      View annotations
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </div>
+  </a>
+
+  <a class="component-card card--blankstate" href="blank-state-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <i class="ph ph-chats-circle" style="font-size:20px;"></i>
+      </div>
+      <div class="card-title">Blank State</div>
+      <div class="card-desc">Empty state pattern with icon, description text, and action button. Supports default and large size variants.</div>
+      <div class="card-tokens">
+        <span class="token-pill">text-placeholder</span>
+        <span class="token-pill">text-subtle</span>
         <span class="token-pill">spacing</span>
         <span class="token-pill">typography</span>
       </div>
