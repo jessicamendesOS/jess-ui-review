@@ -152,6 +152,21 @@
     border-top: 1px solid var(--token-border-subtle, #f3f3f3);
   }
 
+  /* ─── Non-justified variant ─── */
+  .osui-tabs--no-justify {
+    padding: 0;
+  }
+  .osui-tabs--no-justify .osui-tabs__header-item {
+    flex: none;
+  }
+  .osui-tabs--no-justify .osui-tabs__content-item {
+    padding-left: var(--token-scale-400, 16px);
+    padding-right: var(--token-scale-400, 16px);
+  }
+  .osui-tabs--no-justify .osui-tabs__header__indicator {
+    transition: transform 300ms cubic-bezier(.77, 0, .18, 1), width 300ms cubic-bezier(.77, 0, .18, 1);
+  }
+
   /* ─── Vertical layout ─── */
   .osui-tabs--is-vertical {
     grid-template-rows: none;
@@ -325,71 +340,50 @@
   padding: var(--space-none, 0) var(--space-m, 24px);
 }
 
-/* ─── Proposed mode — Tabs ─── */
+/* ─── Proposed mode — visual improvements (layout unchanged) ─── */
 
-/* Horizontal: natural-width tabs, flush container so separator spans full width */
-#previewWrapper.proposed-mode .osui-tabs--is-horizontal {
-  padding: 0;
+#previewWrapper.proposed-mode .osui-tabs__header-item {
+  color: var(--token-text-subtle, #6b7280);
+  transition: color 150ms ease, background-color 150ms ease;
 }
 
 #previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__header-item {
-  flex: none;
-  color: var(--token-text-subtle, #6b7280);
-  transition: color 150ms ease, background-color 150ms ease;
   border-radius: var(--token-border-radius-100, 4px) var(--token-border-radius-100, 4px) 0 0;
 }
 
-#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__header-item:hover:not(.osui-tabs--is-active) {
+#previewWrapper.proposed-mode .osui-tabs__header-item:hover:not(.osui-tabs--is-active) {
   background-color: rgba(0, 0, 0, .04);
   color: var(--token-text-default, #242424);
 }
 
-#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__header-item.osui-tabs--is-active {
+#previewWrapper.proposed-mode .osui-tabs__header-item.osui-tabs--is-active {
   color: var(--token-semantics-primary-base, #105cef);
-}
-
-#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__content-item {
-  padding: var(--token-scale-600, 24px) var(--token-scale-400, 16px);
 }
 
 #previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__content {
   border-top: 1px solid var(--token-border-default, #d5d5d5);
 }
 
-/* Indicator: tracks actual tab width (set by JS), smooth on both position and width */
-#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__header__indicator {
+#previewWrapper.proposed-mode .osui-tabs__header__indicator {
   background-color: var(--token-semantics-primary-base, #105cef);
   height: 3px;
+}
+
+#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__header__indicator {
   border-radius: 3px 3px 0 0;
-  width: 0;
-  transition: transform 300ms cubic-bezier(.77, 0, .18, 1), width 300ms cubic-bezier(.77, 0, .18, 1);
-}
-
-/* Vertical proposed: same indicator style, hover bg */
-#previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header-item {
-  color: var(--token-text-subtle, #6b7280);
-  transition: color 150ms ease, background-color 150ms ease;
-  border-radius: var(--token-border-radius-100, 4px) 0 0 var(--token-border-radius-100, 4px);
-}
-
-#previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header-item:hover:not(.osui-tabs--is-active) {
-  background-color: rgba(0, 0, 0, .04);
-  color: var(--token-text-default, #242424);
-}
-
-#previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header-item.osui-tabs--is-active {
-  color: var(--token-semantics-primary-base, #105cef);
 }
 
 #previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header {
   border-right: 1px solid var(--token-border-default, #d5d5d5);
 }
 
+#previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header-item {
+  border-radius: var(--token-border-radius-100, 4px) 0 0 var(--token-border-radius-100, 4px);
+}
+
 #previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header__indicator {
-  background-color: var(--token-semantics-primary-base, #105cef);
   width: 3px;
   border-radius: 3px 0 0 3px;
-  height: calc(100% / var(--tabs-header-items));
 }
 </style>
 </head>
@@ -459,7 +453,40 @@
 
     <hr class="variant-sep">
 
-    <!-- Variant 2: Vertical -->
+    <!-- Variant 2: Horizontal non-justified (JustifyHeaders: false) -->
+    <p class="variant-label">Horizontal — Non-justified</p>
+
+    <div id="tabs-wrap-2" data-block="OutSystemsUI.Tabs">
+      <div class="osui-tabs osui-tabs--is-horizontal osui-tabs--no-justify" id="osui-tabs-2" name="osui-tabs-2">
+        <div class="osui-tabs__header">
+          <div class="osui-tabs__header-item osui-tabs--is-active"
+               id="osui-tab2-h1" name="osui-tab2-h1" role="tab">Overview</div>
+          <div class="osui-tabs__header-item"
+               id="osui-tab2-h2" name="osui-tab2-h2" role="tab">Details</div>
+          <div class="osui-tabs__header-item"
+               id="osui-tab2-h3" name="osui-tab2-h3" role="tab">Settings</div>
+          <span class="osui-tabs__header__indicator" aria-hidden="true"></span>
+        </div>
+        <div class="osui-tabs__content">
+          <div class="osui-tabs__content-item osui-tabs--is-active"
+               id="osui-tab2-c1" name="osui-tab2-c1" role="tabpanel">
+            <p class="tab-content-placeholder">Overview of the component. This area renders the active panel content.</p>
+          </div>
+          <div class="osui-tabs__content-item"
+               id="osui-tab2-c2" name="osui-tab2-c2" role="tabpanel">
+            <p class="tab-content-placeholder">Detailed specifications and configuration options.</p>
+          </div>
+          <div class="osui-tabs__content-item"
+               id="osui-tab2-c3" name="osui-tab2-c3" role="tabpanel">
+            <p class="tab-content-placeholder">Settings and advanced preferences.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="variant-sep">
+
+    <!-- Variant 3: Vertical -->
     <p class="variant-label">Vertical</p>
 
     <div id="tabs-wrap-v" data-block="OutSystemsUI.Tabs">
@@ -485,57 +512,6 @@
           <div class="osui-tabs__content-item"
                id="osui-tabv-c3" name="osui-tabv-c3" role="tabpanel">
             <p class="tab-content-placeholder">Settings and advanced preferences.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <hr class="variant-sep">
-
-    <!-- Variant 3: Horizontal with icons -->
-    <p class="variant-label">Horizontal — With icons</p>
-
-    <div id="tabs-wrap-2" data-block="OutSystemsUI.Tabs">
-      <div class="osui-tabs osui-tabs--is-horizontal" id="osui-tabs-2" name="osui-tabs-2">
-        <div class="osui-tabs__header">
-          <div class="osui-tabs__header-item osui-tabs--is-active"
-               id="osui-tab2-h1" name="osui-tab2-h1" role="tab"
-               style="gap:6px;">
-            <i class="ph ph-house" aria-hidden="true"></i> Home
-          </div>
-          <div class="osui-tabs__header-item"
-               id="osui-tab2-h2" name="osui-tab2-h2" role="tab"
-               style="gap:6px;">
-            <i class="ph ph-bell" aria-hidden="true"></i> Alerts
-          </div>
-          <div class="osui-tabs__header-item"
-               id="osui-tab2-h3" name="osui-tab2-h3" role="tab"
-               style="gap:6px;">
-            <i class="ph ph-user" aria-hidden="true"></i> Profile
-          </div>
-          <div class="osui-tabs__header-item"
-               id="osui-tab2-h4" name="osui-tab2-h4" role="tab"
-               style="gap:6px;">
-            <i class="ph ph-gear" aria-hidden="true"></i> Settings
-          </div>
-          <span class="osui-tabs__header__indicator" aria-hidden="true"></span>
-        </div>
-        <div class="osui-tabs__content">
-          <div class="osui-tabs__content-item osui-tabs--is-active"
-               id="osui-tab2-c1" name="osui-tab2-c1" role="tabpanel">
-            <p class="tab-content-placeholder">Home dashboard content.</p>
-          </div>
-          <div class="osui-tabs__content-item"
-               id="osui-tab2-c2" name="osui-tab2-c2" role="tabpanel">
-            <p class="tab-content-placeholder">Recent alerts and notifications.</p>
-          </div>
-          <div class="osui-tabs__content-item"
-               id="osui-tab2-c3" name="osui-tab2-c3" role="tabpanel">
-            <p class="tab-content-placeholder">User profile and account details.</p>
-          </div>
-          <div class="osui-tabs__content-item"
-               id="osui-tab2-c4" name="osui-tab2-c4" role="tabpanel">
-            <p class="tab-content-placeholder">Application settings and preferences.</p>
           </div>
         </div>
       </div>
@@ -760,14 +736,11 @@
     const contentItems = tabsEl.querySelectorAll('.osui-tabs__content-item');
     const indicator = tabsEl.querySelector('.osui-tabs__header__indicator');
     const isHoriz = tabsEl.classList.contains('osui-tabs--is-horizontal');
+    const isNoJustify = tabsEl.classList.contains('osui-tabs--no-justify');
     tabsEl.style.setProperty('--tabs-header-items', headerItems.length);
 
     let activeIdx = Array.from(headerItems).findIndex(h => h.classList.contains('osui-tabs--is-active'));
     if (activeIdx < 0) activeIdx = 0;
-
-    function isProposed() {
-      return document.getElementById('previewWrapper').classList.contains('proposed-mode');
-    }
 
     function positionByRect(idx, animate) {
       if (!indicator || !isHoriz) return;
@@ -788,7 +761,7 @@
     }
 
     function updateIndicator(idx, animate) {
-      if (isProposed()) positionByRect(idx, animate);
+      if (isNoJustify) positionByRect(idx, animate);
       else positionByPercent(idx);
     }
 
