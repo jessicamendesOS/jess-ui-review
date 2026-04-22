@@ -30,12 +30,31 @@
     --token-border-default: #d5d5d5;
     --token-border-subtle: #f3f3f3;
     --token-text-default: #242424;
-    --token-text-subtle: #6b7280;
+    --token-text-subtle: #3b3b3b;    /* real 2.29: text-subtle → neutral-1000 #3b3b3b */
+    --token-text-subtlest: #626262;  /* real 2.29: text-subtlest → neutral-800 #626262 */
+    --token-text-disabled: #a2a2a2;
+    --token-text-inverse: #ffffff;
     --token-text-placeholder: #acacac;
+    /* primitives (fallback leaves) */
+    --token-primitives-base-white: #ffffff;
+    --token-primitives-neutral-400: #d5d5d5;
+    --token-primitives-neutral-500: #a2a2a2;
+    --token-primitives-neutral-800: #626262;
+    --token-primitives-neutral-1000: #3b3b3b;
+    --token-primitives-neutral-1200: #242424;
+    --token-primitives-blue-700: #105cef;
+    /* semantics */
     --token-semantics-primary-base: #105cef;
+    --token-semantics-primary-700: #105cef;
     --token-elevation-1: 0px 0px 4px 0px rgba(0,0,0,0.04), 0px 3px 9px 0px rgba(0,0,0,0.07);
     --layer-local-tier-1: 1;
-    --color-primary: #9f3d8f;
+    /* legacy 2.28 palette (for current-mode overrides) */
+    --color-primary: #1068eb;
+    --color-neutral-6: #adb5bd;
+    --color-neutral-9: #272b30;
+    --space-none: 0;
+    --space-base: 16px;
+    --space-xxl: 48px;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -100,12 +119,23 @@
   .preview-card__body { padding: 20px; background: #fff; }
   #previewWrapper { max-width: 460px; margin: 0 auto; }
 
-  /* ─── Blank State (OutSystems UI 2.29.0) ─── */
+  /* ─── Blank State (OutSystems UI 2.29.0) ───
+     Real 2.29 CSS (verbatim):
+       .blank-slate {
+         --osui-blank-slate-description-color: $token-text-default;   // NOTE: SCSS leak — raw $ string.
+                                                                      // Real intent = var(--token-text-default, #242424).
+         --osui-blank-slate-icon-color: var(--token-text-disabled, var(--token-primitives-neutral-500, #a2a2a2));
+         display: flex; flex-direction: column; justify-content: space-around; text-align: center;
+       }
+       .blank-slate-icon       { color: var(--osui-blank-slate-icon-color); font-size: 70px; }
+       .blank-slate.large .blank-slate-icon { font-size: 120px; }
+       .blank-slate-description{ color: var(--osui-blank-slate-description-color);
+                                 padding: var(--token-scale-0, 0) var(--token-scale-400, 16px); }
+       .blank-slate-actions    { padding: var(--token-scale-400, 16px); }
+  */
   .blank-slate {
-    --osui-blank-slate-icon-color: var(--token-text-placeholder, #acacac);
-    --osui-blank-slate-icon-size: 70px;
-    --osui-blank-slate-icon-size-large: 120px;
-    --osui-blank-slate-description-color: var(--token-text-subtle, #6b7280);
+    --osui-blank-slate-icon-color: var(--token-text-disabled, var(--token-primitives-neutral-500, #a2a2a2));
+    --osui-blank-slate-description-color: var(--token-text-default, var(--token-primitives-neutral-1200, #242424));
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -122,11 +152,10 @@
   }
   .blank-slate-icon {
     color: var(--osui-blank-slate-icon-color);
-    font-size: var(--osui-blank-slate-icon-size);
-    line-height: 1;
+    font-size: 70px;
   }
   .blank-slate.large .blank-slate-icon {
-    font-size: var(--osui-blank-slate-icon-size-large);
+    font-size: 120px;
   }
   .blank-slate-description {
     color: var(--osui-blank-slate-description-color);
@@ -139,15 +168,23 @@
     padding: var(--token-scale-1200, 48px) var(--token-scale-400, 16px);
   }
 
-  /* ─── Button (2.29.0) ─── */
+  /* ─── Button (OutSystems UI 2.29.0) ───
+     Real 2.29 .btn does NOT set font-family or font-size (inherits from the host page).
+     Font-size is applied by size modifiers (.btn-small = token-font-size-300, etc.) — base stays inherit.
+     margin:0 is real (resets default button spacing).
+  */
   .btn {
+    --osui-btn-background: var(--token-bg-surface-default, var(--token-primitives-base-white, #ffffff));
+    --osui-btn-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
+    --osui-btn-border-color: currentColor;
+    --osui-btn-border-radius: var(--token-border-radius-200, var(--token-scale-200, 8px));
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    background-color: var(--token-bg-surface-default, #ffffff);
-    border: var(--token-border-size-025, 1px) solid currentColor;
-    border-radius: var(--token-border-radius-200, 8px);
-    color: var(--token-semantics-primary-base, #105cef);
+    background-color: var(--osui-btn-background);
+    border: var(--token-border-size-025, 1px) solid var(--osui-btn-border-color);
+    border-radius: var(--osui-btn-border-radius);
+    color: var(--osui-btn-color);
     cursor: pointer;
     display: -webkit-inline-box;
     display: -ms-inline-flexbox;
@@ -158,20 +195,20 @@
     -ms-flex-pack: center;
     justify-content: center;
     line-height: 1;
-    padding: 0 var(--token-scale-400, 16px);
+    margin: 0;
+    padding: var(--token-scale-0, 0) var(--token-scale-400, 16px);
     transition: all 100ms linear;
-    font-family: inherit;
-    font-size: 14px;
   }
+  /* Real 2.29 .btn-cancel overrides the .btn CSS vars (not inline props), uses text-subtlest + border-input-press (both → neutral-800 #626262) */
   .btn-cancel {
-    background-color: var(--token-bg-surface-default, #ffffff);
-    border-color: var(--token-border-default, #d5d5d5);
-    color: var(--token-text-subtle, #6b7280);
+    --osui-btn-background:   var(--token-bg-surface-default, var(--token-primitives-base-white, #ffffff));
+    --osui-btn-color:        var(--token-text-subtlest,      var(--token-primitives-neutral-800, #626262));
+    --osui-btn-border-color: var(--token-border-input-press, var(--token-primitives-neutral-800, #626262));
   }
   .btn-primary {
-    background-color: var(--token-semantics-primary-base, #105cef);
-    border-color: var(--token-semantics-primary-base, #105cef);
-    color: #fff;
+    background-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
+    border-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
+    color: var(--token-text-inverse, var(--token-primitives-base-white, #ffffff));
   }
 
   /* ─── Annotations ─── */
@@ -289,7 +326,6 @@
 #previewWrapper.current-mode .blank-slate-icon {
   color: var(--text-color-neutral-6, var(--color-neutral-6));
   font-size: 70px;
-  line-height: 1;
 }
 #previewWrapper.current-mode .blank-slate.large .blank-slate-icon {
   font-size: 120px;
@@ -322,11 +358,10 @@
   -ms-flex-pack: center;
   justify-content: center;
   line-height: 1;
+  margin: 0;
   padding: var(--space-none) var(--space-base);
   -webkit-transition: all 100ms linear;
   transition: all 100ms linear;
-  font-family: inherit;
-  font-size: 14px;
 }
 #previewWrapper.current-mode .btn-cancel {
   background-color: var(--background-color-neutral-0, var(--color-neutral-0));
@@ -352,7 +387,7 @@
   font-size: 120px;
 }
 #previewWrapper.proposed-mode .blank-slate-description {
-  color: var(--token-text-subtle, #6b7280);
+  color: var(--token-text-subtle, var(--token-primitives-neutral-1000, #3b3b3b));
   font-size: var(--token-font-size-400, 1rem);
   padding: 0;
   line-height: 1.5;
@@ -365,8 +400,8 @@
 }
 #previewWrapper.proposed-mode .btn-cancel {
   border-radius: var(--token-border-radius-200, 8px);
-  border-color: var(--token-border-default, #d5d5d5);
-  color: var(--token-text-subtle, #6b7280);
+  border-color: var(--token-border-default, var(--token-primitives-neutral-400, #d5d5d5));
+  color: var(--token-text-subtle, var(--token-primitives-neutral-1000, #3b3b3b));
   padding: 0 var(--token-scale-800, 32px);
   transition: border-color .15s, color .15s, box-shadow .15s;
 }

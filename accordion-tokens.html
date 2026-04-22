@@ -33,7 +33,13 @@
     --token-text-default: #242424;
     --token-text-disabled: #a2a2a2;
     --token-semantics-primary-base: #105cef;
-    --color-primary: #9f3d8f;
+    --token-semantics-primary-700: #105cef;
+    --token-primitives-base-white: #ffffff;
+    --token-primitives-blue-700: #105cef;
+    --token-primitives-neutral-400: #d5d5d5;
+    --token-primitives-neutral-500: #a2a2a2;
+    --token-primitives-neutral-1200: #242424;
+    --color-primary: #1068eb;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -170,13 +176,14 @@
 
   /* 6.2.2 — Accordion Item */
   .osui-accordion-item {
-    --osui-accordion-item-background: var(--token-bg-surface-default, #ffffff);
-    --osui-accordion-item-border-color: var(--token-border-default, #d5d5d5);
-    --osui-accordion-item-border-width: var(--token-border-size-025, 1px);
-    --osui-accordion-item-border-radius: var(--token-border-radius-100, 4px);
-    --osui-accordion-item-color: var(--token-text-default, #242424);
-    --osui-accordion-item-active-indicator-color: var(--token-semantics-primary-base, #105cef);
-    --osui-accordion-item-icon-color: var(--token-semantics-primary-base, #105cef);
+    --osui-accordion-item-background: var(--token-bg-surface-default, var(--token-primitives-base-white, #ffffff));
+    --osui-accordion-item-border-color: var(--token-border-default, var(--token-primitives-neutral-400, #d5d5d5));
+    --osui-accordion-item-border-width: var(--token-border-size-025, var(--token-scale-025, 1px));
+    --osui-accordion-item-border-radius: var(--token-border-radius-100, var(--token-scale-100, 4px));
+    /* NOTE: real 2.29 has an SCSS leak here: `--osui-accordion-item-color: $token-text-default;` (raw $ string). Real intent shown below. */
+    --osui-accordion-item-color: var(--token-text-default, var(--token-primitives-neutral-1200, #242424));
+    --osui-accordion-item-active-indicator-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
+    --osui-accordion-item-icon-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
     --accordion-active-border-size: 2px;
     background-color: var(--osui-accordion-item-background);
     border: var(--osui-accordion-item-border-width) solid var(--osui-accordion-item-border-color);
@@ -215,12 +222,12 @@
     transition: opacity 300ms ease-in;
   }
   .osui-accordion-item--is-disabled {
-    --osui-accordion-item-color: var(--token-text-disabled, #a2a2a2);
+    --osui-accordion-item-color: var(--token-text-disabled, var(--token-primitives-neutral-500, #a2a2a2));
     color: var(--osui-accordion-item-color);
     pointer-events: none;
   }
   .osui-accordion-item--is-disabled .osui-accordion-item__icon {
-    color: var(--token-text-disabled, #a2a2a2);
+    color: var(--token-text-disabled, var(--token-primitives-neutral-500, #a2a2a2));
   }
   .osui-accordion-item__title {
     -webkit-box-align: center;

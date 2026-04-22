@@ -29,9 +29,16 @@
     --token-font-weight-regular: 400;
     --token-font-weight-semi-bold: 600;
     --token-bg-surface-default: #ffffff;
-    --token-border-default: #e5e7eb;
-    --token-text-default: #111827;
-    --token-text-subtle: #6b7280;
+    --token-border-default: #d5d5d5;                 /* was invented #e5e7eb; real 2.29 */
+    --token-text-default: #242424;                   /* was invented #111827; real 2.29 */
+    --token-text-subtle: #3b3b3b;                    /* was invented #6b7280; real 2.29 text-subtle → neutral-1000 */
+    --token-primitives-base-white: #ffffff;
+    --token-primitives-neutral-400: #d5d5d5;
+    --token-primitives-neutral-800: #626262;
+    --token-primitives-neutral-1000: #3b3b3b;
+    --token-primitives-neutral-1200: #242424;
+    --token-primitives-blue-700: #105cef;
+    --token-semantics-primary-700: #105cef;
     --token-semantics-primary-base: #105cef;
     --token-bg-primary-lightest: #eef1fd;
     --token-color-neutral-4: #e5e7eb;
@@ -82,11 +89,11 @@
 
   /* ─── Split screen component (OutSystems UI 2.29.0) ─── */
   .split-screen-wrapper {
-    --osui-master-detail-background: var(--token-bg-surface-default, #ffffff);
-    --osui-master-detail-border-color: var(--token-border-default, #d5d5d5);
-    --osui-master-detail-border-radius: var(--token-border-radius-100, 4px);
+    --osui-master-detail-background: var(--token-bg-surface-default, var(--token-primitives-base-white, #ffffff));
+    --osui-master-detail-border-color: var(--token-border-default, var(--token-primitives-neutral-400, #d5d5d5));
+    --osui-master-detail-border-radius: var(--token-border-radius-100, var(--token-scale-100, 4px));
     background-color: var(--osui-master-detail-background);
-    border: var(--token-border-size-025, 1px) solid var(--osui-master-detail-border-color);
+    border: var(--token-border-size-025, var(--token-scale-025, 1px)) solid var(--osui-master-detail-border-color);
     border-radius: var(--osui-master-detail-border-radius);
     display: -webkit-box;
     display: -ms-flexbox;

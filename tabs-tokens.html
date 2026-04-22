@@ -29,9 +29,22 @@
     --token-border-default: #d5d5d5;
     --token-border-subtle: #f3f3f3;
     --token-text-default: #242424;
-    --token-text-subtle: #6b7280;
+    --token-text-subtle: #3b3b3b;       /* real 2.29: text-subtle → neutral-1000 #3b3b3b */
+    --token-text-subtlest: #626262;     /* real 2.29: text-subtlest → neutral-800 #626262 */
+    --token-text-disabled: #a2a2a2;
     --token-text-placeholder: #acacac;
+    /* Primitives used by real 2.29 fallback chains */
+    --token-primitives-base-white: #ffffff;
+    --token-primitives-neutral-100: #f3f3f3;
+    --token-primitives-neutral-400: #d5d5d5;
+    --token-primitives-neutral-500: #a2a2a2;
+    --token-primitives-neutral-800: #626262;
+    --token-primitives-neutral-1000: #3b3b3b;
+    --token-primitives-neutral-1200: #242424;
+    --token-primitives-blue-700: #105cef;
+    /* Semantics */
     --token-semantics-primary-base: #105cef;
+    --token-semantics-primary-700: #105cef;
     --token-elevation-1: 0px 0px 4px 0px rgba(0,0,0,0.04), 0px 3px 9px 0px rgba(0,0,0,0.07);
   }
 
@@ -97,126 +110,177 @@
   .preview-card__body { padding: 24px; background: #fff; }
   #previewWrapper { max-width: 520px; margin: 0 auto; }
 
-  /* ─── Tabs (OutSystems UI 2.29.0) ─── */
+  /* ─── Tabs (OutSystems UI 2.29.0) — faithful to real CSS ───
+     Real .osui-tabs base: display:grid; height:var(--tabs-height); overflow:hidden.
+     No background, no border-radius, no padding on the component itself — any card
+     chrome belongs to the consuming screen or a preview wrapper. */
   .osui-tabs {
+    --osui-tabs-border-color: var(--token-border-default,
+                                var(--token-primitives-neutral-400, #d5d5d5));
+    --osui-tabs-header-item-color: var(--token-text-subtlest,
+                                     var(--token-primitives-neutral-800, #626262));
+    --osui-tabs-header-item-color-active: var(--token-text-default,
+                                            var(--token-primitives-neutral-1200, #242424));
+    --osui-tabs-header-item-color-disabled: var(--token-text-disabled,
+                                              var(--token-primitives-neutral-500, #a2a2a2));
+    --osui-tabs-indicator-color: var(--token-semantics-primary-base,
+                                   var(--token-semantics-primary-700,
+                                     var(--token-primitives-blue-700, #105cef)));
+    --header-item-width: fit-content(30%);
+    --header-item-alignment: auto;
+    --tabs-indicator-size: 1px;
     --tabs-height: auto;
     --tabs-header-items: 3;
     --tabs-indicator-transform: 0%;
     --tabs-content-item-overflow: visible;
-    background: var(--token-bg-surface-default, #fff);
-    border-radius: var(--token-border-radius-200, 8px);
     display: grid;
-    grid-template-rows: auto 1fr;
     height: var(--tabs-height);
-    padding: 0 var(--token-scale-400, 16px);
+    overflow: hidden;
   }
 
-  .osui-tabs__header {
-    display: flex;
+  /* Horizontal variant (real 2.29) */
+  .osui-tabs--is-horizontal {
+    grid-auto-flow: column;
+    grid-template-rows: auto 1fr;
+  }
+  .osui-tabs--is-horizontal > .osui-tabs__header {
+    grid-template-columns: repeat(var(--tabs-header-items), var(--header-item-alignment));
+    justify-content: start;
+    overflow-y: hidden;
+    overflow-x: auto;
+    word-break: keep-all;
+  }
+  .osui-tabs--is-horizontal > .osui-tabs__header .osui-tabs__header-item {
+    justify-content: center;
+    padding: var(--token-scale-200, 8px) var(--token-scale-400, 16px);
+  }
+  .osui-tabs--is-horizontal .osui-tabs__header__indicator {
+    bottom: 0;
+    height: 2px;
+    transform: translateX(var(--tabs-indicator-transform)) translateY(0) translateZ(0);
+    width: var(--tabs-indicator-size);
+  }
+  .osui-tabs--is-horizontal .osui-tabs__content {
+    border-top: var(--token-border-size-025, var(--token-scale-025, 1px)) solid var(--osui-tabs-border-color);
+    margin-top: -1px;
+  }
+
+  /* Justified variant (real 2.29) — makes header items equal-width */
+  .osui-tabs--is-justified {
+    --header-item-alignment: 1fr;
+  }
+  .osui-tabs--is-justified.osui-tabs--is-horizontal .osui-tabs__header {
+    justify-content: initial;
+  }
+  .osui-tabs--is-justified.osui-tabs--is-vertical .osui-tabs__header {
+    align-content: initial;
+  }
+
+  /* Vertical variant */
+  .osui-tabs--is-vertical {
+    grid-auto-flow: row;
+    grid-template-columns: var(--header-item-width) 1fr;
+  }
+  .osui-tabs--is-vertical > .osui-tabs__header {
+    align-content: start;
+    grid-template-rows: repeat(var(--tabs-header-items), var(--header-item-alignment));
     overflow: hidden;
+  }
+  .osui-tabs--is-vertical > .osui-tabs__header .osui-tabs__header-item {
+    flex: none;
+    justify-content: flex-start;
+    padding: var(--token-scale-200, 8px) var(--token-scale-400, 16px) var(--token-scale-200, 8px) 0;
+  }
+  .osui-tabs--is-vertical > .osui-tabs__header > .osui-tabs__header__indicator {
+    height: var(--tabs-indicator-size);
+    position: absolute;
+    top: 0;
+    transform: translateY(var(--tabs-indicator-transform)) translateX(0) translateZ(0);
+    width: 2px;
+  }
+  .osui-tabs--is-vertical.osui-tabs--is-left > .osui-tabs__header > .osui-tabs__header__indicator,
+  .osui-tabs--is-vertical:not(.osui-tabs--is-right) > .osui-tabs__header > .osui-tabs__header__indicator {
+    right: 0;
+  }
+  .osui-tabs--is-vertical .osui-tabs__content {
+    border-left: var(--token-border-size-025, var(--token-scale-025, 1px)) solid var(--osui-tabs-border-color);
+    margin-left: -1px;
+    width: auto;
+  }
+  .osui-tabs--is-vertical .osui-tabs__content-item {
+    padding: var(--token-scale-0, 0) var(--token-scale-600, 24px);
+  }
+
+  /* Header + items (shared across variants) */
+  .osui-tabs__header {
+    display: grid;
+    height: fit-content;
+    min-height: 100%;
     position: relative;
   }
-
   .osui-tabs__header-item {
     align-items: center;
-    color: var(--token-text-subtle, #6b7280);
+    background-color: transparent;
+    color: var(--osui-tabs-header-item-color);
     cursor: pointer;
     display: flex;
-    flex: 1;
     font-size: 13px;
-    justify-content: center;
     min-height: 42px;
-    padding: var(--token-scale-200, 8px) var(--token-scale-400, 16px);
-    position: relative;
+    text-align: unset;
+    width: 100%;
     transition: color 200ms linear;
     user-select: none;
   }
-
+  .osui-tabs__header-item:hover:not(.osui-tabs--is-active) {
+    color: var(--osui-tabs-header-item-color-active);
+  }
   .osui-tabs__header-item.osui-tabs--is-active {
-    color: var(--token-text-default, #242424);
-    font-weight: var(--token-font-weight-semi-bold, 600);
+    color: var(--osui-tabs-header-item-color-active);
+    text-shadow: 0 0 0.5px currentColor;   /* real 2.29 — no font-weight change, avoids reflow */
+  }
+  .osui-tabs__header-item[disabled] {
+    color: var(--osui-tabs-header-item-color-disabled);
+    cursor: auto;
   }
 
+  /* Indicator */
   .osui-tabs__header__indicator {
-    background-color: var(--token-semantics-primary-base, #105cef);
-    bottom: 0;
-    height: 2px;
-    left: 0;
+    background-color: var(--osui-tabs-indicator-color);
     position: absolute;
-    transition: transform 300ms cubic-bezier(.77, 0, .18, 1);
-    width: calc(100% / var(--tabs-header-items));
-    transform: translateX(var(--tabs-indicator-transform));
+    transition: transform 200ms linear;
+    transform-origin: 0 0;
+    will-change: transform;
   }
 
-  .osui-tabs--is-horizontal .osui-tabs__content {
-    border-top: 1px solid var(--token-border-subtle, #f3f3f3);
-  }
-
-  /* ─── Non-justified variant ─── */
-  .osui-tabs--no-justify {
-    padding: 0;
-  }
-  .osui-tabs--no-justify .osui-tabs__header-item {
-    flex: none;
-  }
-  .osui-tabs--no-justify .osui-tabs__content-item {
-    padding-left: var(--token-scale-400, 16px);
-    padding-right: var(--token-scale-400, 16px);
-  }
-  .osui-tabs--no-justify .osui-tabs__header__indicator {
-    transition: transform 300ms cubic-bezier(.77, 0, .18, 1), width 300ms cubic-bezier(.77, 0, .18, 1);
-  }
-
-  /* ─── Vertical layout ─── */
-  .osui-tabs--is-vertical {
-    grid-template-rows: none;
-    grid-template-columns: auto 1fr;
-  }
-
-  .osui-tabs--is-vertical .osui-tabs__header {
-    flex-direction: column;
-    border-right: 1px solid var(--token-border-subtle, #f3f3f3);
-    min-width: 120px;
-  }
-
-  .osui-tabs--is-vertical .osui-tabs__header-item {
-    flex: none;
-    justify-content: flex-start;
-    width: 100%;
-  }
-
-  .osui-tabs--is-vertical .osui-tabs__header__indicator {
-    top: 0;
-    right: 0;
-    left: auto;
-    bottom: auto;
-    width: 2px;
-    height: calc(100% / var(--tabs-header-items));
-    transform: translateY(var(--tabs-indicator-transform));
-  }
-
-  .osui-tabs--is-vertical .osui-tabs__content {
-    border-top: none;
-    padding-left: var(--token-scale-600, 24px);
-  }
-
+  /* Content */
   .osui-tabs__content-item {
     display: none;
     overflow: var(--tabs-content-item-overflow);
     padding: var(--token-scale-600, 24px) var(--token-scale-0, 0);
   }
-
-  .osui-tabs--is-vertical .osui-tabs__content-item {
-    padding: var(--token-scale-0, 0);
-  }
-
   .osui-tabs__content-item.osui-tabs--is-active {
     display: block;
   }
 
+  /* ─── Preview-only chrome (the card-like white surface around the tabs) ─── */
+  #previewWrapper .osui-tabs {
+    background: var(--token-bg-surface-default, var(--token-primitives-base-white, #ffffff));
+    border-radius: var(--token-border-radius-200, 8px);
+    padding: 0 var(--token-scale-400, 16px);
+  }
+  #previewWrapper .osui-tabs--is-vertical {
+    padding: 0;
+  }
+  #previewWrapper .osui-tabs--is-vertical > .osui-tabs__header {
+    padding-left: var(--token-scale-400, 16px);
+  }
+  #previewWrapper .osui-tabs--is-vertical .osui-tabs__content-item {
+    padding: var(--token-scale-400, 16px) var(--token-scale-600, 24px);
+  }
+
   .tab-content-placeholder {
     font-size: 14px;
-    color: var(--token-text-subtle, #6b7280);
+    color: var(--token-text-subtle, var(--token-primitives-neutral-1000, #3b3b3b));
     line-height: 1.6;
   }
 
@@ -284,111 +348,61 @@
     body { padding: 24px 20px 60px; }
   }
 
-/* ─── Current mode (OutSystems UI 2.28.0) ─── */
+/* ─── Current mode (OutSystems UI 2.28.0) — faithful to real 2.28 palette ───
+   2.28 did not use per-component CSS vars. The palette values come directly from
+   --color-neutral-5/8/10 and --color-primary, and the separator uses --border-color-neutral-5. */
 #previewWrapper.current-mode {
   --color-neutral-5: #ced4da;
   --color-neutral-8: #4f575e;
   --color-neutral-10: #101213;
   --color-primary: #1068eb;
-  --space-none: 0;
   --space-s: 8px;
   --space-base: 16px;
   --space-m: 24px;
-  --font-semi-bold: 600;
-  --text-color-neutral-8: var(--color-neutral-8);
-  --text-color-neutral-10: var(--color-neutral-10);
-  --background-color-primary: var(--color-primary);
-  --border-color-neutral-5: var(--color-neutral-5);
 }
 
-#previewWrapper.current-mode .osui-tabs__header-item {
-  color: var(--text-color-neutral-8, #4f575e);
-  padding: var(--space-s, 8px) var(--space-base, 16px);
+#previewWrapper.current-mode .osui-tabs {
+  /* Override the 2.29 CSS vars so the component derives from palette tokens */
+  --osui-tabs-border-color: var(--color-neutral-5, #ced4da);
+  --osui-tabs-header-item-color: var(--color-neutral-8, #4f575e);
+  --osui-tabs-header-item-color-active: var(--color-neutral-10, #101213);
+  --osui-tabs-indicator-color: var(--color-primary, #1068eb);
 }
 
 #previewWrapper.current-mode .osui-tabs__header-item.osui-tabs--is-active {
-  color: var(--text-color-neutral-10, #101213);
-  font-weight: 400;
-  text-shadow: 0 0 0.5px currentColor;
+  /* 2.28 used font-weight:semi-bold instead of the 2.29 text-shadow trick */
+  font-weight: 600;
+  text-shadow: none;
 }
 
-#previewWrapper.current-mode .osui-tabs__header__indicator {
-  background-color: var(--background-color-primary, #1068eb);
+/* ─── Proposed mode ───
+   Two proposals on top of the 2.29 baseline:
+   (1) Active header item uses primary-base instead of text-default, matching the indicator
+       for a stronger state cue;
+   (2) Lighter separator (token-border-subtle) so the active indicator is the dominant
+       visual cue, and a soft hover background fill on inactive items for affordance. */
+#previewWrapper.proposed-mode .osui-tabs {
+  --osui-tabs-border-color: var(--token-border-subtle, var(--token-primitives-neutral-100, #f3f3f3));
+  --osui-tabs-header-item-color-active: var(--token-semantics-primary-base,
+                                          var(--token-semantics-primary-700,
+                                            var(--token-primitives-blue-700, #105cef)));
 }
-
-#previewWrapper.current-mode .osui-tabs--is-horizontal .osui-tabs__content {
-  border-top: 1px solid var(--border-color-neutral-5, #ced4da);
-}
-
-#previewWrapper.current-mode .osui-tabs__content-item {
-  padding: var(--space-m, 24px) var(--space-none, 0);
-}
-
-#previewWrapper.current-mode .osui-tabs--is-vertical .osui-tabs__header {
-  border-right: 1px solid var(--border-color-neutral-5, #ced4da);
-}
-
-#previewWrapper.current-mode .osui-tabs--is-vertical .osui-tabs__header__indicator {
-  background-color: var(--background-color-primary, #1068eb);
-}
-
-#previewWrapper.current-mode .osui-tabs--is-vertical .osui-tabs__content {
-  border-top: none;
-}
-
-#previewWrapper.current-mode .osui-tabs--is-vertical .osui-tabs__content-item {
-  padding: var(--space-none, 0) var(--space-m, 24px);
-}
-
-/* ─── Proposed mode — visual improvements (layout unchanged) ─── */
 
 #previewWrapper.proposed-mode .osui-tabs__header-item {
-  color: var(--token-text-subtle, #6b7280);
-  font-weight: 500;
   transition: color 150ms ease, background-color 150ms ease;
 }
-
+#previewWrapper.proposed-mode .osui-tabs__header-item:hover:not(.osui-tabs--is-active) {
+  background-color: rgba(0, 0, 0, .04);
+  /* Proposal: hover goes to text-default (black), not the active/primary colour, to
+     keep the primary colour reserved for the active state and avoid confusing a hover
+     with an activation. */
+  color: var(--token-text-default, var(--token-primitives-neutral-1200, #242424));
+}
 #previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__header-item {
   border-radius: var(--token-border-radius-100, 4px) var(--token-border-radius-100, 4px) 0 0;
 }
-
-#previewWrapper.proposed-mode .osui-tabs__header-item:hover:not(.osui-tabs--is-active) {
-  background-color: rgba(0, 0, 0, .04);
-  color: var(--token-text-default, #242424);
-}
-
-#previewWrapper.proposed-mode .osui-tabs__header-item.osui-tabs--is-active {
-  color: var(--token-semantics-primary-base, #105cef);
-}
-
-#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__header {
-  overflow: visible;
-}
-
-#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__content {
-  border-top: 1px solid var(--token-border-subtle, #f3f3f3);
-}
-
-#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__header__indicator {
-  bottom: -1px;
-}
-
-#previewWrapper.proposed-mode .osui-tabs__header__indicator {
-  background-color: var(--token-semantics-primary-base, #105cef);
-  z-index: 1;
-}
-
-#previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header {
-  border-right: 1px solid var(--token-border-subtle, #f3f3f3);
-  overflow: visible;
-}
-
 #previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header-item {
   border-radius: var(--token-border-radius-100, 4px) 0 0 var(--token-border-radius-100, 4px);
-}
-
-#previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header__indicator {
-  right: -1px;
 }
 </style>
 </head>
@@ -425,11 +439,11 @@
   <div class="preview-card__body">
   <div id="previewWrapper" class="hide-annotations">
 
-    <!-- Variant 1: Horizontal, 3 tabs -->
+    <!-- Variant 1: Horizontal, 3 tabs, justified -->
     <p class="variant-label">Horizontal — Justified</p>
 
     <div id="tabs-wrap-1" data-block="OutSystemsUI.Tabs">
-      <div class="osui-tabs osui-tabs--is-horizontal" id="osui-tabs-1" name="osui-tabs-1">
+      <div class="osui-tabs osui-tabs--is-horizontal osui-tabs--is-justified" id="osui-tabs-1" name="osui-tabs-1">
         <div class="osui-tabs__header annotate-header">
           <div class="osui-tabs__header-item osui-tabs--is-active annotate-active"
                id="osui-tab1-h1" name="osui-tab1-h1" role="tab">Overview</div>
@@ -458,11 +472,11 @@
 
     <hr class="variant-sep">
 
-    <!-- Variant 2: Horizontal non-justified (JustifyHeaders: false) -->
-    <p class="variant-label">Horizontal — Non-justified</p>
+    <!-- Variant 2: Horizontal non-justified (JustifyHeaders: false — default OS UI behavior) -->
+    <p class="variant-label">Horizontal — Non-justified (default)</p>
 
     <div id="tabs-wrap-2" data-block="OutSystemsUI.Tabs">
-      <div class="osui-tabs osui-tabs--is-horizontal osui-tabs--no-justify" id="osui-tabs-2" name="osui-tabs-2">
+      <div class="osui-tabs osui-tabs--is-horizontal" id="osui-tabs-2" name="osui-tabs-2">
         <div class="osui-tabs__header">
           <div class="osui-tabs__header-item osui-tabs--is-active"
                id="osui-tab2-h1" name="osui-tab2-h1" role="tab">Overview</div>
@@ -495,7 +509,7 @@
     <p class="variant-label">Vertical</p>
 
     <div id="tabs-wrap-v" data-block="OutSystemsUI.Tabs">
-      <div class="osui-tabs osui-tabs--is-vertical" id="osui-tabs-v" name="osui-tabs-v">
+      <div class="osui-tabs osui-tabs--is-vertical osui-tabs--is-left osui-tabs--is-justified" id="osui-tabs-v" name="osui-tabs-v">
         <div class="osui-tabs__header">
           <div class="osui-tabs__header-item osui-tabs--is-active"
                id="osui-tabv-h1" name="osui-tabv-h1" role="tab">Overview</div>
@@ -539,10 +553,10 @@
       <div class="token-row">
         <span class="prop-name">color</span>
         <span class="token-name token-name-with-swatch">
-          <span class="swatch" style="background:#6b7280;"></span>
-          token-text-subtle
+          <span class="swatch" style="background:#626262;"></span>
+          token-text-subtlest
         </span>
-        <span class="token-value">#6b7280</span>
+        <span class="token-value">#626262</span>
       </div>
       <div class="token-row">
         <span class="prop-name">padding (T/B)</span>
@@ -560,9 +574,12 @@
         <span class="token-value">42px</span>
       </div>
       <div class="token-row">
-        <span class="prop-name">flex</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">1 (justified)</span>
+        <span class="prop-name">disabled color</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#a2a2a2;"></span>
+          token-text-disabled
+        </span>
+        <span class="token-value">#a2a2a2</span>
       </div>
     </div>
   </div>
@@ -584,14 +601,14 @@
         <span class="token-value">#242424</span>
       </div>
       <div class="token-row">
-        <span class="prop-name">font-weight</span>
-        <span class="token-name">token-font-weight-semi-bold</span>
-        <span class="token-value">600 (2.29+)</span>
+        <span class="prop-name">emphasis</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">text-shadow (no reflow)</span>
+        <span class="token-value">0 0 0.5px currentColor</span>
       </div>
       <div class="token-row">
-        <span class="prop-name">text-shadow</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">2.28 — no reflow</span>
-        <span class="token-value">0 0 0.5px currentColor</span>
+        <span class="prop-name">2.28 emphasis</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">font-weight:600</span>
+        <span class="token-value">caused 1-2px reflow</span>
       </div>
     </div>
   </div>
@@ -639,12 +656,17 @@
     </div>
     <div class="token-card__body">
       <div class="token-row">
-        <span class="prop-name">border-top</span>
+        <span class="prop-name">border-top (2.29)</span>
         <span class="token-name token-name-with-swatch">
-          <span class="swatch" style="background:#f3f3f3; border-color:rgba(0,0,0,.1);"></span>
-          token-border-subtle
+          <span class="swatch" style="background:#d5d5d5; border-color:rgba(0,0,0,.1);"></span>
+          token-border-default
         </span>
-        <span class="token-value">#f3f3f3</span>
+        <span class="token-value">#d5d5d5</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">border size</span>
+        <span class="token-name">token-border-size-025</span>
+        <span class="token-value">1px</span>
       </div>
       <div class="token-row">
         <span class="prop-name">padding (T/B)</span>
@@ -683,42 +705,50 @@
         <tr>
           <td class="td-property">color (active)</td>
           <td class="td-property">.osui-tabs__header-item<br>.osui-tabs--is-active</td>
-          <td class="td-current">text-color-neutral-10 (#101213)</td>
+          <td class="td-current">color-neutral-10 (#101213)</td>
           <td class="td-proposed">token-semantics-primary-base (#105cef)</td>
-          <td class="td-token">--token-semantics-primary-base</td>
-          <td class="td-rationale">The active tab uses the same color as the indicator — using the <strong>primary semantic token</strong> makes this relationship explicit and supports theming without two separate overrides.</td>
+          <td class="td-token">--osui-tabs-header-item-color-active</td>
+          <td class="td-rationale">2.29 already ties the active color to <code>token-text-default</code>. Proposal re-points the <code>--osui-tabs-header-item-color-active</code> component variable at <strong>primary-base</strong> so the active label matches the indicator colour and supports theming without two overrides.</td>
         </tr>
         <tr>
           <td class="td-property">color (inactive)</td>
           <td class="td-property">.osui-tabs__header-item</td>
-          <td class="td-current">text-color-neutral-8 (#4f575e)</td>
-          <td class="td-proposed">token-text-subtle (#6b7280)</td>
-          <td class="td-token">--token-text-subtle</td>
-          <td class="td-rationale">The 2.28 neutral-8 is darker than needed — <strong>token-text-subtle</strong> is the standard secondary text color, creating the right contrast hierarchy against the active tab without being too heavy.</td>
+          <td class="td-current">color-neutral-8 (#4f575e)</td>
+          <td class="td-proposed">token-text-subtlest (#626262)</td>
+          <td class="td-token">--token-text-subtlest</td>
+          <td class="td-rationale">2.29 already promotes this to <code>token-text-subtlest</code>. No visual change vs 2.28 (#4f575e → #626262 is within ΔE ≈ 3) but theming-ready: the single semantic token drives inactive tabs, secondary captions, and breadcrumbs.</td>
         </tr>
         <tr>
-          <td class="td-property">font-weight</td>
-          <td class="td-property">.osui-tabs__header-item</td>
-          <td class="td-current">400 (inactive) / 600 (active)</td>
-          <td class="td-proposed">500 (all states)</td>
+          <td class="td-property">emphasis</td>
+          <td class="td-property">.osui-tabs__header-item.osui-tabs--is-active</td>
+          <td class="td-current">font-weight: 600 (caused reflow)</td>
+          <td class="td-proposed">text-shadow: 0 0 0.5px currentColor</td>
           <td class="td-token">—</td>
-          <td class="td-rationale">A single medium weight across all states avoids layout shift when switching tabs, while giving the header row more visual presence than regular weight. Active state is communicated by color alone.</td>
+          <td class="td-rationale">2.29 already replaces the weight-switch with a sub-pixel text-shadow, which emphasises the active label without triggering 1-2px layout shift when changing tabs. Row is listed for the migration audit trail.</td>
         </tr>
         <tr>
           <td class="td-property">hover background</td>
           <td class="td-property">.osui-tabs__header-item:hover</td>
           <td class="td-current">none</td>
-          <td class="td-proposed">rgba(0,0,0,.04)</td>
+          <td class="td-proposed">rgba(0,0,0,.04) + radius-100</td>
           <td class="td-token">pending: --token-bg-surface-hover</td>
-          <td class="td-rationale">No hover feedback makes inactive tabs feel unresponsive. A subtle background fill on hover provides clear affordance that tabs are interactive, matching button and list-item patterns.</td>
+          <td class="td-rationale">Neither 2.28 nor 2.29 gives inactive tabs a hover background — the widget relies on color change alone. Proposal adds a <strong>subtle fill</strong> + top-radius for affordance, matching button / list-item patterns.</td>
+        </tr>
+        <tr>
+          <td class="td-property">hover text colour</td>
+          <td class="td-property">.osui-tabs__header-item:hover:not(.is-active)</td>
+          <td class="td-current">text-subtle → active colour (primary)</td>
+          <td class="td-proposed">token-text-default (black)</td>
+          <td class="td-token">--token-text-default</td>
+          <td class="td-rationale">Real 2.28/2.29 hover promotes text to the <em>active</em> colour, which in the proposed scheme is primary blue — making a mere hover look like an activation. Proposal routes hover to <strong>text-default</strong> so primary stays reserved for the truly active tab.</td>
         </tr>
         <tr>
           <td class="td-property">separator color</td>
           <td class="td-property">.osui-tabs__content</td>
-          <td class="td-current">border-color-neutral-5 (#ced4da)</td>
+          <td class="td-current">color-neutral-5 (#ced4da)</td>
           <td class="td-proposed">token-border-subtle (#f3f3f3)</td>
-          <td class="td-token">--token-border-subtle</td>
-          <td class="td-rationale"><strong>token-border-subtle</strong> keeps the header/content divider light and unobtrusive — the active indicator already draws the eye, so the separator doesn't need to compete.</td>
+          <td class="td-token">--osui-tabs-border-color</td>
+          <td class="td-rationale">2.29 already promotes the separator to <code>--osui-tabs-border-color</code> (default: <code>token-border-default</code> #d5d5d5). Proposal re-points that variable to <strong>token-border-subtle</strong> so the active indicator is the dominant cue.</td>
         </tr>
       </tbody>
     </table>
@@ -733,7 +763,7 @@
     const contentItems = tabsEl.querySelectorAll('.osui-tabs__content-item');
     const indicator = tabsEl.querySelector('.osui-tabs__header__indicator');
     const isHoriz = tabsEl.classList.contains('osui-tabs--is-horizontal');
-    const isNoJustify = tabsEl.classList.contains('osui-tabs--no-justify');
+    const isJustified = tabsEl.classList.contains('osui-tabs--is-justified');
     tabsEl.style.setProperty('--tabs-header-items', headerItems.length);
 
     let activeIdx = Array.from(headerItems).findIndex(h => h.classList.contains('osui-tabs--is-active'));
@@ -752,14 +782,21 @@
 
     function positionByPercent(idx) {
       if (!indicator) return;
+      // Real 2.29 JS sets --tabs-indicator-size dynamically; in the justified
+      // variant each tab is 1/N of the header, so the indicator spans the same
+      // fraction. Without this, --tabs-indicator-size stays at its default 1px
+      // and translateX(100%) only moves one pixel.
       indicator.style.width = '';
       indicator.style.transform = '';
+      tabsEl.style.setProperty('--tabs-indicator-size', 'calc(100% / ' + headerItems.length + ')');
       tabsEl.style.setProperty('--tabs-indicator-transform', (idx * 100) + '%');
     }
 
     function updateIndicator(idx, animate) {
-      if (isNoJustify) positionByRect(idx, animate);
-      else positionByPercent(idx);
+      // Non-justified (default) = rect-based because each tab has natural width.
+      // Justified = every tab has equal (100/N)% width, so percent-based works.
+      if (isJustified) positionByPercent(idx);
+      else positionByRect(idx, animate);
     }
 
     tabsInstances.push({ refresh: () => updateIndicator(activeIdx, false) });

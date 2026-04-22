@@ -22,27 +22,58 @@
     --token-border-radius-100: 4px;
     --token-border-radius-200: 8px;
     --token-border-radius-300: 12px;
-    --token-border-radius-full: 9999px;
+    --token-border-radius-full: 999px;
     --token-border-size-0: 0;
     --token-border-size-025: 1px;
     --token-border-size-075: 3px;
     --token-font-size-300: 0.75rem;
     --token-font-size-400: 1rem;
-    --token-font-size-450: 1.125rem;
-    --token-font-size-500: 1.25rem;
-    --token-font-size-550: 1.375rem;
     --token-font-weight-regular: 400;
     --token-font-weight-semi-bold: 600;
     --token-bg-surface-default: #ffffff;
-    --token-border-default: #d5d5d5;
-    --token-border-subtle: #f3f3f3;
     --token-text-default: #242424;
     --token-text-inverse: #ffffff;
+    --token-border-default: #e5e7eb;
+    /* Base (solid) semantics — values from real OS UI 2.29 CSS */
     --token-semantics-primary-base: #105cef;
+    --token-semantics-error-base:   #dc2020;  /* was #dc2626 */
+    --token-semantics-success-base: #29823b;  /* was #16a34a */
+    --token-semantics-warning-base: #e9a100;  /* was #d97706 */
+    /* Semantic 700 leaves + primitives (fallback-chain tails) */
+    --token-semantics-primary-700: #105cef;
+    --token-semantics-success-700: #29823b;
+    --token-semantics-error-700:   #dc2020;
+    --token-semantics-warning-700: #e9a100;
+    --token-primitives-base-white: #ffffff;
+    --token-primitives-blue-700:   #105cef;
+    --token-primitives-green-700:  #29823b;
+    --token-primitives-red-700:    #dc2020;
+    --token-primitives-yellow-700: #e9a100;
+    --token-semantics-info-base:    #017aad;  /* was #0284c7 */
+    --token-semantics-neutral-base: #6b7280;  /* invented — no bare .background-neutral in 2.29; kept as proposal */
+    --token-semantics-purple-base:  #7c3aed;  /* invented — 2.29 has .background-violet (#7048e8), not purple */
+    --token-semantics-pink-base:    #d6336c;  /* was #db2777 */
+    --token-semantics-indigo-base:  #4263eb;  /* was #4f46e5 */
+    /* Light-tint semantics (is-light) */
+    --token-semantics-primary-light: #dbeafe;
+    --token-semantics-primary-text:  #1d4ed8;
+    --token-semantics-error-light:   #fee2e2;
+    --token-semantics-error-text:    #b91c1c;
+    --token-semantics-success-light: #dcfce7;
+    --token-semantics-success-text:  #15803d;
+    --token-semantics-warning-light: #fef3c7;
+    --token-semantics-warning-text:  #a16207;
+    --token-semantics-info-light:    #e0f2fe;
+    --token-semantics-info-text:     #0369a1;
+    --token-semantics-neutral-light: #f3f4f6;
+    --token-semantics-neutral-text:  #374151;
+    --token-semantics-purple-light:  #ede9fe;
+    --token-semantics-purple-text:   #6d28d9;
+    --token-semantics-pink-light:    #fce7f3;
+    --token-semantics-pink-text:     #be185d;
+    --token-semantics-indigo-light:  #e0e7ff;
+    --token-semantics-indigo-text:   #4338ca;
     --token-elevation-1: 0px 0px 4px 0px rgba(0, 0, 0, 0.04), 0px 3px 9px 0px rgba(0, 0, 0, 0.07);
-    --token-elevation-2: 0px 2px 8px 0px rgba(0, 0, 0, 0.08), 0px 8px 24px 0px rgba(0, 0, 0, 0.12);
-    --layer-local-tier-1: 1;
-    --color-primary: #9f3d8f;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -105,42 +136,111 @@
     font-size: 10px; font-weight: 700; text-transform: uppercase;
     letter-spacing: .08em; color: #9ca3af; margin-right: auto;
   }
-  .preview-card__body { padding: 20px; background: #fff; }
-  #previewWrapper { max-width: 460px; margin: 0 auto; }
+  .preview-card__body { padding: 40px 20px; background: #fff; }
+  #previewWrapper { max-width: 520px; margin: 0 auto; }
 
-  /* ─── Badge component (OutSystems UI 2.29.0) ─── */
-  .osui-badge {
+  /* ─── Badge component (real OS UI utility-class HTML) ─── */
+  /*
+    HTML shape:
+    <div class="badge border-radius-rounded background-primary OSInline"><span>1</span></div>
+  */
+
+  .badge {
+    /* Real OS UI 2.29 base — height & min-width drive the circle/pill shape */
     display: inline-flex;
     align-items: center;
-    border-radius: var(--token-border-radius-full, 9999px);
-    font-size: var(--token-font-size-300, 0.75rem);
+    justify-content: center;
+    height: 32px;
+    min-width: 32px;
     font-weight: var(--token-font-weight-semi-bold, 600);
-    padding: var(--token-scale-050, 2px) var(--token-scale-200, 8px);
-    line-height: 1.4;
+    line-height: 1;
+    color: var(--token-text-inverse, var(--token-primitives-base-white, #ffffff));
+    text-align: center;
   }
-  .osui-badge--neutral  { background: #f3f4f6; color: #374151; }
-  .osui-badge--primary  { background: #dbeafe; color: #1d4ed8; }
-  .osui-badge--error    { background: #fee2e2; color: #b91c1c; }
-  .osui-badge--warning  { background: #fef3c7; color: #b45309; }
-  .osui-badge--success  { background: #dcfce7; color: #15803d; }
-  .osui-badge--info     { background: #f0f9ff; color: #0369a1; }
+  .badge > span { display: inline-block; }
 
-  /* Badge grid layout */
-  .badge-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    align-items: center;
-    justify-items: start;
+  /* Size modifiers — real OS UI 2.29 class names & dimensions */
+  .badge.badge-small {
+    font-size: var(--token-font-size-300, 0.75rem);
+    height: 24px;
+    min-width: 24px;
+    padding: 0 var(--token-scale-100, 4px);
+  }
+  .badge.badge-medium {
+    font-size: var(--token-font-size-400, 1rem);
+    height: 40px;
+    min-width: 40px;
+  }
+
+  /* Display utility */
+  .OSInline { display: inline-flex; }
+
+  /* Border-radius utilities — shapes: sharp / soft / round (real 2.29 token chain) */
+  .border-radius-         { border-radius: var(--token-border-radius-0, 0); }                                    /* sharp — invented; 2.29 uses .border-radius-none */
+  .border-radius-soft     { border-radius: var(--token-border-radius-100, var(--token-scale-100, 4px)); }        /* soft — 2.29 resolves to 4px (was 8px) */
+  .border-radius-rounded  { border-radius: var(--token-border-radius-full, 999px); }                             /* round — 999px (was 9999px) */
+
+  /* Background utilities (solid) */
+  .background-primary { background-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef))); }
+  .background-error   { background-color: var(--token-semantics-error-base,   var(--token-semantics-error-700,   var(--token-primitives-red-700,    #dc2020))); }
+  .background-success { background-color: var(--token-semantics-success-base, var(--token-semantics-success-700, var(--token-primitives-green-700,  #29823b))); }
+  .background-warning { background-color: var(--token-semantics-warning-base, var(--token-semantics-warning-700, var(--token-primitives-yellow-700, #e9a100))); }
+  /* .background-info / -pink / -indigo are hardcoded literals in real 2.29 (no var chain).
+     .background-neutral / -purple don't exist in 2.29 (invented — real uses .background-neutral-N / .background-violet). */
+  .background-info    { background-color: var(--token-semantics-info-base,    #017aad); }  /* real 2.29: hardcoded #017aad */
+  .background-neutral { background-color: var(--token-semantics-neutral-base, #6a7178); }  /* invented — real has no .background-neutral, closest is .background-neutral-7 #6a7178 */
+  .background-purple  { background-color: var(--token-semantics-purple-base, #7048e8); }   /* invented — real 2.29 has .background-violet #7048e8 */
+  .background-pink    { background-color: var(--token-semantics-pink-base,   #d6336c); }   /* real 2.29: hardcoded #d6336c */
+  .background-indigo  { background-color: var(--token-semantics-indigo-base, #4263eb); }   /* real 2.29: hardcoded #4263eb */
+
+  /* Lightest background utilities (real OS UI HTML uses .background-{color}-lightest) */
+  .background-primary-lightest { background-color: var(--token-semantics-primary-light); }
+  .background-error-lightest   { background-color: var(--token-semantics-error-light);   }
+  .background-success-lightest { background-color: var(--token-semantics-success-light); }
+  .background-warning-lightest { background-color: var(--token-semantics-warning-light); }
+  .background-info-lightest    { background-color: var(--token-semantics-info-light);    }
+  .background-neutral-lightest { background-color: var(--token-semantics-neutral-light); }
+  .background-purple-lightest  { background-color: var(--token-semantics-purple-light);  }
+  .background-pink-lightest    { background-color: var(--token-semantics-pink-light);    }
+  .background-indigo-lightest  { background-color: var(--token-semantics-indigo-light);  }
+
+  /* Darker text utilities (real OS UI HTML uses .text-{color}-darker) */
+  .text-primary-darker { color: var(--token-semantics-primary-text); }
+  .text-error-darker   { color: var(--token-semantics-error-text);   }
+  .text-success-darker { color: var(--token-semantics-success-text); }
+  .text-warning-darker { color: var(--token-semantics-warning-text); }
+  .text-info-darker    { color: var(--token-semantics-info-text);    }
+  .text-neutral-darker { color: var(--token-semantics-neutral-text); }
+  .text-purple-darker  { color: var(--token-semantics-purple-text);  }
+  .text-pink-darker    { color: var(--token-semantics-pink-text);    }
+  .text-indigo-darker  { color: var(--token-semantics-indigo-text);  }
+
+  /* Preview layout */
+  .badge-row {
+    display: flex; flex-wrap: wrap; gap: 18px;
+    align-items: flex-start; justify-content: center;
+    margin-bottom: 28px;
+  }
+  .badge-row:last-child { margin-bottom: 0; }
+  .badge-row-label {
+    width: 100%; text-align: center;
+    font-size: 10px; font-weight: 700; color: #9ca3af;
+    text-transform: uppercase; letter-spacing: .08em;
+    margin-bottom: 10px;
+  }
+  .badge-cell {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .badge-caption {
+    font-size: 10px; font-weight: 500; color: #9ca3af;
+    font-family: 'SF Mono','Fira Code',monospace;
   }
 
   /* Annotation outlines */
-  .annotate-badge-neutral  { outline: 2px dashed #6b7280; outline-offset: 3px; border-radius: 12px; }
-  .annotate-badge-primary  { outline: 2px dashed #3b82f6; outline-offset: 3px; border-radius: 12px; }
-  .annotate-badge-error    { outline: 2px dashed #ef4444; outline-offset: 3px; border-radius: 12px; }
-  .annotate-badge-warning  { outline: 2px dashed #f59e0b; outline-offset: 3px; border-radius: 12px; }
-  .annotate-badge-success  { outline: 2px dashed #22c55e; outline-offset: 3px; border-radius: 12px; }
-  .annotate-badge-info     { outline: 2px dashed #0ea5e9; outline-offset: 3px; border-radius: 12px; }
+  .annotate-container    { outline: 2px dashed #8b5cf6; outline-offset: 3px; }
+  .annotate-badge        { outline: 2px dashed #3b82f6; outline-offset: 3px; }
+  .annotate-bg           { outline: 2px dashed #10b981; outline-offset: 3px; }
+  .annotate-radius       { outline: 2px dashed #f59e0b; outline-offset: 3px; }
   #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
 
   /* ─── Token panel ─── */
@@ -150,7 +250,7 @@
   .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
   .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; letter-spacing: 0; text-transform: none; }
   .token-card__body { background: #0f1117; }
-  .token-row { display: grid; grid-template-columns: 155px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); transition: background .12s; }
+  .token-row { display: grid; grid-template-columns: 150px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); transition: background .12s; }
   .token-row:last-child { border-bottom: none; }
   .token-row:hover { background: rgba(255,255,255,.03); }
   .prop-name  { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; white-space: nowrap; }
@@ -159,8 +259,7 @@
   .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); vertical-align: middle; margin-right: 5px; flex-shrink: 0; }
   .token-name-with-swatch { display: flex; align-items: center; }
 
-  /* Token card header gradient — red-to-purple accent */
-  .badge-structure-tok  .token-card__header { background: linear-gradient(90deg, #ef4444, #8b5cf6); }
+  .badge-structure-tok  .token-card__header { background: linear-gradient(90deg, #3b82f6, #8b5cf6); }
   .badge-typography-tok .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
   .badge-colors-tok     .token-card__header { background: linear-gradient(120deg, #7c2d12, #f97316); }
 
@@ -193,91 +292,97 @@
     body { padding: 24px 20px 60px; }
   }
 
-/* ─── Current mode (OutSystems UI 2.28.0) ─── */
-#previewWrapper.current-mode {
-  --color-neutral-0: #ffffff;
-  --color-neutral-1: #f8f9fa;
-  --color-neutral-2: #f1f3f5;
-  --color-neutral-3: #e9ecef;
-  --color-neutral-4: #dee2e6;
-  --color-neutral-7: #6a7178;
-  --color-neutral-9: #272b30;
-  --color-neutral-10: #101213;
-  --color-primary: #1068eb;
-  --color-red-lightest: #faeaea;
-  --color-red: #c92a2a;
-  --color-red-dark: #ab2424;
-  --color-yellow-lightest: #fef5e5;
-  --color-yellow: #f59f00;
-  --color-yellow-dark: #d08700;
-  --color-green-lightest: #ebf7ed;
-  --color-green: #37b24d;
-  --color-green-dark: #2f9741;
-  --color-cyan-lightest: #e7f2f4;
-  --color-cyan: #0d8091;
-  --color-cyan-dark: #0b6d7b;
-  --color-blue-lightest: #e8f2fa;
-  --color-blue: #1a79cb;
-  --color-blue-dark: #1667ad;
+/* ─── Current mode (OutSystems UI 2.28.0) — raw values from real 2.28 CSS, no tokens ─── */
+/* Base .badge rule from 2.28 — height-driven shape, white text, flex centering. */
+#previewWrapper.current-mode .badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  min-width: 32px;
+  color: #ffffff;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0;
 }
+/* Size classes — real 2.28 .badge-small / .badge-medium dimensions */
+#previewWrapper.current-mode .badge.badge-small {
+  font-size: 12px;
+  height: 24px;
+  min-width: 24px;
+  padding: 0 4px;
+}
+#previewWrapper.current-mode .badge.badge-medium {
+  font-size: 16px;
+  height: 40px;
+  min-width: 40px;
+  padding: 0;
+}
+/* Shape utilities — real 2.28 resolved values */
+#previewWrapper.current-mode .border-radius-        { border-radius: 0; }    /* invented class — 2.28 uses .border-radius-none */
+#previewWrapper.current-mode .border-radius-soft    { border-radius: 4px; }  /* 2.28 --border-radius-soft: 4px (was mis-shown as 8px) */
+#previewWrapper.current-mode .border-radius-rounded { border-radius: 100px; }
 
-/* 2.28 badge uses semantic color vars mapped to old palette */
-#previewWrapper.current-mode .osui-badge--neutral {
-  background: var(--color-neutral-2, #f1f3f5);
-  color: var(--color-neutral-7, #6a7178);
-}
-#previewWrapper.current-mode .osui-badge--primary {
-  background: var(--color-blue-lightest, #e8f2fa);
-  color: var(--color-primary, #1068eb);
-}
-#previewWrapper.current-mode .osui-badge--error {
-  background: var(--color-red-lightest, #faeaea);
-  color: var(--color-red-dark, #ab2424);
-}
-#previewWrapper.current-mode .osui-badge--warning {
-  background: var(--color-yellow-lightest, #fef5e5);
-  color: var(--color-yellow-dark, #d08700);
-}
-#previewWrapper.current-mode .osui-badge--success {
-  background: var(--color-green-lightest, #ebf7ed);
-  color: var(--color-green-dark, #2f9741);
-}
-#previewWrapper.current-mode .osui-badge--info {
-  background: var(--color-cyan-lightest, #e7f2f4);
-  color: var(--color-cyan-dark, #0b6d7b);
-}
-/* 2.28 uses --border-radius-rounded for pill */
-#previewWrapper.current-mode .osui-badge {
-  border-radius: var(--border-radius-rounded, 100px);
-  font-size: var(--font-size-xs, 12px);
-  font-weight: var(--font-semi-bold, 600);
-  padding: 2px var(--space-s, 8px);
-}
+/* Solid backgrounds — real 2.28 palette values. White text inherited from .badge base. */
+#previewWrapper.current-mode .background-primary { background-color: #1068eb; }  /* --color-primary */
+#previewWrapper.current-mode .background-error   { background-color: #dc2020; }  /* --color-error (was mis-shown as #c92a2a = --color-red) */
+#previewWrapper.current-mode .background-success { background-color: #29823b; }  /* --color-success (was #37b24d = --color-green) */
+#previewWrapper.current-mode .background-warning { background-color: #e9a100; }  /* --color-warning (was #f59f00 = --color-yellow) */
+#previewWrapper.current-mode .background-info    { background-color: #017aad; }  /* --color-info (was #0d8091 = --color-cyan) */
+#previewWrapper.current-mode .background-neutral { background-color: #6a7178; }  /* invented — proxies --color-neutral-7 */
+#previewWrapper.current-mode .background-indigo  { background-color: #4263eb; }  /* --color-indigo */
+#previewWrapper.current-mode .background-purple  { background-color: #7048e8; }  /* proxies 2.28 .background-violet (real class name) */
+#previewWrapper.current-mode .background-pink    { background-color: #d6336c; }  /* --color-pink */
 
-/* ─── Proposed mode — semantic tokens per variant ─── */
-#previewWrapper.proposed-mode .osui-badge--neutral {
-  background: var(--token-semantics-neutral-background, #f3f4f6);
-  color: var(--token-semantics-neutral-text, #374151);
+/* Lightest-tint backgrounds — real 2.28 resolved values.
+   Note: in 2.28, .background-{primary|error|success|warning|info}-lightest resolves to neutral-0 (#ffffff)
+   or to the -light value. Showing the page's paired-light tints here using 2.28's -light hex where available. */
+#previewWrapper.current-mode .background-primary-lightest { background-color: #ffffff; }  /* 2.28 resolves to neutral-0 */
+#previewWrapper.current-mode .background-error-lightest   { background-color: #fceaea; }  /* --color-error-light */
+#previewWrapper.current-mode .background-success-lightest { background-color: #eaf3eb; }  /* --color-success-light */
+#previewWrapper.current-mode .background-warning-lightest { background-color: #fdf6e5; }  /* --color-warning-light */
+#previewWrapper.current-mode .background-info-lightest    { background-color: #e5f5fc; }  /* --color-info-light */
+#previewWrapper.current-mode .background-neutral-lightest { background-color: #f8f9fa; }  /* --color-neutral-1 proxy */
+#previewWrapper.current-mode .background-indigo-lightest  { background-color: #eceffd; }  /* --color-indigo-lightest */
+#previewWrapper.current-mode .background-purple-lightest  { background-color: #f1edfd; }  /* 2.28 --color-violet-lightest */
+#previewWrapper.current-mode .background-pink-lightest    { background-color: #fbebf0; }  /* --color-pink-lightest */
+
+/* Paired "darker" text — in 2.28 .text-{color}-darker resolves to the base color token */
+#previewWrapper.current-mode .text-primary-darker { color: #1068eb; }  /* 2.28 resolves to --color-primary */
+#previewWrapper.current-mode .text-error-darker   { color: #dc2020; }
+#previewWrapper.current-mode .text-success-darker { color: #29823b; }
+#previewWrapper.current-mode .text-warning-darker { color: #e9a100; }
+#previewWrapper.current-mode .text-info-darker    { color: #017aad; }
+#previewWrapper.current-mode .text-neutral-darker { color: #4f575e; }  /* --color-neutral-8 */
+#previewWrapper.current-mode .text-indigo-darker  { color: #2e45a5; }  /* --color-indigo-darker */
+#previewWrapper.current-mode .text-purple-darker  { color: #4e32a2; }  /* --color-violet-darker */
+#previewWrapper.current-mode .text-pink-darker    { color: #96244c; }  /* --color-pink-darker */
+
+/* ─── Proposed mode — expanded palette + proper shape proportions ─── */
+/*
+  Proposed changes:
+    • Extend .background-* / .text-* with three new colors (purple, pink, indigo)
+    • Formalise the paired .background-{color}-lightest / .text-{color}-darker utilities
+    • Fix shape proportions — sharp/soft read as clear rectangles, round with 1 character is a perfect circle
+*/
+
+/* Round: single-character content renders as a perfect circle (height = min-width) */
+#previewWrapper.proposed-mode .badge.border-radius-rounded {
+  height: 20px;
+  min-width: 20px;
+  padding: 0 6px;
+  line-height: 1;
 }
-#previewWrapper.proposed-mode .osui-badge--primary {
-  background: var(--token-semantics-primary-background, #dbeafe);
-  color: var(--token-semantics-primary-text, #1d4ed8);
+#previewWrapper.proposed-mode .badge.badge-small.border-radius-rounded {
+  height: 16px;
+  min-width: 16px;
+  padding: 0 4px;
+  font-size: 10px;
 }
-#previewWrapper.proposed-mode .osui-badge--error {
-  background: var(--token-semantics-error-background, #fee2e2);
-  color: var(--token-semantics-error-text, #b91c1c);
-}
-#previewWrapper.proposed-mode .osui-badge--warning {
-  background: var(--token-semantics-warning-background, #fef3c7);
-  color: var(--token-semantics-warning-text, #b45309);
-}
-#previewWrapper.proposed-mode .osui-badge--success {
-  background: var(--token-semantics-success-background, #dcfce7);
-  color: var(--token-semantics-success-text, #15803d);
-}
-#previewWrapper.proposed-mode .osui-badge--info {
-  background: var(--token-semantics-info-background, #f0f9ff);
-  color: var(--token-semantics-info-text, #0369a1);
+#previewWrapper.proposed-mode .badge.badge-medium.border-radius-rounded {
+  height: 28px;
+  min-width: 28px;
+  padding: 0 8px;
 }
 </style>
 </head>
@@ -295,12 +400,10 @@
 </div>
 
 <div class="legend">
-  <div class="legend-item"><span class="legend-dot" style="background:#6b7280;"></span> Neutral</div>
-  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> Primary</div>
-  <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> Error</div>
-  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> Warning</div>
-  <div class="legend-item"><span class="legend-dot" style="background:#22c55e;"></span> Success</div>
-  <div class="legend-item"><span class="legend-dot" style="background:#0ea5e9;"></span> Info</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6;"></span> .badge (container)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> .background-*</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> .border-radius-*</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#ec4899;"></span> .background-*-lightest + .text-*-darker</div>
 </div>
 
 <!-- Preview -->
@@ -317,13 +420,43 @@
   <div class="preview-card__body">
   <div id="previewWrapper" class="hide-annotations">
 
-    <div class="badge-grid">
-      <span class="osui-badge osui-badge--neutral annotate-badge-neutral">Neutral</span>
-      <span class="osui-badge osui-badge--primary annotate-badge-primary">Primary</span>
-      <span class="osui-badge osui-badge--error annotate-badge-error">Error</span>
-      <span class="osui-badge osui-badge--warning annotate-badge-warning">Warning</span>
-      <span class="osui-badge osui-badge--success annotate-badge-success">Success</span>
-      <span class="osui-badge osui-badge--info annotate-badge-info">Info</span>
+    <div class="badge-row">
+      <div class="badge-row-label">Solid · semantic backgrounds</div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-primary OSInline annotate-bg"><span>1</span></div><span class="badge-caption">primary</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-error OSInline annotate-bg"><span>3</span></div><span class="badge-caption">error</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-success OSInline annotate-bg"><span>9</span></div><span class="badge-caption">success</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-warning OSInline annotate-bg"><span>12</span></div><span class="badge-caption">warning</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-info OSInline annotate-bg"><span>42</span></div><span class="badge-caption">info</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-neutral OSInline annotate-bg"><span>99+</span></div><span class="badge-caption">neutral</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-purple OSInline annotate-bg"><span>5</span></div><span class="badge-caption">purple</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-pink OSInline annotate-bg"><span>8</span></div><span class="badge-caption">pink</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-indigo OSInline annotate-bg"><span>7</span></div><span class="badge-caption">indigo</span></div>
+    </div>
+
+    <div class="badge-row">
+      <div class="badge-row-label">Lightest · .background-&#123;color&#125;-lightest + .text-&#123;color&#125;-darker</div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-neutral-lightest text-neutral-darker OSInline"><span>1</span></div><span class="badge-caption">neutral</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-error-lightest text-error-darker OSInline"><span>2</span></div><span class="badge-caption">error</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-warning-lightest text-warning-darker OSInline"><span>3</span></div><span class="badge-caption">warning</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-success-lightest text-success-darker OSInline"><span>4</span></div><span class="badge-caption">success</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-primary-lightest text-primary-darker OSInline"><span>5</span></div><span class="badge-caption">primary</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-indigo-lightest text-indigo-darker OSInline"><span>6</span></div><span class="badge-caption">indigo</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-purple-lightest text-purple-darker OSInline"><span>7</span></div><span class="badge-caption">purple</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-pink-lightest text-pink-darker OSInline"><span>8</span></div><span class="badge-caption">pink</span></div>
+    </div>
+
+    <div class="badge-row">
+      <div class="badge-row-label">Shapes · sharp / soft / round</div>
+      <div class="badge-cell"><div class="badge border-radius- background-primary OSInline annotate-radius"><span>1</span></div><span class="badge-caption">sharp · .border-radius-</span></div>
+      <div class="badge-cell"><div class="badge border-radius-soft background-primary OSInline annotate-radius"><span>2</span></div><span class="badge-caption">soft · .border-radius-soft</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-primary OSInline annotate-radius"><span>3</span></div><span class="badge-caption">round · .border-radius-rounded</span></div>
+    </div>
+
+    <div class="badge-row">
+      <div class="badge-row-label">Sizes · small / default / medium</div>
+      <div class="badge-cell"><div class="badge badge-small border-radius-rounded background-primary OSInline"><span>1</span></div><span class="badge-caption">small · .badge-small</span></div>
+      <div class="badge-cell"><div class="badge border-radius-rounded background-primary OSInline"><span>2</span></div><span class="badge-caption">default · (no class)</span></div>
+      <div class="badge-cell"><div class="badge badge-medium border-radius-rounded background-primary OSInline"><span>3</span></div><span class="badge-caption">medium · .badge-medium</span></div>
     </div>
 
   </div>
@@ -333,19 +466,14 @@
 <!-- Token cards -->
 <div class="token-grid">
 
-  <!-- Structure -->
+  <!-- .badge base -->
   <div class="token-card badge-structure-tok">
     <div class="token-card__header">
-      <span class="dot" style="background:linear-gradient(90deg,#ef4444,#8b5cf6);"></span>
-      Structure
-      <span class="component-name">osui-badge</span>
+      <span class="dot" style="background:#8b5cf6;"></span>
+      Base (.badge)
+      <span class="component-name">.badge</span>
     </div>
     <div class="token-card__body">
-      <div class="token-row">
-        <span class="prop-name">border-radius</span>
-        <span class="token-name">token-border-radius-full</span>
-        <span class="token-value">9999px</span>
-      </div>
       <div class="token-row">
         <span class="prop-name">padding (T/B)</span>
         <span class="token-name">token-scale-050</span>
@@ -357,22 +485,6 @@
         <span class="token-value">8px</span>
       </div>
       <div class="token-row">
-        <span class="prop-name">line-height</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">1.4</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Typography -->
-  <div class="token-card badge-typography-tok">
-    <div class="token-card__header">
-      <span class="dot" style="background:#10b981;"></span>
-      Typography
-      <span class="component-name">osui-badge</span>
-    </div>
-    <div class="token-card__body">
-      <div class="token-row">
         <span class="prop-name">font-size</span>
         <span class="token-name">token-font-size-300</span>
         <span class="token-value">0.75rem · 12px</span>
@@ -382,49 +494,149 @@
         <span class="token-name">token-font-weight-semi-bold</span>
         <span class="token-value">600</span>
       </div>
+      <div class="token-row">
+        <span class="prop-name">color (text)</span>
+        <span class="token-name">token-text-inverse</span>
+        <span class="token-value">#ffffff</span>
+      </div>
     </div>
   </div>
 
-  <!-- Variant Colors (note) -->
+  <!-- Background utility classes -->
   <div class="token-card badge-colors-tok">
     <div class="token-card__header">
       <span class="dot" style="background:#f97316;"></span>
-      Variant Colors
-      <span class="component-name">osui-badge--*</span>
+      Backgrounds
+      <span class="component-name">.background-*</span>
     </div>
     <div class="token-card__body">
       <div class="token-row">
-        <span class="prop-name">background</span>
-        <span class="token-name" style="color:#f97316;font-style:italic;">pending tokens</span>
-        <span class="token-value">per variant</span>
-      </div>
-      <div class="token-row">
-        <span class="prop-name">color (text)</span>
-        <span class="token-name" style="color:#f97316;font-style:italic;">pending tokens</span>
-        <span class="token-value">per variant</span>
-      </div>
-      <div class="token-row">
-        <span class="prop-name">—neutral bg</span>
+        <span class="prop-name">.background-primary</span>
         <span class="token-name token-name-with-swatch">
-          <span class="swatch" style="background:#f3f4f6;"></span>
-          hardcoded #f3f4f6
+          <span class="swatch" style="background:#105cef;"></span>
+          token-semantics-primary-base
         </span>
-        <span class="token-value">—</span>
+        <span class="token-value">#105cef</span>
       </div>
       <div class="token-row">
-        <span class="prop-name">—error bg</span>
+        <span class="prop-name">.background-error</span>
         <span class="token-name token-name-with-swatch">
-          <span class="swatch" style="background:#fee2e2;"></span>
-          hardcoded #fee2e2
+          <span class="swatch" style="background:#dc2626;"></span>
+          token-semantics-error-base
         </span>
-        <span class="token-value">—</span>
+        <span class="token-value">#dc2626</span>
       </div>
       <div class="token-row">
-        <span class="prop-name">—success bg</span>
+        <span class="prop-name">.background-success</span>
         <span class="token-name token-name-with-swatch">
-          <span class="swatch" style="background:#dcfce7;"></span>
-          hardcoded #dcfce7
+          <span class="swatch" style="background:#16a34a;"></span>
+          token-semantics-success-base
         </span>
+        <span class="token-value">#16a34a</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">.background-warning</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#d97706;"></span>
+          token-semantics-warning-base
+        </span>
+        <span class="token-value">#d97706</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">.background-info</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#0284c7;"></span>
+          token-semantics-info-base
+        </span>
+        <span class="token-value">#0284c7</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">.background-neutral</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#6b7280;"></span>
+          token-semantics-neutral-base
+        </span>
+        <span class="token-value">#6b7280</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">.background-purple</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#7c3aed;"></span>
+          token-semantics-purple-base
+        </span>
+        <span class="token-value">#7c3aed</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">.background-pink</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#db2777;"></span>
+          token-semantics-pink-base
+        </span>
+        <span class="token-value">#db2777</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">.background-indigo</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#4f46e5;"></span>
+          token-semantics-indigo-base
+        </span>
+        <span class="token-value">#4f46e5</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sizes -->
+  <div class="token-card" style="grid-column: span 3;">
+    <div class="token-card__header" style="background: linear-gradient(120deg, #0c4a6e, #0ea5e9);">
+      <span class="dot" style="background:#38bdf8;"></span>
+      Sizes
+      <span class="component-name">.badge-small · (default) · .badge-medium</span>
+    </div>
+    <div class="token-card__body" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(255,255,255,.04);">
+      <div style="background:#0f1117;">
+        <div class="token-row"><span class="prop-name">.badge-small</span><span class="token-name" style="color:#38bdf8;">padding</span><span class="token-value">1px · 4px</span></div>
+        <div class="token-row"><span class="prop-name">&nbsp;</span><span class="token-name" style="color:#38bdf8;">font-size</span><span class="token-value">10px</span></div>
+        <div class="token-row"><span class="prop-name">&nbsp;</span><span class="token-name" style="color:#38bdf8;">min-width</span><span class="token-value">16px</span></div>
+      </div>
+      <div style="background:#0f1117;">
+        <div class="token-row"><span class="prop-name">default · (no class)</span><span class="token-name">token-scale-050 · 200</span><span class="token-value">2px · 8px</span></div>
+        <div class="token-row"><span class="prop-name">&nbsp;</span><span class="token-name">token-font-size-300</span><span class="token-value">12px</span></div>
+        <div class="token-row"><span class="prop-name">&nbsp;</span><span class="token-name">min-width</span><span class="token-value">20px</span></div>
+      </div>
+      <div style="background:#0f1117;">
+        <div class="token-row"><span class="prop-name">.badge-medium</span><span class="token-name" style="color:#fbbf24;">token-scale-075 · 300</span><span class="token-value">3px · 12px</span></div>
+        <div class="token-row"><span class="prop-name">&nbsp;</span><span class="token-name" style="color:#fbbf24;">token-font-size-400</span><span class="token-value">16px</span></div>
+        <div class="token-row"><span class="prop-name">&nbsp;</span><span class="token-name" style="color:#fbbf24;">min-width</span><span class="token-value">28px</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Border radius utilities (Shapes) -->
+  <div class="token-card badge-typography-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#10b981;"></span>
+      Shapes
+      <span class="component-name">.border-radius-*</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">sharp · .border-radius-</span>
+        <span class="token-name">token-border-radius-0</span>
+        <span class="token-value">0</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">soft · .border-radius-soft</span>
+        <span class="token-name">token-border-radius-200</span>
+        <span class="token-value">8px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">round · .border-radius-rounded</span>
+        <span class="token-name">token-border-radius-full</span>
+        <span class="token-value">9999px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">.OSInline</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">display: inline-flex</span>
         <span class="token-value">—</span>
       </div>
     </div>
@@ -436,14 +648,14 @@
 <div class="proposal-section">
   <div class="proposal-header">
     <h3>Token Proposal</h3>
-    <p>Replace per-variant hardcoded hex colors with semantic background/text tokens — pending token library additions.</p>
+    <p>Real OS UI HTML uses <code>.badge</code> + <code>.background-{color}</code> + <code>.background-{color}-lightest</code> + <code>.text-{color}-darker</code> + <code>.border-radius-*</code> + <code>.OSInline</code> utility classes. Proposal <strong>expands the palette</strong> with three new colors (purple, pink, indigo) and consolidates shape variants into <strong>sharp / soft / round</strong>, each backed by a border-radius token.</p>
   </div>
   <div class="proposal-table-wrap">
     <table class="proposal-table">
       <thead>
         <tr>
           <th>Property</th>
-          <th>Component</th>
+          <th>Utility class</th>
           <th>Current (2.28)</th>
           <th>Proposed</th>
           <th>Token</th>
@@ -452,68 +664,140 @@
       </thead>
       <tbody>
         <tr>
-          <td class="td-property">border-radius</td>
-          <td class="td-property">.osui-badge</td>
-          <td class="td-current">border-radius-rounded (100px)</td>
-          <td class="td-proposed">token-border-radius-full (9999px) — no visual change</td>
+          <td class="td-property">background</td>
+          <td class="td-property">.background-primary</td>
+          <td class="td-current">color-primary (#1068eb)</td>
+          <td class="td-proposed">token-semantics-primary-base (#105cef)</td>
+          <td class="td-token">--token-semantics-primary-base</td>
+          <td class="td-rationale">Utility class already exists in OS UI — only swap the <strong>CSS variable target</strong> to the 2.29 semantic token.</td>
+        </tr>
+        <tr>
+          <td class="td-property">background</td>
+          <td class="td-property">.background-error</td>
+          <td class="td-current">color-error (#dc2020)</td>
+          <td class="td-proposed">token-semantics-error-base (#dc2020)</td>
+          <td class="td-token">--token-semantics-error-base</td>
+          <td class="td-rationale">Utility class already exists in 2.28 — swap the <strong>CSS variable target</strong> to the 2.29 semantic token. Color value unchanged.</td>
+        </tr>
+        <tr>
+          <td class="td-property">background</td>
+          <td class="td-property">.background-success</td>
+          <td class="td-current">color-success (#29823b)</td>
+          <td class="td-proposed">token-semantics-success-base (#29823b)</td>
+          <td class="td-token">--token-semantics-success-base</td>
+          <td class="td-rationale">Shared success token — one source of truth for the entire success palette.</td>
+        </tr>
+        <tr>
+          <td class="td-property">background</td>
+          <td class="td-property">.background-warning</td>
+          <td class="td-current">color-warning (#e9a100)</td>
+          <td class="td-proposed">token-semantics-warning-base (#e9a100)</td>
+          <td class="td-token">--token-semantics-warning-base</td>
+          <td class="td-rationale">Consolidated warning palette — one decision point across components.</td>
+        </tr>
+        <tr>
+          <td class="td-property">background</td>
+          <td class="td-property">.background-info</td>
+          <td class="td-current">color-info (#017aad)</td>
+          <td class="td-proposed">token-semantics-info-base (#017aad)</td>
+          <td class="td-token">--token-semantics-info-base</td>
+          <td class="td-rationale">Same utility class — semantic token centralises the info color for Alert/Toast/Badge.</td>
+        </tr>
+        <tr>
+          <td class="td-property">background</td>
+          <td class="td-property">.background-neutral</td>
+          <td class="td-current">— (bare class not in 2.28; closest: .background-neutral-7 = #6a7178)</td>
+          <td class="td-proposed">token-semantics-neutral-base (#6b7280)</td>
+          <td class="td-token">--token-semantics-neutral-base</td>
+          <td class="td-rationale"><strong>New convenience class.</strong> 2.28 only has <code>.background-neutral-{0..10}</code>. A bare <code>.background-neutral</code> hitting a semantic mid-grey saves callers from picking a step.</td>
+        </tr>
+        <tr>
+          <td class="td-property">background</td>
+          <td class="td-property">.background-purple</td>
+          <td class="td-current">— (2.28 calls this .background-violet · #7048e8)</td>
+          <td class="td-proposed">token-semantics-purple-base (#7c3aed)</td>
+          <td class="td-token">--token-semantics-purple-base</td>
+          <td class="td-rationale"><strong>Rename + recolor.</strong> 2.28 has <code>.background-violet</code> (#7048e8). Proposal renames it to the more familiar "purple" and updates the hex to a warmer, higher-contrast violet commonly used for premium/PRO/beta labels.</td>
+        </tr>
+        <tr>
+          <td class="td-property">background</td>
+          <td class="td-property">.background-pink</td>
+          <td class="td-current">color-pink (#d6336c)</td>
+          <td class="td-proposed">token-semantics-pink-base (#d6336c)</td>
+          <td class="td-token">--token-semantics-pink-base</td>
+          <td class="td-rationale">Utility already in 2.28 — elevate to a <em>semantic</em> token so marketing/highlight badges (Hot, New, Trending) share one source.</td>
+        </tr>
+        <tr>
+          <td class="td-property">background</td>
+          <td class="td-property">.background-indigo</td>
+          <td class="td-current">color-indigo (#4263eb)</td>
+          <td class="td-proposed">token-semantics-indigo-base (#4263eb)</td>
+          <td class="td-token">--token-semantics-indigo-base</td>
+          <td class="td-rationale">Utility already in 2.28 — elevate to a semantic token. Indigo sits between primary blue and violet, giving room for status taxonomies (Draft / In review / Published).</td>
+        </tr>
+        <tr>
+          <td class="td-property">background</td>
+          <td class="td-property">.background-&#123;color&#125;-lightest</td>
+          <td class="td-current">utility exists, pointed at raw palette</td>
+          <td class="td-proposed">token-semantics-&#123;color&#125;-light</td>
+          <td class="td-token">--token-semantics-&#123;color&#125;-light</td>
+          <td class="td-rationale"><strong>Remap to semantic light token.</strong> Real HTML already uses <code>.background-indigo-lightest</code> — proposal keeps the utility name and points it at the 2.29 light-tint token so low-emphasis badges share one source of truth.</td>
+        </tr>
+        <tr>
+          <td class="td-property">color</td>
+          <td class="td-property">.text-&#123;color&#125;-darker</td>
+          <td class="td-current">utility exists, pointed at raw palette</td>
+          <td class="td-proposed">token-semantics-&#123;color&#125;-text</td>
+          <td class="td-token">--token-semantics-&#123;color&#125;-text</td>
+          <td class="td-rationale">Paired foreground token ensures AA contrast on every light background. Works automatically with existing <code>.text-indigo-darker</code> etc. classes in OS UI HTML.</td>
+        </tr>
+        <tr>
+          <td class="td-property">size (small)</td>
+          <td class="td-property">.badge-small</td>
+          <td class="td-current">font 12px · height 24px · min-w 24px · padding 0·4px</td>
+          <td class="td-proposed">font-size-300 · height 24px · min-w 24px · scale-100</td>
+          <td class="td-token">--token-font-size-300<br>--token-scale-100</td>
+          <td class="td-rationale">Real OS UI utility — tight badge for dense lists / sidebar counts. Retarget padding &amp; font-size to 2.29 tokens; dimensions unchanged from 2.28.</td>
+        </tr>
+        <tr>
+          <td class="td-property">size (default)</td>
+          <td class="td-property">.badge (no class)</td>
+          <td class="td-current">height 32px · min-w 32px · font inherited · font-weight 600</td>
+          <td class="td-proposed">height 32px · min-w 32px · font-weight-semi-bold</td>
+          <td class="td-token">--token-font-weight-semi-bold</td>
+          <td class="td-rationale">Default badge is height-driven (no padding/font-size override). Retarget font-weight to 2.29 token; dimensions unchanged.</td>
+        </tr>
+        <tr>
+          <td class="td-property">size (medium)</td>
+          <td class="td-property">.badge-medium</td>
+          <td class="td-current">font 16px · height 40px · min-w 40px</td>
+          <td class="td-proposed">font-size-400 · height 40px · min-w 40px</td>
+          <td class="td-token">--token-font-size-400</td>
+          <td class="td-rationale">Real OS UI utility — oversized badge for empty-state counts / hero banners. Retarget font-size to 2.29 token; dimensions unchanged.</td>
+        </tr>
+        <tr>
+          <td class="td-property">shape (sharp)</td>
+          <td class="td-property">.border-radius-</td>
+          <td class="td-current">— (2.28 uses .border-radius-none)</td>
+          <td class="td-proposed">radius 0 · bare class alias for .border-radius-none</td>
+          <td class="td-token">--token-border-radius-0</td>
+          <td class="td-rationale"><strong>Class rename.</strong> 2.28 ships <code>.border-radius-none</code>; proposal keeps that utility and also accepts the bare <code>.border-radius-</code> suffix (seen in real OS UI HTML templates).</td>
+        </tr>
+        <tr>
+          <td class="td-property">shape (soft)</td>
+          <td class="td-property">.border-radius-soft</td>
+          <td class="td-current">radius 4px (--border-radius-soft)</td>
+          <td class="td-proposed">radius 4px · (unchanged)</td>
+          <td class="td-token">--token-border-radius-100</td>
+          <td class="td-rationale">Real OS UI utility — semantic soft-corner. Retarget to the 2.29 radius-100 token so all "soft" surfaces share one value.</td>
+        </tr>
+        <tr>
+          <td class="td-property">shape (round)</td>
+          <td class="td-property">.border-radius-rounded</td>
+          <td class="td-current">radius 100px · always pill/ellipse</td>
+          <td class="td-proposed">radius 999px · circle for 1 char, pill for 2+</td>
           <td class="td-token">--token-border-radius-full</td>
-          <td class="td-rationale">Explicit semantic token replaces magic number; both produce a full pill. <strong>Aligns with 2.29 token naming.</strong></td>
-        </tr>
-        <tr>
-          <td class="td-property">background (neutral)</td>
-          <td class="td-property">.osui-badge--neutral</td>
-          <td class="td-current">color-neutral-2 (#f1f3f5)</td>
-          <td class="td-proposed">token-semantics-neutral-background (#f3f4f6)</td>
-          <td class="td-token">--token-semantics-neutral-background <em>(pending)</em></td>
-          <td class="td-rationale">Semantic background token enables theme overrides without touching the component CSS. <strong>Pending token library entry.</strong></td>
-        </tr>
-        <tr>
-          <td class="td-property">color (neutral)</td>
-          <td class="td-property">.osui-badge--neutral</td>
-          <td class="td-current">color-neutral-7 (#6a7178)</td>
-          <td class="td-proposed">token-semantics-neutral-text (#374151)</td>
-          <td class="td-token">--token-semantics-neutral-text <em>(pending)</em></td>
-          <td class="td-rationale">Matches the contrast relationship used by the neutral Alert variant — same visual hierarchy, one token to update across components.</td>
-        </tr>
-        <tr>
-          <td class="td-property">background (primary)</td>
-          <td class="td-property">.osui-badge--primary</td>
-          <td class="td-current">color-blue-lightest (#e8f2fa)</td>
-          <td class="td-proposed">token-semantics-primary-background (#dbeafe)</td>
-          <td class="td-token">--token-semantics-primary-background <em>(pending)</em></td>
-          <td class="td-rationale">Decouples the badge background from a raw blue palette step — when the primary brand color changes, the <strong>background tint changes automatically</strong>.</td>
-        </tr>
-        <tr>
-          <td class="td-property">background (error)</td>
-          <td class="td-property">.osui-badge--error</td>
-          <td class="td-current">color-red-lightest (#faeaea)</td>
-          <td class="td-proposed">token-semantics-error-background (#fee2e2)</td>
-          <td class="td-token">--token-semantics-error-background <em>(pending)</em></td>
-          <td class="td-rationale">Same rationale as primary — a single semantic token keeps error tints consistent across Badge, Alert, Toast, and Input error states.</td>
-        </tr>
-        <tr>
-          <td class="td-property">background (warning)</td>
-          <td class="td-property">.osui-badge--warning</td>
-          <td class="td-current">color-yellow-lightest (#fef5e5)</td>
-          <td class="td-proposed">token-semantics-warning-background (#fef3c7)</td>
-          <td class="td-token">--token-semantics-warning-background <em>(pending)</em></td>
-          <td class="td-rationale"><strong>Consolidates warning palette</strong> across components into one token; avoids three different yellow-lightest hex values scattered through the library.</td>
-        </tr>
-        <tr>
-          <td class="td-property">background (success)</td>
-          <td class="td-property">.osui-badge--success</td>
-          <td class="td-current">color-green-lightest (#ebf7ed)</td>
-          <td class="td-proposed">token-semantics-success-background (#dcfce7)</td>
-          <td class="td-token">--token-semantics-success-background <em>(pending)</em></td>
-          <td class="td-rationale">Semantic token shared with other success-state components — one decision point for the entire success palette.</td>
-        </tr>
-        <tr>
-          <td class="td-property">background (info)</td>
-          <td class="td-property">.osui-badge--info</td>
-          <td class="td-current">color-cyan-lightest (#e7f2f4)</td>
-          <td class="td-proposed">token-semantics-info-background (#f0f9ff)</td>
-          <td class="td-token">--token-semantics-info-background <em>(pending)</em></td>
-          <td class="td-rationale">Info maps to a blue-sky tone rather than cyan — aligns with the Alert info variant and provides <strong>better color harmony</strong> with the primary blue.</td>
+          <td class="td-rationale"><strong>Shape fix.</strong> Round badge with a single character now renders as a perfect circle (height = min-width). Multi-character content (e.g. "99+") still expands to a pill. Token value 999px in 2.29 (from 100px in 2.28).</td>
         </tr>
       </tbody>
     </table>

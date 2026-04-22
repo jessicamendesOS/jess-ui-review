@@ -8,42 +8,53 @@
 <style>
   :root {
     --token-scale-0: 0;
-    --token-scale-025: 1px;
     --token-scale-050: 2px;
-    --token-scale-075: 3px;
     --token-scale-100: 4px;
     --token-scale-200: 8px;
     --token-scale-300: 12px;
     --token-scale-400: 16px;
     --token-scale-600: 24px;
     --token-scale-800: 32px;
-    --token-scale-1000: 40px;
-    --token-border-radius-0: 0;
     --token-border-radius-100: 4px;
-    --token-border-radius-200: 8px;
-    --token-border-radius-300: 12px;
-    --token-border-radius-full: 9999px;
-    --token-border-size-0: 0;
-    --token-border-size-025: 1px;
-    --token-border-size-075: 3px;
+    --token-border-radius-full: 999px;
     --token-font-size-300: 0.75rem;
-    --token-font-size-400: 1rem;
-    --token-font-size-450: 1.125rem;
     --token-font-size-500: 1.25rem;
     --token-font-size-550: 1.375rem;
+    --token-font-size-650: 1.625rem;
+    --token-font-size-800: 2rem;
+    --token-font-size-900: 2.25rem;
     --token-font-weight-regular: 400;
     --token-font-weight-semi-bold: 600;
+    --token-font-weight-bold: 700;
     --token-bg-surface-default: #ffffff;
     --token-border-default: #d5d5d5;
     --token-border-subtle: #f3f3f3;
     --token-text-default: #242424;
-    --token-text-inverse: #ffffff;
+    /* primitives (fallback leaves) */
+    --token-primitives-neutral-100: #f3f3f3;
+    --token-primitives-neutral-300: #e0e0e0;
+    --token-primitives-neutral-1200: #242424;
+    --token-primitives-blue-700: #105cef;
+    --token-primitives-green-700: #29823b;
+    --token-primitives-red-700: #dc2020;
+    --token-primitives-yellow-700: #e9a100;
+    /* semantics (match real 2.29 hex) */
     --token-semantics-primary-base: #105cef;
-    --token-semantics-success-base: #16a34a;
-    --token-elevation-1: 0px 0px 4px 0px rgba(0, 0, 0, 0.04), 0px 3px 9px 0px rgba(0, 0, 0, 0.07);
-    --token-elevation-2: 0px 2px 8px 0px rgba(0, 0, 0, 0.08), 0px 8px 24px 0px rgba(0, 0, 0, 0.12);
-    --layer-local-tier-1: 1;
+    --token-semantics-primary-700: #105cef;
+    --token-semantics-success-base: #29823b;
+    --token-semantics-success-700: #29823b;
+    --token-semantics-error-base: #dc2020;
+    --token-semantics-error-700: #dc2020;
+    --token-semantics-warning-base: #e9a100;
+    --token-semantics-warning-700: #e9a100;
+    /* legacy 2.28 palette (for current-mode overrides) */
     --color-primary: #1068eb;
+    --color-neutral-3: #e9ecef;
+    --color-success: #29823b;
+    --color-error: #dc2020;
+    --color-warning: #e9a100;
+    --font-size-display: 36px;
+    --font-semi-bold: 600;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -72,13 +83,13 @@
     border-bottom: 1px solid #e5e7eb;
   }
   .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
-  .badge {
+  .badge-chrome {
     display: inline-flex; align-items: center;
     font-size: 11px; font-weight: 700; padding: 4px 10px;
     border-radius: 99px; letter-spacing: .02em; text-transform: uppercase;
   }
-  .badge--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
-  .badge--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+  .badge-chrome--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
 
   .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
   .legend-item {
@@ -105,115 +116,125 @@
     font-size: 10px; font-weight: 700; text-transform: uppercase;
     letter-spacing: .08em; color: #9ca3af; margin-right: auto;
   }
-  .preview-card__body { padding: 20px; background: #fff; }
-  #previewWrapper { max-width: 460px; margin: 0 auto; }
+  .preview-card__body { padding: 32px 20px; background: #fff; }
+  #previewWrapper { max-width: 640px; margin: 0 auto; }
 
-  /* ─── Progress Circle (OutSystems UI 2.29.0) ─── */
+  /* ─── Progress Circle (real OS UI HTML shape) ───
+     <div class="osui-progress-circle" role="progressbar"
+          style="--thickness: 8px; --progress-color: #105cef; --shape: round;
+                 --trail-color: #e0e0e0; --progress-circle-size: 150px; --circle-size: 150px;
+                 --radius: 71px; --stroke-dasharray: 446.106; --stroke-dashoffset: 223.053;
+                 --progress-value: 50%;">
+       <div class="osui-progress-circle__container">
+         <div class="osui-inline-svg svg-wrapper OSInline" style="height: 100%;">
+           <svg xmlns="http://www.w3.org/2000/svg">
+             <circle class="osui-progress-circle__container__trail-path"></circle>
+             <circle class="osui-progress-circle__container__progress-path"></circle>
+           </svg>
+         </div>
+       </div>
+       <div class="osui-progress-circle__content placeholder-empty">
+         <div><span class="font-size-display">50</span></div>
+       </div>
+     </div>
+     Variants driven entirely by inline CSS custom properties.
+  */
   .osui-progress-circle {
-    --progress-size: 80px;
-    --progress-stroke: 6px;
-    --progress-value: 0;
     position: relative;
-    display: inline-flex; align-items: center; justify-content: center;
-    width: var(--progress-size);
-    height: var(--progress-size);
+    width: var(--circle-size, 150px);
+    height: var(--circle-size, 150px);
+    display: inline-block;
   }
-  .osui-progress-circle svg {
-    width: 100%; height: 100%;
+  .osui-progress-circle__container {
+    width: 100%;
+    height: 100%;
+  }
+  .osui-inline-svg.svg-wrapper.OSInline {
+    display: inline-block;
+    width: 100%;
+    line-height: 0;
+  }
+  .osui-inline-svg.svg-wrapper.OSInline svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
     transform: rotate(-90deg);
   }
-  .osui-progress-circle__track {
+  .osui-progress-circle__container__trail-path,
+  .osui-progress-circle__container__progress-path {
+    cx: 50%;
+    cy: 50%;
+    r: var(--radius);
     fill: none;
-    stroke: var(--token-border-subtle, #f3f3f3);
-    stroke-width: var(--progress-stroke);
+    stroke-width: var(--thickness);
   }
-  .osui-progress-circle__fill {
-    fill: none;
-    stroke: var(--token-semantics-primary-base, #105cef);
-    stroke-width: var(--progress-stroke);
+  .osui-progress-circle__container__trail-path {
+    stroke: var(--trail-color, var(--token-primitives-neutral-300, #e0e0e0));
+  }
+  .osui-progress-circle__container__progress-path {
+    stroke: var(--progress-color, var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef))));
+    stroke-dasharray: var(--stroke-dasharray);
+    stroke-dashoffset: var(--stroke-dashoffset);
+    /* Real 2.28/2.29 apply stroke-linecap:round via the .progress-circle wrapper
+       (.progress-circle svg { stroke-linecap: round }). Mirroring here for the pattern component. */
     stroke-linecap: round;
-    stroke-dasharray: 251.2;
-    stroke-dashoffset: calc(251.2 - (251.2 * var(--progress-value) / 100));
-    transition: stroke-dashoffset 0.5s ease;
+    transition: stroke-dashoffset .4s ease;
   }
-  .osui-progress-circle__label {
-    position: absolute;
-    font-size: 14px;
-    font-weight: var(--token-font-weight-semi-bold, 600);
-    color: var(--token-text-default, #242424);
-    line-height: 1;
+  .osui-progress-circle[data-shape="butt"] .osui-progress-circle__container__progress-path {
+    stroke-linecap: butt;
   }
 
-  /* Variants */
-  .osui-progress-circle--success .osui-progress-circle__fill {
-    stroke: var(--token-semantics-success-base, #16a34a);
-  }
-
-  /* Sizes */
-  .osui-progress-circle--small {
-    --progress-size: 48px;
-    --progress-stroke: 4px;
-  }
-  .osui-progress-circle--small .osui-progress-circle__label {
-    font-size: 10px;
-  }
-  .osui-progress-circle--large {
-    --progress-size: 120px;
-    --progress-stroke: 8px;
-  }
-  .osui-progress-circle--large .osui-progress-circle__label {
-    font-size: 18px;
-  }
-
-  /* Indeterminate */
-  .osui-progress-circle--indeterminate svg {
-    transform: none;
-    animation: rotate-ring 1.4s linear infinite;
-  }
-  .osui-progress-circle--indeterminate .osui-progress-circle__fill {
-    stroke-dashoffset: 60;
-    stroke-dasharray: 251.2;
-  }
-  @keyframes rotate-ring {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
-
-  /* Row & section helpers */
-  .circles-row {
+  .osui-progress-circle__content {
+    position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
-    gap: 24px; flex-wrap: wrap;
-    padding: 20px 0;
+    text-align: center;
+    color: var(--token-text-default, var(--token-primitives-neutral-1200, #242424));
+    pointer-events: none;
+  }
+  .osui-progress-circle__content.placeholder-empty:not(:has(span:not(:empty))) { display: none; }
+
+  /* Real 2.29 .font-size-display { font-size: var(--token-font-size-900, 2.25rem) }.
+     Font-weight comes from the shared heading utility: font-weight: var(--token-font-weight-semi-bold, 600).
+     Note: real CSS does NOT set line-height on this utility — the surrounding .progress-circle-text has
+     line-height:1.2 in real 2.29. Dropping the invented line-height:1. */
+  .font-size-display {
+    font-size: var(--token-font-size-900, 2.25rem);
+    font-weight: var(--token-font-weight-semi-bold, 600);
+  }
+
+  .circle-section {
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .circle-row {
+    display: flex; flex-wrap: wrap; gap: 28px;
+    justify-content: center; align-items: flex-end;
   }
   .circle-item {
     display: flex; flex-direction: column; align-items: center; gap: 8px;
+    text-align: center;
   }
   .circle-item__label {
-    font-size: 10px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: .08em; color: #9ca3af;
-  }
-  .section-sep {
-    border: none; border-top: 1px dashed #e5e7eb; margin: 4px 0 12px;
+    font-size: 11px; font-weight: 600; color: #6b7280;
   }
   .section-title {
     font-size: 10px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: .08em; color: #9ca3af; margin-bottom: 4px; text-align: center;
+    letter-spacing: .08em; color: #9ca3af; margin-bottom: 14px;
   }
+  .section-sep { border: none; border-top: 1px dashed #e5e7eb; margin: 28px 0 20px; }
 
-  /* Annotation outlines */
-  .annotate-track  { outline: 2px dashed #ef4444; outline-offset: 4px; border-radius: 50%; }
-  .annotate-fill   { outline: 2px dashed #105cef; outline-offset: 6px; border-radius: 50%; }
-  .annotate-label  { outline: 2px dashed #10b981; outline-offset: 3px; border-radius: 3px; }
+  .annotate-container { outline: 2px dashed #8b5cf6; outline-offset: 6px; border-radius: 50%; }
+  .annotate-trail     { outline: 2px dashed #ef4444; outline-offset: 2px; border-radius: 50%; }
+  .annotate-progress  { outline: 2px dashed #10b981; outline-offset: 2px; border-radius: 50%; }
+  .annotate-content   { outline: 2px dashed #3b82f6; outline-offset: 2px; border-radius: 6px; }
   #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
 
-  /* ─── Token panel ─── */
   .token-panel { display: flex; flex-direction: column; gap: 12px; }
   .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
   .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
   .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
   .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; letter-spacing: 0; text-transform: none; }
   .token-card__body { background: #0f1117; }
-  .token-row { display: grid; grid-template-columns: 155px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); transition: background .12s; }
+  .token-row { display: grid; grid-template-columns: 180px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); transition: background .12s; }
   .token-row:last-child { border-bottom: none; }
   .token-row:hover { background: rgba(255,255,255,.03); }
   .prop-name  { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; white-space: nowrap; }
@@ -222,10 +243,9 @@
   .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); vertical-align: middle; margin-right: 5px; flex-shrink: 0; }
   .token-name-with-swatch { display: flex; align-items: center; }
 
-  .pc-track-tok    .token-card__header { background: linear-gradient(120deg, #105cef, #10b981); }
-  .pc-fill-tok     .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
-  .pc-label-tok    .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
-  .pc-success-tok  .token-card__header { background: linear-gradient(120deg, #14532d, #22c55e); }
+  .pc-trail-tok    .token-card__header { background: linear-gradient(120deg, #7f1d1d, #ef4444); }
+  .pc-progress-tok .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+  .pc-content-tok  .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
 
   .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
   .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; font-family: inherit; transition: all .15s; white-space: nowrap; }
@@ -233,7 +253,6 @@
   .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; font-family: inherit; transition: all .15s; margin-left: 4px; white-space: nowrap; }
   .ann-toggle:hover { color: #111827; border-color: #9ca3af; }
   .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
-  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
 
   .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
   .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
@@ -257,51 +276,39 @@
     body { padding: 24px 20px 60px; }
   }
 
-/* ─── Current mode (OutSystems UI 2.28.0) ─── */
-#previewWrapper.current-mode {
-  --color-neutral-4: #dee2e6;
-  --color-neutral-7: #6a7178;
-  --color-neutral-10: #101213;
-  --color-primary: #1068eb;
-  --color-success: #29823b;
-  --font-semi-bold: 600;
+/* ─── Current mode (2.28) ───
+   Real 2.28 CSS:
+     trail-path stroke    → var(--trail-color, var(--border-color-neutral-3, var(--color-neutral-3)))   → #e9ecef
+     progress-path stroke → var(--progress-color, var(--border-color-primary, var(--color-primary)))    → #1068eb
+     .progress-circle svg → stroke-linecap: round (hardcoded — same in 2.28 & 2.29)
+     .font-size-display   → font-size: var(--font-size-display) = 36px; font-weight: var(--font-semi-bold) = 600
+*/
+#previewWrapper.current-mode .osui-progress-circle__container__trail-path {
+  stroke: var(--color-neutral-3, #e9ecef);
 }
-
-#previewWrapper.current-mode .osui-progress-circle__track {
-  stroke: var(--color-neutral-4, #dee2e6);
-}
-
-#previewWrapper.current-mode .osui-progress-circle__fill {
+#previewWrapper.current-mode .osui-progress-circle__container__progress-path {
   stroke: var(--color-primary, #1068eb);
-  stroke-linecap: butt;
+  /* stroke-linecap stays round — real 2.28 applies it via .progress-circle svg { stroke-linecap:round } */
 }
-
-#previewWrapper.current-mode .osui-progress-circle--success .osui-progress-circle__fill {
+#previewWrapper.current-mode .osui-progress-circle[data-variant="success"] .osui-progress-circle__container__progress-path {
   stroke: var(--color-success, #29823b);
 }
-
-#previewWrapper.current-mode .osui-progress-circle__label {
-  font-weight: 600;
-  color: var(--color-neutral-10, #101213);
+#previewWrapper.current-mode .osui-progress-circle[data-variant="warning"] .osui-progress-circle__container__progress-path {
+  stroke: var(--color-warning, #e9a100);
+}
+#previewWrapper.current-mode .osui-progress-circle[data-variant="error"] .osui-progress-circle__container__progress-path {
+  stroke: var(--color-error, #dc2020);
+}
+#previewWrapper.current-mode .font-size-display {
+  font-size: var(--font-size-display, 36px);
+  font-weight: var(--font-semi-bold, 600);
 }
 
-/* ─── Proposed mode ─── */
-#previewWrapper.proposed-mode .osui-progress-circle__track {
-  stroke: var(--token-border-subtle, #f3f3f3);
-}
-
-#previewWrapper.proposed-mode .osui-progress-circle__fill {
-  stroke: var(--token-semantics-primary-base, #105cef);
-  stroke-linecap: round;
-}
-
-#previewWrapper.proposed-mode .osui-progress-circle--success .osui-progress-circle__fill {
-  stroke: var(--token-semantics-success-base, #16a34a);
-}
-
-#previewWrapper.proposed-mode .osui-progress-circle__label {
-  font-weight: var(--token-font-weight-semi-bold, 600);
-  color: var(--token-text-default, #242424);
+/* ─── Proposed mode ───
+   Proposal: tokenise --trail-color to a semantic token (lighter subtle border) and
+   introduce a gradient-ready slot (--progress-circle-gradient-url) already present in real 2.29. */
+#previewWrapper.proposed-mode .osui-progress-circle__container__trail-path {
+  stroke: var(--token-border-subtle, var(--token-primitives-neutral-100, #f3f3f3));
 }
 </style>
 </head>
@@ -314,15 +321,14 @@
 
 <div class="page-header">
   <h1>Progress Circle</h1>
-  <span class="badge badge--os">OutSystems UI 2.29</span>
-  <span class="badge badge--tokens">Design Tokens</span>
+  <span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span>
+  <span class="badge-chrome badge-chrome--tokens">Design Tokens</span>
 </div>
 
 <div class="legend">
-  <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> Track (background ring)</div>
-  <div class="legend-item"><span class="legend-dot" style="background:#105cef;"></span> Fill (progress arc)</div>
-  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Label (center text)</div>
-  <div class="legend-item"><span class="legend-dot" style="background:#22c55e;"></span> Success variant</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> __trail-path</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> __progress-path</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> __content</div>
 </div>
 
 <!-- Preview -->
@@ -339,96 +345,115 @@
   <div class="preview-card__body">
   <div id="previewWrapper" class="hide-annotations">
 
-    <!-- Variants row -->
-    <p class="section-title">Variants</p>
-    <div class="circles-row">
-
-      <!-- 25% primary -->
+    <p class="section-title" style="text-align:center;">Hero — 150px · 50% primary</p>
+    <div class="circle-row">
       <div class="circle-item">
-        <div class="osui-progress-circle annotate-fill" style="--progress-value: 25">
-          <svg viewBox="0 0 100 100">
-            <circle class="osui-progress-circle__track annotate-track" cx="50" cy="50" r="40"/>
-            <circle class="osui-progress-circle__fill" cx="50" cy="50" r="40"/>
-          </svg>
-          <span class="osui-progress-circle__label annotate-label">25%</span>
+        <div class="osui-progress-circle annotate-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"
+             style="--thickness: 8px; --progress-color: #105cef; --shape: round;
+                    --trail-color: #e0e0e0; --progress-circle-size: 150px; --circle-size: 150px;
+                    --radius: 71px; --stroke-dasharray: 446.106; --stroke-dashoffset: 223.053;
+                    --progress-value: 50%;">
+          <div class="osui-progress-circle__container">
+            <div class="osui-inline-svg svg-wrapper OSInline" style="height: 100%;">
+              <svg xmlns="http://www.w3.org/2000/svg">
+                <circle class="osui-progress-circle__container__trail-path annotate-trail"></circle>
+                <circle class="osui-progress-circle__container__progress-path annotate-progress"></circle>
+              </svg>
+            </div>
+          </div>
+          <div class="osui-progress-circle__content annotate-content">
+            <div><span class="font-size-display">50</span></div>
+          </div>
         </div>
-        <span class="circle-item__label">25%</span>
       </div>
-
-      <!-- 60% primary -->
-      <div class="circle-item">
-        <div class="osui-progress-circle annotate-fill" style="--progress-value: 60">
-          <svg viewBox="0 0 100 100">
-            <circle class="osui-progress-circle__track annotate-track" cx="50" cy="50" r="40"/>
-            <circle class="osui-progress-circle__fill" cx="50" cy="50" r="40"/>
-          </svg>
-          <span class="osui-progress-circle__label annotate-label">60%</span>
-        </div>
-        <span class="circle-item__label">60%</span>
-      </div>
-
-      <!-- 100% success -->
-      <div class="circle-item">
-        <div class="osui-progress-circle osui-progress-circle--success annotate-fill" style="--progress-value: 100">
-          <svg viewBox="0 0 100 100">
-            <circle class="osui-progress-circle__track annotate-track" cx="50" cy="50" r="40"/>
-            <circle class="osui-progress-circle__fill" cx="50" cy="50" r="40"/>
-          </svg>
-          <span class="osui-progress-circle__label annotate-label">100%</span>
-        </div>
-        <span class="circle-item__label">100% — success</span>
-      </div>
-
-      <!-- Indeterminate -->
-      <div class="circle-item">
-        <div class="osui-progress-circle osui-progress-circle--indeterminate annotate-fill">
-          <svg viewBox="0 0 100 100">
-            <circle class="osui-progress-circle__track annotate-track" cx="50" cy="50" r="40"/>
-            <circle class="osui-progress-circle__fill" cx="50" cy="50" r="40"/>
-          </svg>
-        </div>
-        <span class="circle-item__label">Indeterminate</span>
-      </div>
-
     </div>
 
     <hr class="section-sep">
+    <p class="section-title" style="text-align:center;">Semantic variants — 100px</p>
 
-    <!-- Sizes row -->
-    <p class="section-title">Sizes</p>
-    <div class="circles-row" style="align-items: flex-end;">
-
+    <div class="circle-row">
       <div class="circle-item">
-        <div class="osui-progress-circle osui-progress-circle--small" style="--progress-value: 70">
-          <svg viewBox="0 0 100 100">
-            <circle class="osui-progress-circle__track" cx="50" cy="50" r="40"/>
-            <circle class="osui-progress-circle__fill" cx="50" cy="50" r="40"/>
-          </svg>
-          <span class="osui-progress-circle__label">70%</span>
+        <div class="osui-progress-circle" role="progressbar" aria-valuenow="25"
+             style="--thickness: 6px; --progress-color: #105cef; --shape: round;
+                    --trail-color: #e0e0e0; --circle-size: 100px;
+                    --radius: 47px; --stroke-dasharray: 295.31; --stroke-dashoffset: 221.48;
+                    --progress-value: 25%;">
+          <div class="osui-progress-circle__container">
+            <div class="osui-inline-svg svg-wrapper OSInline" style="height: 100%;">
+              <svg xmlns="http://www.w3.org/2000/svg">
+                <circle class="osui-progress-circle__container__trail-path"></circle>
+                <circle class="osui-progress-circle__container__progress-path"></circle>
+              </svg>
+            </div>
+          </div>
+          <div class="osui-progress-circle__content">
+            <div><span style="font-size:20px;font-weight:600;">25</span></div>
+          </div>
         </div>
-        <span class="circle-item__label">Small 48px</span>
+        <span class="circle-item__label">primary · 25%</span>
       </div>
 
       <div class="circle-item">
-        <div class="osui-progress-circle" style="--progress-value: 70">
-          <svg viewBox="0 0 100 100">
-            <circle class="osui-progress-circle__track" cx="50" cy="50" r="40"/>
-            <circle class="osui-progress-circle__fill" cx="50" cy="50" r="40"/>
-          </svg>
-          <span class="osui-progress-circle__label">70%</span>
+        <div class="osui-progress-circle" role="progressbar" aria-valuenow="75" data-variant="success"
+             style="--thickness: 6px; --progress-color: #29823b; --shape: round;
+                    --trail-color: #e0e0e0; --circle-size: 100px;
+                    --radius: 47px; --stroke-dasharray: 295.31; --stroke-dashoffset: 73.83;
+                    --progress-value: 75%;">
+          <div class="osui-progress-circle__container">
+            <div class="osui-inline-svg svg-wrapper OSInline" style="height: 100%;">
+              <svg xmlns="http://www.w3.org/2000/svg">
+                <circle class="osui-progress-circle__container__trail-path"></circle>
+                <circle class="osui-progress-circle__container__progress-path"></circle>
+              </svg>
+            </div>
+          </div>
+          <div class="osui-progress-circle__content">
+            <div><span style="font-size:20px;font-weight:600;">75</span></div>
+          </div>
         </div>
-        <span class="circle-item__label">Medium 80px</span>
+        <span class="circle-item__label">success · 75%</span>
       </div>
 
       <div class="circle-item">
-        <div class="osui-progress-circle osui-progress-circle--large" style="--progress-value: 70">
-          <svg viewBox="0 0 100 100">
-            <circle class="osui-progress-circle__track" cx="50" cy="50" r="40"/>
-            <circle class="osui-progress-circle__fill" cx="50" cy="50" r="40"/>
-          </svg>
-          <span class="osui-progress-circle__label">70%</span>
+        <div class="osui-progress-circle" role="progressbar" aria-valuenow="90" data-variant="warning"
+             style="--thickness: 6px; --progress-color: #e9a100; --shape: round;
+                    --trail-color: #e0e0e0; --circle-size: 100px;
+                    --radius: 47px; --stroke-dasharray: 295.31; --stroke-dashoffset: 29.53;
+                    --progress-value: 90%;">
+          <div class="osui-progress-circle__container">
+            <div class="osui-inline-svg svg-wrapper OSInline" style="height: 100%;">
+              <svg xmlns="http://www.w3.org/2000/svg">
+                <circle class="osui-progress-circle__container__trail-path"></circle>
+                <circle class="osui-progress-circle__container__progress-path"></circle>
+              </svg>
+            </div>
+          </div>
+          <div class="osui-progress-circle__content">
+            <div><span style="font-size:20px;font-weight:600;">90</span></div>
+          </div>
         </div>
-        <span class="circle-item__label">Large 120px</span>
+        <span class="circle-item__label">warning · 90%</span>
+      </div>
+
+      <div class="circle-item">
+        <div class="osui-progress-circle" role="progressbar" aria-valuenow="40" data-variant="error"
+             style="--thickness: 6px; --progress-color: #dc2020; --shape: round;
+                    --trail-color: #e0e0e0; --circle-size: 100px;
+                    --radius: 47px; --stroke-dasharray: 295.31; --stroke-dashoffset: 177.19;
+                    --progress-value: 40%;">
+          <div class="osui-progress-circle__container">
+            <div class="osui-inline-svg svg-wrapper OSInline" style="height: 100%;">
+              <svg xmlns="http://www.w3.org/2000/svg">
+                <circle class="osui-progress-circle__container__trail-path"></circle>
+                <circle class="osui-progress-circle__container__progress-path"></circle>
+              </svg>
+            </div>
+          </div>
+          <div class="osui-progress-circle__content">
+            <div><span style="font-size:20px;font-weight:600;">40</span></div>
+          </div>
+        </div>
+        <span class="circle-item__label">error · 40%</span>
       </div>
 
     </div>
@@ -440,45 +465,56 @@
 <!-- Token cards -->
 <div class="token-grid">
 
-  <!-- Track -->
-  <div class="token-card pc-track-tok">
+  <div class="token-card pc-trail-tok">
     <div class="token-card__header">
       <span class="dot" style="background:#ef4444;"></span>
-      Track Ring
-      <span class="component-name">osui-progress-circle__track</span>
+      Trail path
+      <span class="component-name">__container__trail-path</span>
     </div>
     <div class="token-card__body">
       <div class="token-row">
-        <span class="prop-name">stroke</span>
+        <span class="prop-name">stroke (2.29)</span>
         <span class="token-name token-name-with-swatch">
-          <span class="swatch" style="background:#f3f3f3; border-color:rgba(0,0,0,.1);"></span>
-          token-border-subtle
+          <span class="swatch" style="background:#e0e0e0; border-color:rgba(0,0,0,.1);"></span>
+          token-primitives-neutral-300
         </span>
-        <span class="token-value">#f3f3f3</span>
+        <span class="token-value">#e0e0e0</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">stroke (2.28)</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#e9ecef; border-color:rgba(0,0,0,.1);"></span>
+          color-neutral-3
+        </span>
+        <span class="token-value">#e9ecef</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">override slot</span>
+        <span class="token-name">--trail-color</span>
+        <span class="token-value">inline prop</span>
       </div>
       <div class="token-row">
         <span class="prop-name">stroke-width</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded (CSS var)</span>
-        <span class="token-value">--progress-stroke</span>
+        <span class="token-name">--thickness</span>
+        <span class="token-value">inline prop</span>
       </div>
       <div class="token-row">
-        <span class="prop-name">fill</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">none</span>
+        <span class="prop-name">r</span>
+        <span class="token-name">--radius</span>
+        <span class="token-value">inline prop</span>
       </div>
     </div>
   </div>
 
-  <!-- Fill / Progress arc -->
-  <div class="token-card pc-fill-tok">
+  <div class="token-card pc-progress-tok">
     <div class="token-card__header">
-      <span class="dot" style="background:#105cef;"></span>
-      Progress Arc
-      <span class="component-name">osui-progress-circle__fill</span>
+      <span class="dot" style="background:#10b981;"></span>
+      Progress path
+      <span class="component-name">__container__progress-path</span>
     </div>
     <div class="token-card__body">
       <div class="token-row">
-        <span class="prop-name">stroke</span>
+        <span class="prop-name">primary</span>
         <span class="token-name token-name-with-swatch">
           <span class="swatch" style="background:#105cef;"></span>
           token-semantics-primary-base
@@ -486,38 +522,61 @@
         <span class="token-value">#105cef</span>
       </div>
       <div class="token-row">
+        <span class="prop-name">primary (2.28)</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#1068eb;"></span>
+          color-primary
+        </span>
+        <span class="token-value">#1068eb</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">success</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#29823b;"></span>
+          token-semantics-success-base
+        </span>
+        <span class="token-value">#29823b</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">warning</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#e9a100;"></span>
+          token-semantics-warning-base
+        </span>
+        <span class="token-value">#e9a100</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">error</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#dc2020;"></span>
+          token-semantics-error-base
+        </span>
+        <span class="token-value">#dc2020</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">override slot</span>
+        <span class="token-name">--progress-color</span>
+        <span class="token-value">inline prop</span>
+      </div>
+      <div class="token-row">
         <span class="prop-name">stroke-linecap</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded (real)</span>
         <span class="token-value">round</span>
-      </div>
-      <div class="token-row">
-        <span class="prop-name">stroke-dasharray</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">251.2 (2π × 40)</span>
-      </div>
-      <div class="token-row">
-        <span class="prop-name">transition</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">0.5s ease</span>
       </div>
     </div>
   </div>
 
-  <!-- Label -->
-  <div class="token-card pc-label-tok">
+  <div class="token-card pc-content-tok">
     <div class="token-card__header">
-      <span class="dot" style="background:#10b981;"></span>
-      Center Label
-      <span class="component-name">osui-progress-circle__label</span>
+      <span class="dot" style="background:#3b82f6;"></span>
+      Center content
+      <span class="component-name">__content · .font-size-display</span>
     </div>
     <div class="token-card__body">
       <div class="token-row">
-        <span class="prop-name">color</span>
-        <span class="token-name token-name-with-swatch">
-          <span class="swatch" style="background:#242424;"></span>
-          token-text-default
-        </span>
-        <span class="token-value">#242424</span>
+        <span class="prop-name">.font-size-display</span>
+        <span class="token-name">token-font-size-900</span>
+        <span class="token-value">2.25rem · 36px</span>
       </div>
       <div class="token-row">
         <span class="prop-name">font-weight</span>
@@ -525,38 +584,19 @@
         <span class="token-value">600</span>
       </div>
       <div class="token-row">
-        <span class="prop-name">font-size</span>
+        <span class="prop-name">color</span>
+        <span class="token-name">token-text-default</span>
+        <span class="token-value">#242424</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">progress-circle-text line-height</span>
         <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">14px (medium)</span>
+        <span class="token-value">1.2</span>
       </div>
       <div class="token-row">
-        <span class="prop-name">position</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">absolute (centered)</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Success variant -->
-  <div class="token-card pc-success-tok">
-    <div class="token-card__header">
-      <span class="dot" style="background:#22c55e;"></span>
-      Success Variant
-      <span class="component-name">osui-progress-circle--success</span>
-    </div>
-    <div class="token-card__body">
-      <div class="token-row">
-        <span class="prop-name">stroke (fill)</span>
-        <span class="token-name token-name-with-swatch">
-          <span class="swatch" style="background:#16a34a;"></span>
-          token-semantics-success-base
-        </span>
-        <span class="token-value">#16a34a</span>
-      </div>
-      <div class="token-row">
-        <span class="prop-name">track stroke</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">inherited</span>
-        <span class="token-value">token-border-subtle</span>
+        <span class="prop-name">--circle-size</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">inline</span>
+        <span class="token-value">100–150px typical</span>
       </div>
     </div>
   </div>
@@ -567,60 +607,76 @@
 <div class="proposal-section">
   <div class="proposal-header">
     <h3>Token Proposal</h3>
-    <p>Suggested token changes to align Progress Circle with the 2.29 semantic token system.</p>
+    <p>Real OS UI drives visuals via inline CSS custom properties on <code>.osui-progress-circle</code> — <strong>no modifier classes</strong> for semantic variants. Internal structure is an <code>osui-inline-svg</code> wrapper with two <code>&lt;circle&gt;</code> elements (<code>__trail-path</code> + <code>__progress-path</code>) plus an absolutely-positioned <code>__content</code> overlay carrying a <code>.font-size-display</code> utility span. Rounded line-caps are hardcoded in both 2.28 and 2.29 via <code>.progress-circle svg { stroke-linecap: round }</code>.</p>
   </div>
   <div class="proposal-table-wrap">
     <table class="proposal-table">
       <thead>
         <tr>
           <th>Property</th>
-          <th>Component</th>
+          <th>Element</th>
           <th>Current (2.28)</th>
-          <th>Proposed</th>
+          <th>New tokens (2.29)</th>
           <th>Token</th>
           <th>Rationale</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="td-property">stroke (track)</td>
-          <td class="td-property">.osui-progress-circle__track</td>
-          <td class="td-current">--color-neutral-4 (#dee2e6)</td>
-          <td class="td-proposed">token-border-subtle (#f3f3f3)</td>
-          <td class="td-token">--token-border-subtle</td>
-          <td class="td-rationale">The track is a structural ring, not a content element — <strong>token-border-subtle</strong> is semantically correct (it's literally a subtle ring border) and is lighter, keeping the focus on the progress arc.</td>
+          <td class="td-property">trail stroke</td>
+          <td class="td-property">__container__trail-path</td>
+          <td class="td-current">color-neutral-3 (#e9ecef)</td>
+          <td class="td-proposed">token-primitives-neutral-300 (#e0e0e0)</td>
+          <td class="td-token">--token-primitives-neutral-300</td>
+          <td class="td-rationale">Real 2.29 points the trail stroke to a <strong>hardcoded primitive</strong>, not a semantic token — matches the paired Progress Bar. Slightly darker grey for higher arc/trail contrast.</td>
         </tr>
         <tr>
-          <td class="td-property">stroke (fill)</td>
-          <td class="td-property">.osui-progress-circle__fill</td>
-          <td class="td-current">--color-primary (#1068eb)</td>
+          <td class="td-property">progress stroke (primary)</td>
+          <td class="td-property">__container__progress-path</td>
+          <td class="td-current">color-primary (#1068eb)</td>
           <td class="td-proposed">token-semantics-primary-base (#105cef)</td>
           <td class="td-token">--token-semantics-primary-base</td>
-          <td class="td-rationale">Replaces the raw brand color with the <strong>semantic primary token</strong>, enabling theme overrides and ensuring consistency with other primary-colored elements like buttons and indicators.</td>
+          <td class="td-rationale">Progress arc participates in theme overrides with <strong>every other primary-coloured component</strong>. Real 2.29 nests down to <code>--token-primitives-blue-700</code> as the final fallback.</td>
         </tr>
         <tr>
-          <td class="td-property">stroke (fill — success)</td>
-          <td class="td-property">.osui-progress-circle--success .fill</td>
-          <td class="td-current">--color-success (#29823b)</td>
-          <td class="td-proposed">token-semantics-success-base (#16a34a)</td>
+          <td class="td-property">progress stroke (success)</td>
+          <td class="td-property">__container__progress-path</td>
+          <td class="td-current">color-success (#29823b)</td>
+          <td class="td-proposed">token-semantics-success-base (#29823b)</td>
           <td class="td-token">--token-semantics-success-base</td>
-          <td class="td-rationale"><strong>token-semantics-success-base</strong> is the canonical success color in the new system, replacing the direct palette value and enabling consistent success state styling across all components.</td>
+          <td class="td-rationale">Same hex, now theme-aware. One decision point across Progress Bar, Progress Circle, Alert, Toast.</td>
         </tr>
         <tr>
-          <td class="td-property">font-weight (label)</td>
-          <td class="td-property">.osui-progress-circle__label</td>
-          <td class="td-current">hardcoded: 600</td>
-          <td class="td-proposed">token-font-weight-semi-bold (600)</td>
-          <td class="td-token">--token-font-weight-semi-bold</td>
-          <td class="td-rationale">Connecting the hardcoded weight to the <strong>token-font-weight-semi-bold token</strong> ensures the center label stays in sync if the typographic scale is adjusted globally.</td>
+          <td class="td-property">progress stroke (warning)</td>
+          <td class="td-property">__container__progress-path</td>
+          <td class="td-current">color-warning (#e9a100)</td>
+          <td class="td-proposed">token-semantics-warning-base (#e9a100)</td>
+          <td class="td-token">--token-semantics-warning-base</td>
+          <td class="td-rationale">Shared warning token — aligns with alerts, toasts, counter warning variant.</td>
         </tr>
         <tr>
-          <td class="td-property">color (label)</td>
-          <td class="td-property">.osui-progress-circle__label</td>
-          <td class="td-current">--color-neutral-10 (#101213)</td>
-          <td class="td-proposed">token-text-default (#242424)</td>
-          <td class="td-token">--token-text-default</td>
-          <td class="td-rationale"><strong>token-text-default</strong> is the semantic default text color, slightly warmer than neutral-10 and consistent with all other body text tokens across the 2.29 system.</td>
+          <td class="td-property">progress stroke (error)</td>
+          <td class="td-property">__container__progress-path</td>
+          <td class="td-current">color-error (#dc2020)</td>
+          <td class="td-proposed">token-semantics-error-base (#dc2020)</td>
+          <td class="td-token">--token-semantics-error-base</td>
+          <td class="td-rationale">Shared error token — one source across destructive surfaces.</td>
+        </tr>
+        <tr>
+          <td class="td-property">stroke-linecap</td>
+          <td class="td-property">.progress-circle svg</td>
+          <td class="td-current">round (hardcoded)</td>
+          <td class="td-proposed">round (hardcoded)</td>
+          <td class="td-token"><em>n/a</em></td>
+          <td class="td-rationale">Unchanged — already ships round. <code>--shape</code> inline prop can override to <code>butt</code> when sharp caps are required (e.g. compact segmented arcs).</td>
+        </tr>
+        <tr>
+          <td class="td-property">.font-size-display</td>
+          <td class="td-property">__content span</td>
+          <td class="td-current">--font-size-display (36px) · font-semi-bold (600)</td>
+          <td class="td-proposed">token-font-size-900 (2.25rem) · token-font-weight-semi-bold (600)</td>
+          <td class="td-token">--token-font-size-900</td>
+          <td class="td-rationale">Same hex/weight, now part of the <strong>numbered typography scale</strong>. One token governs all large metric numbers across Counter + Progress Circle.</td>
         </tr>
       </tbody>
     </table>

@@ -17,28 +17,24 @@
     --token-scale-400: 16px;
     --token-scale-600: 24px;
     --token-scale-800: 32px;
-    --token-scale-1000: 40px;
-    --token-border-radius-0: 0;
     --token-border-radius-100: 4px;
     --token-border-radius-200: 8px;
-    --token-border-radius-300: 12px;
-    --token-border-radius-full: 9999px;
-    --token-border-size-0: 0;
-    --token-border-size-025: 1px;
     --token-font-size-300: 0.75rem;
-    --token-font-size-400: 1rem;
     --token-font-weight-regular: 400;
     --token-font-weight-semi-bold: 600;
     --token-bg-surface-default: #ffffff;
     --token-border-default: #d5d5d5;
-    --token-border-subtle: #f3f3f3;
     --token-text-default: #242424;
-    --token-text-inverse: #ffffff;
+    --token-text-disabled: #a2a2a2;
+    /* Primitives used by real 2.29 fallback chains */
+    --token-primitives-neutral-400: #d5d5d5;
+    --token-primitives-neutral-500: #a2a2a2;
+    --token-primitives-blue-700: #105cef;
+    /* Semantics */
     --token-semantics-primary-base: #105cef;
-    --token-semantics-warning-base: #f59e0b;
-    --token-elevation-1: 0px 0px 4px 0px rgba(0, 0, 0, 0.04), 0px 3px 9px 0px rgba(0, 0, 0, 0.07);
-    --layer-local-tier-1: 1;
-    --color-primary: #1068eb;
+    --token-semantics-primary-700: #105cef;
+    --token-semantics-warning-base: #e9a100;
+    --token-semantics-warning-700: #e9a100;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -67,13 +63,14 @@
     border-bottom: 1px solid #e5e7eb;
   }
   .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
-  .badge {
+  .badge-chrome {
     display: inline-flex; align-items: center;
     font-size: 11px; font-weight: 700; padding: 4px 10px;
     border-radius: 99px; letter-spacing: .02em; text-transform: uppercase;
+    white-space: nowrap;
   }
-  .badge--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
-  .badge--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+  .badge-chrome--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
 
   .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
   .legend-item {
@@ -100,82 +97,133 @@
     font-size: 10px; font-weight: 700; text-transform: uppercase;
     letter-spacing: .08em; color: #9ca3af; margin-right: auto;
   }
-  .preview-card__body { padding: 20px; background: #fff; }
-  #previewWrapper { max-width: 460px; margin: 0 auto; }
+  .preview-card__body { padding: 24px 20px; background: #fff; }
+  #previewWrapper { max-width: 520px; margin: 0 auto; }
 
-  /* ─── Rating (OutSystems UI 2.29.0) ─── */
-  .osui-rating {
-    display: inline-flex;
-    gap: var(--token-scale-050, 2px);
-    align-items: center;
+  /* ─── Rating component (real OS UI HTML shape) ───
+     <div class="rating is-edit">
+       <fieldset>
+         <legend class="wcag-hide-text">Rating</legend>
+         <input type="radio" class="rating-input wcag-hide-text" value="0">
+         <label class="rating-item" ...>
+         <input type="radio" class="rating-input wcag-hide-text" value="1">
+         <label class="rating-item" for="...-rating-1">
+           <span class="wcag-hide-text">Rating 1</span>
+           <div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"></i></div>
+           <div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"></i></div>
+           <div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"></i></div>
+         </label>
+         ...
+       </fieldset>
+     </div>
+  */
+
+  .wcag-hide-text {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
   }
-  .osui-rating__star {
-    width: 24px; height: 24px;
-    cursor: pointer;
-    transition: transform 0.1s;
-    flex-shrink: 0;
-  }
-  .osui-rating__star:hover { transform: scale(1.15); }
-  .osui-rating--readonly .osui-rating__star { cursor: default; }
-  .osui-rating--readonly .osui-rating__star:hover { transform: none; }
 
-  .osui-rating__star--filled   { color: var(--token-semantics-warning-base, #f59e0b); }
-  .osui-rating__star--empty    { color: var(--token-border-default, #d5d5d5); }
-
-  /* Half star using clip on a layered pair */
-  .osui-rating__star-wrap {
+  /* ─── Real 2.29 .rating base ───
+     Uses --rating-size CSS var; default = 16px. Sizes: .rating-small=8px, .rating-medium=24px.
+     No .rating-large in OS UI. */
+  .rating {
+    --osui-rating-disabled-color: var(--token-text-disabled, var(--token-primitives-neutral-500, #a2a2a2));
+    --osui-rating-disabled-empty-color: var(--token-border-default, var(--token-primitives-neutral-400, #d5d5d5));
+    --rating-size: 16px;
     position: relative;
-    width: 24px; height: 24px;
-    flex-shrink: 0;
+    display: inline-flex;
+    flex-wrap: wrap;
+    font-size: var(--rating-size);
+    pointer-events: none;
   }
-  .osui-rating__star-wrap svg {
+  .rating.rating-small  { --rating-size: 8px; }
+  .rating.rating-medium { --rating-size: 24px; }
+  .rating.rating-small .rating-item {
+    padding-right: calc(var(--rating-size) + var(--token-scale-100, 4px));
+  }
+  .rating.is-edit:not(:has(fieldset[disabled=true])) { pointer-events: initial; }
+  .rating.is-edit:not(:has(fieldset[disabled=true])) .rating-item { cursor: pointer; pointer-events: auto; }
+  .rating fieldset {
+    border: none; display: contents; margin: 0; padding: 0;
+  }
+  .rating .rating-input { /* radio hidden via wcag-hide-text */
+    position: absolute; width: 1px; height: 1px;
+    overflow: hidden; clip: rect(0,0,0,0);
+  }
+  .rating .rating-item {
+    box-sizing: content-box; /* real 2.29 default — padding extends outside the declared width */
+    display: inline-block;
+    height: var(--rating-size);
+    padding-right: calc(var(--rating-size) + var(--token-scale-200, 8px));
+    position: relative;
+    width: var(--rating-size);
+  }
+  .rating .rating-item-filled,
+  .rating .rating-item-half,
+  .rating .rating-item-empty {
+    left: 0; line-height: 1;
+    position: absolute; top: 0;
+    transition: opacity linear 150ms;
+  }
+  .rating .rating-item-filled { opacity: 1; }
+  .rating .rating-item-empty, .rating .rating-item-half { opacity: 0; }
+
+  /* Preview-only: toggle visibility via class modifier on .rating-item
+     (the real OS UI uses radio :checked selectors which don't work in a static preview). */
+  #previewWrapper .rating .rating-item-filled,
+  #previewWrapper .rating .rating-item-half,
+  #previewWrapper .rating .rating-item-empty { display: none; }
+  #previewWrapper .rating .rating-item.show-filled .rating-item-filled { display: block; opacity: 1; }
+  #previewWrapper .rating .rating-item.show-half   .rating-item-half   { display: block; opacity: 1; }
+  #previewWrapper .rating .rating-item.show-empty  .rating-item-empty  { display: block; opacity: 1; }
+
+  /* .icon base (OS UI utility) — renders at the rating-size */
+  .rating .icon {
+    display: inline-block;
+    width: var(--rating-size); height: var(--rating-size);
+    line-height: 1;
+  }
+  .rating .icon svg {
     width: 100%; height: 100%;
-  }
-  .osui-rating__star-wrap .star-half-filled {
-    position: absolute; top: 0; left: 0;
-    clip-path: inset(0 50% 0 0);
-    color: var(--token-semantics-warning-base, #f59e0b);
-  }
-  .osui-rating__star-wrap .star-half-empty {
-    color: var(--token-border-default, #d5d5d5);
+    display: block;
   }
 
-  /* Size variants */
-  .osui-rating--small .osui-rating__star,
-  .osui-rating--small .osui-rating__star-wrap { width: 16px; height: 16px; }
-  .osui-rating--large .osui-rating__star,
-  .osui-rating--large .osui-rating__star-wrap { width: 32px; height: 32px; }
+  /* Utility: text-primary / text-neutral-5 (OS UI utilities — faithful to 2.29)
+     Real 2.29: .text-primary → semantics-primary-base (BLUE #105cef, not yellow);
+     .text-neutral-5 → hardcoded #ced4da (NOT a token). */
+  .text-primary {
+    color: var(--token-semantics-primary-base,
+             var(--token-semantics-primary-700,
+               var(--token-primitives-blue-700, #105cef)));
+  }
+  .text-neutral-5 { color: #ced4da; }
 
-  /* Section helpers */
-  .rating-row {
-    display: flex; flex-direction: column; gap: 16px;
-    padding: 16px 0;
+  /* Edit-mode hover affordance (preview enhancement) */
+  #previewWrapper .rating.is-edit .rating-item:hover { transform: scale(1.12); transition: transform .1s; }
+
+  /* Layout helpers for the preview only */
+  .rating-group {
+    display: flex; flex-direction: column; gap: 14px;
+    margin-bottom: 20px;
   }
-  .rating-item {
-    display: flex; align-items: center; gap: 12px;
+  .rating-row-item {
+    display: flex; align-items: center; gap: 14px;
   }
-  .rating-item__label {
+  .rating-row-label {
     font-size: 11px; font-weight: 600; color: #6b7280;
-    min-width: 120px;
+    min-width: 130px;
   }
-  .section-sep {
-    border: none; border-top: 1px dashed #e5e7eb; margin: 4px 0 12px;
-  }
+  .section-sep { border: none; border-top: 1px dashed #e5e7eb; margin: 12px 0 16px; }
   .section-title {
     font-size: 10px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: .08em; color: #9ca3af; margin-bottom: 4px;
+    letter-spacing: .08em; color: #9ca3af; margin-bottom: 10px;
   }
 
-  /* Interactive rating JS feedback */
-  .osui-rating--interactive .osui-rating__star--preview {
-    color: var(--token-semantics-warning-base, #f59e0b);
-    opacity: 0.7;
-  }
-
-  /* Annotation outlines */
-  .annotate-filled  { outline: 2px dashed #f59e0b; outline-offset: 3px; border-radius: 4px; }
-  .annotate-empty   { outline: 2px dashed #d5d5d5; outline-offset: 3px; border-radius: 4px; }
-  .annotate-wrap    { outline: 2px dashed #ef4444; outline-offset: 4px; border-radius: 4px; }
+  /* Annotations */
+  .annotate-filled { outline: 2px dashed #f59e0b; outline-offset: 3px; border-radius: 4px; }
+  .annotate-half   { outline: 2px dashed #ef4444; outline-offset: 3px; border-radius: 4px; }
+  .annotate-empty  { outline: 2px dashed #9ca3af; outline-offset: 3px; border-radius: 4px; }
+  .annotate-container { outline: 2px dashed #3b82f6; outline-offset: 6px; border-radius: 6px; }
   #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
 
   /* ─── Token panel ─── */
@@ -196,8 +244,7 @@
 
   .rating-filled-tok  .token-card__header { background: linear-gradient(120deg, #f59e0b, #ef4444); }
   .rating-empty-tok   .token-card__header { background: linear-gradient(120deg, #374151, #6b7280); }
-  .rating-gap-tok     .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
-  .rating-size-tok    .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+  .rating-struct-tok  .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
 
   .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
   .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; font-family: inherit; transition: all .15s; white-space: nowrap; }
@@ -205,7 +252,6 @@
   .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; font-family: inherit; transition: all .15s; margin-left: 4px; white-space: nowrap; }
   .ann-toggle:hover { color: #111827; border-color: #9ca3af; }
   .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
-  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
 
   .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
   .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
@@ -229,62 +275,34 @@
     body { padding: 24px 20px 60px; }
   }
 
-/* ─── Current mode (OutSystems UI 2.28.0) ─── */
+/* ─── Current mode (OutSystems UI 2.28.0) — faithful to real 2.28 palette ───
+   Real 2.28 .text-primary resolves to --color-primary (BLUE #1068eb), not yellow.
+   Real 2.28 .text-neutral-5 resolves to --color-neutral-5 (#ced4da). */
 #previewWrapper.current-mode {
-  --color-yellow: #f59f00;
-  --color-neutral-5: #ced4da;
-  --color-neutral-10: #101213;
   --color-primary: #1068eb;
-  --font-semi-bold: 600;
+  --color-neutral-5: #ced4da;
 }
-
-#previewWrapper.current-mode .osui-rating {
-  gap: 4px;
+#previewWrapper.current-mode .text-primary {
+  color: var(--color-primary, #1068eb);
 }
-
-#previewWrapper.current-mode .osui-rating__star--filled {
-  color: var(--color-yellow, #f59f00);
-}
-
-#previewWrapper.current-mode .osui-rating__star--empty {
+#previewWrapper.current-mode .text-neutral-5 {
   color: var(--color-neutral-5, #ced4da);
 }
 
-#previewWrapper.current-mode .osui-rating__star-wrap .star-half-filled {
-  color: var(--color-yellow, #f59f00);
+/* ─── Proposed mode — dedicated rating-filled token tied to the warning semantic ───
+   Neither 2.28 nor 2.29 gives Rating its own color token: filled stars inherit primary.
+   Proposal introduces --token-rating-filled-color pointing at warning-base so the widget
+   reads as an affective/warning cue (gold stars) while keeping primary for links/actions. */
+#previewWrapper.proposed-mode .rating .text-primary {
+  color: var(--token-rating-filled-color,
+           var(--token-semantics-warning-base,
+             var(--token-semantics-warning-700, #e9a100)));
 }
-
-#previewWrapper.current-mode .osui-rating__star-wrap .star-half-empty {
-  color: var(--color-neutral-5, #ced4da);
+#previewWrapper.proposed-mode .rating .text-neutral-5 {
+  color: var(--token-border-default, var(--token-primitives-neutral-400, #d5d5d5));
 }
-
-#previewWrapper.current-mode .osui-rating--interactive .osui-rating__star--preview {
-  color: var(--color-yellow, #f59f00);
-}
-
-/* ─── Proposed mode ─── */
-#previewWrapper.proposed-mode .osui-rating {
-  gap: var(--token-scale-050, 2px);
-}
-
-#previewWrapper.proposed-mode .osui-rating__star--filled {
-  color: var(--token-semantics-warning-base, #f59e0b);
-}
-
-#previewWrapper.proposed-mode .osui-rating__star--empty {
-  color: var(--token-border-default, #d5d5d5);
-}
-
-#previewWrapper.proposed-mode .osui-rating__star-wrap .star-half-filled {
-  color: var(--token-semantics-warning-base, #f59e0b);
-}
-
-#previewWrapper.proposed-mode .osui-rating__star-wrap .star-half-empty {
-  color: var(--token-border-default, #d5d5d5);
-}
-
-#previewWrapper.proposed-mode .osui-rating--interactive .osui-rating__star--preview {
-  color: var(--token-semantics-warning-base, #f59e0b);
+#previewWrapper.proposed-mode {
+  --token-rating-filled-color: #e9a100;
 }
 </style>
 </head>
@@ -297,16 +315,22 @@
 
 <div class="page-header">
   <h1>Rating</h1>
-  <span class="badge badge--os">OutSystems UI 2.29</span>
-  <span class="badge badge--tokens">Design Tokens</span>
+  <span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span>
+  <span class="badge-chrome badge-chrome--tokens">Design Tokens</span>
 </div>
 
 <div class="legend">
-  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> Filled star</div>
-  <div class="legend-item"><span class="legend-dot" style="background:#d5d5d5;"></span> Empty star</div>
-  <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> Half star</div>
-  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> Star gap</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> .rating (fieldset)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> .rating-item-filled</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> .rating-item-half</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#9ca3af;"></span> .rating-item-empty</div>
 </div>
+
+<!-- Star SVG sprite -->
+<svg width="0" height="0" style="position:absolute;">
+  <symbol id="icon-star" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></symbol>
+  <symbol id="icon-star-half" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" opacity=".25"/><path fill="currentColor" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77V2z"/></symbol>
+</svg>
 
 <!-- Preview -->
 <div class="preview-card">
@@ -322,89 +346,129 @@
   <div class="preview-card__body">
   <div id="previewWrapper" class="hide-annotations">
 
-    <div class="rating-row">
+    <p class="section-title">States</p>
 
-      <!-- Read-only 3/5 -->
-      <div class="rating-item">
-        <span class="rating-item__label">Read-only 3/5</span>
-        <div class="osui-rating osui-rating--readonly" id="rating-readonly-3">
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled annotate-filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled annotate-filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled annotate-filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--empty annotate-empty"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--empty annotate-empty"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    <div class="rating-group">
+      <!-- 3/5 filled -->
+      <div class="rating-row-item">
+        <span class="rating-row-label">3 / 5 (read-only)</span>
+        <div class="rating annotate-container" id="rating-3">
+          <fieldset>
+            <legend class="wcag-hide-text">Rating</legend>
+            <input type="radio" class="rating-input wcag-hide-text" name="rating-3" value="0">
+            <input type="radio" class="rating-input wcag-hide-text" name="rating-3" value="1">
+            <label class="rating-item show-filled annotate-filled" for="rating-3-1">
+              <span class="wcag-hide-text">Rating 1</span>
+              <div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
+              <div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div>
+              <div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
+            </label>
+            <input type="radio" class="rating-input wcag-hide-text" name="rating-3" value="2">
+            <label class="rating-item show-filled annotate-filled" for="rating-3-2">
+              <span class="wcag-hide-text">Rating 2</span>
+              <div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
+              <div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div>
+              <div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
+            </label>
+            <input type="radio" class="rating-input wcag-hide-text" name="rating-3" value="3" checked>
+            <label class="rating-item show-filled annotate-filled" for="rating-3-3">
+              <span class="wcag-hide-text">Rating 3</span>
+              <div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
+              <div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div>
+              <div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
+            </label>
+            <input type="radio" class="rating-input wcag-hide-text" name="rating-3" value="4">
+            <label class="rating-item show-empty annotate-empty" for="rating-3-4">
+              <span class="wcag-hide-text">Rating 4</span>
+              <div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
+              <div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div>
+              <div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
+            </label>
+            <input type="radio" class="rating-input wcag-hide-text" name="rating-3" value="5">
+            <label class="rating-item show-empty annotate-empty" for="rating-3-5">
+              <span class="wcag-hide-text">Rating 5</span>
+              <div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
+              <div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div>
+              <div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
+            </label>
+          </fieldset>
         </div>
       </div>
 
-      <!-- Read-only 4.5/5 with half star -->
-      <div class="rating-item">
-        <span class="rating-item__label">Read-only 4.5/5</span>
-        <div class="osui-rating osui-rating--readonly" id="rating-readonly-half">
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <!-- half star -->
-          <div class="osui-rating__star-wrap annotate-wrap">
-            <svg viewBox="0 0 24 24" fill="currentColor" class="star-half-empty"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24" fill="currentColor" class="star-half-filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          </div>
+      <!-- 4.5/5 half star -->
+      <div class="rating-row-item">
+        <span class="rating-row-label">4.5 / 5 (read-only)</span>
+        <div class="rating">
+          <fieldset>
+            <legend class="wcag-hide-text">Rating</legend>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-half annotate-half"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+          </fieldset>
         </div>
       </div>
 
-      <!-- Interactive -->
-      <div class="rating-item">
-        <span class="rating-item__label">Interactive</span>
-        <div class="osui-rating osui-rating--interactive" id="rating-interactive" data-value="3">
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled" data-index="1"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled" data-index="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled" data-index="3"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--empty" data-index="4"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--empty" data-index="5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <!-- Edit mode -->
+      <div class="rating-row-item">
+        <span class="rating-row-label">Edit mode · 2 / 5</span>
+        <div class="rating is-edit">
+          <fieldset>
+            <legend class="wcag-hide-text">Rating</legend>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+          </fieldset>
         </div>
       </div>
-
     </div>
 
     <hr class="section-sep">
 
-    <!-- Sizes -->
     <p class="section-title">Sizes</p>
-    <div class="rating-row">
-
-      <div class="rating-item">
-        <span class="rating-item__label">Small (16px)</span>
-        <div class="osui-rating osui-rating--readonly osui-rating--small">
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--empty"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--empty"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    <div class="rating-group">
+      <div class="rating-row-item">
+        <span class="rating-row-label">Small (8px)</span>
+        <div class="rating rating-small">
+          <fieldset>
+            <legend class="wcag-hide-text">Rating</legend>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+          </fieldset>
         </div>
       </div>
-
-      <div class="rating-item">
-        <span class="rating-item__label">Medium (24px)</span>
-        <div class="osui-rating osui-rating--readonly">
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--empty"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--empty"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <div class="rating-row-item">
+        <span class="rating-row-label">Default (16px)</span>
+        <div class="rating">
+          <fieldset>
+            <legend class="wcag-hide-text">Rating</legend>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+          </fieldset>
         </div>
       </div>
-
-      <div class="rating-item">
-        <span class="rating-item__label">Large (32px)</span>
-        <div class="osui-rating osui-rating--readonly osui-rating--large">
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--empty"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          <svg viewBox="0 0 24 24" fill="currentColor" class="osui-rating__star osui-rating__star--empty"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <div class="rating-row-item">
+        <span class="rating-row-label">Medium (24px)</span>
+        <div class="rating rating-medium">
+          <fieldset>
+            <legend class="wcag-hide-text">Rating</legend>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+          </fieldset>
         </div>
       </div>
-
     </div>
 
   </div>
@@ -414,31 +478,68 @@
 <!-- Token cards -->
 <div class="token-grid">
 
-  <!-- Filled star -->
-  <div class="token-card rating-filled-tok">
+  <!-- Container -->
+  <div class="token-card rating-struct-tok">
     <div class="token-card__header">
-      <span class="dot" style="background:#f59e0b;"></span>
-      Filled Star
-      <span class="component-name">osui-rating__star--filled</span>
+      <span class="dot" style="background:#3b82f6;"></span>
+      Container
+      <span class="component-name">.rating + .rating-item</span>
     </div>
     <div class="token-card__body">
       <div class="token-row">
-        <span class="prop-name">color</span>
+        <span class="prop-name">--rating-size (default)</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+        <span class="token-value">16px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">small / medium</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">.rating-small · .rating-medium</span>
+        <span class="token-value">8px · 24px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">item padding-right</span>
+        <span class="token-name">token-scale-200</span>
+        <span class="token-value">calc(size + 8px)</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">disabled color</span>
         <span class="token-name token-name-with-swatch">
-          <span class="swatch" style="background:#f59e0b;"></span>
-          token-semantics-warning-base
+          <span class="swatch" style="background:#a2a2a2;"></span>
+          token-text-disabled
         </span>
-        <span class="token-value">#f59e0b</span>
+        <span class="token-value">#a2a2a2</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filled / half star -->
+  <div class="token-card rating-filled-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#f59e0b;"></span>
+      Filled &amp; half
+      <span class="component-name">.text-primary (inside .rating)</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">color (real 2.29)</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#105cef;"></span>
+          token-semantics-primary-base
+        </span>
+        <span class="token-value">#105cef</span>
       </div>
       <div class="token-row">
-        <span class="prop-name">fill</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">currentColor</span>
+        <span class="prop-name">proposed color</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#e9a100;"></span>
+          token-rating-filled-color
+        </span>
+        <span class="token-value">#e9a100</span>
       </div>
       <div class="token-row">
-        <span class="prop-name">width / height</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">24px (default)</span>
+        <span class="prop-name">star size</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">inherits --rating-size</span>
+        <span class="token-value">8 / 16 / 24</span>
       </div>
     </div>
   </div>
@@ -446,13 +547,21 @@
   <!-- Empty star -->
   <div class="token-card rating-empty-tok">
     <div class="token-card__header">
-      <span class="dot" style="background:#d5d5d5;"></span>
-      Empty Star
-      <span class="component-name">osui-rating__star--empty</span>
+      <span class="dot" style="background:#6b7280;"></span>
+      Empty
+      <span class="component-name">.text-neutral-5</span>
     </div>
     <div class="token-card__body">
       <div class="token-row">
-        <span class="prop-name">color</span>
+        <span class="prop-name">color (real 2.29)</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#ced4da;"></span>
+          hardcoded hex
+        </span>
+        <span class="token-value">#ced4da</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">proposed color</span>
         <span class="token-name token-name-with-swatch">
           <span class="swatch" style="background:#d5d5d5;"></span>
           token-border-default
@@ -460,71 +569,9 @@
         <span class="token-value">#d5d5d5</span>
       </div>
       <div class="token-row">
-        <span class="prop-name">fill</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">currentColor</span>
-      </div>
-      <div class="token-row">
-        <span class="prop-name">cursor (readonly)</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">default</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Gap token -->
-  <div class="token-card rating-gap-tok">
-    <div class="token-card__header">
-      <span class="dot" style="background:#3b82f6;"></span>
-      Star Container
-      <span class="component-name">osui-rating</span>
-    </div>
-    <div class="token-card__body">
-      <div class="token-row">
-        <span class="prop-name">gap</span>
-        <span class="token-name">token-scale-050</span>
-        <span class="token-value">2px</span>
-      </div>
-      <div class="token-row">
-        <span class="prop-name">display</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">inline-flex</span>
-      </div>
-      <div class="token-row">
-        <span class="prop-name">align-items</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">center</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Sizes -->
-  <div class="token-card rating-size-tok">
-    <div class="token-card__header">
-      <span class="dot" style="background:#10b981;"></span>
-      Size Variants
-      <span class="component-name">osui-rating--small / large</span>
-    </div>
-    <div class="token-card__body">
-      <div class="token-row">
-        <span class="prop-name">small width/height</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">16px</span>
-      </div>
-      <div class="token-row">
-        <span class="prop-name">medium width/height</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">24px</span>
-      </div>
-      <div class="token-row">
-        <span class="prop-name">large width/height</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">32px</span>
-      </div>
-      <div class="token-row">
-        <span class="prop-name">hover scale</span>
-        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
-        <span class="token-value">1.15 (interactive)</span>
+        <span class="prop-name">icon</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">fa fa-star (outline)</span>
+        <span class="token-value">FA</span>
       </div>
     </div>
   </div>
@@ -535,14 +582,14 @@
 <div class="proposal-section">
   <div class="proposal-header">
     <h3>Token Proposal</h3>
-    <p>Suggested token changes to align Rating with the 2.29 semantic token system.</p>
+    <p>Real OS UI HTML uses <code>.rating</code> + <code>fieldset</code> + <code>.rating-item</code> + 3 state divs (<code>-filled</code>, <code>-half</code>, <code>-empty</code>), coloured via <code>.text-primary</code> / <code>.text-neutral-5</code> utility classes. Sizing is driven by <code>--rating-size</code> on the <code>.rating</code> container (8/16/24px). Icons use Font Awesome (<code>.fa.fa-star</code>/<code>.fa-star-half</code>).</p>
   </div>
   <div class="proposal-table-wrap">
     <table class="proposal-table">
       <thead>
         <tr>
           <th>Property</th>
-          <th>Component</th>
+          <th>Utility class</th>
           <th>Current (2.28)</th>
           <th>Proposed</th>
           <th>Token</th>
@@ -551,28 +598,52 @@
       </thead>
       <tbody>
         <tr>
-          <td class="td-property">color (filled star)</td>
-          <td class="td-property">.osui-rating__star--filled</td>
-          <td class="td-current">--color-yellow (#f59f00)</td>
-          <td class="td-proposed">token-semantics-warning-base (#f59e0b)</td>
-          <td class="td-token">--token-semantics-warning-base</td>
-          <td class="td-rationale">Star ratings communicate a warning/attention semantic — <strong>token-semantics-warning-base</strong> makes the color intent explicit and consistent with badges, alerts, and other warning-state elements across the system.</td>
+          <td class="td-property">color (filled)</td>
+          <td class="td-property">.text-primary (inside .rating)</td>
+          <td class="td-current">color-primary (#1068eb) — <em>blue</em></td>
+          <td class="td-proposed">token-rating-filled-color (#e9a100)</td>
+          <td class="td-token">--token-rating-filled-color</td>
+          <td class="td-rationale">Neither 2.28 nor 2.29 gives Rating its own color — filled stars inherit <strong>primary blue</strong> from the <code>.text-primary</code> utility. Proposal introduces a dedicated <strong>rating-filled token</strong> tied to <code>warning-base</code> so stars read as an affective cue (gold) without hijacking the primary utility elsewhere.</td>
         </tr>
         <tr>
-          <td class="td-property">color (empty star)</td>
-          <td class="td-property">.osui-rating__star--empty</td>
-          <td class="td-current">--color-neutral-5 (#ced4da)</td>
+          <td class="td-property">color (half)</td>
+          <td class="td-property">.text-primary</td>
+          <td class="td-current">color-primary (#1068eb)</td>
+          <td class="td-proposed">token-rating-filled-color (#e9a100)</td>
+          <td class="td-token">--token-rating-filled-color</td>
+          <td class="td-rationale">Half star shares the filled color — same dedicated token keeps half/filled visually identical across theme overrides.</td>
+        </tr>
+        <tr>
+          <td class="td-property">color (empty)</td>
+          <td class="td-property">.text-neutral-5</td>
+          <td class="td-current">color-neutral-5 (#ced4da)</td>
           <td class="td-proposed">token-border-default (#d5d5d5)</td>
           <td class="td-token">--token-border-default</td>
-          <td class="td-rationale">An empty rating slot is structurally equivalent to an empty bordered slot — using <strong>token-border-default</strong> is semantically correct and ensures it stays in sync with other unfilled UI elements like checkbox outlines and input borders.</td>
+          <td class="td-rationale">In real 2.29 <code>.text-neutral-5</code> is <strong>hardcoded</strong> (#ced4da). Promote it to <code>token-border-default</code> so empty stars share the <strong>low-emphasis gray</strong> used for dividers and input borders — one semantic token covers all three uses.</td>
         </tr>
         <tr>
-          <td class="td-property">gap</td>
-          <td class="td-property">.osui-rating</td>
-          <td class="td-current">hardcoded: 4px</td>
-          <td class="td-proposed">token-scale-050 (2px)</td>
-          <td class="td-token">--token-scale-050</td>
-          <td class="td-rationale">Connecting spacing to the scale token ensures the rating's internal rhythm stays consistent if the global spacing scale is adjusted. <strong>2px</strong> (token-scale-050) is tighter and better suits small star rows.</td>
+          <td class="td-property">size</td>
+          <td class="td-property">--rating-size</td>
+          <td class="td-current">hardcoded 8px / 16px / 24px</td>
+          <td class="td-proposed">token-scale-200 / 400 / 600</td>
+          <td class="td-token">--token-scale-200 / 400 / 600</td>
+          <td class="td-rationale">Today each variant sets <code>--rating-size</code> to a raw pixel value. Proposal ties sizes to the spacing scale so Rating scales in lock-step with other components under density / responsive token sets.</td>
+        </tr>
+        <tr>
+          <td class="td-property">item padding-right</td>
+          <td class="td-property">.rating-item</td>
+          <td class="td-current">calc(size + var(--space-s))</td>
+          <td class="td-proposed">calc(size + token-scale-200)</td>
+          <td class="td-token">--token-scale-200</td>
+          <td class="td-rationale">2.28 used the legacy <code>--space-s</code> alias. 2.29 already ties this to <code>token-scale-200</code> — no palette mapping needed, but called out here for the audit trail.</td>
+        </tr>
+        <tr>
+          <td class="td-property">disabled color</td>
+          <td class="td-property">.rating fieldset[disabled]</td>
+          <td class="td-current">text-color-neutral-6 · color-neutral-6</td>
+          <td class="td-proposed">token-text-disabled (#a2a2a2)</td>
+          <td class="td-token">--token-text-disabled</td>
+          <td class="td-rationale">2.29 already introduces <code>--osui-rating-disabled-color</code> as a semantic layer. Row is included for completeness so theming overrides can target this single token instead of the legacy <code>color-neutral-6</code> palette.</td>
         </tr>
       </tbody>
     </table>
@@ -595,39 +666,6 @@
     btn.textContent = hiding ? 'Show annotations' : 'Hide annotations';
     btn.classList.toggle('ann-toggle--off', hiding);
   }
-
-  // Interactive rating
-  (function initInteractiveRating() {
-    const ratingEl = document.getElementById('rating-interactive');
-    if (!ratingEl) return;
-    const stars = Array.from(ratingEl.querySelectorAll('.osui-rating__star'));
-    let currentValue = parseInt(ratingEl.dataset.value, 10) || 0;
-
-    function applyState(value, isPreview) {
-      stars.forEach((star, i) => {
-        const filled = i < value;
-        star.classList.toggle('osui-rating__star--filled', filled && !isPreview);
-        star.classList.toggle('osui-rating__star--empty', !filled && !isPreview);
-        star.classList.toggle('osui-rating__star--preview', filled && isPreview);
-        if (isPreview) {
-          star.classList.toggle('osui-rating__star--filled', false);
-          star.classList.toggle('osui-rating__star--empty', !filled);
-        }
-      });
-    }
-
-    applyState(currentValue, false);
-
-    stars.forEach((star, i) => {
-      star.addEventListener('mouseenter', () => applyState(i + 1, true));
-      star.addEventListener('mouseleave', () => applyState(currentValue, false));
-      star.addEventListener('click', () => {
-        currentValue = i + 1;
-        ratingEl.dataset.value = currentValue;
-        applyState(currentValue, false);
-      });
-    });
-  })();
 </script>
 
 <script src="assets/os-ui/O11.OutSystemsUI.js"></script>

@@ -39,10 +39,17 @@
     --token-text-default: #242424;
     --token-text-inverse: #ffffff;
     --token-semantics-primary-base: #105cef;
+    --token-semantics-primary-700: #105cef;
+    --token-primitives-base-white: #ffffff;
+    --token-primitives-neutral-1200: #242424;
+    --token-primitives-blue-700: #105cef;
+    --token-primitives-green-700: #29823b;
+    --token-primitives-red-700: #dc2020;
+    --token-primitives-yellow-700: #e9a100;
     --token-elevation-1: 0px 0px 4px 0px rgba(0, 0, 0, 0.04), 0px 3px 9px 0px rgba(0, 0, 0, 0.07);
     --token-elevation-2: 0px 2px 8px 0px rgba(0, 0, 0, 0.08), 0px 8px 24px 0px rgba(0, 0, 0, 0.12);
     --layer-local-tier-1: 1;
-    --color-primary: #9f3d8f;
+    --color-primary: #1068eb;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -264,8 +271,8 @@
   }
   .btn:hover { opacity: 0.85; }
   .btn-primary {
-    background: var(--token-semantics-primary-base, #105cef);
-    border-color: var(--token-semantics-primary-base, #105cef);
+    background: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
+    border-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
     color: #fff;
   }
 
@@ -892,7 +899,7 @@
 
     <!-- Card (basic) -->
     <div class="card card-content annotate-container margin-bottom-l">
-      <p style="color: var(--token-text-default, #242424); font-size: 14px; margin-bottom: 6px; font-weight: 600;">Card with padding</p>
+      <p style="color: var(--token-text-default, var(--token-primitives-neutral-1200, #242424)); font-size: 14px; margin-bottom: 6px; font-weight: 600;">Card with padding</p>
       <p style="font-size: 13px; color: #6b7280;">Uses <code style="font-family: 'SF Mono', monospace; font-size: 11px; background: #f3f4f6; padding: 1px 4px; border-radius: 3px;">.card</code> — background, border, border-radius, shadow, padding all token-driven.</p>
     </div>
 
@@ -910,7 +917,7 @@
     <!-- Card Item (card-detail) -->
     <div class="card card-detail annotate-container margin-bottom-l">
       <div class="card-detail-left annotate-detail-left">
-        <div style="width:64px; height:64px; border-radius: var(--token-border-radius-200, 8px); background: var(--token-semantics-primary-base, #105cef); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#fff; font-size:32px;">
+        <div style="width:64px; height:64px; border-radius: var(--token-border-radius-200, 8px); background: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef))); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#fff; font-size:32px;">
           <i class="ph ph-user"></i>
         </div>
       </div>

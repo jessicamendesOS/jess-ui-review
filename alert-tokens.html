@@ -28,25 +28,52 @@
     --token-font-weight-regular: 400;
     --token-font-weight-semi-bold: 600;
     --token-text-default: #242424;
+    --token-border-default: #d5d5d5;
+    --token-primitives-neutral-400: #d5d5d5;
+    --token-primitives-neutral-1200: #242424;
 
-    /* Alert semantic color tokens (OutSystems UI 2.29.0 fallback values) */
+    /* Alert semantic color tokens (OutSystems UI 2.29.0 real fallback values) */
     --token-bg-info-subtle-default: #e9ecfc;
     --token-text-info: #0d4bc3;
     --token-semantics-info-base: #105cef;
+    --token-semantics-info-700: #105cef;
+    --token-semantics-info-100: #e9ecfc;
+    --token-semantics-info-900: #0d4bc3;
+    --token-primitives-blue-100: #e9ecfc;
+    --token-primitives-blue-700: #105cef;
+    --token-primitives-blue-900: #0d4bc3;
 
     --token-bg-success-subtle-default: #e2f9e4;
     --token-text-success: #126f23;
     --token-semantics-success-base: #1ba433;
+    --token-semantics-success-700: #1ba433;
+    --token-semantics-success-100: #e2f9e4;
+    --token-semantics-success-900: #126f23;
+    --token-primitives-green-100: #e2f9e4;
+    --token-primitives-green-700: #1ba433;
+    --token-primitives-green-900: #126f23;
 
     --token-bg-danger-subtle-default: #fde1e1;
     --token-text-danger: #991b1b;
     --token-semantics-danger-base: #e52929;
+    --token-semantics-danger-700: #e52929;
+    --token-semantics-danger-100: #fde1e1;
+    --token-semantics-danger-900: #991b1b;
+    --token-primitives-red-100: #fde1e1;
+    --token-primitives-red-700: #e52929;
+    --token-primitives-red-900: #991b1b;
 
     --token-bg-warning-subtle-default: #fff0c7;
     --token-text-warning: #704b02;
     --token-semantics-warning-base: #ffd600;
+    --token-semantics-warning-500: #ffd600;
+    --token-semantics-warning-200: #fff0c7;
+    --token-semantics-warning-1000: #704b02;
+    --token-primitives-yellow-200: #fff0c7;
+    --token-primitives-yellow-500: #ffd600;
+    --token-primitives-yellow-1000: #704b02;
 
-    --color-primary: #9f3d8f;
+    --color-primary: #1068eb;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -111,12 +138,14 @@
   .preview-card__body { padding: 20px; }
   #previewWrapper { max-width: 460px; margin: 0 auto; }
 
-  /* ─── Alert component (OutSystems UI 2.29.0) ─── */
+  /* ─── Alert component (OutSystems UI 2.29.0) ───
+     NOTE: real 2.29 has a SCSS leak — `--osui-alert-color: $token-text-default;` (raw $ string).
+     Real intent shown below as var(--token-text-default, …). */
   .alert {
     --osui-alert-background: transparent;
-    --osui-alert-color: var(--token-text-default, #242424);
-    --osui-alert-accent-color: var(--token-border-default, #d5d5d5);
-    --osui-alert-border-radius: var(--token-border-radius-300, 12px);
+    --osui-alert-color: var(--token-text-default, var(--token-primitives-neutral-1200, #242424));
+    --osui-alert-accent-color: var(--token-border-default, var(--token-primitives-neutral-400, #d5d5d5));
+    --osui-alert-border-radius: var(--token-border-radius-300, var(--token-scale-300, 12px));
     --osui-alert-padding: var(--token-scale-400, 16px);
     -webkit-box-align: center;
     -ms-flex-align: center;
@@ -146,25 +175,26 @@
     -ms-flex: 1;
     flex: 1;
   }
+  /* Variant rules — full nested fallback chains, verbatim from real 2.29 */
   .alert-info {
-    --osui-alert-background: var(--token-bg-info-subtle-default, #e9ecfc);
-    --osui-alert-color: var(--token-text-info, #0d4bc3);
-    --osui-alert-accent-color: var(--token-semantics-info-base, #105cef);
+    --osui-alert-background:   var(--token-bg-info-subtle-default, var(--token-semantics-info-100, var(--token-primitives-blue-100, #e9ecfc)));
+    --osui-alert-color:        var(--token-text-info,              var(--token-semantics-info-900, var(--token-primitives-blue-900, #0d4bc3)));
+    --osui-alert-accent-color: var(--token-semantics-info-base,    var(--token-semantics-info-700, var(--token-primitives-blue-700, #105cef)));
   }
   .alert-success {
-    --osui-alert-background: var(--token-bg-success-subtle-default, #e2f9e4);
-    --osui-alert-color: var(--token-text-success, #126f23);
-    --osui-alert-accent-color: var(--token-semantics-success-base, #1ba433);
+    --osui-alert-background:   var(--token-bg-success-subtle-default, var(--token-semantics-success-100, var(--token-primitives-green-100, #e2f9e4)));
+    --osui-alert-color:        var(--token-text-success,              var(--token-semantics-success-900, var(--token-primitives-green-900, #126f23)));
+    --osui-alert-accent-color: var(--token-semantics-success-base,    var(--token-semantics-success-700, var(--token-primitives-green-700, #1ba433)));
   }
   .alert-error {
-    --osui-alert-background: var(--token-bg-danger-subtle-default, #fde1e1);
-    --osui-alert-color: var(--token-text-danger, #991b1b);
-    --osui-alert-accent-color: var(--token-semantics-danger-base, #e52929);
+    --osui-alert-background:   var(--token-bg-danger-subtle-default, var(--token-semantics-danger-100, var(--token-primitives-red-100, #fde1e1)));
+    --osui-alert-color:        var(--token-text-danger,              var(--token-semantics-danger-900, var(--token-primitives-red-900, #991b1b)));
+    --osui-alert-accent-color: var(--token-semantics-danger-base,    var(--token-semantics-danger-700, var(--token-primitives-red-700, #e52929)));
   }
   .alert-warning {
-    --osui-alert-background: var(--token-bg-warning-subtle-default, #fff0c7);
-    --osui-alert-color: var(--token-text-warning, #704b02);
-    --osui-alert-accent-color: var(--token-semantics-warning-base, #ffd600);
+    --osui-alert-background:   var(--token-bg-warning-subtle-default, var(--token-semantics-warning-200,  var(--token-primitives-yellow-200,  #fff0c7)));
+    --osui-alert-color:        var(--token-text-warning,              var(--token-semantics-warning-1000, var(--token-primitives-yellow-1000, #704b02)));
+    --osui-alert-accent-color: var(--token-semantics-warning-base,    var(--token-semantics-warning-500,  var(--token-primitives-yellow-500,  #ffd600)));
   }
 
   /* Annotation outlines */
