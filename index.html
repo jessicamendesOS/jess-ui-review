@@ -142,6 +142,11 @@
   .card--blankstate .card-footer    { color: #8b5cf6; }
   .card--blankstate .token-pill     { background: #f5f3ff; color: #6d28d9; }
 
+  .card--tabs .card-accent    { background: linear-gradient(90deg, #0ea5e9, #6366f1); }
+  .card--tabs .card-icon      { background: #f0f9ff; color: #0ea5e9; }
+  .card--tabs .card-footer    { color: #0284c7; }
+  .card--tabs .token-pill     { background: #f0f9ff; color: #0369a1; }
+
   /* ─── Footer ─── */
   .site-footer {
     margin-top: 56px;
@@ -167,7 +172,7 @@
   <div class="badge-row">
     <span class="badge badge-os">OutSystems UI 2.29</span>
     <span class="badge badge-dt">Design Tokens</span>
-    <span class="badge badge-cnt">7 components</span>
+    <span class="badge badge-cnt">8 components</span>
   </div>
 </header>
 
@@ -323,6 +328,33 @@
         <span class="token-pill">border-radius</span>
         <span class="token-pill">spacing</span>
         <span class="token-pill">typography</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      View annotations
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </div>
+  </a>
+
+  <!-- Tabs -->
+  <a class="component-card card--tabs" href="tabs-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect x="2" y="3" width="5" height="3" rx="1" fill="currentColor"/>
+          <rect x="9" y="3" width="5" height="3" rx="1" fill="currentColor" opacity=".4"/>
+          <rect x="2" y="7" width="16" height="10" rx="1.5" fill="currentColor" opacity=".25"/>
+          <rect x="2" y="6" width="5" height="1.5" rx=".75" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="card-title">Tabs</div>
+      <div class="card-desc">Horizontal navigation with animated indicator, active state, and icon support. Includes justified and icon+label variants.</div>
+      <div class="card-tokens">
+        <span class="token-pill">text-subtle</span>
+        <span class="token-pill">primary</span>
+        <span class="token-pill">spacing</span>
+        <span class="token-pill">indicator</span>
       </div>
     </div>
     <div class="card-footer">

@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tabs — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-0: 0;
+    --token-scale-025: 1px;
+    --token-scale-050: 2px;
+    --token-scale-100: 4px;
+    --token-scale-200: 8px;
+    --token-scale-300: 12px;
+    --token-scale-400: 16px;
+    --token-scale-600: 24px;
+    --token-scale-800: 32px;
+    --token-scale-1000: 40px;
+    --token-scale-1200: 48px;
+    --token-border-radius-0: 0;
+    --token-border-radius-100: 4px;
+    --token-border-radius-200: 8px;
+    --token-border-radius-300: 12px;
+    --token-border-size-025: 1px;
+    --token-font-size-400: 1rem;
+    --token-font-weight-semi-bold: 600;
+    --token-bg-surface-default: #ffffff;
+    --token-border-default: #d5d5d5;
+    --token-border-subtle: #f3f3f3;
+    --token-text-default: #242424;
+    --token-text-subtle: #6b7280;
+    --token-text-placeholder: #acacac;
+    --token-semantics-primary-base: #105cef;
+    --token-elevation-1: 0px 0px 4px 0px rgba(0,0,0,0.04), 0px 3px 9px 0px rgba(0,0,0,0.07);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    color: #111827;
+    line-height: 1.5;
+    padding: 48px 32px;
+  }
+
+  .back-nav {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #6b7280;
+    text-decoration: none; margin-bottom: 24px;
+    padding: 5px 10px 5px 6px; border-radius: 8px;
+    transition: background .15s, color .15s;
+  }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+
+  .page-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
+  .badge {
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 700; padding: 4px 10px;
+    border-radius: 99px; letter-spacing: .02em; text-transform: uppercase;
+  }
+  .badge--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; color: #374151;
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 99px;
+    padding: 4px 10px 4px 6px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  .preview-card {
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07);
+    border: 1px solid #e5e7eb; overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .preview-card__header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa;
+  }
+  .preview-card__label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-right: auto;
+  }
+  .preview-card__body { padding: 24px; background: #f4f5f7; }
+  #previewWrapper { max-width: 520px; margin: 0 auto; }
+
+  /* ─── Tabs (OutSystems UI 2.29.0) ─── */
+  .osui-tabs {
+    --tabs-height: auto;
+    --tabs-header-items: 3;
+    --tabs-indicator-transform: 0%;
+    --tabs-content-item-overflow: visible;
+    background: var(--token-bg-surface-default, #fff);
+    border-radius: var(--token-border-radius-200, 8px);
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: var(--tabs-height);
+    padding: 0 var(--token-scale-400, 16px);
+  }
+
+  .osui-tabs__header {
+    display: flex;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .osui-tabs__header-item {
+    align-items: center;
+    color: var(--token-text-subtle, #6b7280);
+    cursor: pointer;
+    display: flex;
+    flex: 1;
+    font-size: 14px;
+    justify-content: center;
+    min-height: 42px;
+    padding: var(--token-scale-200, 8px) var(--token-scale-400, 16px);
+    position: relative;
+    transition: color 200ms linear;
+    user-select: none;
+  }
+
+  .osui-tabs__header-item.osui-tabs--is-active {
+    color: var(--token-text-default, #242424);
+    font-weight: var(--token-font-weight-semi-bold, 600);
+  }
+
+  .osui-tabs__header__indicator {
+    background-color: var(--token-semantics-primary-base, #105cef);
+    bottom: 0;
+    height: 2px;
+    left: 0;
+    position: absolute;
+    transition: transform 300ms cubic-bezier(.77, 0, .18, 1);
+    width: calc(100% / var(--tabs-header-items));
+    transform: translateX(var(--tabs-indicator-transform));
+  }
+
+  .osui-tabs--is-horizontal .osui-tabs__content {
+    border-top: 1px solid var(--token-border-subtle, #f3f3f3);
+  }
+
+  .osui-tabs__content-item {
+    display: none;
+    overflow: var(--tabs-content-item-overflow);
+    padding: var(--token-scale-600, 24px) var(--token-scale-0, 0);
+  }
+
+  .osui-tabs__content-item.osui-tabs--is-active {
+    display: block;
+  }
+
+  .tab-content-placeholder {
+    font-size: 14px;
+    color: var(--token-text-subtle, #6b7280);
+    line-height: 1.6;
+  }
+
+  /* ─── Annotations ─── */
+  .annotate-header    { outline: 2px dashed #3b82f6; outline-offset: 3px; border-radius: 2px; }
+  .annotate-active    { outline: 2px dashed #8b5cf6; outline-offset: 2px; }
+  .annotate-indicator { outline: 2px dashed #10b981; outline-offset: 3px; }
+  .annotate-content   { outline: 2px dashed #f59e0b; outline-offset: 2px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+
+  .variant-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-bottom: 12px; text-align: center;
+  }
+  .variant-sep {
+    border: none; border-top: 1px dashed #e5e7eb; margin: 28px 0;
+  }
+
+  /* ─── Token panel ─── */
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; letter-spacing: 0; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 155px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); transition: background .12s; }
+  .token-row:last-child { border-bottom: none; }
+  .token-row:hover { background: rgba(255,255,255,.03); }
+  .prop-name  { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; white-space: nowrap; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value{ font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; white-space: nowrap; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); vertical-align: middle; margin-right: 5px; flex-shrink: 0; }
+  .token-name-with-swatch { display: flex; align-items: center; }
+
+  .tabs-header-tok   .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
+  .tabs-active-tok   .token-card__header { background: linear-gradient(120deg, #1e1b4b, #8b5cf6); }
+  .tabs-indicator-tok .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+  .tabs-content-tok  .token-card__header { background: linear-gradient(120deg, #92400e, #f59e0b); }
+
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; font-family: inherit; transition: all .15s; white-space: nowrap; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; font-family: inherit; transition: all .15s; margin-left: 4px; white-space: nowrap; }
+  .ann-toggle:hover { color: #111827; border-color: #9ca3af; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p  { font-size: 12px; color: #6b7280; }
+  .proposal-table-wrap { overflow-x: auto; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .proposal-table tbody tr:last-child td { border-bottom: none; }
+  .proposal-table tbody tr:hover td { background: #fafafa; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; white-space: nowrap; }
+  .td-current  { color: #9ca3af; }
+  .td-proposed { font-weight: 600; color: #111827; }
+  .td-token    { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; }
+  .td-rationale{ color: #4b5563; max-width: 280px; }
+  .td-rationale strong { color: #111827; }
+
+  @media (max-width: 960px) {
+    .token-grid { grid-template-columns: 1fr; }
+    body { padding: 24px 20px 60px; }
+  }
+
+/* ─── Current mode (OutSystems UI 2.28.0) ─── */
+#previewWrapper.current-mode {
+  --color-neutral-5: #ced4da;
+  --color-neutral-8: #4f575e;
+  --color-neutral-10: #101213;
+  --color-primary: #1068eb;
+  --space-none: 0;
+  --space-s: 8px;
+  --space-base: 16px;
+  --space-m: 24px;
+  --font-semi-bold: 600;
+  --text-color-neutral-8: var(--color-neutral-8);
+  --text-color-neutral-10: var(--color-neutral-10);
+  --background-color-primary: var(--color-primary);
+  --border-color-neutral-5: var(--color-neutral-5);
+}
+
+#previewWrapper.current-mode .osui-tabs__header-item {
+  color: var(--text-color-neutral-8, #4f575e);
+  padding: var(--space-s, 8px) var(--space-base, 16px);
+}
+
+#previewWrapper.current-mode .osui-tabs__header-item.osui-tabs--is-active {
+  color: var(--text-color-neutral-10, #101213);
+  font-weight: var(--font-semi-bold, 600);
+  text-shadow: 0 0 0.5px currentColor;
+}
+
+#previewWrapper.current-mode .osui-tabs__header__indicator {
+  background-color: var(--background-color-primary, #1068eb);
+}
+
+#previewWrapper.current-mode .osui-tabs--is-horizontal .osui-tabs__content {
+  border-top: 1px solid var(--border-color-neutral-5, #ced4da);
+}
+
+#previewWrapper.current-mode .osui-tabs__content-item {
+  padding: var(--space-m, 24px) var(--space-none, 0);
+}
+
+/* ─── Proposed mode — Tabs ─── */
+#previewWrapper.proposed-mode .osui-tabs__header-item {
+  color: var(--token-text-subtle, #6b7280);
+  transition: color 150ms ease, background-color 150ms ease;
+  border-radius: var(--token-border-radius-100, 4px) var(--token-border-radius-100, 4px) 0 0;
+}
+
+#previewWrapper.proposed-mode .osui-tabs__header-item:hover:not(.osui-tabs--is-active) {
+  background-color: rgba(0, 0, 0, .04);
+  color: var(--token-text-default, #242424);
+}
+
+#previewWrapper.proposed-mode .osui-tabs__header-item.osui-tabs--is-active {
+  color: var(--token-semantics-primary-base, #105cef);
+}
+
+#previewWrapper.proposed-mode .osui-tabs__header__indicator {
+  background-color: var(--token-semantics-primary-base, #105cef);
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+}
+
+#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__content {
+  border-top: 1px solid var(--token-border-default, #d5d5d5);
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-nav">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  All components
+</a>
+
+<div class="page-header">
+  <h1>Tabs</h1>
+  <span class="badge badge--os">OutSystems UI 2.29</span>
+  <span class="badge badge--tokens">Design Tokens</span>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> Tab Header</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6;"></span> Active Tab Item</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Indicator</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> Content Area</div>
+</div>
+
+<div class="preview-card">
+  <div class="preview-card__header">
+    <span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+  <div id="previewWrapper" class="hide-annotations">
+
+    <!-- Variant 1: Horizontal, 3 tabs -->
+    <p class="variant-label">Horizontal — Justified</p>
+
+    <div id="tabs-wrap-1" data-block="OutSystemsUI.Tabs">
+      <div class="osui-tabs osui-tabs--is-horizontal" id="osui-tabs-1" name="osui-tabs-1">
+        <div class="osui-tabs__header annotate-header">
+          <div class="osui-tabs__header-item osui-tabs--is-active annotate-active"
+               id="osui-tab1-h1" name="osui-tab1-h1" role="tab">Overview</div>
+          <div class="osui-tabs__header-item"
+               id="osui-tab1-h2" name="osui-tab1-h2" role="tab">Details</div>
+          <div class="osui-tabs__header-item"
+               id="osui-tab1-h3" name="osui-tab1-h3" role="tab">Settings</div>
+          <span class="osui-tabs__header__indicator annotate-indicator" aria-hidden="true"></span>
+        </div>
+        <div class="osui-tabs__content annotate-content">
+          <div class="osui-tabs__content-item osui-tabs--is-active"
+               id="osui-tab1-c1" name="osui-tab1-c1" role="tabpanel">
+            <p class="tab-content-placeholder">Overview of the component. This area renders the active panel content.</p>
+          </div>
+          <div class="osui-tabs__content-item"
+               id="osui-tab1-c2" name="osui-tab1-c2" role="tabpanel">
+            <p class="tab-content-placeholder">Detailed specifications and configuration options.</p>
+          </div>
+          <div class="osui-tabs__content-item"
+               id="osui-tab1-c3" name="osui-tab1-c3" role="tabpanel">
+            <p class="tab-content-placeholder">Settings and advanced preferences.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="variant-sep">
+
+    <!-- Variant 2: Horizontal, 4 tabs with icons -->
+    <p class="variant-label">Horizontal — With icons</p>
+
+    <div id="tabs-wrap-2" data-block="OutSystemsUI.Tabs">
+      <div class="osui-tabs osui-tabs--is-horizontal" id="osui-tabs-2" name="osui-tabs-2">
+        <div class="osui-tabs__header">
+          <div class="osui-tabs__header-item osui-tabs--is-active"
+               id="osui-tab2-h1" name="osui-tab2-h1" role="tab"
+               style="gap:6px;">
+            <i class="ph ph-house" aria-hidden="true"></i> Home
+          </div>
+          <div class="osui-tabs__header-item"
+               id="osui-tab2-h2" name="osui-tab2-h2" role="tab"
+               style="gap:6px;">
+            <i class="ph ph-bell" aria-hidden="true"></i> Alerts
+          </div>
+          <div class="osui-tabs__header-item"
+               id="osui-tab2-h3" name="osui-tab2-h3" role="tab"
+               style="gap:6px;">
+            <i class="ph ph-user" aria-hidden="true"></i> Profile
+          </div>
+          <div class="osui-tabs__header-item"
+               id="osui-tab2-h4" name="osui-tab2-h4" role="tab"
+               style="gap:6px;">
+            <i class="ph ph-gear" aria-hidden="true"></i> Settings
+          </div>
+          <span class="osui-tabs__header__indicator" aria-hidden="true"></span>
+        </div>
+        <div class="osui-tabs__content">
+          <div class="osui-tabs__content-item osui-tabs--is-active"
+               id="osui-tab2-c1" name="osui-tab2-c1" role="tabpanel">
+            <p class="tab-content-placeholder">Home dashboard content.</p>
+          </div>
+          <div class="osui-tabs__content-item"
+               id="osui-tab2-c2" name="osui-tab2-c2" role="tabpanel">
+            <p class="tab-content-placeholder">Recent alerts and notifications.</p>
+          </div>
+          <div class="osui-tabs__content-item"
+               id="osui-tab2-c3" name="osui-tab2-c3" role="tabpanel">
+            <p class="tab-content-placeholder">User profile and account details.</p>
+          </div>
+          <div class="osui-tabs__content-item"
+               id="osui-tab2-c4" name="osui-tab2-c4" role="tabpanel">
+            <p class="tab-content-placeholder">Application settings and preferences.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+</div>
+
+<div class="token-grid">
+
+  <!-- Header Item (inactive) -->
+  <div class="token-card tabs-header-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#3b82f6;"></span>
+      Header Item
+      <span class="component-name">osui-tabs__header-item</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">color</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#6b7280;"></span>
+          token-text-subtle
+        </span>
+        <span class="token-value">#6b7280</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">padding (T/B)</span>
+        <span class="token-name">token-scale-200</span>
+        <span class="token-value">8px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">padding (L/R)</span>
+        <span class="token-name">token-scale-400</span>
+        <span class="token-value">16px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">min-height</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+        <span class="token-value">42px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">flex</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+        <span class="token-value">1 (justified)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Active Tab Item -->
+  <div class="token-card tabs-active-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#8b5cf6;"></span>
+      Active Tab
+      <span class="component-name">osui-tabs--is-active</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">color</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#242424;"></span>
+          token-text-default
+        </span>
+        <span class="token-value">#242424</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">font-weight</span>
+        <span class="token-name">token-font-weight-semi-bold</span>
+        <span class="token-value">600</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">text-shadow</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">2.28 only</span>
+        <span class="token-value">0 0 0.5px currentColor</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indicator -->
+  <div class="token-card tabs-indicator-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#10b981;"></span>
+      Indicator
+      <span class="component-name">osui-tabs__header__indicator</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">background</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#105cef;"></span>
+          token-semantics-primary-base
+        </span>
+        <span class="token-value">#105cef</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">height</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+        <span class="token-value">2px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">width</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">computed</span>
+        <span class="token-value">100% / N tabs</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">transition</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+        <span class="token-value">300ms cubic-bezier</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="token-card tabs-content-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#f59e0b;"></span>
+      Content Area
+      <span class="component-name">osui-tabs__content</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">border-top</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#f3f3f3; border-color:rgba(0,0,0,.1);"></span>
+          token-border-subtle
+        </span>
+        <span class="token-value">#f3f3f3</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">padding (T/B)</span>
+        <span class="token-name">token-scale-600</span>
+        <span class="token-value">24px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">padding (L/R)</span>
+        <span class="token-name">token-scale-0</span>
+        <span class="token-value">0</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Proposal table -->
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Token Proposal</h3>
+    <p>Suggested changes to improve visual clarity and semantic token alignment.</p>
+  </div>
+  <div class="proposal-table-wrap">
+    <table class="proposal-table">
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Component</th>
+          <th>Current (2.28)</th>
+          <th>Proposed</th>
+          <th>Token</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-property">color (active)</td>
+          <td class="td-property">.osui-tabs__header-item<br>.osui-tabs--is-active</td>
+          <td class="td-current">text-color-neutral-10 (#101213)</td>
+          <td class="td-proposed">token-semantics-primary-base (#105cef)</td>
+          <td class="td-token">--token-semantics-primary-base</td>
+          <td class="td-rationale">The active tab uses the same color as the indicator — using the <strong>primary semantic token</strong> makes this relationship explicit and supports theming without two separate overrides.</td>
+        </tr>
+        <tr>
+          <td class="td-property">color (inactive)</td>
+          <td class="td-property">.osui-tabs__header-item</td>
+          <td class="td-current">text-color-neutral-8 (#4f575e)</td>
+          <td class="td-proposed">token-text-subtle (#6b7280)</td>
+          <td class="td-token">--token-text-subtle</td>
+          <td class="td-rationale">The 2.28 neutral-8 is darker than needed — <strong>token-text-subtle</strong> is the standard secondary text color, creating the right contrast hierarchy against the active tab without being too heavy.</td>
+        </tr>
+        <tr>
+          <td class="td-property">height</td>
+          <td class="td-property">.osui-tabs__header__indicator</td>
+          <td class="td-current">2px (hardcoded)</td>
+          <td class="td-proposed">3px (hardcoded)</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale">A 3px indicator is more visible at desktop densities and matches common design system conventions (Material, Fluent, Carbon). Still thin enough not to feel heavy.</td>
+        </tr>
+        <tr>
+          <td class="td-property">border-radius</td>
+          <td class="td-property">.osui-tabs__header__indicator</td>
+          <td class="td-current">none</td>
+          <td class="td-proposed">3px 3px 0 0</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale">Slight rounding on the indicator top corners softens the edge without breaking the flush-to-border-top appearance. Complements the increased height.</td>
+        </tr>
+        <tr>
+          <td class="td-property">hover background</td>
+          <td class="td-property">.osui-tabs__header-item:hover</td>
+          <td class="td-current">none</td>
+          <td class="td-proposed">rgba(0,0,0,.04)</td>
+          <td class="td-token">pending: --token-bg-surface-hover</td>
+          <td class="td-rationale">No hover feedback makes inactive tabs feel unresponsive. A subtle background fill on hover provides clear affordance that tabs are interactive, matching button and list-item patterns.</td>
+        </tr>
+        <tr>
+          <td class="td-property">border-top color</td>
+          <td class="td-property">.osui-tabs__content</td>
+          <td class="td-current">border-color-neutral-5 (#ced4da)</td>
+          <td class="td-proposed">token-border-default (#d5d5d5)</td>
+          <td class="td-token">--token-border-default</td>
+          <td class="td-rationale"><strong>token-border-default</strong> is the standard separator token, ensuring the tab content divider stays consistent with table rows, card footers, and other divider surfaces.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function initTabsInteractive(tabsEl) {
+    const headerItems = tabsEl.querySelectorAll('.osui-tabs__header-item');
+    const contentItems = tabsEl.querySelectorAll('.osui-tabs__content-item');
+    const count = headerItems.length;
+    tabsEl.style.setProperty('--tabs-header-items', count);
+
+    headerItems.forEach((item, i) => {
+      item.addEventListener('click', () => {
+        headerItems.forEach(h => h.classList.remove('osui-tabs--is-active'));
+        contentItems.forEach(c => c.classList.remove('osui-tabs--is-active'));
+        item.classList.add('osui-tabs--is-active');
+        if (contentItems[i]) contentItems[i].classList.add('osui-tabs--is-active');
+        tabsEl.style.setProperty('--tabs-indicator-transform', (i * 100) + '%');
+      });
+    });
+  }
+
+  document.querySelectorAll('.osui-tabs').forEach(el => initTabsInteractive(el));
+
+  function setMode(mode, btn) {
+    const w = document.getElementById('previewWrapper');
+    w.classList.toggle('proposed-mode', mode === 'proposed');
+    w.classList.toggle('current-mode', mode === 'legacy');
+    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+    btn.classList.add('ptab--active');
+  }
+
+  function toggleAnnotations(btn) {
+    const wrapper = document.getElementById('previewWrapper');
+    const hiding = !wrapper.classList.contains('hide-annotations');
+    wrapper.classList.toggle('hide-annotations', hiding);
+    btn.textContent = hiding ? 'Show annotations' : 'Hide annotations';
+    btn.classList.toggle('ann-toggle--off', hiding);
+  }
+
+  // Attempt OS UI initialization (requires OutSystems runtime environment)
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      const TabsAPI = OutSystems.OSUI.Patterns.TabsAPI;
+      const HeaderItemAPI = OutSystems.OSUI.Patterns.TabsHeaderItemAPI;
+      const ContentItemAPI = OutSystems.OSUI.Patterns.TabsContentItemAPI;
+
+      ['osui-tabs-1', 'osui-tabs-2'].forEach((tabsId, ti) => {
+        const cfg = JSON.stringify({ StartingTab: 0, Height: '', TabsOrientation: 'Horizontal', JustifyHeaders: true });
+        TabsAPI.Create(tabsId, cfg);
+
+        const tabsEl = document.getElementById(tabsId);
+        tabsEl.querySelectorAll('.osui-tabs__header-item').forEach((el, i) => {
+          HeaderItemAPI.Create(el.id, JSON.stringify({}));
+          HeaderItemAPI.Initialize(el.id);
+        });
+        tabsEl.querySelectorAll('.osui-tabs__content-item').forEach((el, i) => {
+          ContentItemAPI.Create(el.id, JSON.stringify({}));
+          ContentItemAPI.Initialize(el.id);
+        });
+
+        TabsAPI.Initialize(tabsId);
+      });
+    } catch (e) {
+      // OS UI runtime not available — interactive tabs handled by initTabsInteractive above
+    }
+  });
+</script>
+<script src="assets/os-ui/O11.OutSystemsUI.js"></script>
+</body>
+</html>
