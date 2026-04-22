@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Card — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
     --token-scale-0: 0;
@@ -104,6 +105,7 @@
     letter-spacing: .08em; color: #9ca3af; margin-right: auto;
   }
   .preview-card__body { padding: 20px; background: #f4f5f7; }
+  #previewWrapper { max-width: 460px; margin: 0 auto; }
 
   /* ─── Card component (OutSystems UI 2.29.0) ─── */
   .card {
@@ -278,7 +280,7 @@
 
   /* ─── Token panel ─── */
   .token-panel { display: flex; flex-direction: column; gap: 12px; }
-  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); }
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
   .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
   .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
   .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; letter-spacing: 0; text-transform: none; }
@@ -329,17 +331,476 @@
     body { padding: 24px 20px 60px; }
   }
 
-  /* ─── Proposed mode — Card ─── */
+  
+  
+/* ─── Current mode (OutSystems UI 2.28.0) ─── */
+#previewWrapper.current-mode {
+  /*! Typography - Size */
+  --font-size-h1:32px;
+  --font-size-h2:28px;
+  --font-size-h3:26px;
+  --font-size-h4:22px;
+  --font-size-h5:20px;
+  --font-size-h6:18px;
+  --font-size-display:36px;
+  --font-size-base:16px;
+  --font-size-s:14px;
+  --font-size-xs:12px;
+  --font-size-label:11px;
+  /*! Typography - Weight */
+  --font-light:300;
+  --font-regular:400;
+  --font-semi-bold:600;
+  --font-bold:700;
+  /*! Color - Brand */
+  --color-primary:#1068eb;
+  --color-secondary:#303d60;
+  --color-primary-hover:#295fd6;
+  --color-primary-selected:rgba(20, 110, 245, 0.12);
+  --color-primary-lightest:linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9));
+  /*! Color - Focus */
+  --color-focus-outer:#ffd337;
+  --color-focus-inner:var(--color-neutral-10);
+  /*! Color - Extended */
+  --color-red-lightest:#faeaea;
+  --color-red-lighter:#e9aaaa;
+  --color-red-light:#d96a6a;
+  --color-red:#c92a2a;
+  --color-red-dark:#ab2424;
+  --color-red-darker:#8d1d1d;
+  --color-red-darkest:#6f1717;
+  --color-orange-lightest:#fef0e6;
+  --color-orange-lighter:#fcc29c;
+  --color-orange-light:#f99551;
+  --color-orange:#f76707;
+  --color-orange-dark:#d25806;
+  --color-orange-darker:#ad4805;
+  --color-orange-darkest:#883904;
+  --color-yellow-lightest:#fef5e5;
+  --color-yellow-lighter:#fbd999;
+  --color-yellow-light:#f8bc4c;
+  --color-yellow:#f59f00;
+  --color-yellow-dark:#d08700;
+  --color-yellow-darker:#ac6f00;
+  --color-yellow-darkest:#875700;
+  --color-lime-lightest:#f1f8e8;
+  --color-lime-lighter:#c7e3a2;
+  --color-lime-light:#9ecd5c;
+  --color-lime:#74b816;
+  --color-lime-dark:#639c13;
+  --color-lime-darker:#51810f;
+  --color-lime-darkest:#40650c;
+  --color-green-lightest:#ebf7ed;
+  --color-green-lighter:#afe0b8;
+  --color-green-light:#73c982;
+  --color-green:#37b24d;
+  --color-green-dark:#2f9741;
+  --color-green-darker:#267d36;
+  --color-green-darkest:#1e622a;
+  --color-teal-lightest:#e6f2ef;
+  --color-teal-lighter:#9cccbd;
+  --color-teal-light:#52a58c;
+  --color-teal:#087f5b;
+  --color-teal-dark:#076c4d;
+  --color-teal-darker:#065940;
+  --color-teal-darkest:#044632;
+  --color-cyan-lightest:#e7f2f4;
+  --color-cyan-lighter:#9eccd3;
+  --color-cyan-light:#56a6b2;
+  --color-cyan:#0d8091;
+  --color-cyan-dark:#0b6d7b;
+  --color-cyan-darker:#095a66;
+  --color-cyan-darkest:#074650;
+  --color-blue-lightest:#e8f2fa;
+  --color-blue-lighter:#a3c9ea;
+  --color-blue-light:#5fa1db;
+  --color-blue:#1a79cb;
+  --color-blue-dark:#1667ad;
+  --color-blue-darker:#12558e;
+  --color-blue-darkest:#0e4370;
+  --color-indigo-lightest:#eceffd;
+  --color-indigo-lighter:#b3c1f7;
+  --color-indigo-light:#7b92f1;
+  --color-indigo:#4263eb;
+  --color-indigo-dark:#3854c8;
+  --color-indigo-darker:#2e45a5;
+  --color-indigo-darkest:#243681;
+  --color-violet-lightest:#f1edfd;
+  --color-violet-lighter:#c6b6f6;
+  --color-violet-light:#9b7fef;
+  --color-violet:#7048e8;
+  --color-violet-dark:#5f3dc5;
+  --color-violet-darker:#4e32a2;
+  --color-violet-darkest:#3e2880;
+  --color-grape-lightest:#f7ecfa;
+  --color-grape-lighter:#dfb2e9;
+  --color-grape-light:#c678d9;
+  --color-grape:#ae3ec9;
+  --color-grape-dark:#9435ab;
+  --color-grape-darker:#7a2b8d;
+  --color-grape-darkest:#60226f;
+  --color-pink-lightest:#fbebf0;
+  --color-pink-lighter:#efadc4;
+  --color-pink-light:#e27098;
+  --color-pink:#d6336c;
+  --color-pink-dark:#b62b5c;
+  --color-pink-darker:#96244c;
+  --color-pink-darkest:#761c3b;
+  /*! Color - Neutral */
+  --color-neutral-0:#ffffff;
+  --color-neutral-1:#f8f9fa;
+  --color-neutral-2:#f1f3f5;
+  --color-neutral-3:#e9ecef;
+  --color-neutral-4:#dee2e6;
+  --color-neutral-5:#ced4da;
+  --color-neutral-6:#adb5bd;
+  --color-neutral-7:#6a7178;
+  --color-neutral-8:#4f575e;
+  --color-neutral-9:#272b30;
+  --color-neutral-10:#101213;
+  /*! Color - Semantic */
+  --color-error-light:#fceaea;
+  --color-error:#dc2020;
+  --color-warning-light:#fdf6e5;
+  --color-warning:#e9a100;
+  --color-success-light:#eaf3eb;
+  --color-success:#29823b;
+  --color-info-light:#e5f5fc;
+  --color-info:#017aad;
+  /*! Overlays */
+  --overlay-background:rgba(0, 0, 0, 0.25);
+  /*! Space - Sizes */
+  --space-none:0;
+  --space-xs:4px;
+  --space-s:8px;
+  --space-base:16px;
+  --space-m:24px;
+  --space-l:32px;
+  --space-xl:40px;
+  --space-xxl:48px;
+  /*! Border Radius */
+  --border-radius-none:0;
+  --border-radius-soft:4px;
+  --border-radius-rounded:100px;
+  --border-radius-circle:100%;
+  /*! Border Size */
+  --border-size-none:0;
+  --border-size-s:1px;
+  --border-size-m:2px;
+  --border-size-l:3px;
+  /*! Elevation / Shadow */
+  --shadow-none:none;
+  --shadow-xs:0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-s:0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-m:0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-l:0 6px 8px rgba(0, 0, 0, 0.1);
+  --shadow-xl:0 8px 10px rgba(0, 0, 0, 0.1);
+  /*! App Settings */
+  --header-color:#ffffff;
+  --color-background-body:#f3f6f8;
+  --color-background-login:#ffffff;
+  --header-size:56px;
+  --header-size-content:48px;
+  --side-menu-size:300px;
+  --bottom-bar-size:56px;
+  --footer-height:0px;
+  /*! iOS Safe Areas (Notch Support) */
+  /*! Before MABS12, the insets were obtained via env(safe-area-inset-*)
+      for iOS, as for Android the values were reported incorrectly.
+      From MABS12 onwards, the native shell is injecting the CSS variables
+      "--safe-area-inset-*".
+      To ensure retro-compatibility, we use max() to get the highest value
+      between env() and the CSS variable.
+  */
+  --os-safe-area-top:max(env(safe-area-inset-top), var(--safe-area-inset-top, 0px));
+  --os-safe-area-right:max(env(safe-area-inset-right), var(--safe-area-inset-right, 0px));
+  --os-safe-area-bottom:max(env(safe-area-inset-bottom), var(--safe-area-inset-bottom, 0px));
+  --os-safe-area-left:max(env(safe-area-inset-left), var(--safe-area-inset-left, 0px));
+  /*! Layer System */
+  --layer-system-scale:5;
+  --layer-above:var(--layer-system-scale);
+  --layer-below:calc(-1 * var(--layer-system-scale));
+  /*! Global Layers */
+  --layer-global-screen:0;
+  --layer-global-elevated:calc(var(--layer-above) + var(--layer-global-screen));
+  --layer-global-navigation:calc(var(--layer-above) + var(--layer-global-elevated));
+  --layer-global-off-canvas:calc(var(--layer-above) + var(--layer-global-navigation));
+  --layer-global-instant-interaction:calc(var(--layer-above) + var(--layer-global-off-canvas));
+  /*! Auxiliary */
+  --layer-global-negative:-1;
+  --layer-global-auto:auto;
+  /*! Local Layers */
+  --layer-local-tier-1:1;
+  --layer-local-tier-2:2;
+  --layer-local-tier-3:3;
+  --layer-local-tier-4:4;
+  --layer-local-tier-5:5;
+  /*! Fixed/Absolute Patterns that need their variables on a global level to be referenced on all DOM contexts */
+  --osui-bottom-sheet-layer:var(--layer-global-off-canvas);
+  --osui-notification-layer:var(--layer-global-instant-interaction);
+  --osui-popup-layer:var(--layer-global-off-canvas);
+  --osui-sidebar-layer:var(--layer-global-off-canvas);
+  --osui-menu-layer:calc(var(--layer-global-navigation) + var(--layer-local-tier-2));
+}
+
+/*! 6.2.5. Card */
+#previewWrapper.current-mode .card {
+  background-color:var(--background-color-neutral-0, var(--color-neutral-0));
+  border:var(--border-size-s) solid var(--border-color-neutral-4, var(--color-neutral-4));
+  border-radius:var(--border-radius-soft);
+  box-shadow: none;
+  padding:var(--space-m);
+}
+#previewWrapper.current-mode .layout-native .card {
+  padding:var(--space-base);
+}
+/*! 6.2.6. Card Background */
+#previewWrapper.current-mode .card-background {
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  border-radius:var(--border-radius-soft);
+  color:var(--text-color-neutral-0, var(--color-neutral-0));
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  overflow:hidden;
+  padding:var(--space-m);
+  position:relative;
+}
+#previewWrapper.current-mode .card-background {
+  -servicestudio-height:auto !important;
+}
+#previewWrapper.current-mode .card-background-content {
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  position:relative;
+  width:100%;
+  z-index:var(--layer-local-tier-1);
+}
+#previewWrapper.current-mode .card-background-content {
+  -servicestudio-display:initial;
+}
+#previewWrapper.current-mode .card-background-content.top-left,
+#previewWrapper.current-mode .card-background-content.center-left,
+#previewWrapper.current-mode .card-background-content.bottom-left {
+  text-align:left;
+}
+#previewWrapper.current-mode .card-background-content.top-center,
+#previewWrapper.current-mode .card-background-content.center,
+#previewWrapper.current-mode .card-background-content.bottom-center {
+  text-align:center;
+}
+#previewWrapper.current-mode .card-background-content.top-right,
+#previewWrapper.current-mode .card-background-content.center-right,
+#previewWrapper.current-mode .card-background-content.bottom-right {
+  text-align:right;
+}
+#previewWrapper.current-mode .card-background-image,
+#previewWrapper.current-mode .card-background-color {
+  left:0;
+  position:absolute;
+  top:0;
+  height:100%;
+  width:100%;
+}
+#previewWrapper.current-mode .card-background-image img {
+  height:100%;
+  -o-object-fit:cover;
+     object-fit:cover;
+  -o-object-position:center center;
+     object-position:center center;
+  width:100%;
+}
+#previewWrapper.current-mode .card-background-color {
+  opacity:0.6;
+}
+#previewWrapper.current-mode .card-background-color:after {
+  background:-webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgb(0, 0, 0)));
+  background:linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgb(0, 0, 0) 100%);
+  content:"";
+  height:100%;
+  left:0;
+  opacity:1;
+  position:absolute;
+  top:0;
+  width:100%;
+  z-index:var(--layer-local-tier-1);
+}
+#previewWrapper.current-mode .remove-card-gradient .card-background-color:after {
+  background:none;
+}
+#previewWrapper.current-mode .layout-native .card-background {
+  padding:var(--space-base);
+}
+#previewWrapper.current-mode .layout-native .card-background.padding-none {
+  padding:var(--space-none);
+}
+/*! 6.2.7. Card Item */
+#previewWrapper.current-mode .card-detail {
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+}
+#previewWrapper.current-mode .card-detail-left {
+  max-width:120px;
+  padding-right:var(--space-base);
+}
+#previewWrapper.current-mode .card-detail-center {
+  -webkit-box-flex:1;
+      -ms-flex:1;
+          flex:1;
+}
+#previewWrapper.current-mode .card-detail-right {
+  padding-left:var(--space-base);
+}
+#previewWrapper.current-mode .card-detail-title {
+  color:var(--text-color-neutral-10, var(--color-neutral-10));
+  font-size:var(--font-size-h5);
+  font-weight:var(--font-semi-bold);
+}
+#previewWrapper.current-mode .card-detail-text {
+  color:var(--text-color-neutral-7, var(--color-neutral-7));
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#previewWrapper.current-mode .is-rtl .card-detail-left {
+  padding-left:var(--space-base);
+  padding-right:0;
+}
+#previewWrapper.current-mode .is-rtl .card-detail-right {
+  padding-left:0;
+  padding-right:var(--space-base);
+}
+
+/* ─── Proposed mode — Card ─── */
   #previewWrapper.proposed-mode .card {
-    --osui-card-border-radius: var(--token-border-radius-300, 12px);
-    --osui-card-border-color: var(--token-border-default, #d5d5d5);
-    --osui-card-shadow: var(--token-elevation-2, 0px 2px 8px 0px rgba(0, 0, 0, 0.08), 0px 8px 24px 0px rgba(0, 0, 0, 0.12));
+    --osui-card-border-radius: var(--token-border-radius-200, 8px);
+    --osui-card-border-color: #e5e7eb;
+    --osui-card-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
+    overflow: hidden;
+    transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
   }
-  #previewWrapper.proposed-mode .card-title {
-    color: var(--token-text-default, #242424);
+  #previewWrapper.proposed-mode .card:hover {
+    --osui-card-border-color: #d1d5db;
+    box-shadow: 0 4px 14px rgba(16, 24, 40, 0.08), 0 2px 4px rgba(16, 24, 40, 0.04);
   }
+
+  /* Basic padded card — tighter padding, better text */
+  #previewWrapper.proposed-mode .card.card-content {
+    padding: 20px;
+  }
+
+  /* Card Background — 8px radius, sem overlay escuro */
   #previewWrapper.proposed-mode .card-background {
-    border-radius: var(--token-border-radius-300, 12px);
+    border-radius: var(--token-border-radius-200, 8px);
+    overflow: hidden;
+  }
+  #previewWrapper.proposed-mode .card-background-color {
+    opacity: 1;
+  }
+  #previewWrapper.proposed-mode .card-background-color:after {
+    display: none;
+  }
+
+  /* Card Detail — refined typography & icon spacing */
+  #previewWrapper.proposed-mode .card.card-detail {
+    padding: 16px 20px;
+    gap: 4px;
+    cursor: pointer;
+    transition: background-color .15s, border-color .15s;
+  }
+  #previewWrapper.proposed-mode .card.card-detail:hover {
+    background-color: #fafbfc;
+  }
+  #previewWrapper.proposed-mode .card-detail-left {
+    padding-right: 16px;
+  }
+  #previewWrapper.proposed-mode .card-detail-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 2px;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+  }
+  #previewWrapper.proposed-mode .card-detail-text {
+    font-size: 0.8125rem;
+    color: #6b7280;
+    line-height: 1.4;
+  }
+  #previewWrapper.proposed-mode .card-detail-right {
+    padding-left: 12px;
+    color: #9ca3af;
+    transition: color .15s, transform .15s;
+  }
+  #previewWrapper.proposed-mode .card.card-detail:hover .card-detail-right {
+    color: #111827;
+    transform: translateX(2px);
+  }
+
+  /* Card Sectioned — image flush, clean body/footer separation */
+  #previewWrapper.proposed-mode .card.card-sectioned {
+    padding: 0;
+  }
+  #previewWrapper.proposed-mode .card.card-sectioned .card-image {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    background: #f3f4f6;
+  }
+  #previewWrapper.proposed-mode .card.card-sectioned .card-image img {
+    border-radius: 0;
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    -o-object-fit: cover;
+       object-fit: cover;
+    transition: transform .4s ease;
+  }
+  #previewWrapper.proposed-mode .card.card-sectioned:hover .card-image img {
+    transform: scale(1.03);
+  }
+  #previewWrapper.proposed-mode .card.card-sectioned .card-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+    letter-spacing: -0.015em;
+    padding: 20px 20px 6px;
+    line-height: 1.3;
+  }
+  #previewWrapper.proposed-mode .card.card-sectioned .card-content {
+    padding: 0 20px 20px;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: #6b7280;
+  }
+  #previewWrapper.proposed-mode .card.card-sectioned .card-bottom {
+    padding: 14px 20px;
+    border-top: 1px solid #f3f4f6;
+    background-color: #fafbfc;
+  }
+  #previewWrapper.proposed-mode .card.card-sectioned .card-bottom .btn {
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition: transform .15s, box-shadow .2s, opacity .15s;
+  }
+  #previewWrapper.proposed-mode .card.card-sectioned .card-bottom .btn-primary {
+    box-shadow: 0 1px 2px rgba(16, 92, 239, 0.2);
+  }
+  #previewWrapper.proposed-mode .card.card-sectioned .card-bottom .btn-primary:hover {
+    opacity: 1;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(16, 92, 239, 0.28), 0 2px 4px rgba(16, 92, 239, 0.16);
   }
 
   /* ─── Token Editor ─── */
@@ -420,13 +881,14 @@
     <div class="preview-card__header">
       <span class="preview-card__label">Preview</span>
       <div class="preview-tabs">
-        <button class="ptab ptab--active" onclick="setMode('current',this)">New tokens</button>
+        <button class="ptab" onclick="setMode('legacy',this)">Current</button>
+        <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
         <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
       </div>
-      <button class="ann-toggle" onclick="toggleAnnotations(this)">Hide annotations</button>
+      <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
     </div>
     <div class="preview-card__body">
-    <div id="previewWrapper">
+    <div id="previewWrapper" class="hide-annotations">
 
     <!-- Card (basic) -->
     <div class="card card-content annotate-container margin-bottom-l">
@@ -448,7 +910,9 @@
     <!-- Card Item (card-detail) -->
     <div class="card card-detail annotate-container margin-bottom-l">
       <div class="card-detail-left annotate-detail-left">
-        <img src="https://picsum.photos/seed/avatar/80/80" alt="" style="width:80px; height:80px; border-radius: var(--token-border-radius-100, 4px); display:block; object-fit:cover;">
+        <div style="width:64px; height:64px; border-radius: var(--token-border-radius-200, 8px); background: var(--token-semantics-primary-base, #105cef); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#fff; font-size:32px;">
+          <i class="ph ph-user"></i>
+        </div>
       </div>
       <div class="card-detail-center annotate-detail-ctr">
         <div class="card-detail-title">Card Title</div>
@@ -697,7 +1161,7 @@
         <tr>
           <th>Property</th>
           <th>Component</th>
-          <th>Current</th>
+          <th>Current (2.29)</th>
           <th>Proposed</th>
           <th>Token</th>
           <th>Rationale</th>
@@ -708,25 +1172,25 @@
           <td class="td-property">border-radius</td>
           <td class="td-property">.card, .card-background</td>
           <td class="td-current">token-border-radius-200 (8px)</td>
-          <td class="td-proposed">token-border-radius-300 (12px)</td>
-          <td class="td-token">--token-border-radius-300</td>
-          <td class="td-rationale">The Alert component already uses 12px. Aligning cards creates a <strong>consistent container radius</strong> across the component library.</td>
+          <td class="td-proposed">token-border-radius-200 (8px) — no change</td>
+          <td class="td-token">--token-border-radius-200</td>
+          <td class="td-rationale">Kept at 8px to match the Alert component and maintain a <strong>consistent container radius</strong> across the library.</td>
         </tr>
         <tr>
           <td class="td-property">border-color</td>
           <td class="td-property">.card</td>
           <td class="td-current">token-border-subtle (#f3f3f3)</td>
-          <td class="td-proposed">token-border-default (#d5d5d5)</td>
-          <td class="td-token">--token-border-default</td>
-          <td class="td-rationale">The subtle border is nearly invisible on white surfaces. <strong>token-border-default</strong> gives the card better definition and improves accessibility contrast.</td>
+          <td class="td-proposed">#e5e7eb (pending token: token-border-neutral-200)</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale">The subtle border is nearly invisible on white. A slightly stronger border gives the card <strong>better definition</strong> without being heavy.</td>
         </tr>
         <tr>
           <td class="td-property">box-shadow</td>
           <td class="td-property">.card</td>
-          <td class="td-current">token-elevation-1 (very subtle)</td>
-          <td class="td-proposed">token-elevation-2 (stronger)</td>
-          <td class="td-token">--token-elevation-2</td>
-          <td class="td-rationale">Elevation 1 is barely perceptible. A stronger shadow gives the card <strong>clearer visual hierarchy</strong> and helps it stand out from the page background.</td>
+          <td class="td-current">token-elevation-1</td>
+          <td class="td-proposed">0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06)</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale">Flatter shadow creates a <strong>more modern, border-forward</strong> appearance. Elevation can be reserved for interactive states (hover).</td>
         </tr>
         <tr>
           <td class="td-property">color</td>
@@ -734,7 +1198,47 @@
           <td class="td-current">inherited (no explicit token)</td>
           <td class="td-proposed">token-text-default (#242424)</td>
           <td class="td-token">--token-text-default</td>
-          <td class="td-rationale">Explicitly setting the title color ensures correct rendering across <strong>theme overrides</strong> and prevents unintentional color inheritance.</td>
+          <td class="td-rationale">Explicit token prevents unintentional color inheritance across <strong>theme overrides</strong>.</td>
+        </tr>
+        <tr>
+          <td class="td-property">padding</td>
+          <td class="td-property">.card-image (card-sectioned)</td>
+          <td class="td-current">token-scale-600 (24px T/L/R)</td>
+          <td class="td-proposed">0</td>
+          <td class="td-token">--token-scale-0</td>
+          <td class="td-rationale">Image flush to card edges creates a <strong>magazine-style layout</strong> consistent with modern card patterns.</td>
+        </tr>
+        <tr>
+          <td class="td-property">border-radius</td>
+          <td class="td-property">.card-image img</td>
+          <td class="td-current">osui-card-border-radius (8px)</td>
+          <td class="td-proposed">0</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale">Image no longer needs its own radius when flush — the <strong>card's overflow:hidden</strong> clips the top corners correctly.</td>
+        </tr>
+        <tr>
+          <td class="td-property">background</td>
+          <td class="td-property">.card-bottom (card-sectioned)</td>
+          <td class="td-current">none (transparent)</td>
+          <td class="td-proposed">#fafbfc (pending token: token-bg-surface-subtle)</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale">Subtle tint creates a <strong>visual separation</strong> between the content body and the action footer.</td>
+        </tr>
+        <tr>
+          <td class="td-property">border-top</td>
+          <td class="td-property">.card-bottom (card-sectioned)</td>
+          <td class="td-current">none</td>
+          <td class="td-proposed">1px solid #f3f4f6</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale">Explicit separator reinforces the <strong>body / footer distinction</strong> without adding visual weight.</td>
+        </tr>
+        <tr>
+          <td class="td-property">width</td>
+          <td class="td-property">.card-bottom .btn</td>
+          <td class="td-current">auto (content width)</td>
+          <td class="td-proposed">100%</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale">Full-width CTA is a <strong>mobile-first best practice</strong> for primary actions inside card footers.</td>
         </tr>
       </tbody>
     </table>
@@ -818,8 +1322,9 @@
 
 <script>
   function setMode(mode, btn) {
-    const wrapper = document.getElementById('previewWrapper');
-    wrapper.className = mode === 'proposed' ? 'proposed-mode' : '';
+    const w = document.getElementById('previewWrapper');
+    w.classList.toggle('proposed-mode', mode === 'proposed');
+    w.classList.toggle('current-mode', mode === 'legacy');
     document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
     btn.classList.add('ptab--active');
   }
