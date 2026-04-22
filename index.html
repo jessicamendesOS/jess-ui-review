@@ -147,6 +147,36 @@
   .card--tabs .card-footer    { color: #0284c7; }
   .card--tabs .token-pill     { background: #f0f9ff; color: #0369a1; }
 
+  .card--badge .card-accent       { background: linear-gradient(90deg, #ef4444, #8b5cf6); }
+  .card--badge .card-icon         { background: #fef2f2; color: #ef4444; }
+  .card--badge .card-footer       { color: #dc2626; }
+  .card--badge .token-pill        { background: #fef2f2; color: #b91c1c; }
+
+  .card--counter .card-accent     { background: linear-gradient(90deg, #3b82f6, #dc2626); }
+  .card--counter .card-icon       { background: #eff6ff; color: #3b82f6; }
+  .card--counter .card-footer     { color: #2563eb; }
+  .card--counter .token-pill      { background: #eff6ff; color: #1d4ed8; }
+
+  .card--progresscircle .card-accent  { background: linear-gradient(90deg, #105cef, #10b981); }
+  .card--progresscircle .card-icon    { background: #eff6ff; color: #105cef; }
+  .card--progresscircle .card-footer  { color: #1d4ed8; }
+  .card--progresscircle .token-pill   { background: #eff6ff; color: #1d4ed8; }
+
+  .card--rating .card-accent      { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+  .card--rating .card-icon        { background: #fffbeb; color: #f59e0b; }
+  .card--rating .card-footer      { color: #d97706; }
+  .card--rating .token-pill       { background: #fffbeb; color: #92400e; }
+
+  .card--iconbadge .card-accent    { background: linear-gradient(90deg, #ef4444, #f97316); }
+  .card--iconbadge .card-icon      { background: #fef2f2; color: #ef4444; }
+  .card--iconbadge .card-footer    { color: #dc2626; }
+  .card--iconbadge .token-pill     { background: #fef2f2; color: #b91c1c; }
+
+  .card--progressbar .card-accent  { background: linear-gradient(90deg, #3b82f6, #10b981); }
+  .card--progressbar .card-icon    { background: #eff6ff; color: #3b82f6; }
+  .card--progressbar .card-footer  { color: #2563eb; }
+  .card--progressbar .token-pill   { background: #eff6ff; color: #1d4ed8; }
+
   /* ─── Footer ─── */
   .site-footer {
     margin-top: 56px;
@@ -172,7 +202,7 @@
   <div class="badge-row">
     <span class="badge badge-os">OutSystems UI 2.29</span>
     <span class="badge badge-dt">Design Tokens</span>
-    <span class="badge badge-cnt">8 components</span>
+    <span class="badge badge-cnt">14 components</span>
   </div>
 </header>
 
@@ -355,6 +385,156 @@
         <span class="token-pill">primary</span>
         <span class="token-pill">spacing</span>
         <span class="token-pill">indicator</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      View annotations
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </div>
+  </a>
+
+  <!-- Icon Badge -->
+  <a class="component-card card--iconbadge" href="icon-badge-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="9" cy="11" r="6" fill="currentColor" opacity=".3"/>
+          <circle cx="15" cy="5" r="4" fill="currentColor"/>
+          <path d="M7 11a2 2 0 0 1 4 0" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none" opacity=".7"/>
+        </svg>
+      </div>
+      <div class="card-title">Icon Badge</div>
+      <div class="card-desc">Icon with a small badge overlay for notifications — dot, count (error), and count (primary) variants.</div>
+      <div class="card-tokens">
+        <span class="token-pill">semantics-error</span>
+        <span class="token-pill">semantics-primary</span>
+        <span class="token-pill">scale</span>
+        <span class="token-pill">border-radius-full</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      View annotations
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </div>
+  </a>
+
+  <!-- Progress Bar -->
+  <a class="component-card card--progressbar" href="progress-bar-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect x="2" y="8" width="16" height="4" rx="2" fill="currentColor" opacity=".25"/>
+          <rect x="2" y="8" width="10" height="4" rx="2" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="card-title">Progress Bar</div>
+      <div class="card-desc">Horizontal progress indicator with percentage, success, and indeterminate states. Three height variants: thin, default, thick.</div>
+      <div class="card-tokens">
+        <span class="token-pill">semantics-primary</span>
+        <span class="token-pill">semantics-success</span>
+        <span class="token-pill">border-subtle</span>
+        <span class="token-pill">scale</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      View annotations
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </div>
+  </a>
+
+  <!-- Badge -->
+  <a class="component-card card--badge" href="badge-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect x="2" y="6" width="16" height="8" rx="4" fill="currentColor" opacity=".3"/>
+          <rect x="5" y="6" width="6" height="8" rx="4" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="card-title">Badge</div>
+      <div class="card-desc">Status and category pill labels in six semantic color variants: neutral, primary, error, warning, success, and info.</div>
+      <div class="card-tokens">
+        <span class="token-pill">semantics</span>
+        <span class="token-pill">border-radius-full</span>
+        <span class="token-pill">typography</span>
+        <span class="token-pill">spacing</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      View annotations
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </div>
+  </a>
+
+  <!-- Counter -->
+  <a class="component-card card--counter" href="counter-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="7" fill="currentColor" opacity=".3"/>
+          <circle cx="10" cy="10" r="4" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="card-title">Counter</div>
+      <div class="card-desc">Compact numeric pill for notification counts. Color variants (primary, error, warning, success) and three size variants.</div>
+      <div class="card-tokens">
+        <span class="token-pill">semantics-primary</span>
+        <span class="token-pill">text-inverse</span>
+        <span class="token-pill">scale</span>
+        <span class="token-pill">border-radius-full</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      View annotations
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </div>
+  </a>
+
+  <!-- Progress Circle -->
+  <a class="component-card card--progresscircle" href="progress-circle-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="2" opacity=".25"/>
+          <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="2" stroke-dasharray="44" stroke-dashoffset="15" stroke-linecap="round" transform="rotate(-90 10 10)"/>
+        </svg>
+      </div>
+      <div class="card-title">Progress Circle</div>
+      <div class="card-desc">SVG circular progress indicator. Percentage, success, and indeterminate states. Small, medium, and large sizes.</div>
+      <div class="card-tokens">
+        <span class="token-pill">semantics-primary</span>
+        <span class="token-pill">border-subtle</span>
+        <span class="token-pill">typography</span>
+        <span class="token-pill">scale</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      View annotations
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </div>
+  </a>
+
+  <!-- Rating -->
+  <a class="component-card card--rating" href="rating-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M10 2l2.2 4.5 5 .7-3.6 3.5.85 4.95L10 13.4l-4.45 2.25.85-4.95L2.8 7.2l5-.7L10 2z" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="card-title">Rating</div>
+      <div class="card-desc">Star rating with read-only, half-star, and interactive modes. Three size variants and semantic warning token for fill colour.</div>
+      <div class="card-tokens">
+        <span class="token-pill">semantics-warning</span>
+        <span class="token-pill">border-default</span>
+        <span class="token-pill">scale</span>
+        <span class="token-pill">interactive</span>
       </div>
     </div>
     <div class="card-footer">

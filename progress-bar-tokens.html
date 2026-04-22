@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress Bar — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-0: 0;
+    --token-scale-025: 1px;
+    --token-scale-050: 2px;
+    --token-scale-075: 3px;
+    --token-scale-100: 4px;
+    --token-scale-200: 8px;
+    --token-scale-300: 12px;
+    --token-scale-400: 16px;
+    --token-scale-600: 24px;
+    --token-scale-800: 32px;
+    --token-scale-1000: 40px;
+    --token-border-radius-0: 0;
+    --token-border-radius-100: 4px;
+    --token-border-radius-200: 8px;
+    --token-border-radius-300: 12px;
+    --token-border-radius-full: 9999px;
+    --token-border-size-0: 0;
+    --token-border-size-025: 1px;
+    --token-font-size-300: 0.75rem;
+    --token-font-size-400: 1rem;
+    --token-font-weight-regular: 400;
+    --token-font-weight-semi-bold: 600;
+    --token-bg-surface-default: #ffffff;
+    --token-border-default: #d5d5d5;
+    --token-border-subtle: #f3f3f3;
+    --token-text-default: #242424;
+    --token-text-inverse: #ffffff;
+    --token-semantics-primary-base: #105cef;
+    --token-semantics-success-base: #16a34a;
+    --token-semantics-error-base: #dc2626;
+    --token-elevation-1: 0px 0px 4px 0px rgba(0, 0, 0, 0.04), 0px 3px 9px 0px rgba(0, 0, 0, 0.07);
+    --layer-local-tier-1: 1;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    color: #111827;
+    line-height: 1.5;
+    padding: 48px 32px;
+  }
+
+  .back-nav {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #6b7280;
+    text-decoration: none; margin-bottom: 24px;
+    padding: 5px 10px 5px 6px; border-radius: 8px;
+    transition: background .15s, color .15s;
+  }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+
+  .page-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
+  .badge {
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 700; padding: 4px 10px;
+    border-radius: 99px; letter-spacing: .02em; text-transform: uppercase;
+  }
+  .badge--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; color: #374151;
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 99px;
+    padding: 4px 10px 4px 6px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  .preview-card {
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07);
+    border: 1px solid #e5e7eb; overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .preview-card__header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa;
+  }
+  .preview-card__label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-right: auto;
+  }
+  .preview-card__body { padding: 20px; background: #fff; }
+  #previewWrapper { max-width: 460px; margin: 0 auto; }
+
+  /* ─── Progress Bar component (OutSystems UI 2.29.0) ─── */
+  .osui-progress-bar {
+    width: 100%;
+    height: var(--token-scale-200, 8px);
+    background-color: var(--token-border-subtle, #f3f3f3);
+    border-radius: var(--token-border-radius-full, 9999px);
+    overflow: hidden;
+  }
+
+  .osui-progress-bar__fill {
+    height: 100%;
+    border-radius: var(--token-border-radius-full, 9999px);
+    background-color: var(--token-semantics-primary-base, #105cef);
+    transition: width 0.3s ease;
+  }
+
+  .osui-progress-bar--success .osui-progress-bar__fill {
+    background-color: var(--token-semantics-success-base, #16a34a);
+  }
+
+  /* Height variants */
+  .osui-progress-bar--thin  { height: var(--token-scale-100, 4px); }
+  .osui-progress-bar--thick { height: var(--token-scale-300, 12px); }
+
+  /* Indeterminate */
+  .osui-progress-bar--indeterminate .osui-progress-bar__fill {
+    width: 40% !important;
+    animation: progress-indeterminate 1.4s ease-in-out infinite;
+  }
+
+  @keyframes progress-indeterminate {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(350%); }
+  }
+
+  /* ─── Variant layout helpers ─── */
+  .variant-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-bottom: 8px;
+  }
+  .variant-sep {
+    border: none; border-top: 1px dashed #e5e7eb; margin: 20px 0;
+  }
+  .variant-group {
+    margin-bottom: 8px;
+  }
+  .variant-group + .variant-group {
+    margin-top: 16px;
+  }
+  .variant-row-label {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .variant-row-label span {
+    font-size: 11px; color: #6b7280; font-weight: 500;
+  }
+  .variant-row-label .pct {
+    font-size: 11px; color: #9ca3af; font-family: 'SF Mono','Fira Code',monospace;
+  }
+  .variant-section-title {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-bottom: 14px; text-align: center;
+  }
+
+  /* ─── Annotation outlines ─── */
+  .annotate-track  { outline: 2px dashed #3b82f6; outline-offset: 3px; border-radius: 9999px; }
+  .annotate-fill   { outline: 2px dashed #10b981; outline-offset: 2px; border-radius: 9999px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+
+  /* ─── Token panel ─── */
+  .token-panel { display: flex; flex-direction: column; gap: 12px; }
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; letter-spacing: 0; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 155px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); transition: background .12s; }
+  .token-row:last-child { border-bottom: none; }
+  .token-row:hover { background: rgba(255,255,255,.03); }
+  .prop-name  { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; white-space: nowrap; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value{ font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; white-space: nowrap; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); vertical-align: middle; margin-right: 5px; flex-shrink: 0; }
+  .token-name-with-swatch { display: flex; align-items: center; }
+
+  .progress-track-tok   .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
+  .progress-fill-tok    .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+  .progress-variants-tok .token-card__header { background: linear-gradient(120deg, #92400e, #f59e0b); }
+
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; font-family: inherit; transition: all .15s; white-space: nowrap; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; font-family: inherit; transition: all .15s; margin-left: 4px; white-space: nowrap; }
+  .ann-toggle:hover { color: #111827; border-color: #9ca3af; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p  { font-size: 12px; color: #6b7280; }
+  .proposal-table-wrap { overflow-x: auto; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .proposal-table tbody tr:last-child td { border-bottom: none; }
+  .proposal-table tbody tr:hover td { background: #fafafa; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; white-space: nowrap; }
+  .td-current  { color: #9ca3af; }
+  .td-proposed { font-weight: 600; color: #111827; }
+  .td-token    { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; }
+  .td-rationale{ color: #4b5563; max-width: 280px; }
+  .td-rationale strong { color: #111827; }
+
+  @media (max-width: 960px) {
+    .token-grid { grid-template-columns: 1fr; }
+    body { padding: 24px 20px 60px; }
+  }
+
+  /* ─── Current mode (OutSystems UI 2.28.0) ─── */
+  #previewWrapper.current-mode {
+    --color-neutral-4: #dee2e6;
+    --color-primary: #1068eb;
+    --color-success: #29823b;
+    --space-none: 0;
+    --space-xs: 4px;
+    --space-s: 8px;
+    --space-base: 16px;
+    --background-color-primary: var(--color-primary);
+  }
+
+  #previewWrapper.current-mode .osui-progress-bar {
+    background-color: var(--color-neutral-4, #dee2e6);
+    border-radius: 100px;
+  }
+
+  #previewWrapper.current-mode .osui-progress-bar__fill {
+    background-color: var(--background-color-primary, #1068eb);
+    border-radius: 100px;
+  }
+
+  #previewWrapper.current-mode .osui-progress-bar--success .osui-progress-bar__fill {
+    background-color: var(--color-success, #29823b);
+  }
+
+  /* ─── Proposed mode ─── */
+  #previewWrapper.proposed-mode .osui-progress-bar {
+    background-color: var(--token-border-subtle, #f3f3f3);
+    border-radius: var(--token-border-radius-full, 9999px);
+    height: var(--token-scale-200, 8px);
+  }
+
+  #previewWrapper.proposed-mode .osui-progress-bar__fill {
+    background-color: var(--token-semantics-primary-base, #105cef);
+    border-radius: var(--token-border-radius-full, 9999px);
+  }
+
+  #previewWrapper.proposed-mode .osui-progress-bar--success .osui-progress-bar__fill {
+    background-color: var(--token-semantics-success-base, #16a34a);
+  }
+
+  #previewWrapper.proposed-mode .osui-progress-bar--thin  { height: var(--token-scale-100, 4px); }
+  #previewWrapper.proposed-mode .osui-progress-bar--thick { height: var(--token-scale-300, 12px); }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-nav">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  All components
+</a>
+
+<div class="page-header">
+  <h1>Progress Bar</h1>
+  <span class="badge badge--os">OutSystems UI 2.29</span>
+  <span class="badge badge--tokens">Design Tokens</span>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> Track</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Fill</div>
+</div>
+
+<!-- Preview card -->
+<div class="preview-card">
+  <div class="preview-card__header">
+    <span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+  <div id="previewWrapper" class="hide-annotations">
+
+    <!-- Percentage variants -->
+    <p class="variant-section-title">Progress states</p>
+
+    <div class="variant-group">
+      <div class="variant-row-label">
+        <span>25% — In progress</span>
+        <span class="pct">25%</span>
+      </div>
+      <div class="osui-progress-bar annotate-track">
+        <div class="osui-progress-bar__fill annotate-fill" style="width: 25%;"></div>
+      </div>
+    </div>
+
+    <div class="variant-group">
+      <div class="variant-row-label">
+        <span>60% — In progress</span>
+        <span class="pct">60%</span>
+      </div>
+      <div class="osui-progress-bar annotate-track">
+        <div class="osui-progress-bar__fill annotate-fill" style="width: 60%;"></div>
+      </div>
+    </div>
+
+    <div class="variant-group">
+      <div class="variant-row-label">
+        <span>100% — Complete</span>
+        <span class="pct">100%</span>
+      </div>
+      <div class="osui-progress-bar osui-progress-bar--success annotate-track">
+        <div class="osui-progress-bar__fill annotate-fill" style="width: 100%;"></div>
+      </div>
+    </div>
+
+    <div class="variant-group">
+      <div class="variant-row-label">
+        <span>Indeterminate</span>
+        <span class="pct">—</span>
+      </div>
+      <div class="osui-progress-bar osui-progress-bar--indeterminate annotate-track">
+        <div class="osui-progress-bar__fill annotate-fill"></div>
+      </div>
+    </div>
+
+    <hr class="variant-sep">
+
+    <!-- Height variants -->
+    <p class="variant-section-title">Height variants</p>
+
+    <div class="variant-group">
+      <div class="variant-row-label">
+        <span>Thin (4px)</span>
+        <span class="pct">token-scale-100</span>
+      </div>
+      <div class="osui-progress-bar osui-progress-bar--thin annotate-track">
+        <div class="osui-progress-bar__fill annotate-fill" style="width: 70%;"></div>
+      </div>
+    </div>
+
+    <div class="variant-group">
+      <div class="variant-row-label">
+        <span>Default (8px)</span>
+        <span class="pct">token-scale-200</span>
+      </div>
+      <div class="osui-progress-bar annotate-track">
+        <div class="osui-progress-bar__fill annotate-fill" style="width: 70%;"></div>
+      </div>
+    </div>
+
+    <div class="variant-group">
+      <div class="variant-row-label">
+        <span>Thick (12px)</span>
+        <span class="pct">token-scale-300</span>
+      </div>
+      <div class="osui-progress-bar osui-progress-bar--thick annotate-track">
+        <div class="osui-progress-bar__fill annotate-fill" style="width: 70%;"></div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+</div>
+
+<!-- Token cards -->
+<div class="token-grid">
+
+  <!-- Track -->
+  <div class="token-card progress-track-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#3b82f6;"></span>
+      Track
+      <span class="component-name">osui-progress-bar</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">background</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#f3f3f3; border-color:rgba(0,0,0,.1);"></span>
+          token-border-subtle
+        </span>
+        <span class="token-value">#f3f3f3</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">height (default)</span>
+        <span class="token-name">token-scale-200</span>
+        <span class="token-value">8px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">height (thin)</span>
+        <span class="token-name">token-scale-100</span>
+        <span class="token-value">4px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">height (thick)</span>
+        <span class="token-name">token-scale-300</span>
+        <span class="token-value">12px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">border-radius</span>
+        <span class="token-name">token-border-radius-full</span>
+        <span class="token-value">9999px</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fill -->
+  <div class="token-card progress-fill-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#10b981;"></span>
+      Fill
+      <span class="component-name">osui-progress-bar__fill</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">background (primary)</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#105cef;"></span>
+          token-semantics-primary-base
+        </span>
+        <span class="token-value">#105cef</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">background (success)</span>
+        <span class="token-name token-name-with-swatch">
+          <span class="swatch" style="background:#16a34a;"></span>
+          token-semantics-success-base
+        </span>
+        <span class="token-value">#16a34a</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">border-radius</span>
+        <span class="token-name">token-border-radius-full</span>
+        <span class="token-value">9999px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">transition</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+        <span class="token-value">width 0.3s ease</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indeterminate / animation -->
+  <div class="token-card progress-variants-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#f59e0b;"></span>
+      Indeterminate
+      <span class="component-name">--indeterminate</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">fill width</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+        <span class="token-value">40%</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">animation</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+        <span class="token-value">1.4s ease-in-out ∞</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">keyframe start</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+        <span class="token-value">translateX(-100%)</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">keyframe end</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">hardcoded</span>
+        <span class="token-value">translateX(350%)</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Proposal table -->
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Token Proposal</h3>
+    <p>Suggested changes to improve semantic alignment and reduce hardcoded values.</p>
+  </div>
+  <div class="proposal-table-wrap">
+    <table class="proposal-table">
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Component</th>
+          <th>Current (2.28)</th>
+          <th>Proposed</th>
+          <th>Token</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-property">background (track)</td>
+          <td class="td-property">.osui-progress-bar</td>
+          <td class="td-current">color-neutral-4 (#dee2e6)</td>
+          <td class="td-proposed">token-border-subtle (#f3f3f3)</td>
+          <td class="td-token">--token-border-subtle</td>
+          <td class="td-rationale"><strong>token-border-subtle</strong> is a lighter, less noisy track color that lets the fill stand out more clearly. The old neutral-4 value is visually heavy and not purpose-built for track backgrounds.</td>
+        </tr>
+        <tr>
+          <td class="td-property">background (fill)</td>
+          <td class="td-property">.osui-progress-bar__fill</td>
+          <td class="td-current">color-primary (#1068eb)</td>
+          <td class="td-proposed">token-semantics-primary-base (#105cef)</td>
+          <td class="td-token">--token-semantics-primary-base</td>
+          <td class="td-rationale">Replacing the legacy <strong>color-primary</strong> variable with the semantic primary token ensures the fill color <strong>participates in theme overrides</strong> alongside all other primary-coloured components.</td>
+        </tr>
+        <tr>
+          <td class="td-property">background (success fill)</td>
+          <td class="td-property">.osui-progress-bar--success .osui-progress-bar__fill</td>
+          <td class="td-current">color-success (#29823b)</td>
+          <td class="td-proposed">token-semantics-success-base (#16a34a)</td>
+          <td class="td-token">--token-semantics-success-base</td>
+          <td class="td-rationale">The success fill should use the new <strong>semantic success token</strong>, not the legacy palette variable, so that success state theming is consistent across all components.</td>
+        </tr>
+        <tr>
+          <td class="td-property">border-radius</td>
+          <td class="td-property">.osui-progress-bar, .osui-progress-bar__fill</td>
+          <td class="td-current">hardcoded 100px</td>
+          <td class="td-proposed">token-border-radius-full (9999px)</td>
+          <td class="td-token">--token-border-radius-full</td>
+          <td class="td-rationale">Using <strong>token-border-radius-full</strong> is semantically correct for a pill shape and keeps the value in the token system. The hardcoded 100px works but is not portable across the design system.</td>
+        </tr>
+        <tr>
+          <td class="td-property">height</td>
+          <td class="td-property">.osui-progress-bar (all sizes)</td>
+          <td class="td-current">hardcoded 4px / 8px / 12px</td>
+          <td class="td-proposed">token-scale-100 / token-scale-200 / token-scale-300</td>
+          <td class="td-token">--token-scale-100 / -200 / -300</td>
+          <td class="td-rationale">Height values that map to the scale system allow the bar to <strong>scale proportionally</strong> with density adjustments, rather than requiring three separate hard-coded overrides.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function setMode(mode, btn) {
+    const w = document.getElementById('previewWrapper');
+    w.classList.toggle('proposed-mode', mode === 'proposed');
+    w.classList.toggle('current-mode', mode === 'legacy');
+    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+    btn.classList.add('ptab--active');
+  }
+
+  function toggleAnnotations(btn) {
+    const wrapper = document.getElementById('previewWrapper');
+    const hiding = !wrapper.classList.contains('hide-annotations');
+    wrapper.classList.toggle('hide-annotations', hiding);
+    btn.textContent = hiding ? 'Show annotations' : 'Hide annotations';
+    btn.classList.toggle('ann-toggle--off', hiding);
+  }
+</script>
+
+<script src="assets/os-ui/O11.OutSystemsUI.js"></script>
+</body>
+</html>
