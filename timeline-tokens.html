@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timeline — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-0: 0;
+    --token-scale-025: 1px;
+    --token-scale-050: 2px;
+    --token-scale-075: 3px;
+    --token-scale-100: 4px;
+    --token-scale-200: 8px;
+    --token-scale-300: 12px;
+    --token-scale-400: 16px;
+    --token-scale-600: 24px;
+    --token-scale-800: 32px;
+    --token-scale-1000: 40px;
+    --token-border-radius-100: 4px;
+    --token-border-radius-200: 8px;
+    --token-border-radius-full: 9999px;
+    --token-border-size-025: 1px;
+    --token-border-size-050: 2px;
+    --token-font-size-200: 0.625rem;   /* 10px */
+    --token-font-size-300: 0.75rem;    /* 12px */
+    --token-font-size-350: 0.8125rem;  /* 13px — timestamp */
+    --token-font-size-400: 1rem;       /* 16px */
+    --token-font-weight-regular: 400;
+    --token-font-weight-semi-bold: 600;
+    --token-bg-surface-default: #ffffff;
+    --token-text-default: #242424;
+    --token-text-subtle: #3b3b3b;
+    --token-text-subtlest: #626262;
+    --token-text-disabled: #a2a2a2;
+    --token-text-inverse: #ffffff;
+    --token-border-default: #d5d5d5;
+    --token-border-subtle: #f3f3f3;
+    --token-primitives-base-white: #ffffff;
+    --token-primitives-neutral-0:   #ffffff;
+    --token-primitives-neutral-400: #d5d5d5;
+    --token-primitives-neutral-500: #a2a2a2;
+    --token-primitives-neutral-700: #626262;
+    --token-primitives-neutral-900: #3b3b3b;
+    --token-primitives-neutral-1000:#242424;
+    --token-primitives-blue-700:    #105cef;
+    --token-primitives-green-700:   #29823b;
+    --token-primitives-red-700:     #dc2020;
+    --token-primitives-yellow-700:  #e9a100;
+    --token-semantics-primary-base: #105cef;
+    --token-semantics-primary-700:  #105cef;
+    --token-semantics-success-base: #29823b;
+    --token-semantics-success-700:  #29823b;
+    --token-semantics-error-base:   #dc2020;
+    --token-semantics-error-700:    #dc2020;
+    --token-semantics-warning-base: #e9a100;
+    --token-semantics-warning-700:  #e9a100;
+    --token-semantics-info-base:    #017aad;
+    --token-semantics-orange-base:  #ea580c;   /* invented — 2.28 has no bare `orange`, only warning (#e9a100) */
+    --token-semantics-orange-700:   #c2410c;
+    --token-elevation-1: 0px 0px 4px 0px rgba(0, 0, 0, 0.04), 0px 3px 9px 0px rgba(0, 0, 0, 0.07);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    color: #111827;
+    line-height: 1.5;
+    padding: 48px 32px;
+  }
+
+  .back-nav {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #6b7280;
+    text-decoration: none; margin-bottom: 24px;
+    padding: 5px 10px 5px 6px; border-radius: 8px;
+    transition: background .15s, color .15s;
+  }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+
+  .page-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
+  .badge-chrome {
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 700; padding: 4px 10px;
+    border-radius: 99px; letter-spacing: .02em; text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .badge-chrome--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; color: #374151;
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 99px;
+    padding: 4px 10px 4px 6px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  .preview-card {
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07);
+    border: 1px solid #e5e7eb; overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .preview-card__header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa;
+  }
+  .preview-card__label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-right: auto;
+  }
+  .preview-card__body { padding: 36px 24px; background: #fff; }
+  #previewWrapper { max-width: 560px; margin: 0 auto; }
+
+  /* ─── Timeline component — faithful to real OS UI 2.27/2.28 CSS ───
+     HTML shape inferred from OSUI rules (selectors + Navigation.TimelineItem block):
+       <div class="timeline">
+         <div data-block="Navigation.TimelineItem">
+           <div class="timeline-item">
+             <div class="timeline-left">12:30 · Mon</div>
+             <div class="timeline-icon">
+               <div class="timeline-icon-container background-success">
+                 <i class="ph-bold ph-check"></i>
+               </div>
+               <div class="timeline-icon-line"></div>
+             </div>
+             <div class="timeline-right timeline-content">
+               <div class="timeline-content-inner">
+                 <h4>Invoice paid</h4>
+                 <p>The February invoice was automatically settled.</p>
+               </div>
+             </div>
+           </div>
+         </div>
+         ...
+       </div>
+  */
+
+  .timeline { display: flex; flex-direction: column; }
+
+  .timeline-item {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+  }
+  .timeline-item .timeline-content {
+    flex: 1;
+    margin-bottom: var(--token-scale-800, 32px);    /* real 2.27: space-xl */
+  }
+  .timeline-icon {
+    align-items: center;
+    display: flex;
+    flex-direction: column;   /* HTML order is [container, line] so container renders on top */
+    position: relative;
+  }
+  .timeline-icon-line {
+    background-color: var(--token-border-default, #d5d5d5);   /* real 2.27: color-neutral-5 */
+    flex: 1;
+    margin: var(--token-scale-200, 8px) 0;
+    width: var(--token-border-size-025, 1px);
+  }
+  .timeline-icon-container {
+    align-items: center;
+    border-radius: var(--token-border-radius-full, 9999px);
+    color: var(--token-text-inverse, var(--token-primitives-base-white, #ffffff));
+    display: flex;
+    font-size: var(--token-font-size-200, 0.625rem);
+    height: var(--token-scale-600, 24px);
+    justify-content: center;
+    margin: 0 var(--token-scale-400, 16px);
+    text-align: center;
+    width: var(--token-scale-600, 24px);
+    flex-shrink: 0;
+  }
+  .timeline-icon-container:empty {
+    height: var(--token-scale-200, 8px);
+    width: var(--token-scale-200, 8px);
+    margin-top: var(--token-scale-100, 4px);
+  }
+  .timeline-right,
+  .timeline-content-inner {
+    color: var(--token-text-subtle, var(--token-primitives-neutral-900, #3b3b3b));
+  }
+
+  /* Last item: hide the trailing line so the timeline terminates cleanly at
+     the final bubble. Real OSUI also switches flex-direction on `:last-of-type`,
+     but that's only meaningful paired with `column-reverse` — we use plain
+     `column` + DOM order [container, line], so hiding the line is enough. */
+  [data-block="Navigation.TimelineItem"]:last-of-type .timeline-icon-line {
+    display: none;
+  }
+
+  /* Timestamp column — default (current-mode / new-tokens) behaviour is a
+     left column with right-aligned text. Proposed mode flips this via flex
+     `order` so the timestamp moves to the right edge of each row. */
+  .timeline-timestamp {
+    flex: 0 0 88px;
+    font-size: var(--token-font-size-300, 0.75rem);
+    color: var(--token-text-subtlest, #626262);
+    font-weight: var(--token-font-weight-semi-bold, 600);
+    padding-top: var(--token-scale-050, 2px);
+    text-align: right;
+    padding-right: var(--token-scale-100, 4px);
+  }
+
+  .timeline-content-inner strong {
+    color: var(--token-text-default, #242424);
+    font-weight: var(--token-font-weight-semi-bold, 600);
+  }
+  .timeline-content-inner h4 {
+    font-size: var(--token-font-size-400, 1rem);
+    font-weight: var(--token-font-weight-semi-bold, 600);
+    color: var(--token-text-default, #242424);
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+  .timeline-content-inner p {
+    font-size: var(--token-font-size-300, 0.75rem);
+    line-height: 1.5;
+    color: var(--token-text-subtle, #3b3b3b);
+  }
+
+  /* Rich-event variant — bigger bubble with a subtle neutral surface for
+     user-attributed events (comments, approvals, reviewer notes). Distinguishes
+     from plain semantic bubbles (solid colour + white glyph) by using a low-
+     emphasis surface so the event reads as "annotation" rather than "status". */
+  .timeline-icon-container.timeline-avatar {
+    width: var(--token-scale-800, 32px);
+    height: var(--token-scale-800, 32px);
+    background: var(--token-border-subtle, #f3f3f3);
+    color: var(--token-text-subtle, #3b3b3b);
+  }
+  .timeline-icon-container.timeline-avatar .ph,
+  .timeline-icon-container.timeline-avatar .ph-bold,
+  .timeline-icon-container.timeline-avatar i {
+    font-size: var(--token-font-size-300, 0.75rem);
+  }
+
+  /* Comment-card variant — content-inner wraps in a bordered box for events
+     that carry a quoted body (e.g. inline comments, reviewer notes). */
+  .timeline-content-inner.timeline-content--card {
+    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
+    border-radius: var(--token-border-radius-200, 8px);
+    padding: var(--token-scale-300, 12px) var(--token-scale-400, 16px);
+  }
+  .timeline-comment-header {
+    font-size: var(--token-font-size-300, 0.75rem);
+    color: var(--token-text-subtle, #3b3b3b);
+    margin-bottom: var(--token-scale-100, 4px);
+  }
+
+  /* Background utilities (reused from OS UI — same as badge/counter) */
+  .background-primary { background-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef))); }
+  .background-success { background-color: var(--token-semantics-success-base, var(--token-semantics-success-700, var(--token-primitives-green-700, #29823b))); }
+  .background-error   { background-color: var(--token-semantics-error-base,   var(--token-semantics-error-700,   var(--token-primitives-red-700,   #dc2020))); }
+  .background-warning { background-color: var(--token-semantics-warning-base, var(--token-semantics-warning-700, var(--token-primitives-yellow-700,#e9a100))); }
+  .background-info    { background-color: var(--token-semantics-info-base, #017aad); }
+  .background-neutral { background-color: var(--token-primitives-neutral-500, #a2a2a2); }
+  .background-orange  { background-color: var(--token-semantics-orange-base, #ea580c); }
+
+  /* Preview layout helpers */
+  .timeline-row-label {
+    font-size: 10px; font-weight: 700; color: #9ca3af;
+    text-transform: uppercase; letter-spacing: .08em;
+    margin-bottom: 16px;
+    padding-left: 2px;
+  }
+  .timeline-section { margin-bottom: 36px; }
+  .timeline-section:last-child { margin-bottom: 0; }
+
+  /* Annotation outlines */
+  .annotate-icon       { outline: 2px dashed #3b82f6; outline-offset: 3px; border-radius: 50%; }
+  .annotate-line       { outline: 2px dashed #10b981; outline-offset: 2px; }
+  .annotate-content    { outline: 2px dashed #f59e0b; outline-offset: 3px; border-radius: 4px; }
+  .annotate-container  { outline: 2px dashed #8b5cf6; outline-offset: 8px; border-radius: 12px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+
+  /* ─── Token panel ─── */
+  .token-panel { display: flex; flex-direction: column; gap: 12px; }
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; letter-spacing: 0; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 155px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); transition: background .12s; }
+  .token-row:last-child { border-bottom: none; }
+  .token-row:hover { background: rgba(255,255,255,.03); }
+  .prop-name  { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; white-space: nowrap; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value{ font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; white-space: nowrap; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); vertical-align: middle; margin-right: 5px; flex-shrink: 0; }
+  .token-name-with-swatch { display: flex; align-items: center; }
+
+  .timeline-structure-tok  .token-card__header { background: linear-gradient(120deg, #0e7490, #06b6d4); }
+  .timeline-typography-tok .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+  .timeline-states-tok     .token-card__header { background: linear-gradient(120deg, #c2410c, #f97316); }
+
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; font-family: inherit; transition: all .15s; white-space: nowrap; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; font-family: inherit; transition: all .15s; margin-left: 4px; white-space: nowrap; }
+  .ann-toggle:hover { color: #111827; border-color: #9ca3af; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p  { font-size: 12px; color: #6b7280; }
+  .proposal-table-wrap { overflow-x: auto; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .proposal-table tbody tr:last-child td { border-bottom: none; }
+  .proposal-table tbody tr:hover td { background: #fafafa; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; white-space: nowrap; }
+  .td-current  { color: #9ca3af; }
+  .td-proposed { font-weight: 600; color: #111827; }
+  .td-token    { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; }
+  .td-rationale{ color: #4b5563; max-width: 280px; }
+  .td-rationale strong { color: #111827; }
+
+  @media (max-width: 960px) {
+    .token-grid { grid-template-columns: 1fr; }
+    body { padding: 24px 20px 60px; }
+  }
+
+/* ─── Current mode (OutSystems UI 2.28.0) — raw values from real 2.27 CSS, no tokens ─── */
+/* Line: 1px · color-neutral-5 (#ced4da) · margin space-s 0 space-s (8px) */
+#previewWrapper.current-mode .timeline-icon-line {
+  background-color: #ced4da;
+  width: 1px;
+  margin: 8px 0;
+}
+/* Icon container: 24x24, text white (neutral-0), bg from utility class */
+#previewWrapper.current-mode .timeline-icon-container {
+  height: 24px;
+  width: 24px;
+  color: #ffffff;
+  margin: 0 16px;        /* real 2.27: space-none space-base (16px) */
+  font-size: 10px;       /* font-size-xs */
+}
+#previewWrapper.current-mode .timeline-icon-container:empty {
+  height: 8px; width: 8px; margin-top: 4px;
+}
+/* Background utilities — raw 2.28 palette */
+#previewWrapper.current-mode .background-primary { background-color: #1068eb; }
+#previewWrapper.current-mode .background-success { background-color: #29823b; }
+#previewWrapper.current-mode .background-error   { background-color: #dc2020; }
+#previewWrapper.current-mode .background-warning { background-color: #e9a100; }
+#previewWrapper.current-mode .background-info    { background-color: #017aad; }
+#previewWrapper.current-mode .background-neutral { background-color: #adb5bd; }  /* color-neutral-6 */
+#previewWrapper.current-mode .background-orange  { background-color: #ea580c; }  /* invented — 2.28 has no bare orange; closest is --color-orange (#f76707) */
+/* Content text: color-neutral-8 */
+#previewWrapper.current-mode .timeline-right,
+#previewWrapper.current-mode .timeline-content-inner {
+  color: #4f575e;   /* color-neutral-8 */
+}
+#previewWrapper.current-mode .timeline-content-inner h4 { color: #212529; }  /* color-neutral-10 */
+#previewWrapper.current-mode .timeline-content-inner p  { color: #4f575e; }
+/* Content margin-bottom: space-xl (32px) */
+#previewWrapper.current-mode .timeline-item .timeline-content {
+  margin-bottom: 32px;
+}
+/* Timestamp — 2.28 has no dedicated class, faithful preview shows it in the
+   muted neutral-7 colour; layout stays as a left column (88px wide). */
+#previewWrapper.current-mode .timeline-timestamp {
+  color: #6a7178;   /* color-neutral-7 */
+  font-size: 12px;
+}
+/* Avatar + comment-card variants render with 2.28 baseline — the border and
+   radius tokens already resolve to matching 2.28 values, so the card reads
+   consistently across modes. */
+#previewWrapper.current-mode .timeline-icon-container.timeline-avatar {
+  width: 32px; height: 32px;
+}
+#previewWrapper.current-mode .timeline-content-inner.timeline-content--card {
+  border-color: #ced4da;  /* color-neutral-5 */
+}
+
+/* ─── Proposed mode — semantic tokens, bigger icon + thicker line, upcoming state ─── */
+/*
+  Proposed changes:
+    • Icon container 24 → 28px so a 14px phosphor-bold glyph fits without
+      clipping. 24px cramps icons bigger than ~10px (real 2.28 uses font-size-xs
+      = 10px, which is a pixel-scribble even for monochrome glyphs like ✓).
+    • Line 1 → 2px (token-border-size-050) for a deliberate track at any zoom
+      and consistency with Wizard/Progress connectors.
+    • Palette migrates from raw neutral-5/8/10 references to semantic text /
+      border tokens so dark-mode overrides inherit correctly.
+    • New `.upcoming` state — dashed line + muted icon for future events that
+      haven't happened yet (maps cleanly onto project trackers / scheduled tasks).
+*/
+#previewWrapper.proposed-mode .timeline-icon-container {
+  height: 28px;
+  width: 28px;
+  font-size: var(--token-font-size-300, 0.75rem);
+}
+#previewWrapper.proposed-mode .timeline-icon-container .ph-bold,
+#previewWrapper.proposed-mode .timeline-icon-container .ph,
+#previewWrapper.proposed-mode .timeline-icon-container i {
+  font-size: 0.875rem;   /* 14px glyph inside 28px bubble */
+}
+#previewWrapper.proposed-mode .timeline-icon-container:empty {
+  /* Compact bead variant keeps 8px footprint — the sizing override above
+     uses ID specificity that would otherwise squash it.
+     margin-top aligns the dot's CENTER with a 28px bubble's center so mixing
+     dots + icon bubbles in the same timeline keeps the connector line on a
+     single axis: (28 - 8) / 2 = 10px. */
+  height: var(--token-scale-200, 8px);
+  width: var(--token-scale-200, 8px);
+  margin-top: 10px;
+}
+#previewWrapper.proposed-mode .timeline-icon-line {
+  width: var(--token-border-size-050, 2px);
+  background-color: var(--token-border-default, #d5d5d5);
+}
+/* Upcoming-state — dashed line + muted icon, signals "scheduled but not yet happened" */
+#previewWrapper.proposed-mode .timeline-icon.is-upcoming .timeline-icon-container:not(:empty) {
+  background-color: var(--token-bg-surface-default, #ffffff) !important;
+  color: var(--token-text-disabled, #a2a2a2);
+  border: var(--token-border-size-050, 2px) dashed var(--token-border-default, #d5d5d5);
+}
+#previewWrapper.proposed-mode .timeline-icon.is-upcoming .timeline-icon-line {
+  background-color: transparent;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--token-border-default, #d5d5d5) 0 4px,
+    transparent 4px 8px
+  );
+  width: var(--token-border-size-050, 2px);
+}
+#previewWrapper.proposed-mode .timeline-item:has(.is-upcoming) .timeline-content-inner h4,
+#previewWrapper.proposed-mode .timeline-item:has(.is-upcoming) .timeline-content-inner p {
+  color: var(--token-text-disabled, #a2a2a2);
+}
+
+/* Proposed-mode layout shift — timestamp jumps from LEFT column to RIGHT edge
+   via flex `order`. DOM stays [timestamp, icon, content] (current-mode friendly)
+   but visually renders as [icon, content, timestamp] in proposed mode. Keep
+   the default `align-items: stretch` on `.timeline-item` so `.timeline-icon`
+   stretches to match content height — otherwise the `flex: 1` line has no
+   space to fill and disappears between rows.
+   Also fix the icon column width: without a fixed width, rows with a 28px
+   bubble (60px natural column) and rows with an 8px dot (40px natural column)
+   sit on different X axes — dots appear 10px left of bubbles. Locking to the
+   widest natural column (60px) centers every bubble/dot on the same vertical
+   axis, so dot + icon mixed timelines stay aligned. */
+#previewWrapper.proposed-mode .timeline-icon      { order: 1; flex: 0 0 60px; }
+#previewWrapper.proposed-mode .timeline-content   {
+  order: 2;
+  /* Content font-size tuned down to 14px (was inheriting 16px body). Combined
+     with line-height 1.45 → first line is ~20px tall, centre at ~10px from
+     row top. The bubble/dot centre (after my margin-top fixes) sits at 14px,
+     so a 4px padding-top on the content shifts the FIRST line down to align
+     with the bubble centre. Multi-line content is NOT centred — subsequent
+     lines flow naturally below the first, matching expected reading order. */
+  font-size: 0.875rem;  /* 14px */
+  line-height: 1.45;
+  padding-top: var(--token-scale-100, 4px);
+}
+#previewWrapper.proposed-mode .timeline-timestamp {
+  order: 3;
+  text-align: right;
+  padding-right: 0;
+  padding-left: var(--token-scale-400, 16px);
+  flex: 0 0 72px;
+  padding-top: var(--token-scale-100, 4px);
+  font-size: 0.75rem;
+  /* Regular weight — matches the reference examples where the date is a
+     low-emphasis meta-field; semi-bold was over-competing with the event
+     content on the left. */
+  font-weight: var(--token-font-weight-regular, 400);
+}
+
+/* Rich-event variant — bumps to 40px in proposed mode so the chat glyph
+   matches the weight of the comment card beside it. Glyph scales to 18px so
+   it reads as the anchor of a richer event row. */
+#previewWrapper.proposed-mode .timeline-icon-container.timeline-avatar {
+  width: 40px; height: 40px;
+}
+#previewWrapper.proposed-mode .timeline-icon-container.timeline-avatar .ph,
+#previewWrapper.proposed-mode .timeline-icon-container.timeline-avatar .ph-bold,
+#previewWrapper.proposed-mode .timeline-icon-container.timeline-avatar i {
+  font-size: 1.125rem;   /* 18px */
+}
+
+/* Comment-card variant in proposed mode — lifts the card with a subtle shadow
+   so it reads as a distinct quote block instead of a flat outlined box. */
+#previewWrapper.proposed-mode .timeline-content-inner.timeline-content--card {
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+  background: var(--token-bg-surface-default, #ffffff);
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-nav">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  All components
+</a>
+
+<div class="page-header">
+  <h1>Timeline</h1>
+  <span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span>
+  <span class="badge-chrome badge-chrome--tokens">Design Tokens</span>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6;"></span> .timeline (container)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> .timeline-icon-container</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> .timeline-icon-line</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> .timeline-content</div>
+</div>
+
+<!-- Preview -->
+<div class="preview-card">
+  <div class="preview-card__header">
+    <span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+  <div id="previewWrapper" class="hide-annotations">
+
+    <!-- Hiring pipeline — inspired by real-world applicant tracking timelines
+         (example: semantic bubbles with right-aligned timestamps). Content
+         works in all modes; proposed mode flips layout + grows bubbles. -->
+    <div class="timeline-section">
+      <div class="timeline-row-label">Hiring pipeline · semantic icons + right-aligned timestamps</div>
+      <div class="timeline annotate-container">
+        <div data-block="Navigation.TimelineItem">
+          <div class="timeline-item">
+            <div class="timeline-timestamp">Sep 20</div>
+            <div class="timeline-icon">
+              <div class="timeline-icon-container background-neutral annotate-icon"><i class="ph-bold ph-user"></i></div>
+              <div class="timeline-icon-line annotate-line"></div>
+            </div>
+            <div class="timeline-right timeline-content annotate-content">
+              <div class="timeline-content-inner">
+                Applied to <strong>Front End Developer</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-block="Navigation.TimelineItem">
+          <div class="timeline-item">
+            <div class="timeline-timestamp">Sep 22</div>
+            <div class="timeline-icon">
+              <div class="timeline-icon-container background-primary"><i class="ph-bold ph-thumbs-up"></i></div>
+              <div class="timeline-icon-line"></div>
+            </div>
+            <div class="timeline-right timeline-content">
+              <div class="timeline-content-inner">
+                Advanced to phone screening by <strong>Bethany Blake</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-block="Navigation.TimelineItem">
+          <div class="timeline-item">
+            <div class="timeline-timestamp">Sep 28</div>
+            <div class="timeline-icon">
+              <div class="timeline-icon-container background-success"><i class="ph-bold ph-check"></i></div>
+              <div class="timeline-icon-line"></div>
+            </div>
+            <div class="timeline-right timeline-content">
+              <div class="timeline-content-inner">
+                Completed phone screening with <strong>Martha Gardner</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-block="Navigation.TimelineItem">
+          <div class="timeline-item">
+            <div class="timeline-timestamp">Sep 30</div>
+            <div class="timeline-icon">
+              <div class="timeline-icon-container background-primary"><i class="ph-bold ph-thumbs-up"></i></div>
+              <div class="timeline-icon-line"></div>
+            </div>
+            <div class="timeline-right timeline-content">
+              <div class="timeline-content-inner">
+                Advanced to interview by <strong>Bethany Blake</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-block="Navigation.TimelineItem">
+          <div class="timeline-item">
+            <div class="timeline-timestamp">Oct 4</div>
+            <div class="timeline-icon">
+              <div class="timeline-icon-container background-success"><i class="ph-bold ph-check"></i></div>
+              <div class="timeline-icon-line"></div>
+            </div>
+            <div class="timeline-right timeline-content">
+              <div class="timeline-content-inner">
+                Completed interview with <strong>Katherine Snyder</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Invoice activity feed — shows empty-dot events + avatar variant
+         + comment card variant + final checkmark. -->
+    <div class="timeline-section">
+      <div class="timeline-row-label">Activity feed · empty-dots · avatar + comment card · check</div>
+      <div class="timeline">
+        <div data-block="Navigation.TimelineItem">
+          <div class="timeline-item">
+            <div class="timeline-timestamp">7d ago</div>
+            <div class="timeline-icon">
+              <div class="timeline-icon-container background-neutral"></div>
+              <div class="timeline-icon-line"></div>
+            </div>
+            <div class="timeline-right timeline-content">
+              <div class="timeline-content-inner">
+                <strong>Chelsea Hagon</strong> created the invoice.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-block="Navigation.TimelineItem">
+          <div class="timeline-item">
+            <div class="timeline-timestamp">6d ago</div>
+            <div class="timeline-icon">
+              <div class="timeline-icon-container background-neutral"></div>
+              <div class="timeline-icon-line"></div>
+            </div>
+            <div class="timeline-right timeline-content">
+              <div class="timeline-content-inner">
+                <strong>Chelsea Hagon</strong> edited the invoice.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-block="Navigation.TimelineItem">
+          <div class="timeline-item">
+            <div class="timeline-timestamp">6d ago</div>
+            <div class="timeline-icon">
+              <div class="timeline-icon-container background-neutral"></div>
+              <div class="timeline-icon-line"></div>
+            </div>
+            <div class="timeline-right timeline-content">
+              <div class="timeline-content-inner">
+                <strong>Chelsea Hagon</strong> sent the invoice.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-block="Navigation.TimelineItem">
+          <div class="timeline-item">
+            <div class="timeline-timestamp">3d ago</div>
+            <div class="timeline-icon">
+              <div class="timeline-icon-container background-orange">
+                <i class="ph-bold ph-chat"></i>
+              </div>
+              <div class="timeline-icon-line"></div>
+            </div>
+            <div class="timeline-right timeline-content">
+              <div class="timeline-content-inner timeline-content--card">
+                <div class="timeline-comment-header">
+                  <strong>Chelsea Hagon</strong> commented
+                </div>
+                <p>Called client, they reassured me the invoice would be paid by the 25th.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-block="Navigation.TimelineItem">
+          <div class="timeline-item">
+            <div class="timeline-timestamp">2d ago</div>
+            <div class="timeline-icon">
+              <div class="timeline-icon-container background-neutral"></div>
+              <div class="timeline-icon-line"></div>
+            </div>
+            <div class="timeline-right timeline-content">
+              <div class="timeline-content-inner">
+                <strong>Alex Curren</strong> viewed the invoice.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-block="Navigation.TimelineItem">
+          <div class="timeline-item">
+            <div class="timeline-timestamp">1d ago</div>
+            <div class="timeline-icon">
+              <div class="timeline-icon-container background-primary"><i class="ph-bold ph-check"></i></div>
+              <div class="timeline-icon-line"></div>
+            </div>
+            <div class="timeline-right timeline-content">
+              <div class="timeline-content-inner">
+                <strong>Alex Curren</strong> paid the invoice.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+</div>
+
+<!-- Token cards -->
+<div class="token-grid">
+
+  <!-- Icon container -->
+  <div class="token-card timeline-structure-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#06b6d4;"></span>
+      Icon container
+      <span class="component-name">.timeline-icon-container</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">size</span>
+        <span class="token-name">token-scale-600</span>
+        <span class="token-value">24px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">size (empty dot)</span>
+        <span class="token-name">token-scale-200</span>
+        <span class="token-value">8px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">border-radius</span>
+        <span class="token-name">token-border-radius-full</span>
+        <span class="token-value">9999px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">text color</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#ffffff;"></span>token-text-inverse</span>
+        <span class="token-value">#ffffff</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">font-size</span>
+        <span class="token-name">token-font-size-200</span>
+        <span class="token-value">10px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">h-margin</span>
+        <span class="token-name">token-scale-400</span>
+        <span class="token-value">16px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">empty-dot top margin</span>
+        <span class="token-name">token-scale-100</span>
+        <span class="token-value">4px</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Line -->
+  <div class="token-card timeline-typography-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#10b981;"></span>
+      Connector line
+      <span class="component-name">.timeline-icon-line</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">width</span>
+        <span class="token-name">token-border-size-025</span>
+        <span class="token-value">1px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">bg (default)</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#d5d5d5;"></span>token-border-default</span>
+        <span class="token-value">#d5d5d5</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">v-margin</span>
+        <span class="token-name">token-scale-200</span>
+        <span class="token-value">8px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">flex</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">flex: 1 · fills between bubbles</span>
+        <span class="token-value">—</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">last-of-type</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">display: none</span>
+        <span class="token-value">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="token-card timeline-states-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#f97316;"></span>
+      Content + states
+      <span class="component-name">.timeline-content · .timeline-left</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">content margin-bottom</span>
+        <span class="token-name">token-scale-800</span>
+        <span class="token-value">32px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">content text</span>
+        <span class="token-name">token-text-subtle</span>
+        <span class="token-value">#3b3b3b</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">title (h4)</span>
+        <span class="token-name">token-text-default</span>
+        <span class="token-value">#242424</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">title font-size</span>
+        <span class="token-name">token-font-size-400</span>
+        <span class="token-value">1rem · 16px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">body font-size</span>
+        <span class="token-name">token-font-size-300</span>
+        <span class="token-value">0.75rem · 12px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">timestamp label</span>
+        <span class="token-name">token-text-subtlest</span>
+        <span class="token-value">#626262</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">upcoming icon</span>
+        <span class="token-name">token-text-disabled</span>
+        <span class="token-value">#a2a2a2</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Proposal table -->
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Token Proposal</h3>
+    <p>Real OS UI HTML uses <code>.timeline</code> + <code>[data-block="Navigation.TimelineItem"]</code> + <code>.timeline-item</code> + <code>.timeline-icon</code> (wraps <code>.timeline-icon-container</code> + <code>.timeline-icon-line</code>) + <code>.timeline-content</code>. Background colour on the bubble comes from a shared <code>.background-{semantic}</code> utility (same classes used by Badge/Counter). Proposal migrates raw palette references to semantic tokens, bumps the icon to 28px so bold glyphs fit, thickens the line to 2px, and introduces a new <strong>upcoming</strong> state with a dashed line for scheduled-but-not-happened events.</p>
+  </div>
+  <div class="proposal-table-wrap">
+    <table class="proposal-table">
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Utility class</th>
+          <th>Current (2.28)</th>
+          <th>Proposed</th>
+          <th>Token</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-property">icon size</td>
+          <td class="td-property">.timeline-icon-container</td>
+          <td class="td-current">24px · glyph font-size-xs (10px)</td>
+          <td class="td-proposed">28px · glyph 14px (phosphor-bold)</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale"><strong>Grow to 28px.</strong> 24px with a 10px glyph reads as a pixel scribble — at small viewing sizes the ✓ inside the bubble is indistinguishable from a blob. 28px + 14px bold glyph gives enough contrast for a meaningful completion mark while keeping the bubble visually anchored to the timestamp on the left.</td>
+        </tr>
+        <tr>
+          <td class="td-property">line width</td>
+          <td class="td-property">.timeline-icon-line</td>
+          <td class="td-current">1px hardcoded</td>
+          <td class="td-proposed">2px · token-border-size-050</td>
+          <td class="td-token">--token-border-size-050</td>
+          <td class="td-rationale">1px disappears on high-DPI screens and makes the timeline look broken between bubbles. <strong>2px</strong> reads as a deliberate temporal thread and matches the Wizard connector so both step-based components share one visual language for "progression".</td>
+        </tr>
+        <tr>
+          <td class="td-property">line colour</td>
+          <td class="td-property">.timeline-icon-line</td>
+          <td class="td-current">color-neutral-5 (#ced4da)</td>
+          <td class="td-proposed">token-border-default (#d5d5d5)</td>
+          <td class="td-token">--token-border-default</td>
+          <td class="td-rationale">Same visual weight, semantically anchored. Dark-mode overrides and brand-tinted themes now automatically pick up the right contrast for the connector without hitting a raw palette step.</td>
+        </tr>
+        <tr>
+          <td class="td-property">icon bg (semantic)</td>
+          <td class="td-property">.background-{color}</td>
+          <td class="td-current">raw palette per color (e.g. color-primary #1068eb)</td>
+          <td class="td-proposed">token-semantics-{color}-base chain</td>
+          <td class="td-token">--token-semantics-primary-base<br>--token-semantics-success-base<br>--token-semantics-error-base<br>--token-semantics-warning-base<br>--token-semantics-info-base</td>
+          <td class="td-rationale">Utility classes unchanged (same HTML). Resolution chain migrates from raw palette tokens to the 2.29 semantic family — one decision point for brand / theme overrides across Badge, Counter, Timeline, and Wizard.</td>
+        </tr>
+        <tr>
+          <td class="td-property">icon text colour</td>
+          <td class="td-property">.timeline-icon-container</td>
+          <td class="td-current">color-neutral-0 (#ffffff) — <em>raw palette</em></td>
+          <td class="td-proposed">token-text-inverse (#ffffff)</td>
+          <td class="td-token">--token-text-inverse</td>
+          <td class="td-rationale">Value unchanged — migration from hardcoded neutral-0 to the semantic <code>text-inverse</code> token so any future "on-dark" override (e.g. high-contrast themes) applies automatically.</td>
+        </tr>
+        <tr>
+          <td class="td-property">content text</td>
+          <td class="td-property">.timeline-right · .timeline-content-inner</td>
+          <td class="td-current">color-neutral-8 (#4f575e)</td>
+          <td class="td-proposed">token-text-subtle (#3b3b3b)</td>
+          <td class="td-token">--token-text-subtle</td>
+          <td class="td-rationale">Slightly darker subtle token improves legibility for body copy next to the bold title. Semantic anchoring means Timeline body text tracks the same scale as Card / List / Form descriptions.</td>
+        </tr>
+        <tr>
+          <td class="td-property">content margin-bottom</td>
+          <td class="td-property">.timeline-content</td>
+          <td class="td-current">space-xl (32px) — legacy alias</td>
+          <td class="td-proposed">token-scale-800 (32px)</td>
+          <td class="td-token">--token-scale-800</td>
+          <td class="td-rationale">Value unchanged — migration from the legacy <code>--space-xl</code> alias to the 2.29 spacing scale. Theming overrides now target one token.</td>
+        </tr>
+        <tr>
+          <td class="td-property">upcoming state</td>
+          <td class="td-property">.timeline-icon.is-upcoming</td>
+          <td class="td-current">— (not in 2.28)</td>
+          <td class="td-proposed">dashed 2px line + outlined bubble + text-disabled body</td>
+          <td class="td-token">--token-border-default<br>--token-text-disabled</td>
+          <td class="td-rationale"><strong>New state.</strong> 2.28 has no concept of "scheduled but not happened" — every timeline item reads as completed history. Real product usage (audit logs, project trackers, subscription dashboards) routinely shows upcoming events alongside past ones. <code>.is-upcoming</code> uses a <strong>dashed line + outlined bubble</strong> so upcoming events read as "pending" at a glance without collapsing the row geometry.</td>
+        </tr>
+        <tr>
+          <td class="td-property">timestamp label</td>
+          <td class="td-property">.timeline-timestamp</td>
+          <td class="td-current">— (unclassed in 2.28; plain body)</td>
+          <td class="td-proposed">token-text-subtlest · token-font-size-300 · semi-bold</td>
+          <td class="td-token">--token-text-subtlest<br>--token-font-size-300<br>--token-font-weight-semi-bold</td>
+          <td class="td-rationale"><strong>Formalise the timestamp slot.</strong> Real 2.28 leaves the left label unstyled, so teams reach for inline styles or body-level colour tokens — producing visually inconsistent timelines across product areas. Proposal pins it to <code>text-subtlest</code> + <code>font-size-300</code> semi-bold so every Timeline renders the label at the same weight hierarchy.</td>
+        </tr>
+        <tr>
+          <td class="td-property">timestamp layout</td>
+          <td class="td-property">.timeline-timestamp</td>
+          <td class="td-current">left column (fixed 88px)</td>
+          <td class="td-proposed">right-aligned via flex <code>order: 3</code> (CSS-only flip)</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale">Modern activity feeds (GitHub, Linear, Slack threads) anchor <strong>content</strong> on the left and drop the timestamp as a low-emphasis right-column — content gets the reading-order priority; the time becomes a secondary meta-field. Flipping the column is <strong>CSS-only</strong>: DOM order stays <code>[timestamp, icon, content]</code>, proposed mode reorders visually with <code>order</code>. Same markup works in both layouts.</td>
+        </tr>
+        <tr>
+          <td class="td-property">extended palette · orange</td>
+          <td class="td-property">.background-orange</td>
+          <td class="td-current">— (2.28 only has .background-warning #e9a100)</td>
+          <td class="td-proposed">token-semantics-orange-base (#ea580c)</td>
+          <td class="td-token">--token-semantics-orange-base</td>
+          <td class="td-rationale"><strong>New semantic colour.</strong> 2.28 ships warning (<code>#e9a100</code>, amber/yellow) but no true orange. Communication events (comments, notes, messaging) need a warmer tone that reads as "conversational" rather than the attention-grabbing warning. Orange <code>#ea580c</code> fills that gap and extends the shared <code>.background-{color}</code> utility used by Badge, Counter, and Timeline.</td>
+        </tr>
+        <tr>
+          <td class="td-property">comment-card variant</td>
+          <td class="td-property">.timeline-content-inner.timeline-content--card</td>
+          <td class="td-current">— (not in 2.28)</td>
+          <td class="td-proposed">bordered card · 8px radius · subtle shadow</td>
+          <td class="td-token">--token-border-default<br>--token-border-radius-200<br>--token-bg-surface-default</td>
+          <td class="td-rationale"><strong>New variant.</strong> For rich content events (inline comments, reviewer quotes, rejection reasons) the plain inline text block doesn't scale — nested paragraphs visually merge with neighbouring rows. Wrapping the body in a bordered card (radius-200, text-default border, surface-default bg) gives it structural weight without a separate component, and the card grows with the content.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function setMode(mode, btn) {
+    const w = document.getElementById('previewWrapper');
+    w.classList.toggle('proposed-mode', mode === 'proposed');
+    w.classList.toggle('current-mode', mode === 'legacy');
+    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+    btn.classList.add('ptab--active');
+  }
+
+  function toggleAnnotations(btn) {
+    const wrapper = document.getElementById('previewWrapper');
+    const hiding = !wrapper.classList.contains('hide-annotations');
+    wrapper.classList.toggle('hide-annotations', hiding);
+    btn.textContent = hiding ? 'Show annotations' : 'Hide annotations';
+    btn.classList.toggle('ann-toggle--off', hiding);
+  }
+</script>
+
+</body>
+</html>
