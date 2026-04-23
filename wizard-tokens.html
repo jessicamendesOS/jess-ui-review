@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wizard — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-0: 0;
+    --token-scale-025: 1px;
+    --token-scale-050: 2px;
+    --token-scale-075: 3px;
+    --token-scale-100: 4px;
+    --token-scale-200: 8px;
+    --token-scale-300: 12px;
+    --token-scale-400: 16px;
+    --token-scale-600: 24px;
+    --token-scale-800: 32px;
+    --token-scale-1000: 40px;
+    --token-border-radius-100: 4px;
+    --token-border-radius-200: 8px;
+    --token-border-radius-full: 9999px;
+    --token-border-size-025: 1px;
+    --token-border-size-050: 2px;
+    --token-border-size-075: 3px;
+    --token-font-size-200: 0.625rem;   /* 10px */
+    --token-font-size-300: 0.75rem;    /* 12px */
+    --token-font-size-400: 1rem;       /* 16px */
+    --token-font-weight-regular: 400;
+    --token-font-weight-semi-bold: 600;
+    --token-bg-surface-default: #ffffff;
+    --token-text-default: #242424;
+    --token-text-subtle: #3b3b3b;
+    --token-text-subtlest: #626262;
+    --token-text-disabled: #a2a2a2;
+    --token-text-inverse: #ffffff;
+    --token-border-default: #d5d5d5;
+    --token-border-subtle: #f3f3f3;
+    --token-primitives-base-white: #ffffff;
+    --token-primitives-neutral-0:   #ffffff;
+    --token-primitives-neutral-400: #d5d5d5;
+    --token-primitives-neutral-500: #a2a2a2;
+    --token-primitives-neutral-700: #626262;
+    --token-primitives-neutral-900: #3b3b3b;
+    --token-primitives-neutral-1000:#242424;
+    --token-primitives-blue-700:    #105cef;
+    --token-primitives-green-700:   #29823b;
+    --token-semantics-primary-base: #105cef;
+    --token-semantics-primary-700:  #105cef;
+    --token-semantics-success-base: #29823b;
+    --token-semantics-success-700:  #29823b;
+    --token-elevation-1: 0px 0px 4px 0px rgba(0, 0, 0, 0.04), 0px 3px 9px 0px rgba(0, 0, 0, 0.07);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    color: #111827;
+    line-height: 1.5;
+    padding: 48px 32px;
+  }
+
+  .back-nav {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #6b7280;
+    text-decoration: none; margin-bottom: 24px;
+    padding: 5px 10px 5px 6px; border-radius: 8px;
+    transition: background .15s, color .15s;
+  }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+
+  .page-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
+  .badge-chrome {
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 700; padding: 4px 10px;
+    border-radius: 99px; letter-spacing: .02em; text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .badge-chrome--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; color: #374151;
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 99px;
+    padding: 4px 10px 4px 6px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  .preview-card {
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07);
+    border: 1px solid #e5e7eb; overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .preview-card__header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa;
+  }
+  .preview-card__label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-right: auto;
+  }
+  .preview-card__body { padding: 36px 24px; background: #fff; }
+  #previewWrapper { max-width: 620px; margin: 0 auto; }
+
+  /* ─── Wizard component — faithful to real OS UI 2.27/2.28/2.29 CSS ───
+       Structure (from real OSUI):
+       <div class="wizard-wrapper">
+         <div class="list">
+           <div data-block="WizardItem">
+             <div class="wizard-wrapper-item active">
+               <div class="wizard-item-icon-wrapper">
+                 <div class="wizard-item-icon">
+                   <i class="icon fa fa-check"></i>  <!-- or step number -->
+                 </div>
+               </div>
+               <div class="wizard-item-label">Step 1</div>
+             </div>
+           </div>
+           ...
+         </div>
+       </div>
+  */
+
+  .wizard-wrapper .list {
+    display: flex;
+    width: 100%;
+  }
+  .wizard-wrapper [data-block*="WizardItem"] {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+  }
+  /* First step has no leading connector */
+  .wizard-wrapper [data-block*="WizardItem"]:first-child .wizard-item-icon-wrapper::before {
+    content: none;
+  }
+  .wizard-wrapper [data-block*="WizardItem"] .wizard-wrapper-item {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .wizard-wrapper [data-block*="WizardItem"] .wizard-wrapper-item.label-top {
+    flex-direction: column-reverse;
+  }
+  .wizard-wrapper [data-block*="WizardItem"] .wizard-item-label {
+    color: var(--token-text-subtlest, #626262);       /* real 2.27: text-color-neutral-7 */
+    text-align: center;
+    font-size: var(--token-font-size-300, 0.75rem);
+    line-height: 1.4;
+    padding: 0 var(--token-scale-100, 4px);
+  }
+
+  /* Icon bubble — 32x32 circle */
+  .wizard-item-icon {
+    align-items: center;
+    background-color: var(--token-bg-surface-default, #ffffff);
+    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);  /* real 2.27: border-size-s */
+    border-radius: var(--token-border-radius-full, 9999px);
+    color: var(--token-text-subtlest, #626262);
+    display: flex;
+    height: var(--token-scale-800, 32px);
+    justify-content: center;
+    margin: 0 auto;
+    position: relative;
+    width: var(--token-scale-800, 32px);
+    z-index: 1;
+    font-size: var(--token-font-size-300, 0.75rem);
+    font-weight: var(--token-font-weight-semi-bold, 600);
+  }
+  .wizard-item-icon:empty {
+    height: var(--token-scale-200, 8px);
+    width: var(--token-scale-200, 8px);
+  }
+  /* Connector wrapper + the horizontal line (::before) */
+  .wizard-item-icon-wrapper {
+    margin: var(--token-scale-200, 8px) 0;
+    position: relative;
+    width: 100%;
+  }
+  .wizard-item-icon-wrapper::before {
+    content: "";
+    height: var(--token-border-size-050, 2px);
+    position: absolute;
+    right: calc(50% + 12px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: calc(100% - 24px);
+    background-color: var(--token-border-default, #d5d5d5);   /* default = next/future connector */
+  }
+  .wizard-item-icon .icon,
+  .wizard-item-icon i {
+    font-size: var(--token-font-size-200, 0.625rem);
+    width: auto;
+    display: inline-block;
+    line-height: 1;
+  }
+
+  /* ─── States ─── */
+  /* Active — outlined primary ring, primary text, connector BEHIND is primary (step is "reached") */
+  .wizard-wrapper-item.active .wizard-item-icon {
+    background-color: var(--token-bg-surface-default, #ffffff);
+    border-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
+    color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
+  }
+  .wizard-wrapper-item.active .wizard-item-icon-wrapper::before {
+    background-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
+  }
+  .wizard-wrapper-item.active .wizard-item-label {
+    color: var(--token-text-default, #242424);
+    font-weight: var(--token-font-weight-semi-bold, 600);
+  }
+  /* Past — fully filled primary */
+  .wizard-wrapper-item.past .wizard-item-icon {
+    background-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
+    border-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
+    color: var(--token-text-inverse, var(--token-primitives-base-white, #ffffff));
+  }
+  .wizard-wrapper-item.past .wizard-item-icon-wrapper::before {
+    background-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
+  }
+  .wizard-wrapper-item.past .wizard-item-label {
+    color: var(--token-text-subtle, #3b3b3b);
+  }
+  /* Next — muted icon text, default connector */
+  .wizard-wrapper-item.next .wizard-item-icon-wrapper::before {
+    background-color: var(--token-border-default, #d5d5d5);
+  }
+  .wizard-wrapper-item.next .wizard-item-icon {
+    color: var(--token-text-disabled, #a2a2a2);
+  }
+
+  /* ─── Vertical variant ─── */
+  .wizard-wrapper.wizard-vertical .list { flex-direction: column; }
+  .wizard-wrapper.wizard-vertical [data-block*="WizardItem"] .wizard-wrapper-item {
+    align-items: center;
+    flex-direction: row;
+    margin-bottom: var(--token-scale-600, 24px);
+  }
+  .wizard-wrapper.wizard-vertical [data-block*="WizardItem"]:last-child .wizard-wrapper-item {
+    margin-bottom: 0;
+  }
+  .wizard-wrapper.wizard-vertical .wizard-item-icon-wrapper {
+    margin: 0 var(--token-scale-200, 8px) 0 0;
+    width: auto;
+    flex-shrink: 0;
+  }
+  .wizard-wrapper.wizard-vertical .wizard-wrapper-item .wizard-item-icon-wrapper::before {
+    bottom: calc(50% + 12px);
+    height: calc(100% + 18px);
+    left: 50%;
+    top: auto;
+    right: auto;
+    transform: translateX(-50%);
+    width: var(--token-border-size-050, 2px);
+  }
+  .wizard-wrapper.wizard-vertical .wizard-item-label {
+    text-align: left;
+    padding: 0;
+  }
+
+  /* Preview helpers */
+  .wizard-row {
+    display: flex; flex-direction: column; gap: 10px;
+    margin-bottom: 32px;
+  }
+  .wizard-row:last-child { margin-bottom: 0; }
+  .wizard-row-label {
+    font-size: 10px; font-weight: 700; color: #9ca3af;
+    text-transform: uppercase; letter-spacing: .08em;
+    padding-left: 2px;
+  }
+
+  /* Annotation outlines */
+  .annotate-icon       { outline: 2px dashed #3b82f6; outline-offset: 3px; border-radius: 50%; }
+  .annotate-connector  { outline: 2px dashed #10b981; outline-offset: 2px; }
+  .annotate-label      { outline: 2px dashed #f59e0b; outline-offset: 3px; border-radius: 4px; }
+  .annotate-container  { outline: 2px dashed #8b5cf6; outline-offset: 8px; border-radius: 12px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+
+  /* ─── Token panel ─── */
+  .token-panel { display: flex; flex-direction: column; gap: 12px; }
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; letter-spacing: 0; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 150px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); transition: background .12s; }
+  .token-row:last-child { border-bottom: none; }
+  .token-row:hover { background: rgba(255,255,255,.03); }
+  .prop-name  { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; white-space: nowrap; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value{ font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; white-space: nowrap; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); vertical-align: middle; margin-right: 5px; flex-shrink: 0; }
+  .token-name-with-swatch { display: flex; align-items: center; }
+
+  .wizard-structure-tok  .token-card__header { background: linear-gradient(120deg, #6d28d9, #a78bfa); }
+  .wizard-states-tok     .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
+  .wizard-typography-tok .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; font-family: inherit; transition: all .15s; white-space: nowrap; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; font-family: inherit; transition: all .15s; margin-left: 4px; white-space: nowrap; }
+  .ann-toggle:hover { color: #111827; border-color: #9ca3af; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p  { font-size: 12px; color: #6b7280; }
+  .proposal-table-wrap { overflow-x: auto; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .proposal-table tbody tr:last-child td { border-bottom: none; }
+  .proposal-table tbody tr:hover td { background: #fafafa; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; white-space: nowrap; }
+  .td-current  { color: #9ca3af; }
+  .td-proposed { font-weight: 600; color: #111827; }
+  .td-token    { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; }
+  .td-rationale{ color: #4b5563; max-width: 280px; }
+  .td-rationale strong { color: #111827; }
+
+  @media (max-width: 960px) {
+    .token-grid { grid-template-columns: 1fr; }
+    body { padding: 24px 20px 60px; }
+  }
+
+/* ─── Current mode (OutSystems UI 2.28.0) — raw values from real 2.27/2.28 CSS, no tokens ─── */
+/* All values below come verbatim from the real OSUI 2.27 wizard rules at /* 6.4.9 */. */
+#previewWrapper.current-mode .wizard-item-icon {
+  background-color: #ffffff;       /* color-neutral-0 */
+  border: 1px solid #ced4da;       /* border-size-s + color-neutral-5 */
+  color: #6a7178;                  /* color-neutral-7 */
+  height: 32px;
+  width: 32px;
+}
+#previewWrapper.current-mode .wizard-item-icon:empty {
+  height: 8px; width: 8px;
+}
+#previewWrapper.current-mode .wizard-item-icon-wrapper::before {
+  height: 2px;                     /* hardcoded in 2.28 */
+  background-color: #ced4da;       /* color-neutral-5 (future/default connector) */
+}
+/* Vertical variant needs the tall line back — the horizontal-connector rule
+   above has higher specificity than the base `.wizard-vertical … ::before`
+   rule (ID vs. classes), so restore the vertical connector dimensions here. */
+#previewWrapper.current-mode .wizard-wrapper.wizard-vertical .wizard-item-icon-wrapper::before {
+  height: calc(100% + 18px);
+  width: 2px;
+}
+#previewWrapper.current-mode .wizard-wrapper [data-block*="WizardItem"] .wizard-item-label {
+  color: #6a7178;                  /* color-neutral-7 */
+}
+/* States — raw 2.28 palette */
+#previewWrapper.current-mode .wizard-wrapper-item.active .wizard-item-icon {
+  border-color: #1068eb;           /* color-primary */
+  color: #1068eb;
+  background-color: #ffffff;
+}
+#previewWrapper.current-mode .wizard-wrapper-item.active .wizard-item-icon-wrapper::before {
+  background-color: #1068eb;
+}
+#previewWrapper.current-mode .wizard-wrapper-item.active .wizard-item-label {
+  color: #212529;                  /* color-neutral-10 */
+  font-weight: 600;
+}
+#previewWrapper.current-mode .wizard-wrapper-item.past .wizard-item-icon {
+  background-color: #1068eb;
+  border-color: #1068eb;
+  color: #ffffff;                  /* color-neutral-0 */
+}
+#previewWrapper.current-mode .wizard-wrapper-item.past .wizard-item-icon-wrapper::before {
+  background-color: #1068eb;
+}
+#previewWrapper.current-mode .wizard-wrapper-item.past .wizard-item-label {
+  color: #4f575e;                  /* color-neutral-8 */
+}
+#previewWrapper.current-mode .wizard-wrapper-item.next .wizard-item-icon-wrapper::before {
+  background-color: #ced4da;       /* color-neutral-5 */
+}
+/* Real 2.27/2.28 only dims the NEXT-state colour on `.fa-fw` glyphs (icon fonts)
+   — plain text/numbers inside .wizard-item-icon keep the base `color-neutral-7`
+   (#6a7178). Targeting <i> / .ph / .fa-fw keeps number labels legible. */
+#previewWrapper.current-mode .wizard-wrapper-item.next .wizard-item-icon i,
+#previewWrapper.current-mode .wizard-wrapper-item.next .wizard-item-icon .ph,
+#previewWrapper.current-mode .wizard-wrapper-item.next .wizard-item-icon .ph-bold,
+#previewWrapper.current-mode .wizard-wrapper-item.next .wizard-item-icon .fa-fw {
+  color: #ced4da;
+}
+
+/* ─── Proposed mode — semantic tokens, larger hit area, disabled state ─── */
+/*
+  Proposed changes:
+    • Icon bubble grows to 44px (+12px) — meets mobile tap-target guidelines
+      (≥44px) and gives the glyph inside enough room to read as a deliberate
+      affordance rather than a compact dot. Glyph font-size scales to 16px.
+    • Connector bumps to 3px so it reads as a deliberate progress track instead
+      of a hairline border.
+    • Past state keeps the primary semantic (same family as active) — the
+      `.past` vs `.active` distinction is carried by fill vs. outline, not hue,
+      so the wizard reads as one journey through a single brand colour.
+    • Active state gains a primary halo for keyboard-a11y.
+    • Labels use the new subtle/subtlest text tokens (semantic) — same visual
+      weight hierarchy but decoupled from raw neutral palette.
+    • Add `.disabled` state (not in 2.28) — greyed icon + disabled text token
+      for flows with conditionally locked steps.
+*/
+#previewWrapper.proposed-mode .wizard-item-icon {
+  height: 36px;
+  width: 36px;
+  border-width: var(--token-border-size-050, 2px);
+  font-size: var(--token-font-size-300, 0.75rem);  /* 12px — proportioned to 36px bubble */
+}
+#previewWrapper.proposed-mode .wizard-item-icon .ph,
+#previewWrapper.proposed-mode .wizard-item-icon .ph-bold,
+#previewWrapper.proposed-mode .wizard-item-icon i {
+  font-size: 0.875rem;  /* 14px checkmark — slightly bigger than step-number glyph */
+}
+/* Empty-dot variant keeps the compact 8px footprint from the base rule — the
+   .proposed-mode override above has ID specificity that out-specs
+   `.wizard-item-icon:empty`, so restore the :empty behaviour here. */
+#previewWrapper.proposed-mode .wizard-item-icon:empty {
+  height: var(--token-scale-200, 8px);
+  width: var(--token-scale-200, 8px);
+}
+#previewWrapper.proposed-mode .wizard-item-icon-wrapper::before {
+  height: var(--token-border-size-050, 2px);
+}
+/* Same specificity fix as current-mode: the horizontal override above wins
+   against the vertical rule (ID vs. classes), so restore the tall connector. */
+#previewWrapper.proposed-mode .wizard-wrapper.wizard-vertical .wizard-item-icon-wrapper::before {
+  height: calc(100% + 18px);
+  width: var(--token-border-size-050, 2px);
+}
+/* Past → PRIMARY semantic (same family as active; distinction is fill vs.
+   outline, not hue — the wizard reads as a single brand-colour journey). */
+#previewWrapper.proposed-mode .wizard-wrapper-item.past .wizard-item-icon {
+  background-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
+  border-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
+  color: var(--token-text-inverse, #ffffff);
+}
+#previewWrapper.proposed-mode .wizard-wrapper-item.past .wizard-item-icon-wrapper::before {
+  background-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
+}
+#previewWrapper.proposed-mode .wizard-wrapper-item.past .wizard-item-label {
+  color: var(--token-text-subtle, #3b3b3b);
+}
+/* Active keeps primary ring + focus halo for keyboard a11y */
+#previewWrapper.proposed-mode .wizard-wrapper-item.active .wizard-item-icon {
+  box-shadow: 0 0 0 4px color-mix(in srgb,
+    var(--token-semantics-primary-base, #105cef) 18%, transparent);
+}
+/* Disabled state — new, not in 2.28 */
+#previewWrapper.proposed-mode .wizard-wrapper-item.disabled .wizard-item-icon {
+  background-color: var(--token-bg-surface-default, #ffffff);
+  border-color: var(--token-border-subtle, #f3f3f3);
+  color: var(--token-text-disabled, #a2a2a2);
+  opacity: .6;
+}
+#previewWrapper.proposed-mode .wizard-wrapper-item.disabled .wizard-item-icon-wrapper::before {
+  background-color: var(--token-border-subtle, #f3f3f3);
+}
+#previewWrapper.proposed-mode .wizard-wrapper-item.disabled .wizard-item-label {
+  color: var(--token-text-disabled, #a2a2a2);
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-nav">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  All components
+</a>
+
+<div class="page-header">
+  <h1>Wizard</h1>
+  <span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span>
+  <span class="badge-chrome badge-chrome--tokens">Design Tokens</span>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6;"></span> .wizard-wrapper (container)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> .wizard-item-icon</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> .wizard-item-icon-wrapper::before</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> .wizard-item-label</div>
+</div>
+
+<!-- Preview -->
+<div class="preview-card">
+  <div class="preview-card__header">
+    <span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+  <div id="previewWrapper" class="hide-annotations">
+
+    <!-- Horizontal — completed flow (step 3 of 4 active) -->
+    <div class="wizard-row">
+      <div class="wizard-row-label">Horizontal · states past / active / next</div>
+      <div class="wizard-wrapper annotate-container">
+        <div class="list">
+          <div data-block="WizardItem">
+            <div class="wizard-wrapper-item past">
+              <div class="wizard-item-icon-wrapper"><div class="wizard-item-icon annotate-icon"><i class="ph-bold ph-check"></i></div></div>
+              <div class="wizard-item-label">Account</div>
+            </div>
+          </div>
+          <div data-block="WizardItem">
+            <div class="wizard-wrapper-item past">
+              <div class="wizard-item-icon-wrapper"><div class="wizard-item-icon"><i class="ph-bold ph-check"></i></div></div>
+              <div class="wizard-item-label">Profile</div>
+            </div>
+          </div>
+          <div data-block="WizardItem">
+            <div class="wizard-wrapper-item active">
+              <div class="wizard-item-icon-wrapper"><div class="wizard-item-icon">3</div></div>
+              <div class="wizard-item-label annotate-label">Address</div>
+            </div>
+          </div>
+          <div data-block="WizardItem">
+            <div class="wizard-wrapper-item next">
+              <div class="wizard-item-icon-wrapper"><div class="wizard-item-icon">4</div></div>
+              <div class="wizard-item-label">Review</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Horizontal — numbered only (no completion icon) -->
+    <div class="wizard-row">
+      <div class="wizard-row-label">Horizontal · numbered only (first-time flow)</div>
+      <div class="wizard-wrapper">
+        <div class="list">
+          <div data-block="WizardItem">
+            <div class="wizard-wrapper-item active">
+              <div class="wizard-item-icon-wrapper"><div class="wizard-item-icon">1</div></div>
+              <div class="wizard-item-label">Choose plan</div>
+            </div>
+          </div>
+          <div data-block="WizardItem">
+            <div class="wizard-wrapper-item next">
+              <div class="wizard-item-icon-wrapper"><div class="wizard-item-icon">2</div></div>
+              <div class="wizard-item-label">Billing</div>
+            </div>
+          </div>
+          <div data-block="WizardItem">
+            <div class="wizard-wrapper-item next">
+              <div class="wizard-item-icon-wrapper"><div class="wizard-item-icon">3</div></div>
+              <div class="wizard-item-label">Confirm</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Horizontal — empty dot variant (compact, no labels inside) -->
+    <div class="wizard-row">
+      <div class="wizard-row-label">Horizontal · empty dot variant (.wizard-item-icon:empty → 8px dot)</div>
+      <div class="wizard-wrapper">
+        <div class="list">
+          <div data-block="WizardItem">
+            <div class="wizard-wrapper-item past">
+              <div class="wizard-item-icon-wrapper"><div class="wizard-item-icon"></div></div>
+              <div class="wizard-item-label">Step 1</div>
+            </div>
+          </div>
+          <div data-block="WizardItem">
+            <div class="wizard-wrapper-item past">
+              <div class="wizard-item-icon-wrapper"><div class="wizard-item-icon"></div></div>
+              <div class="wizard-item-label">Step 2</div>
+            </div>
+          </div>
+          <div data-block="WizardItem">
+            <div class="wizard-wrapper-item active">
+              <div class="wizard-item-icon-wrapper"><div class="wizard-item-icon"></div></div>
+              <div class="wizard-item-label">Step 3</div>
+            </div>
+          </div>
+          <div data-block="WizardItem">
+            <div class="wizard-wrapper-item next">
+              <div class="wizard-item-icon-wrapper"><div class="wizard-item-icon"></div></div>
+              <div class="wizard-item-label">Step 4</div>
+            </div>
+          </div>
+          <div data-block="WizardItem">
+            <div class="wizard-wrapper-item next">
+              <div class="wizard-item-icon-wrapper"><div class="wizard-item-icon"></div></div>
+              <div class="wizard-item-label">Step 5</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vertical -->
+    <div class="wizard-row">
+      <div class="wizard-row-label">Vertical · .wizard-vertical</div>
+      <div class="wizard-wrapper wizard-vertical">
+        <div class="list">
+          <div data-block="WizardItem">
+            <div class="wizard-wrapper-item past">
+              <div class="wizard-item-icon-wrapper"><div class="wizard-item-icon"><i class="ph-bold ph-check"></i></div></div>
+              <div class="wizard-item-label">Connect your account</div>
+            </div>
+          </div>
+          <div data-block="WizardItem">
+            <div class="wizard-wrapper-item past">
+              <div class="wizard-item-icon-wrapper"><div class="wizard-item-icon"><i class="ph-bold ph-check"></i></div></div>
+              <div class="wizard-item-label">Import your data</div>
+            </div>
+          </div>
+          <div data-block="WizardItem">
+            <div class="wizard-wrapper-item active">
+              <div class="wizard-item-icon-wrapper"><div class="wizard-item-icon">3</div></div>
+              <div class="wizard-item-label">Configure integrations</div>
+            </div>
+          </div>
+          <div data-block="WizardItem">
+            <div class="wizard-wrapper-item next">
+              <div class="wizard-item-icon-wrapper"><div class="wizard-item-icon">4</div></div>
+              <div class="wizard-item-label">Invite your team</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+</div>
+
+<!-- Token cards -->
+<div class="token-grid">
+
+  <!-- Icon bubble -->
+  <div class="token-card wizard-structure-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#8b5cf6;"></span>
+      Icon bubble
+      <span class="component-name">.wizard-item-icon</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">size</span>
+        <span class="token-name">token-scale-800</span>
+        <span class="token-value">32px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">size (empty dot)</span>
+        <span class="token-name">token-scale-200</span>
+        <span class="token-value">8px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">border-width</span>
+        <span class="token-name">token-border-size-025</span>
+        <span class="token-value">1px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">border-radius</span>
+        <span class="token-name">token-border-radius-full</span>
+        <span class="token-value">9999px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">bg (default)</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#ffffff;"></span>token-bg-surface-default</span>
+        <span class="token-value">#ffffff</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">border (default)</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#d5d5d5;"></span>token-border-default</span>
+        <span class="token-value">#d5d5d5</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">font-size</span>
+        <span class="token-name">token-font-size-300</span>
+        <span class="token-value">0.75rem · 12px</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connector line -->
+  <div class="token-card wizard-typography-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#10b981;"></span>
+      Connector line
+      <span class="component-name">.wizard-item-icon-wrapper::before</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">thickness</span>
+        <span class="token-name">token-border-size-050</span>
+        <span class="token-value">2px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">bg (default · next)</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#d5d5d5;"></span>token-border-default</span>
+        <span class="token-value">#d5d5d5</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">bg (past · active)</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#105cef;"></span>token-semantics-primary-base</span>
+        <span class="token-value">#105cef</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">wrapper margin</span>
+        <span class="token-name">token-scale-200</span>
+        <span class="token-value">8px (vertical)</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">v-gap (vertical)</span>
+        <span class="token-name">token-scale-600</span>
+        <span class="token-value">24px</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- States -->
+  <div class="token-card wizard-states-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#3b82f6;"></span>
+      States
+      <span class="component-name">.active · .past · .next</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">.active · border</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#105cef;"></span>token-semantics-primary-base</span>
+        <span class="token-value">#105cef</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">.active · text</span>
+        <span class="token-name">token-semantics-primary-base</span>
+        <span class="token-value">#105cef</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">.active · label</span>
+        <span class="token-name">token-text-default</span>
+        <span class="token-value">#242424</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">.past · bg</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#105cef;"></span>token-semantics-primary-base</span>
+        <span class="token-value">#105cef</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">.past · text</span>
+        <span class="token-name">token-text-inverse</span>
+        <span class="token-value">#ffffff</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">.past · label</span>
+        <span class="token-name">token-text-subtle</span>
+        <span class="token-value">#3b3b3b</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">.next · connector</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#d5d5d5;"></span>token-border-default</span>
+        <span class="token-value">#d5d5d5</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">.next · icon text</span>
+        <span class="token-name">token-text-disabled</span>
+        <span class="token-value">#a2a2a2</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">base label</span>
+        <span class="token-name">token-text-subtlest</span>
+        <span class="token-value">#626262</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Proposal table -->
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Token Proposal</h3>
+    <p>Real OS UI HTML uses <code>.wizard-wrapper</code> + <code>.list</code> + <code>[data-block="WizardItem"]</code> + <code>.wizard-wrapper-item</code> (with <code>.active</code>, <code>.past</code>, <code>.next</code> state classes) + <code>.wizard-item-icon-wrapper</code> + <code>.wizard-item-icon</code> + <code>.wizard-item-label</code>. Proposal migrates raw <code>color-neutral-*</code> / <code>color-primary</code> references to semantic tokens, introduces a <strong>success semantic for the past state</strong> (completed ≠ just "reached"), and adds a <strong>disabled state</strong> absent from 2.28.</p>
+  </div>
+  <div class="proposal-table-wrap">
+    <table class="proposal-table">
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Utility class</th>
+          <th>Current (2.28)</th>
+          <th>Proposed</th>
+          <th>Token</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-property">icon size</td>
+          <td class="td-property">.wizard-item-icon</td>
+          <td class="td-current">hardcoded 32px · glyph inherits 10px</td>
+          <td class="td-proposed">36px · number 12px · icon glyph 14px</td>
+          <td class="td-token">--token-font-size-300</td>
+          <td class="td-rationale"><strong>Grow to 36px.</strong> 32px is tight for a checkmark glyph — at 10px the ✓ reads as a pixel scribble. 36px gives the bubble enough room for a 14px checkmark (✓ reads as deliberate) without making the step numbers feel chunky. Empty-dot variant (8px) preserved for the compact progress-bead layout.</td>
+        </tr>
+        <tr>
+          <td class="td-property">icon border</td>
+          <td class="td-property">.wizard-item-icon</td>
+          <td class="td-current">1px solid color-neutral-5 (#ced4da)</td>
+          <td class="td-proposed">2px solid token-border-default (#d5d5d5)</td>
+          <td class="td-token">--token-border-size-050<br>--token-border-default</td>
+          <td class="td-rationale">Thicker border (2px) so the <em>active</em> ring reads as a clear progress indicator — 1px disappears on high-DPI screens next to a 2px connector line.</td>
+        </tr>
+        <tr>
+          <td class="td-property">connector</td>
+          <td class="td-property">.wizard-item-icon-wrapper::before</td>
+          <td class="td-current">2px hardcoded · color-neutral-5 (next) · color-primary (past/active)</td>
+          <td class="td-proposed">2px token · token-border-default · token-semantics-primary-base</td>
+          <td class="td-token">--token-border-size-050<br>--token-border-default<br>--token-semantics-primary-base</td>
+          <td class="td-rationale">Thickness unchanged (<strong>2px</strong> — a hairline track reads as lightweight progress, not a structural divider). The win is moving from raw <code>color-neutral-5</code> / <code>color-primary</code> references to semantic tokens so dark-mode / brand-override themes inherit the connector palette consistently.</td>
+        </tr>
+        <tr>
+          <td class="td-property">past state · colour</td>
+          <td class="td-property">.wizard-wrapper-item.past .wizard-item-icon</td>
+          <td class="td-current">bg color-primary (#1068eb) · number only</td>
+          <td class="td-proposed">bg token-semantics-primary-base (#105cef) · ✓ glyph</td>
+          <td class="td-token">--token-semantics-primary-base</td>
+          <td class="td-rationale">Past keeps the <strong>primary semantic</strong> (same family as active) — the past/active distinction is carried by <em>fill vs. outline</em>, not hue, so the wizard reads as one journey through a single brand colour instead of a traffic-light (green/blue/grey). Adds an explicit <code>check</code> glyph so completed steps are unambiguously done and not just "reached".</td>
+        </tr>
+        <tr>
+          <td class="td-property">active state · ring</td>
+          <td class="td-property">.wizard-wrapper-item.active .wizard-item-icon</td>
+          <td class="td-current">border color-primary · no focus halo</td>
+          <td class="td-proposed">border + 4px primary 18% halo (keyboard-a11y)</td>
+          <td class="td-token">--token-semantics-primary-base (color-mix)</td>
+          <td class="td-rationale">Adds a subtle <strong>18% primary halo</strong> around the active step so keyboard users landing on the wizard via tab-order can spot the current step without relying on the label colour alone. Halo sits outside the bubble so it doesn't shift the layout.</td>
+        </tr>
+        <tr>
+          <td class="td-property">next state · icon text</td>
+          <td class="td-property">.wizard-wrapper-item.next .wizard-item-icon</td>
+          <td class="td-current">color-neutral-5 (#ced4da) — <em>same as the border</em></td>
+          <td class="td-proposed">token-text-disabled (#a2a2a2)</td>
+          <td class="td-token">--token-text-disabled</td>
+          <td class="td-rationale">In 2.28 the next-step number uses <code>color-neutral-5</code> — the SAME value as the icon border — so the digit fades into the circle outline and you can't read whether the step is "3" or "4" at a glance. Bump to <code>text-disabled</code> (#a2a2a2) for enough contrast to stay readable while still reading as "not yet active".</td>
+        </tr>
+        <tr>
+          <td class="td-property">labels · base</td>
+          <td class="td-property">.wizard-item-label</td>
+          <td class="td-current">color-neutral-7 (#6a7178) — hardcoded palette step</td>
+          <td class="td-proposed">token-text-subtlest (#626262)</td>
+          <td class="td-token">--token-text-subtlest</td>
+          <td class="td-rationale">Same visual weight (low-emphasis label) but semantically anchored to <code>text-subtlest</code> — dark-mode themes and brand overrides get the right contrast flipped automatically instead of inheriting a fixed grey.</td>
+        </tr>
+        <tr>
+          <td class="td-property">labels · state tokens</td>
+          <td class="td-property">.active / .past .wizard-item-label</td>
+          <td class="td-current">neutral-10 (active) · neutral-8 (past)</td>
+          <td class="td-proposed">text-default (active) · text-subtle (past)</td>
+          <td class="td-token">--token-text-default<br>--token-text-subtle</td>
+          <td class="td-rationale">Hierarchy unchanged (active = darkest, past = medium, next = subtlest) but backed by semantic text tokens so the whole wizard respects a single "text emphasis scale" instead of picking three arbitrary neutral steps.</td>
+        </tr>
+        <tr>
+          <td class="td-property">disabled state</td>
+          <td class="td-property">.wizard-wrapper-item.disabled</td>
+          <td class="td-current">— (not in 2.28)</td>
+          <td class="td-proposed">icon + label → token-text-disabled · connector → token-border-subtle · opacity .6</td>
+          <td class="td-token">--token-text-disabled<br>--token-border-subtle</td>
+          <td class="td-rationale"><strong>New state.</strong> Real 2.28 has no disabled wizard step — but flows with conditional branches (e.g. "billing only if paid plan") need a way to mark an upcoming step as locked/unavailable. Proposal introduces <code>.disabled</code> that tones down both the bubble and label without collapsing the step geometry.</td>
+        </tr>
+        <tr>
+          <td class="td-property">vertical spacing</td>
+          <td class="td-property">.wizard-vertical .wizard-wrapper-item</td>
+          <td class="td-current">margin-bottom: var(--space-l) · raw alias</td>
+          <td class="td-proposed">margin-bottom: token-scale-600 (24px)</td>
+          <td class="td-token">--token-scale-600</td>
+          <td class="td-rationale">2.28 uses the legacy <code>--space-l</code> alias. 2.29 already maps that to <code>token-scale-600</code> — row is included for audit trail so theming overrides target the single token.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function setMode(mode, btn) {
+    const w = document.getElementById('previewWrapper');
+    w.classList.toggle('proposed-mode', mode === 'proposed');
+    w.classList.toggle('current-mode', mode === 'legacy');
+    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+    btn.classList.add('ptab--active');
+  }
+
+  function toggleAnnotations(btn) {
+    const wrapper = document.getElementById('previewWrapper');
+    const hiding = !wrapper.classList.contains('hide-annotations');
+    wrapper.classList.toggle('hide-annotations', hiding);
+    btn.textContent = hiding ? 'Show annotations' : 'Hide annotations';
+    btn.classList.toggle('ann-toggle--off', hiding);
+  }
+</script>
+
+</body>
+</html>

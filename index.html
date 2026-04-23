@@ -177,6 +177,11 @@
   .card--progressbar .card-footer  { color: #2563eb; }
   .card--progressbar .token-pill   { background: #eff6ff; color: #1d4ed8; }
 
+  .card--wizard .card-accent       { background: linear-gradient(90deg, #8b5cf6, #3b82f6); }
+  .card--wizard .card-icon         { background: #f5f3ff; color: #7c3aed; }
+  .card--wizard .card-footer       { color: #6d28d9; }
+  .card--wizard .token-pill        { background: #f5f3ff; color: #6d28d9; }
+
   /* ─── Footer ─── */
   .site-footer {
     margin-top: 56px;
@@ -202,7 +207,7 @@
   <div class="badge-row">
     <span class="badge badge-os">OutSystems UI 2.29</span>
     <span class="badge badge-dt">Design Tokens</span>
-    <span class="badge badge-cnt">14 components</span>
+    <span class="badge badge-cnt">15 components</span>
   </div>
 </header>
 
@@ -556,6 +561,34 @@
         <span class="token-pill">text-subtle</span>
         <span class="token-pill">spacing</span>
         <span class="token-pill">typography</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      View annotations
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </div>
+  </a>
+
+  <!-- Wizard -->
+  <a class="component-card card--wizard" href="wizard-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="4"  cy="10" r="2.5" fill="currentColor"/>
+          <path d="M6.5 10h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="10" cy="10" r="2.5" fill="currentColor"/>
+          <path d="M12.5 10h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".4"/>
+          <circle cx="16" cy="10" r="2.5" fill="currentColor" opacity=".35"/>
+        </svg>
+      </div>
+      <div class="card-title">Wizard</div>
+      <div class="card-desc">Multi-step flow indicator with past / active / next states, numbered or checkmark icons, horizontal and vertical layouts.</div>
+      <div class="card-tokens">
+        <span class="token-pill">semantics-primary</span>
+        <span class="token-pill">semantics-success</span>
+        <span class="token-pill">states</span>
+        <span class="token-pill">scale</span>
       </div>
     </div>
     <div class="card-footer">
