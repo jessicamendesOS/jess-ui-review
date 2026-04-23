@@ -363,26 +363,34 @@
   Proposed changes:
     • Extend .background-* / .text-* with three new colors (purple, pink, indigo)
     • Formalise the paired .background-{color}-lightest / .text-{color}-darker utilities
-    • Fix shape proportions — sharp/soft read as clear rectangles, round with 1 character is a perfect circle
+    • Downsize badges (40/32/24 → 28/20/16) so a single-character count reads as a
+      compact affordance rather than a chunky pill. Heights apply to ALL shape
+      variants (sharp / soft / round) so the three shapes render at the same size
+      and the shape row becomes a pure corner-radius comparison.
+    • Default badge picks up an explicit font-size (inherited 16px was too large
+      for the reduced 20px height — text was overflowing the circle).
 */
 
-/* Round: single-character content renders as a perfect circle (height = min-width) */
-#previewWrapper.proposed-mode .badge.border-radius-rounded {
+/* Default size applies to ALL shape variants (sharp/soft/round) so shapes share
+   the same footprint — only the corner-radius differs between them. */
+#previewWrapper.proposed-mode .badge {
   height: 20px;
   min-width: 20px;
   padding: 0 6px;
+  font-size: 12px; /* token-font-size-300 — sits well inside 20px height */
   line-height: 1;
 }
-#previewWrapper.proposed-mode .badge.badge-small.border-radius-rounded {
+#previewWrapper.proposed-mode .badge.badge-small {
   height: 16px;
   min-width: 16px;
   padding: 0 4px;
   font-size: 10px;
 }
-#previewWrapper.proposed-mode .badge.badge-medium.border-radius-rounded {
+#previewWrapper.proposed-mode .badge.badge-medium {
   height: 28px;
   min-width: 28px;
   padding: 0 8px;
+  font-size: 14px;
 }
 </style>
 </head>
@@ -755,25 +763,33 @@
           <td class="td-property">size (small)</td>
           <td class="td-property">.badge-small</td>
           <td class="td-current">font 12px · height 24px · min-w 24px · padding 0·4px</td>
-          <td class="td-proposed">font-size-300 · height 24px · min-w 24px · scale-100</td>
-          <td class="td-token">--token-font-size-300<br>--token-scale-100</td>
-          <td class="td-rationale">Real OS UI utility — tight badge for dense lists / sidebar counts. Retarget padding &amp; font-size to 2.29 tokens; dimensions unchanged from 2.28.</td>
+          <td class="td-proposed">font 10px · height 16px · min-w 16px · padding 0·4px</td>
+          <td class="td-token">--token-scale-100 (padding)</td>
+          <td class="td-rationale"><strong>Downsize</strong> for dense lists/sidebar counts — 24px was a chunky pill for a single digit. 16px height with 10px text still reads at normal viewing distance and tucks tighter against inline text.</td>
         </tr>
         <tr>
           <td class="td-property">size (default)</td>
           <td class="td-property">.badge (no class)</td>
-          <td class="td-current">height 32px · min-w 32px · font inherited · font-weight 600</td>
-          <td class="td-proposed">height 32px · min-w 32px · font-weight-semi-bold</td>
-          <td class="td-token">--token-font-weight-semi-bold</td>
-          <td class="td-rationale">Default badge is height-driven (no padding/font-size override). Retarget font-weight to 2.29 token; dimensions unchanged.</td>
+          <td class="td-current">height 32px · min-w 32px · font inherited (≈16px)</td>
+          <td class="td-proposed">height 20px · min-w 20px · font 12px (token-font-size-300)</td>
+          <td class="td-token">--token-font-size-300<br>--token-font-weight-semi-bold</td>
+          <td class="td-rationale"><strong>Explicit font-size</strong> — 2.28 leaves the default badge font-inherited (renders at 16px), which was oversized for a count/status indicator and broke out of the circle at reduced heights. Lock it to <code>token-font-size-300</code> (12px) and right-size height to 20px so a single digit renders as a clean compact circle.</td>
         </tr>
         <tr>
           <td class="td-property">size (medium)</td>
           <td class="td-property">.badge-medium</td>
           <td class="td-current">font 16px · height 40px · min-w 40px</td>
-          <td class="td-proposed">font-size-400 · height 40px · min-w 40px</td>
-          <td class="td-token">--token-font-size-400</td>
-          <td class="td-rationale">Real OS UI utility — oversized badge for empty-state counts / hero banners. Retarget font-size to 2.29 token; dimensions unchanged.</td>
+          <td class="td-proposed">font 14px · height 28px · min-w 28px</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale"><strong>Downsize</strong> — 40px was closer to avatar territory than a count badge. 28px keeps the "oversized" role for empty-state/hero banners but no longer dwarfs adjacent body text.</td>
+        </tr>
+        <tr>
+          <td class="td-property">shape × size consistency</td>
+          <td class="td-property">.badge.border-radius-*</td>
+          <td class="td-current">sharp/soft inherit base 32px; only rounded was resized in preview prototypes</td>
+          <td class="td-proposed">all three shapes share the same height/min-width per size</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale"><strong>Shape ≠ size.</strong> Shape modifiers (sharp / soft / round) only change <code>border-radius</code> — they <strong>must not</strong> affect badge dimensions. The proposed CSS applies the new heights at the base <code>.badge</code> level so the shape row renders as a pure corner-radius comparison and a <code>.border-radius-rounded .badge-medium</code> has the same footprint as a <code>.border-radius-soft .badge-medium</code>.</td>
         </tr>
         <tr>
           <td class="td-property">shape (sharp)</td>

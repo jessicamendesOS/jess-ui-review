@@ -158,6 +158,11 @@
     position: relative;
     width: var(--rating-size);
   }
+  /* Real OS UI behaviour: the LAST rating-item drops its trailing padding so
+     the widget hugs the final star instead of carrying an extra 24px of
+     whitespace to the right. Skipping this rule is why the preview read as
+     "more spaced than the real component". */
+  .rating .rating-item:last-of-type { padding-right: 0; }
   .rating .rating-item-filled,
   .rating .rating-item-half,
   .rating .rating-item-empty {
@@ -174,18 +179,24 @@
   #previewWrapper .rating .rating-item-half,
   #previewWrapper .rating .rating-item-empty { display: none; }
   #previewWrapper .rating .rating-item.show-filled .rating-item-filled { display: block; opacity: 1; }
-  #previewWrapper .rating .rating-item.show-half   .rating-item-half   { display: block; opacity: 1; }
+  /* Half state layers the neutral/empty full star UNDER the primary half star so
+     the right side reads as the "empty" colour and the left side as "filled" —
+     matching real OS UI behaviour where both `.rating-item-half` and
+     `.rating-item-empty` resolve to opacity 1 for a half-filled position.
+     Stacking: DOM order puts `.rating-item-empty` last (on top by default), so
+     lift the `.rating-item-half` above it with z-index. */
+  #previewWrapper .rating .rating-item.show-half   .rating-item-empty  { display: block; opacity: 1; z-index: 1; }
+  #previewWrapper .rating .rating-item.show-half   .rating-item-half   { display: block; opacity: 1; z-index: 2; }
   #previewWrapper .rating .rating-item.show-empty  .rating-item-empty  { display: block; opacity: 1; }
 
-  /* .icon base (OS UI utility) — renders at the rating-size */
+  /* .icon base (OS UI utility) — renders at the rating-size.
+     Phosphor Fill icons are font glyphs: size via font-size, colour via `color`
+     (supplied by the `.text-primary` / `.text-neutral-5` utility classes). */
   .rating .icon {
     display: inline-block;
     width: var(--rating-size); height: var(--rating-size);
+    font-size: var(--rating-size);
     line-height: 1;
-  }
-  .rating .icon svg {
-    width: 100%; height: 100%;
-    display: block;
   }
 
   /* Utility: text-primary / text-neutral-5 (OS UI utilities — faithful to 2.29)
@@ -209,6 +220,12 @@
   .rating-row-item {
     display: flex; align-items: center; gap: 14px;
   }
+  /* Keep the rating at its natural inline-flex content width so the 5 items
+     don't wrap to a second row when the parent flex container is narrower
+     than 5 × (size + padding-right). Real 2.29 ships `flex-wrap: wrap` on
+     .rating for safety, but in normal layouts the rating should sit on a
+     single line — `flex-shrink: 0` on the preview container enforces that. */
+  .rating-row-item .rating { flex-shrink: 0; }
   .rating-row-label {
     font-size: 11px; font-weight: 600; color: #6b7280;
     min-width: 130px;
@@ -289,18 +306,71 @@
   color: var(--color-neutral-5, #ced4da);
 }
 
+/* Disabled state — faithful to real OSUI 2.27/2.28/2.29:
+     .rating fieldset[disabled=true] .rating-item-filled / -half { color: neutral-6 #adb5bd }
+     .rating fieldset[disabled=true] .rating-item-empty  .icon   { color: neutral-4 #dee2e6 }
+   Current mode ships this as a hardcoded palette; new-tokens + proposed modes
+   lift it onto `--token-text-disabled` / a subtle tint of the disabled colour. */
+#previewWrapper.current-mode .rating fieldset[disabled="true"] .rating-item-filled .icon,
+#previewWrapper.current-mode .rating fieldset[disabled="true"] .rating-item-half   .icon {
+  color: #adb5bd; /* color-neutral-6 */
+}
+#previewWrapper.current-mode .rating fieldset[disabled="true"] .rating-item-empty .icon {
+  color: #dee2e6; /* color-neutral-4 */
+}
+/* New tokens (default/base state — no mode class) + proposed: empty stars track
+   the same subtle tint logic as the active empty colour, so disabled reads as a
+   single muted family instead of "two disconnected greys".
+   Selector: `:not(.current-mode)` covers both new-tokens (base) and proposed. */
+#previewWrapper:not(.current-mode) .rating fieldset[disabled="true"] .rating-item-filled .icon,
+#previewWrapper:not(.current-mode) .rating fieldset[disabled="true"] .rating-item-half   .icon {
+  color: var(--token-text-disabled, #a2a2a2);
+}
+#previewWrapper:not(.current-mode) .rating fieldset[disabled="true"] .rating-item-empty .icon {
+  color: color-mix(in srgb, var(--token-text-disabled, #a2a2a2) 35%, #ffffff);
+}
+/* Disabled fieldset removes the native browser chrome + restores pointer events
+   so the preview reads as "read-only" rather than "unresponsive button". */
+#previewWrapper .rating fieldset[disabled="true"] {
+  cursor: not-allowed;
+  opacity: 1; /* colour change alone conveys disabled — keep at full opacity */
+}
+
+/* Mode-aware size hints next to the "Small / Default / Medium" labels.
+   Default/Medium are the same across modes (16/24 px); Small is the only one
+   that shifts in proposed mode (8 → 12 px). */
+#previewWrapper .size-hint::before { content: '('; }
+#previewWrapper .size-hint::after  { content: ')'; }
+#previewWrapper [data-size-small]   { --size-px: '8px'; }
+#previewWrapper [data-size-default] { --size-px: '16px'; }
+#previewWrapper [data-size-medium]  { --size-px: '24px'; }
+#previewWrapper.proposed-mode [data-size-small] { --size-px: '12px'; }
+#previewWrapper .size-hint { font-variant-numeric: tabular-nums; }
+#previewWrapper .size-hint[data-size-small]::before,
+#previewWrapper .size-hint[data-size-default]::before,
+#previewWrapper .size-hint[data-size-medium]::before { content: '(' var(--size-px); }
+
 /* ─── Proposed mode — dedicated rating-filled token tied to the warning semantic ───
    Neither 2.28 nor 2.29 gives Rating its own color token: filled stars inherit primary.
    Proposal introduces --token-rating-filled-color pointing at warning-base so the widget
-   reads as an affective/warning cue (gold stars) while keeping primary for links/actions. */
+   reads as an affective/warning cue (gold stars) while keeping primary for links/actions.
+   Empty stars pick up a subtle tint derived from the filled color (via color-mix) so
+   the widget reads as a single chromatic family instead of "gold + unrelated grey". */
 #previewWrapper.proposed-mode .rating .text-primary {
   color: var(--token-rating-filled-color,
            var(--token-semantics-warning-base,
              var(--token-semantics-warning-700, #e9a100)));
 }
 #previewWrapper.proposed-mode .rating .text-neutral-5 {
-  color: var(--token-border-default, var(--token-primitives-neutral-400, #d5d5d5));
+  color: var(--token-rating-empty-color,
+           color-mix(in srgb,
+             var(--token-rating-filled-color, #e9a100) 22%,
+             #ffffff));
 }
+/* Small variant in proposed mode bumps from 8px → 12px: at 8px the star shape
+   collapses to an almost-unreadable dot, so the proposal lifts it to the
+   next step on the scale (token-scale-300) for a more legible compact size. */
+#previewWrapper.proposed-mode .rating.rating-small { --rating-size: 12px; }
 #previewWrapper.proposed-mode {
   --token-rating-filled-color: #e9a100;
 }
@@ -325,12 +395,6 @@
   <div class="legend-item"><span class="legend-dot" style="background:#ef4444;"></span> .rating-item-half</div>
   <div class="legend-item"><span class="legend-dot" style="background:#9ca3af;"></span> .rating-item-empty</div>
 </div>
-
-<!-- Star SVG sprite -->
-<svg width="0" height="0" style="position:absolute;">
-  <symbol id="icon-star" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></symbol>
-  <symbol id="icon-star-half" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" opacity=".25"/><path fill="currentColor" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77V2z"/></symbol>
-</svg>
 
 <!-- Preview -->
 <div class="preview-card">
@@ -359,37 +423,37 @@
             <input type="radio" class="rating-input wcag-hide-text" name="rating-3" value="1">
             <label class="rating-item show-filled annotate-filled" for="rating-3-1">
               <span class="wcag-hide-text">Rating 1</span>
-              <div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
-              <div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div>
-              <div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
+              <div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div>
+              <div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div>
+              <div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div>
             </label>
             <input type="radio" class="rating-input wcag-hide-text" name="rating-3" value="2">
             <label class="rating-item show-filled annotate-filled" for="rating-3-2">
               <span class="wcag-hide-text">Rating 2</span>
-              <div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
-              <div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div>
-              <div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
+              <div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div>
+              <div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div>
+              <div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div>
             </label>
             <input type="radio" class="rating-input wcag-hide-text" name="rating-3" value="3" checked>
             <label class="rating-item show-filled annotate-filled" for="rating-3-3">
               <span class="wcag-hide-text">Rating 3</span>
-              <div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
-              <div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div>
-              <div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
+              <div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div>
+              <div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div>
+              <div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div>
             </label>
             <input type="radio" class="rating-input wcag-hide-text" name="rating-3" value="4">
             <label class="rating-item show-empty annotate-empty" for="rating-3-4">
               <span class="wcag-hide-text">Rating 4</span>
-              <div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
-              <div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div>
-              <div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
+              <div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div>
+              <div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div>
+              <div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div>
             </label>
             <input type="radio" class="rating-input wcag-hide-text" name="rating-3" value="5">
             <label class="rating-item show-empty annotate-empty" for="rating-3-5">
               <span class="wcag-hide-text">Rating 5</span>
-              <div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
-              <div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div>
-              <div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div>
+              <div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div>
+              <div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div>
+              <div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div>
             </label>
           </fieldset>
         </div>
@@ -401,11 +465,11 @@
         <div class="rating">
           <fieldset>
             <legend class="wcag-hide-text">Rating</legend>
-            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-half annotate-half"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-half annotate-half"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
           </fieldset>
         </div>
       </div>
@@ -416,11 +480,26 @@
         <div class="rating is-edit">
           <fieldset>
             <legend class="wcag-hide-text">Rating</legend>
-            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-half"><i class="icon text-primary fa fa-star-half fa-1x"><svg><use href="#icon-star-half"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+          </fieldset>
+        </div>
+      </div>
+
+      <!-- Disabled · 3 / 5 (real OSUI: fieldset[disabled=true] re-colours both filled and empty to muted neutrals) -->
+      <div class="rating-row-item">
+        <span class="rating-row-label">Disabled · 3 / 5</span>
+        <div class="rating">
+          <fieldset disabled="true">
+            <legend class="wcag-hide-text">Rating</legend>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-half"><i class="icon text-primary ph-fill ph-star-half"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
           </fieldset>
         </div>
       </div>
@@ -431,41 +510,41 @@
     <p class="section-title">Sizes</p>
     <div class="rating-group">
       <div class="rating-row-item">
-        <span class="rating-row-label">Small (8px)</span>
+        <span class="rating-row-label">Small <span class="size-hint" data-size-small></span></span>
         <div class="rating rating-small">
           <fieldset>
             <legend class="wcag-hide-text">Rating</legend>
-            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
           </fieldset>
         </div>
       </div>
       <div class="rating-row-item">
-        <span class="rating-row-label">Default (16px)</span>
+        <span class="rating-row-label">Default <span class="size-hint" data-size-default></span></span>
         <div class="rating">
           <fieldset>
             <legend class="wcag-hide-text">Rating</legend>
-            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
           </fieldset>
         </div>
       </div>
       <div class="rating-row-item">
-        <span class="rating-row-label">Medium (24px)</span>
+        <span class="rating-row-label">Medium <span class="size-hint" data-size-medium></span></span>
         <div class="rating rating-medium">
           <fieldset>
             <legend class="wcag-hide-text">Rating</legend>
-            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
-            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 fa fa-star fa-1x"><svg><use href="#icon-star"/></svg></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-filled"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
+            <label class="rating-item show-empty"><div class="rating-item-filled"><i class="icon text-primary ph-fill ph-star"></i></div><div class="rating-item-empty"><i class="icon text-neutral-5 ph-fill ph-star"></i></div></label>
           </fieldset>
         </div>
       </div>
@@ -616,18 +695,18 @@
         <tr>
           <td class="td-property">color (empty)</td>
           <td class="td-property">.text-neutral-5</td>
-          <td class="td-current">color-neutral-5 (#ced4da)</td>
-          <td class="td-proposed">token-border-default (#d5d5d5)</td>
-          <td class="td-token">--token-border-default</td>
-          <td class="td-rationale">In real 2.29 <code>.text-neutral-5</code> is <strong>hardcoded</strong> (#ced4da). Promote it to <code>token-border-default</code> so empty stars share the <strong>low-emphasis gray</strong> used for dividers and input borders — one semantic token covers all three uses.</td>
+          <td class="td-current">color-neutral-5 (#ced4da) — <em>unrelated grey</em></td>
+          <td class="td-proposed">token-rating-empty-color — <em>subtle tint of filled</em></td>
+          <td class="td-token">--token-rating-empty-color</td>
+          <td class="td-rationale">Real 2.28/2.29 render empty stars in a <strong>standalone neutral grey</strong>, disconnected from the filled color. Proposal derives the empty state from the filled token (<code>color-mix(filled 22%, white)</code>) so the widget reads as a single chromatic family — empty stars still clearly "off" but visually anchored to the rating color instead of looking like a third, unrelated tone.</td>
         </tr>
         <tr>
           <td class="td-property">size</td>
           <td class="td-property">--rating-size</td>
           <td class="td-current">hardcoded 8px / 16px / 24px</td>
-          <td class="td-proposed">token-scale-200 / 400 / 600</td>
-          <td class="td-token">--token-scale-200 / 400 / 600</td>
-          <td class="td-rationale">Today each variant sets <code>--rating-size</code> to a raw pixel value. Proposal ties sizes to the spacing scale so Rating scales in lock-step with other components under density / responsive token sets.</td>
+          <td class="td-proposed">token-scale-300 / 400 / 600 (12 / 16 / 24px)</td>
+          <td class="td-token">--token-scale-300 / 400 / 600</td>
+          <td class="td-rationale">Today each variant sets <code>--rating-size</code> to a raw pixel value. Proposal ties sizes to the spacing scale so Rating scales in lock-step with other components under density / responsive token sets. <strong>Small bumps from 8px → 12px</strong>: at 8px the star shape collapses into an illegible dot; 12px (the next step on the scale) keeps the compact footprint while preserving recognisable star geometry.</td>
         </tr>
         <tr>
           <td class="td-property">item padding-right</td>

@@ -323,6 +323,15 @@
 #previewWrapper.current-mode .counter-kpi-trend--up   { color: #29823b; }                       /* --color-success */
 #previewWrapper.current-mode .counter-kpi-trend--down { color: #dc2020; }                       /* --color-error */
 
+/* Current-mode compact KPI scale — mirrors the new-tokens/proposed type
+   hierarchy using raw 2.28 px values. Padding is intentionally NOT overridden
+   here: the 2.28 `.counter` ships with `padding: 0 24px` (no top/bottom), so
+   current-mode inherits that behaviour from the `.counter` rule above. Only
+   the TOKEN SOURCE changes between modes, not the visual hierarchy. */
+#previewWrapper.current-mode .counter-kpi-icon                       { width: 44px; height: 44px; font-size: 22px; }
+#previewWrapper.current-mode .counter-kpi-plain .font-size-display   { font-size: 28px; line-height: 1.15; }
+#previewWrapper.current-mode .counter-kpi-trend                      { font-size: 16px; }
+
 /* ─── Proposed mode — semantic tokens for all background/text properties ─── */
 #previewWrapper.proposed-mode .counter.background-primary { background-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef))); }
 #previewWrapper.proposed-mode .counter.background-success { background-color: var(--token-semantics-success-base, var(--token-semantics-success-700, var(--token-primitives-green-700,  #29823b))); }

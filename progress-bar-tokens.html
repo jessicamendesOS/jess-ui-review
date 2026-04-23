@@ -554,7 +554,7 @@
 <div class="proposal-section">
   <div class="proposal-header">
     <h3>Token Proposal</h3>
-    <p>Real OS UI 2.29 structure is just two classes: <code>.progress-bar</code> (outer track) &gt; <code>.progress</code> (inner fill). There are <strong>no modifier classes</strong> for variants — consumers recolour the fill by overriding <code>background-color</code> on <code>.progress</code>. Real <code>.progress-bar-text { display: none }</code>, so a visible label is an extension.</p>
+    <p>Real OS UI 2.29 structure is just two classes: <code>.progress-bar</code> (outer track) &gt; <code>.progress</code> (inner fill). There are <strong>no modifier classes</strong> for variants — consumers recolour the fill by overriding <code>background-color</code> on <code>.progress</code>.</p>
   </div>
   <div class="proposal-table-wrap">
     <table class="proposal-table">
@@ -616,14 +616,6 @@
           <td class="td-proposed">token-scale-100 / 200 / 400</td>
           <td class="td-token">--token-scale-100 / -200 / -400</td>
           <td class="td-rationale">Thickness joins the spacing scale — <strong>scales proportionally</strong> with density adjustments rather than living as three magic numbers.</td>
-        </tr>
-        <tr>
-          <td class="td-property">label visibility</td>
-          <td class="td-property">.progress-bar-text</td>
-          <td class="td-current">display: none (hidden)</td>
-          <td class="td-proposed">opt-in overlay with token-text-inverse + mix-blend</td>
-          <td class="td-token">--token-text-inverse</td>
-          <td class="td-rationale">2.28 <strong>hides the label entirely</strong>. Proposal: expose a visible inline-value affordance using <code>mix-blend-mode: difference</code> for contrast-safe legibility over any fill color.</td>
         </tr>
       </tbody>
     </table>
