@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pagination — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-0: 0;
+    --token-scale-025: 1px;
+    --token-scale-050: 2px;
+    --token-scale-100: 4px;
+    --token-scale-200: 8px;
+    --token-scale-300: 12px;
+    --token-scale-400: 16px;
+    --token-scale-600: 24px;
+    --token-scale-800: 32px;
+    --token-scale-900: 36px;
+    --token-border-radius-100: 4px;
+    --token-border-radius-200: 8px;
+    --token-border-radius-full: 9999px;
+    --token-border-size-025: 1px;
+    --token-border-size-050: 2px;
+    --token-font-size-300: 0.75rem;
+    --token-font-size-350: 0.8125rem;
+    --token-font-size-400: 1rem;
+    --token-font-weight-regular: 400;
+    --token-font-weight-medium: 500;
+    --token-font-weight-semi-bold: 600;
+    --token-bg-surface-default: #ffffff;
+    --token-text-default: #242424;
+    --token-text-subtle: #3b3b3b;
+    --token-text-subtlest: #626262;
+    --token-text-disabled: #a2a2a2;
+    --token-text-inverse: #ffffff;
+    --token-border-default: #d5d5d5;
+    --token-border-subtle: #f3f3f3;
+    --token-primitives-base-white: #ffffff;
+    --token-primitives-blue-700:    #105cef;
+    --token-semantics-primary-base: #105cef;
+    --token-semantics-primary-700:  #105cef;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    color: #111827;
+    line-height: 1.5;
+    padding: 48px 32px;
+  }
+
+  .back-nav {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #6b7280;
+    text-decoration: none; margin-bottom: 24px;
+    padding: 5px 10px 5px 6px; border-radius: 8px;
+    transition: background .15s, color .15s;
+  }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+
+  .page-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
+  .badge-chrome {
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 700; padding: 4px 10px;
+    border-radius: 99px; letter-spacing: .02em; text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .badge-chrome--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; color: #374151;
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 99px;
+    padding: 4px 10px 4px 6px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  .preview-card {
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07);
+    border: 1px solid #e5e7eb; overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .preview-card__header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa;
+  }
+  .preview-card__label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-right: auto;
+  }
+  .preview-card__body { padding: 36px 24px; background: #fff; }
+  #previewWrapper { max-width: 660px; margin: 0 auto; }
+
+  /* ─── Pagination component — faithful to real OS UI 2.27/2.28 CSS ───
+     HTML shape from OSUI:
+       <div class="pagination">
+         <div class="pagination-counter">1 of 10</div>
+         <div class="pagination-container">
+           <button class="pagination-button" disabled>‹</button>
+           <button class="pagination-button">1</button>
+           <button class="pagination-button is--active">2</button>
+           <button class="pagination-button">3</button>
+           <button class="pagination-button is--ellipsis">…</button>
+           <button class="pagination-button">10</button>
+           <button class="pagination-button">›</button>
+         </div>
+       </div>
+  */
+  .pagination {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--token-scale-400, 16px);
+  }
+  .pagination-container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+  .pagination-container > .pagination-button:first-child {
+    margin-left: 0;
+  }
+  .pagination-button {
+    align-items: center;
+    background-color: var(--token-bg-surface-default, #ffffff);
+    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);   /* real 2.27: color-neutral-4 */
+    border-radius: var(--token-border-radius-100, 4px);                                     /* real 2.27: border-radius-soft */
+    color: var(--token-text-subtle, #3b3b3b);                                               /* real 2.27: color-neutral-8 */
+    cursor: pointer;
+    display: inline-flex;
+    height: var(--token-scale-800, 32px);
+    justify-content: center;
+    margin-left: var(--token-scale-200, 8px);
+    padding: 0;
+    width: var(--token-scale-800, 32px);
+    font-family: inherit;
+    font-size: var(--token-font-size-350, 0.8125rem);
+    line-height: 1;
+    transition: background-color .12s, border-color .12s, color .12s;
+  }
+  .pagination-button:hover:not([disabled]):not(.is--active):not(.is--ellipsis) {
+    background-color: rgba(21, 24, 26, 0.04);
+  }
+  .pagination-button[disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .pagination-button.is--active {
+    border: var(--token-border-size-025, 1px) solid var(--token-semantics-primary-base, var(--token-primitives-blue-700, #105cef));
+    color: var(--token-semantics-primary-base, var(--token-primitives-blue-700, #105cef));
+    cursor: default;
+    pointer-events: none;
+  }
+  .pagination-button.is--ellipsis {
+    background-color: transparent;
+    border: 0;
+    cursor: default;
+    width: var(--token-scale-400, 16px);
+  }
+  .pagination-counter {
+    color: var(--token-text-subtlest, #626262);           /* real 2.27: color-neutral-7 */
+    font-size: var(--token-font-size-350, 0.8125rem);
+  }
+
+  /* Go-to-page input variant — real 2.27 `.pagination-input` wraps prev/next
+     buttons around a <input.form-control data-input> + a plain "of X pages"
+     label. Input matches the sibling buttons' 32×32 footprint. */
+  .pagination-input {
+    align-items: center;
+    display: flex;
+  }
+  .pagination .form-control[data-input] {
+    height: var(--token-scale-800, 32px);
+    margin: 0 var(--token-scale-200, 8px);               /* real 2.27: space-none space-s */
+    padding: 0;
+    text-align: center;
+    width: var(--token-scale-800, 32px);
+    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
+    border-radius: var(--token-border-radius-100, 4px);
+    background-color: var(--token-bg-surface-default, #ffffff);
+    color: var(--token-text-subtle, #3b3b3b);
+    font-family: inherit;
+    font-size: var(--token-font-size-350, 0.8125rem);
+    line-height: 1;
+  }
+  /* No :focus rule in base — real 2.28 inherits the browser/global form focus
+     treatment. Proposed-mode adds an explicit primary-blue outline. */
+  .pagination-input__suffix {
+    color: var(--token-text-subtlest, #626262);
+    font-size: var(--token-font-size-350, 0.8125rem);
+  }
+
+  /* Preview layout helpers */
+  .pagination-row-label {
+    font-size: 10px; font-weight: 700; color: #9ca3af;
+    text-transform: uppercase; letter-spacing: .08em;
+    margin-bottom: 12px;
+    padding-left: 2px;
+  }
+  .pagination-section { margin-bottom: 32px; }
+  .pagination-section:last-child { margin-bottom: 0; }
+
+  /* Annotation outlines */
+  .annotate-container { outline: 2px dashed #8b5cf6; outline-offset: 8px; border-radius: 8px; }
+  .annotate-btn       { outline: 2px dashed #3b82f6; outline-offset: 3px; border-radius: 6px; }
+  .annotate-active    { outline: 2px dashed #f59e0b; outline-offset: 3px; border-radius: 6px; }
+  .annotate-counter   { outline: 2px dashed #10b981; outline-offset: 3px; border-radius: 4px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+
+  /* ─── Token panel ─── */
+  .token-panel { display: flex; flex-direction: column; gap: 12px; }
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; letter-spacing: 0; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 150px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); transition: background .12s; }
+  .token-row:last-child { border-bottom: none; }
+  .token-row:hover { background: rgba(255,255,255,.03); }
+  .prop-name  { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; white-space: nowrap; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value{ font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; white-space: nowrap; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); vertical-align: middle; margin-right: 5px; flex-shrink: 0; }
+  .token-name-with-swatch { display: flex; align-items: center; }
+
+  .pg-btn-tok     .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
+  .pg-active-tok  .token-card__header { background: linear-gradient(120deg, #7c2d12, #f97316); }
+  .pg-states-tok  .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; font-family: inherit; transition: all .15s; white-space: nowrap; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; font-family: inherit; transition: all .15s; margin-left: 4px; white-space: nowrap; }
+  .ann-toggle:hover { color: #111827; border-color: #9ca3af; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p  { font-size: 12px; color: #6b7280; }
+  .proposal-table-wrap { overflow-x: auto; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .proposal-table tbody tr:last-child td { border-bottom: none; }
+  .proposal-table tbody tr:hover td { background: #fafafa; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; white-space: nowrap; }
+  .td-current  { color: #9ca3af; }
+  .td-proposed { font-weight: 600; color: #111827; }
+  .td-token    { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; }
+  .td-rationale{ color: #4b5563; max-width: 280px; }
+  .td-rationale strong { color: #111827; }
+
+  @media (max-width: 960px) {
+    .token-grid { grid-template-columns: 1fr; }
+    body { padding: 24px 20px 60px; }
+  }
+
+/* ─── Current mode (OutSystems UI 2.28.0) — raw 2.27 values, no tokens ─── */
+#previewWrapper.current-mode .pagination-button {
+  background-color: #ffffff;      /* color-neutral-0 */
+  border: 1px solid #dee2e6;      /* color-neutral-4 */
+  border-radius: 4px;             /* border-radius-soft */
+  color: #4f575e;                 /* color-neutral-8 */
+  height: 32px;
+  width: 32px;
+  margin-left: 8px;               /* space-s */
+  font-size: 13px;
+}
+#previewWrapper.current-mode .pagination-button:hover:not([disabled]):not(.is--active):not(.is--ellipsis) {
+  background-color: rgba(21, 24, 26, 0.04);
+  border: 1px solid #dee2e6;       /* unchanged in 2.27 — hover keeps the border colour */
+}
+#previewWrapper.current-mode .pagination-button.is--active {
+  border: 1px solid #1068eb;      /* color-primary */
+  color: #1068eb;
+}
+#previewWrapper.current-mode .pagination-button.is--ellipsis {
+  width: 16px;
+  background-color: transparent;   /* real 2.27: transparent ellipsis, no box */
+  border: 0;
+}
+#previewWrapper.current-mode .pagination-counter {
+  color: #6a7178;                 /* color-neutral-7 */
+  font-size: 13px;
+}
+#previewWrapper.current-mode .pagination .form-control[data-input] {
+  height: 32px;
+  width: 32px;
+  margin: 0 8px;                  /* space-s */
+  border: 1px solid #dee2e6;      /* color-neutral-4 — matches sibling buttons */
+  border-radius: 4px;
+  background-color: #ffffff;
+  color: #4f575e;                 /* color-neutral-8 */
+  font-size: 13px;
+}
+#previewWrapper.current-mode .pagination-input__suffix {
+  color: #6a7178;
+  font-size: 13px;
+}
+
+/* ─── Proposed mode — minimal tonal pagination with text nav labels ─── */
+/*
+  Proposed changes:
+    • Rest state: NO border, NO bg — page numbers render as plain dark text
+      with generous spacing. Hover reveals a subtle chip background for
+      feedback, but the default state is pure text.
+    • Active page: thin neutral-grey border outline (border-default) forming
+      a soft chip. Unlike 2.28's primary-blue border, this is quieter — the
+      active page is distinguished by its SHAPE (bordered chip) rather than
+      its COLOUR, letting all items read in a consistent dark tone.
+    • Prev/Next: reveal text labels next to the chevrons — "‹ Previous" and
+      "Next ›". Width auto-fits content, no fixed square. Makes navigation
+      explicit and reachable without hunting for tiny arrow buttons.
+    • Ellipsis: plain horizontal dots, no chip container.
+    • Text: token-text-default (dark, near-black) for all items so the row
+      reads as one uniform control rather than a grid of coloured states.
+    • Spacing: widen margins so the row breathes — numbers float as plain
+      text rather than locked into a grid.
+*/
+#previewWrapper.proposed-mode .pagination-button {
+  background-color: transparent;
+  border: 0;
+  border-radius: var(--token-border-radius-200, 8px);
+  color: var(--token-text-default, #242424);
+  height: var(--token-scale-900, 36px);
+  min-width: var(--token-scale-900, 36px);
+  width: auto;
+  padding: 0 var(--token-scale-300, 12px);
+  font-size: var(--token-font-size-350, 0.8125rem);
+  margin-left: var(--token-scale-100, 4px);
+  font-weight: var(--token-font-weight-medium, 500);
+}
+#previewWrapper.proposed-mode .pagination-button:hover:not([disabled]):not(.is--active):not(.is--ellipsis) {
+  background-color: var(--token-border-subtle, #f3f3f3);
+  border: 0;
+}
+/* Active: thin grey border chip (not filled primary) — active state is
+   carried by SHAPE, not colour. Matches modern minimal pagination patterns
+   where every item shares the same text tone. */
+#previewWrapper.proposed-mode .pagination-button.is--active {
+  background-color: transparent;
+  border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
+  color: var(--token-text-default, #242424);
+  font-weight: var(--token-font-weight-medium, 500);
+}
+/* Ellipsis: plain dots, no chip, auto width */
+#previewWrapper.proposed-mode .pagination-button.is--ellipsis {
+  background: none;
+  border: 0;
+  color: var(--token-text-subtlest, #626262);
+  width: auto;
+  min-width: 0;
+  padding: 0 var(--token-scale-200, 8px);
+}
+#previewWrapper.proposed-mode .pagination-counter {
+  color: var(--token-text-subtlest, #626262);
+  font-size: var(--token-font-size-350, 0.8125rem);
+}
+/* Go-to-page input inherits the proposed chip aesthetic — 36px, 8px radius,
+   same thin neutral border as the active-page outline. */
+#previewWrapper.proposed-mode .pagination .form-control[data-input] {
+  height: var(--token-scale-900, 36px);
+  width: var(--token-scale-900, 36px);
+  margin: 0 var(--token-scale-200, 8px);
+  border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
+  border-radius: var(--token-border-radius-200, 8px);
+  background-color: transparent;
+  color: var(--token-text-default, #242424);
+  font-size: var(--token-font-size-350, 0.8125rem);
+  font-weight: var(--token-font-weight-medium, 500);
+}
+/* Focus: only one border change — swap the existing border colour to primary
+   and drop the outline entirely, so the input doesn't render with TWO
+   concentric borders (outline ring + border box) which reads as a doubled-up
+   chrome artefact. */
+#previewWrapper.proposed-mode .pagination .form-control[data-input]:focus {
+  outline: 0;
+  border-color: var(--token-semantics-primary-base, #105cef);
+}
+#previewWrapper.proposed-mode .pagination-input__suffix {
+  color: var(--token-text-subtlest, #626262);
+  font-size: var(--token-font-size-350, 0.8125rem);
+  margin-left: var(--token-scale-100, 4px);
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-nav">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  All components
+</a>
+
+<div class="page-header">
+  <h1>Pagination</h1>
+  <span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span>
+  <span class="badge-chrome badge-chrome--tokens">Design Tokens</span>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6;"></span> .pagination (container)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> .pagination-button</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> .is--active</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> .pagination-counter</div>
+</div>
+
+<!-- Preview -->
+<div class="preview-card">
+  <div class="preview-card__header">
+    <span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+  <div id="previewWrapper" class="hide-annotations">
+
+    <!-- Simple pagination (few pages) -->
+    <div class="pagination-section">
+      <div class="pagination-row-label">Simple · 5 pages (current = 2)</div>
+      <div class="pagination annotate-container">
+        <div class="pagination-counter annotate-counter">11 to 20 of 47 items</div>
+        <div class="pagination-container">
+          <button class="pagination-button annotate-btn" aria-label="Previous"><i class="ph-bold ph-caret-left"></i></button>
+          <button class="pagination-button">1</button>
+          <button class="pagination-button is--active annotate-active" aria-current="page">2</button>
+          <button class="pagination-button">3</button>
+          <button class="pagination-button">4</button>
+          <button class="pagination-button">5</button>
+          <button class="pagination-button" aria-label="Next"><i class="ph-bold ph-caret-right"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- With ellipsis (long path) -->
+    <div class="pagination-section">
+      <div class="pagination-row-label">With ellipsis · 42 pages (current = 5)</div>
+      <div class="pagination">
+        <div class="pagination-counter">41 to 50 of 420 items</div>
+        <div class="pagination-container">
+          <button class="pagination-button" aria-label="Previous"><i class="ph-bold ph-caret-left"></i></button>
+          <button class="pagination-button">1</button>
+          <button class="pagination-button">2</button>
+          <button class="pagination-button">3</button>
+          <button class="pagination-button">4</button>
+          <button class="pagination-button is--active" aria-current="page">5</button>
+          <button class="pagination-button">6</button>
+          <button class="pagination-button is--ellipsis">…</button>
+          <button class="pagination-button">42</button>
+          <button class="pagination-button" aria-label="Next"><i class="ph-bold ph-caret-right"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- First page (prev disabled) -->
+    <div class="pagination-section">
+      <div class="pagination-row-label">First page · prev disabled</div>
+      <div class="pagination">
+        <div class="pagination-counter">1 to 10 of 100 items</div>
+        <div class="pagination-container">
+          <button class="pagination-button" disabled aria-label="Previous"><i class="ph-bold ph-caret-left"></i></button>
+          <button class="pagination-button is--active" aria-current="page">1</button>
+          <button class="pagination-button">2</button>
+          <button class="pagination-button">3</button>
+          <button class="pagination-button is--ellipsis">…</button>
+          <button class="pagination-button">10</button>
+          <button class="pagination-button" aria-label="Next"><i class="ph-bold ph-caret-right"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Go-to-page input variant (.pagination-input) — real 2.27 pattern -->
+    <div class="pagination-section">
+      <div class="pagination-row-label">Go-to-page input · .pagination-input + .form-control[data-input]</div>
+      <div class="pagination">
+        <div class="pagination-counter">1 to 3 of 55 items</div>
+        <div class="pagination-input">
+          <button class="pagination-button" aria-label="Previous"><i class="ph-bold ph-caret-left"></i></button>
+          <input class="form-control" data-input value="1" type="text" aria-label="Go to page">
+          <span class="pagination-input__suffix">of 19 pages</span>
+          <button class="pagination-button" aria-label="Next"><i class="ph-bold ph-caret-right"></i></button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+</div>
+
+<!-- Token cards -->
+<div class="token-grid">
+
+  <!-- Button -->
+  <div class="token-card pg-btn-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#3b82f6;"></span>
+      Button (rest)
+      <span class="component-name">.pagination-button</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">size</span>
+        <span class="token-name">token-scale-800</span>
+        <span class="token-value">32px · 32px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">border-radius</span>
+        <span class="token-name">token-border-radius-100</span>
+        <span class="token-value">4px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">border</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#d5d5d5;"></span>token-border-default</span>
+        <span class="token-value">1px · #d5d5d5</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">bg</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#ffffff;"></span>token-bg-surface-default</span>
+        <span class="token-value">#ffffff</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">color</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#3b3b3b;"></span>token-text-subtle</span>
+        <span class="token-value">#3b3b3b</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">margin-left</span>
+        <span class="token-name">token-scale-200</span>
+        <span class="token-value">8px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">font-size</span>
+        <span class="token-name">token-font-size-350</span>
+        <span class="token-value">13px</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Active -->
+  <div class="token-card pg-active-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#f97316;"></span>
+      Active (is--active)
+      <span class="component-name">.pagination-button.is--active</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">border</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#105cef;"></span>token-semantics-primary-base</span>
+        <span class="token-value">1px · #105cef</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">color</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#105cef;"></span>token-semantics-primary-base</span>
+        <span class="token-value">#105cef</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">pointer-events</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">none · not clickable</span>
+        <span class="token-value">—</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">bg</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">transparent (same as rest)</span>
+        <span class="token-value">—</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">weight</span>
+        <span class="token-name">token-font-weight-regular</span>
+        <span class="token-value">400</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- States + counter -->
+  <div class="token-card pg-states-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#10b981;"></span>
+      States + counter
+      <span class="component-name">hover · disabled · ellipsis</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">hover · bg</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">rgba(21,24,26,.04)</span>
+        <span class="token-value">4% black</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">disabled</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">opacity: 0.5</span>
+        <span class="token-value">—</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">ellipsis · bg</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">transparent · no border</span>
+        <span class="token-value">—</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">ellipsis · width</span>
+        <span class="token-name">token-scale-400</span>
+        <span class="token-value">16px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">counter · color</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#626262;"></span>token-text-subtlest</span>
+        <span class="token-value">#626262</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">counter · font-size</span>
+        <span class="token-name">token-font-size-350</span>
+        <span class="token-value">13px</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Proposal table -->
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Token Proposal</h3>
+    <p>Real OS UI HTML uses <code>.pagination</code> + <code>.pagination-counter</code> + <code>.pagination-container</code> + <code>.pagination-button</code> (with state modifiers <code>.is--active</code>, <code>.is--ellipsis</code>, and native <code>[disabled]</code>). Proposal <strong>drops the border grid</strong> on rest-state buttons (cleaner chrome), promotes the active state to a <strong>solid-filled primary chip</strong>, bumps the button size to 36px, and migrates palette references to semantic tokens.</p>
+  </div>
+  <div class="proposal-table-wrap">
+    <table class="proposal-table">
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Utility class</th>
+          <th>Current (2.28)</th>
+          <th>Proposed</th>
+          <th>Token</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-property">button size</td>
+          <td class="td-property">.pagination-button</td>
+          <td class="td-current">32px · 32px</td>
+          <td class="td-proposed">36px · 36px (token-scale-900)</td>
+          <td class="td-token">--token-scale-900</td>
+          <td class="td-rationale">32px is below the 44px mobile tap-target minimum and reads as cramped on desktop next to chunky content rows. 36px adds 4px of breathing room, puts each button closer to accessibility guidance, and still keeps a 10-button pagination narrow enough for a modal.</td>
+        </tr>
+        <tr>
+          <td class="td-property">button border</td>
+          <td class="td-property">.pagination-button</td>
+          <td class="td-current">1px solid color-neutral-4 (#dee2e6)</td>
+          <td class="td-proposed">none (rest) · only active carries colour</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale"><strong>Drop the border grid.</strong> 10 bordered squares in a row reads as visual noise — the borders compete with the digits they contain. Proposal removes borders on rest-state buttons; hover surfaces them with a subtle background, and the active state carries the only coloured fill in the row. Result: the chain of digits reads cleanly as one unit, with "you are here" unambiguously strongest.</td>
+        </tr>
+        <tr>
+          <td class="td-property">border-radius</td>
+          <td class="td-property">.pagination-button</td>
+          <td class="td-current">4px (border-radius-soft)</td>
+          <td class="td-proposed">8px (token-border-radius-200)</td>
+          <td class="td-token">--token-border-radius-200</td>
+          <td class="td-rationale">Softer chip corner matches the card / popover treatment used elsewhere in 2.29. 4px reads "button-y"; 8px reads "pill-y" and pairs better with the borderless rest state.</td>
+        </tr>
+        <tr>
+          <td class="td-property">rest colour</td>
+          <td class="td-property">.pagination-button</td>
+          <td class="td-current">color-neutral-8 (#4f575e)</td>
+          <td class="td-proposed">token-text-default (#242424)</td>
+          <td class="td-token">--token-text-default</td>
+          <td class="td-rationale">Since rest-state is borderless, text needs to hold its own as the only affordance — <code>text-default</code> (near-black) ensures digits read cleanly at 13px. All items share this colour so the row reads as one unit, distinguished only by the active chip's outline.</td>
+        </tr>
+        <tr>
+          <td class="td-property">rest weight</td>
+          <td class="td-property">.pagination-button</td>
+          <td class="td-current">inherited (400)</td>
+          <td class="td-proposed">token-font-weight-medium (500)</td>
+          <td class="td-token">--token-font-weight-medium</td>
+          <td class="td-rationale">Digits need slightly more weight to hold their own at 13px without a border — 500 reads crisp without pushing into "strong CTA" territory (600+).</td>
+        </tr>
+        <tr>
+          <td class="td-property">active state</td>
+          <td class="td-property">.pagination-button.is--active</td>
+          <td class="td-current">1px primary border chip + primary text · white bg</td>
+          <td class="td-proposed">1px neutral border · token-text-default · same weight</td>
+          <td class="td-token">--token-border-default<br>--token-text-default</td>
+          <td class="td-rationale"><strong>Shape, not colour.</strong> Active is carried by a <em>thin grey border chip</em> around the same dark text — every item shares the same tone, so the row reads as one uniform control rather than a grid of states. Matches modern minimal pagination patterns (Tailwind UI, Vercel admin, Plain.com) where the active page is a quiet outline rather than a shouty primary fill.</td>
+        </tr>
+        <tr>
+          <td class="td-property">hover state</td>
+          <td class="td-property">.pagination-button:hover</td>
+          <td class="td-current">rgba(21,24,26,0.04) bg · border unchanged</td>
+          <td class="td-proposed">token-border-subtle bg · token-text-default color</td>
+          <td class="td-token">--token-border-subtle<br>--token-text-default</td>
+          <td class="td-rationale">Since rest-state buttons are borderless, hover needs to <em>surface</em> the button as a chip. <code>border-subtle</code> (#f3f3f3) is just dark enough to lift the digit out without competing with the active primary fill.</td>
+        </tr>
+        <tr>
+          <td class="td-property">button spacing</td>
+          <td class="td-property">.pagination-button margin-left</td>
+          <td class="td-current">8px (space-s)</td>
+          <td class="td-proposed">4px (token-scale-100)</td>
+          <td class="td-token">--token-scale-100</td>
+          <td class="td-rationale">With borderless chips and a solid-filled active state, 8px gaps make the row feel stretched out. 4px closes the rhythm so the chain reads as one connected control instead of 10 separate buttons — and the active chip's fill contrast is enough to keep it visually separated from its neighbours.</td>
+        </tr>
+        <tr>
+          <td class="td-property">go-to-page input</td>
+          <td class="td-property">.pagination-input · .form-control[data-input]</td>
+          <td class="td-current">32×32 · neutral-4 border · radius 4px · focus: browser default</td>
+          <td class="td-proposed">36×36 · border-default · radius 8px · focus: single primary border (no outline ring)</td>
+          <td class="td-token">--token-border-default<br>--token-border-radius-200<br>--token-semantics-primary-base</td>
+          <td class="td-rationale">Aligns the input with the proposed chip aesthetic (same thin border, same radius-200, same text-default colour). Focus swaps the existing border colour to primary — no <code>outline</code> ring on top of the border, to avoid the doubled-chrome artefact of two concentric lines.</td>
+        </tr>
+        <tr>
+          <td class="td-property">ellipsis</td>
+          <td class="td-property">.pagination-button.is--ellipsis</td>
+          <td class="td-current">16px · transparent bg · no border</td>
+          <td class="td-proposed">auto-width plain dots · 8px padding · no chip</td>
+          <td class="td-token">--token-scale-200<br>--token-text-subtlest</td>
+          <td class="td-rationale">Unchanged in spirit — the ellipsis stays as plain dots, but sizes fluidly to content instead of being pinned at 16px. Colour migrates to <code>text-subtlest</code> so the dots read as passive punctuation between the numbered chips.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function setMode(mode, btn) {
+    const w = document.getElementById('previewWrapper');
+    w.classList.toggle('proposed-mode', mode === 'proposed');
+    w.classList.toggle('current-mode', mode === 'legacy');
+    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+    btn.classList.add('ptab--active');
+  }
+
+  function toggleAnnotations(btn) {
+    const wrapper = document.getElementById('previewWrapper');
+    const hiding = !wrapper.classList.contains('hide-annotations');
+    wrapper.classList.toggle('hide-annotations', hiding);
+    btn.textContent = hiding ? 'Show annotations' : 'Hide annotations';
+    btn.classList.toggle('ann-toggle--off', hiding);
+  }
+</script>
+
+</body>
+</html>
