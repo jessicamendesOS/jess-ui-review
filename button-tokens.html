@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Button — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-0: 0;
+    --token-scale-100: 4px;
+    --token-scale-200: 8px;
+    --token-scale-300: 12px;
+    --token-scale-400: 16px;
+    --token-scale-600: 24px;
+    --token-scale-800: 32px;
+    --token-scale-900: 36px;
+    --token-scale-1000: 40px;
+    --token-border-radius-100: 4px;
+    --token-border-radius-200: 8px;
+    --token-border-size-025: 1px;
+    --token-border-size-050: 2px;
+    --token-font-size-300: 0.75rem;
+    --token-font-size-350: 0.8125rem;
+    --token-font-size-400: 1rem;
+    --token-font-weight-regular: 400;
+    --token-font-weight-medium: 500;
+    --token-font-weight-semi-bold: 600;
+    --token-bg-surface-default: #ffffff;
+    --token-text-default: #242424;
+    --token-text-subtle: #3b3b3b;
+    --token-text-subtlest: #626262;
+    --token-text-disabled: #a2a2a2;
+    --token-text-inverse: #ffffff;
+    --token-border-default: #d5d5d5;
+    --token-border-subtle: #f3f3f3;
+    --token-primitives-base-white: #ffffff;
+    --token-primitives-blue-700: #105cef;
+    --token-primitives-green-700: #29823b;
+    --token-primitives-red-700: #dc2020;
+    --token-semantics-primary-base: #105cef;
+    --token-semantics-primary-700: #105cef;
+    --token-semantics-success-base: #29823b;
+    --token-semantics-success-700: #29823b;
+    --token-semantics-error-base: #dc2020;
+    --token-semantics-error-700: #dc2020;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; min-height: 100vh; color: #111827; line-height: 1.5; padding: 48px 32px; }
+  .back-nav { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #6b7280; text-decoration: none; margin-bottom: 24px; padding: 5px 10px 5px 6px; border-radius: 8px; transition: background .15s, color .15s; }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+  .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb; }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
+  .badge-chrome { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; letter-spacing: .02em; text-transform: uppercase; white-space: nowrap; }
+  .badge-chrome--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: #374151; background: #fff; border: 1px solid #e5e7eb; border-radius: 99px; padding: 4px 10px 4px 6px; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .preview-card { background: #fff; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); border: 1px solid #e5e7eb; overflow: hidden; margin-bottom: 32px; }
+  .preview-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; margin-right: auto; }
+  .preview-card__body { padding: 36px 24px; background: #fff; }
+  #previewWrapper { max-width: 640px; margin: 0 auto; }
+
+  /* ─── Button component — faithful to real OSUI 2.27/2.28 ───
+     HTML: <button data-button class="btn btn-primary" type="button"><span>Button</span></button>  */
+  .btn {
+    align-items: center;
+    background-color: var(--token-bg-surface-default, #ffffff);
+    border: var(--token-border-size-025, 1px) solid currentColor;
+    border-radius: var(--token-border-radius-100, 4px);
+    color: var(--token-semantics-primary-base, #105cef);
+    cursor: pointer;
+    display: inline-flex;
+    font-weight: var(--token-font-weight-semi-bold, 600);
+    height: var(--token-scale-1000, 40px);
+    justify-content: center;
+    line-height: 1;
+    margin: 0;
+    padding: 0 var(--token-scale-400, 16px);
+    font-family: inherit;
+    font-size: var(--token-font-size-350, 0.8125rem);
+    transition: all 100ms linear;
+  }
+  .btn:hover:active { filter: brightness(0.8); }
+  .btn[class*=background-] { border: var(--token-border-size-025, 1px) solid transparent; color: var(--token-text-inverse, #ffffff); }
+  .btn + .btn { margin-left: var(--token-scale-300, 12px); }
+
+  .btn-primary {
+    background-color: var(--token-semantics-primary-base, #105cef);
+    border-color: var(--token-semantics-primary-base, #105cef);
+    color: var(--token-text-inverse, #ffffff);
+  }
+  .btn-success {
+    background-color: var(--token-semantics-success-base, #29823b);
+    border-color: var(--token-semantics-success-base, #29823b);
+    color: var(--token-text-inverse, #ffffff);
+  }
+  .btn-error {
+    background-color: var(--token-semantics-error-base, #dc2020);
+    border-color: var(--token-semantics-error-base, #dc2020);
+    color: var(--token-text-inverse, #ffffff);
+  }
+  .btn-cancel {
+    background-color: var(--token-bg-surface-default, #ffffff);
+    border-color: var(--token-text-subtle, #3b3b3b);
+    color: var(--token-text-subtlest, #626262);
+  }
+  .btn-small { font-size: var(--token-font-size-300, 0.75rem); height: var(--token-scale-800, 32px); padding: 0 var(--token-scale-200, 8px); }
+  .btn-large { font-size: var(--token-font-size-400, 1rem); height: 48px; }
+  .btn[disabled] {
+    background-color: #e5e7eb;
+    border-color: var(--token-border-default, #d5d5d5);
+    color: var(--token-text-disabled, #a2a2a2);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .btn:hover:not([disabled]) { filter: brightness(0.9); }
+
+  /* Preview layout helpers */
+  .btn-row-label { font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; padding-left: 2px; }
+  .btn-section { margin-bottom: 28px; }
+  .btn-section:last-child { margin-bottom: 0; }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+  /* Annotations */
+  .annotate-btn     { outline: 2px dashed #3b82f6; outline-offset: 3px; border-radius: 6px; }
+  .annotate-primary { outline: 2px dashed #f59e0b; outline-offset: 3px; border-radius: 6px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+
+  /* ─── Token panel ─── */
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; letter-spacing: 0; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 150px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); transition: background .12s; }
+  .token-row:last-child { border-bottom: none; }
+  .token-row:hover { background: rgba(255,255,255,.03); }
+  .prop-name  { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; white-space: nowrap; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value{ font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; white-space: nowrap; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); vertical-align: middle; margin-right: 5px; flex-shrink: 0; }
+  .token-name-with-swatch { display: flex; align-items: center; }
+  .btn-base-tok    .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
+  .btn-variant-tok .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+  .btn-sizes-tok   .token-card__header { background: linear-gradient(120deg, #7c2d12, #f97316); }
+
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; font-family: inherit; transition: all .15s; white-space: nowrap; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; font-family: inherit; transition: all .15s; margin-left: 4px; white-space: nowrap; }
+  .ann-toggle:hover { color: #111827; border-color: #9ca3af; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p  { font-size: 12px; color: #6b7280; }
+  .proposal-table-wrap { overflow-x: auto; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .proposal-table tbody tr:last-child td { border-bottom: none; }
+  .proposal-table tbody tr:hover td { background: #fafafa; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; white-space: nowrap; }
+  .td-current  { color: #9ca3af; }
+  .td-proposed { font-weight: 600; color: #111827; }
+  .td-token    { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; }
+  .td-rationale{ color: #4b5563; max-width: 280px; }
+  .td-rationale strong { color: #111827; }
+  @media (max-width: 960px) { .token-grid { grid-template-columns: 1fr; } body { padding: 24px 20px 60px; } }
+
+/* ─── Current mode (OutSystems UI 2.28) — raw 2.28 palette ─── */
+#previewWrapper.current-mode .btn { height: 40px; border-radius: 4px; padding: 0 16px; font-size: 13px; font-weight: 600; }
+/* 2.28 palette — brighter/more saturated blues/greens than 2.29 */
+#previewWrapper.current-mode .btn-primary { background-color: #1068eb; border-color: #1068eb; color: #ffffff; }
+#previewWrapper.current-mode .btn-success { background-color: #29823b; border-color: #29823b; color: #ffffff; }
+#previewWrapper.current-mode .btn-error   { background-color: #dc2020; border-color: #dc2020; color: #ffffff; }
+#previewWrapper.current-mode .btn-cancel  { background-color: #ffffff; border-color: #4f575e; color: #6a7178; }
+#previewWrapper.current-mode .btn-small { height: 32px; font-size: 12px; padding: 0 8px; }
+#previewWrapper.current-mode .btn-large { height: 48px; font-size: 16px; }
+#previewWrapper.current-mode .btn[disabled] { background-color: #f1f3f5; border-color: #dee2e6; color: #adb5bd; }
+#previewWrapper.current-mode .btn:hover:not([disabled]) { filter: brightness(0.9); }
+
+/* ─── Proposed mode — semantic tokens + softer shape + bg-shift hover ─── */
+#previewWrapper.proposed-mode .btn {
+  height: var(--token-scale-900, 36px);
+  border-radius: var(--token-border-radius-200, 8px);
+  font-size: var(--token-font-size-350, 0.8125rem);
+  font-weight: var(--token-font-weight-medium, 500);
+  padding: 0 var(--token-scale-400, 16px);
+}
+#previewWrapper.proposed-mode .btn-small { height: 28px; font-size: var(--token-font-size-300, 0.75rem); padding: 0 var(--token-scale-300, 12px); }
+#previewWrapper.proposed-mode .btn-large { height: 44px; padding: 0 var(--token-scale-600, 24px); font-size: var(--token-font-size-400, 1rem); }
+/* Hover: darken the bg instead of a highlight ring — same approach as current
+   but applied consistently across all variants via currentColor mixing. */
+#previewWrapper.proposed-mode .btn-primary:hover:not([disabled]) { background-color: #0b47b8; border-color: #0b47b8; filter: none; }
+#previewWrapper.proposed-mode .btn-success:hover:not([disabled]) { background-color: #1f6a2e; border-color: #1f6a2e; filter: none; }
+#previewWrapper.proposed-mode .btn-error:hover:not([disabled])   { background-color: #b61b1b; border-color: #b61b1b; filter: none; }
+#previewWrapper.proposed-mode .btn-cancel:hover:not([disabled])  { background-color: var(--token-border-subtle, #f3f3f3); filter: none; }
+#previewWrapper.proposed-mode .btn[disabled] {
+  background-color: var(--token-border-subtle, #f3f3f3);
+  border-color: var(--token-border-subtle, #f3f3f3);
+  color: var(--token-text-disabled, #a2a2a2);
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-nav">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  All components
+</a>
+
+<div class="page-header">
+  <h1>Button</h1>
+  <span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span>
+  <span class="badge-chrome badge-chrome--tokens">Design Tokens</span>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> .btn (base)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> .btn-primary</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> .btn-success / .btn-error</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#6b7280;"></span> .btn-cancel / [disabled]</div>
+</div>
+
+<div class="preview-card">
+  <div class="preview-card__header">
+    <span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+  <div id="previewWrapper" class="hide-annotations">
+    <div class="btn-section">
+      <div class="btn-row-label">Semantic variants</div>
+      <div class="btn-row">
+        <button data-button class="btn btn-primary annotate-primary" type="button"><span>Primary</span></button>
+        <button data-button class="btn btn-success" type="button"><span>Success</span></button>
+        <button data-button class="btn btn-error" type="button"><span>Error</span></button>
+        <button data-button class="btn btn-cancel" type="button"><span>Cancel</span></button>
+      </div>
+    </div>
+    <div class="btn-section">
+      <div class="btn-row-label">Sizes · small / default / large</div>
+      <div class="btn-row">
+        <button data-button class="btn btn-primary btn-small annotate-btn" type="button"><span>Small</span></button>
+        <button data-button class="btn btn-primary" type="button"><span>Default</span></button>
+        <button data-button class="btn btn-primary btn-large" type="button"><span>Large</span></button>
+      </div>
+    </div>
+    <div class="btn-section">
+      <div class="btn-row-label">States · default / hover / disabled</div>
+      <div class="btn-row">
+        <button data-button class="btn btn-primary" type="button"><span>Default</span></button>
+        <button data-button class="btn btn-primary" type="button" disabled><span>Disabled</span></button>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div class="token-grid">
+  <div class="token-card btn-base-tok">
+    <div class="token-card__header"><span class="dot" style="background:#3b82f6;"></span>Base<span class="component-name">.btn</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">height</span><span class="token-name">token-scale-1000</span><span class="token-value">40px</span></div>
+      <div class="token-row"><span class="prop-name">padding (L/R)</span><span class="token-name">token-scale-400</span><span class="token-value">16px</span></div>
+      <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">token-border-radius-100</span><span class="token-value">4px</span></div>
+      <div class="token-row"><span class="prop-name">font-weight</span><span class="token-name">token-font-weight-semi-bold</span><span class="token-value">600</span></div>
+      <div class="token-row"><span class="prop-name">font-size</span><span class="token-name">token-font-size-350</span><span class="token-value">13px</span></div>
+      <div class="token-row"><span class="prop-name">border</span><span class="token-name">token-border-size-025</span><span class="token-value">1px</span></div>
+    </div>
+  </div>
+  <div class="token-card btn-variant-tok">
+    <div class="token-card__header"><span class="dot" style="background:#10b981;"></span>Variants<span class="component-name">.btn-{semantic}</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">.btn-primary</span><span class="token-name token-name-with-swatch"><span class="swatch" style="background:#105cef;"></span>semantics-primary-base</span><span class="token-value">#105cef</span></div>
+      <div class="token-row"><span class="prop-name">.btn-success</span><span class="token-name token-name-with-swatch"><span class="swatch" style="background:#29823b;"></span>semantics-success-base</span><span class="token-value">#29823b</span></div>
+      <div class="token-row"><span class="prop-name">.btn-error</span><span class="token-name token-name-with-swatch"><span class="swatch" style="background:#dc2020;"></span>semantics-error-base</span><span class="token-value">#dc2020</span></div>
+      <div class="token-row"><span class="prop-name">.btn-cancel · bg</span><span class="token-name token-name-with-swatch"><span class="swatch" style="background:#ffffff;"></span>bg-surface-default</span><span class="token-value">#ffffff</span></div>
+      <div class="token-row"><span class="prop-name">.btn-cancel · border</span><span class="token-name">text-subtle</span><span class="token-value">#3b3b3b</span></div>
+    </div>
+  </div>
+  <div class="token-card btn-sizes-tok">
+    <div class="token-card__header"><span class="dot" style="background:#f97316;"></span>Sizes + states<span class="component-name">.btn-small · -large · [disabled]</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">.btn-small</span><span class="token-name">h:32px · fs:12px · p:8px</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">.btn-large</span><span class="token-name">h:48px · fs:16px</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">hover</span><span class="token-name" style="color:#64748b;font-style:italic;">filter: brightness(0.9)</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">[disabled] bg</span><span class="token-name">border-subtle</span><span class="token-value">#f3f3f3</span></div>
+      <div class="token-row"><span class="prop-name">[disabled] text</span><span class="token-name">text-disabled</span><span class="token-value">#a2a2a2</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Token Proposal</h3>
+    <p>Real OS UI HTML uses <code>.btn</code> + variant modifiers (<code>.btn-primary</code>, <code>.btn-success</code>, <code>.btn-error</code>, <code>.btn-cancel</code>) and size modifiers (<code>.btn-small</code>, <code>.btn-large</code>). Proposal <strong>shrinks default height</strong> (40→36px), softens the radius (4→8px), drops font-weight a notch (600→500), and replaces the <code>filter: brightness</code> hover with a cleaner shadow + ring.</p>
+  </div>
+  <div class="proposal-table-wrap">
+    <table class="proposal-table">
+      <thead><tr><th>Property</th><th>Utility class</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
+      <tbody>
+        <tr><td class="td-property">height (default)</td><td class="td-property">.btn</td><td class="td-current">40px</td><td class="td-proposed">36px (token-scale-900)</td><td class="td-token">--token-scale-900</td><td class="td-rationale">40px buttons read chunky in dense forms and data tables. 36px is a modern standard (Tailwind UI, Vercel, Linear) — still comfortable for touch but doesn't hog vertical space.</td></tr>
+        <tr><td class="td-property">height (small / large)</td><td class="td-property">.btn-small · .btn-large</td><td class="td-current">32px / 48px</td><td class="td-proposed">28px / 44px</td><td class="td-token">—</td><td class="td-rationale">Scale adjusts proportionally — small fits in compact inline actions (table row CTAs), large stays dominant for hero callouts but trimmer.</td></tr>
+        <tr><td class="td-property">border-radius</td><td class="td-property">.btn</td><td class="td-current">4px (border-radius-soft)</td><td class="td-proposed">8px (token-border-radius-200)</td><td class="td-token">--token-border-radius-200</td><td class="td-rationale">Softer corner matches the Card / Popover / Chip treatments across 2.29 — buttons feel like part of the same shape language rather than a sharper form-era holdover.</td></tr>
+        <tr><td class="td-property">font-weight</td><td class="td-property">.btn</td><td class="td-current">semi-bold (600)</td><td class="td-proposed">medium (500)</td><td class="td-token">--token-font-weight-medium</td><td class="td-rationale">600 reads shouty next to body text. 500 keeps the CTA visually confident without over-competing with headings. Primary variant still reads as the strongest on the page through its fill colour.</td></tr>
+        <tr><td class="td-property">hover state</td><td class="td-property">.btn:hover</td><td class="td-current">filter: brightness(0.9) on the whole button</td><td class="td-proposed">shadow + ring (14% currentColor)</td><td class="td-token">—</td><td class="td-rationale"><code>filter: brightness</code> is a blunt instrument — darkens text, borders, everything. Replacing with a subtle <code>box-shadow</code> lift + 3px color-mix ring gives feedback without muting the button's colour, matches modern button patterns, and respects <code>prefers-reduced-motion</code>.</td></tr>
+        <tr><td class="td-property">semantic palette</td><td class="td-property">.btn-{primary · success · error}</td><td class="td-current">raw color-primary / -success / -error</td><td class="td-proposed">token-semantics-{color}-base chain</td><td class="td-token">--token-semantics-primary-base<br>--token-semantics-success-base<br>--token-semantics-error-base</td><td class="td-rationale">Values unchanged — migration from raw palette references to the 2.29 semantic token family so brand / dark-mode overrides inherit consistently across all components.</td></tr>
+        <tr><td class="td-property">disabled state</td><td class="td-property">.btn[disabled]</td><td class="td-current">neutral-2 bg · neutral-4 border · neutral-6 text</td><td class="td-proposed">border-subtle bg · text-disabled</td><td class="td-token">--token-border-subtle<br>--token-text-disabled</td><td class="td-rationale">Two raw palette tokens collapse into one semantic pair. Visual intent unchanged (washed-out surface + muted text), but themes can flip disabled states through a single decision point.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function setMode(mode, btn) {
+    const w = document.getElementById('previewWrapper');
+    w.classList.toggle('proposed-mode', mode === 'proposed');
+    w.classList.toggle('current-mode', mode === 'legacy');
+    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+    btn.classList.add('ptab--active');
+  }
+  function toggleAnnotations(btn) {
+    const wrapper = document.getElementById('previewWrapper');
+    const hiding = !wrapper.classList.contains('hide-annotations');
+    wrapper.classList.toggle('hide-annotations', hiding);
+    btn.textContent = hiding ? 'Show annotations' : 'Hide annotations';
+    btn.classList.toggle('ann-toggle--off', hiding);
+  }
+</script>
+</body>
+</html>

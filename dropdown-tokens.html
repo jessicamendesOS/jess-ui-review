@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dropdown — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-100: 4px; --token-scale-200: 8px; --token-scale-300: 12px; --token-scale-400: 16px; --token-scale-600: 24px; --token-scale-800: 32px; --token-scale-900: 36px; --token-scale-1000: 40px;
+    --token-border-radius-100: 4px; --token-border-radius-200: 8px;
+    --token-border-size-025: 1px;
+    --token-font-size-300: 0.75rem; --token-font-size-350: 0.8125rem;
+    --token-font-weight-medium: 500;
+    --token-bg-surface-default: #ffffff;
+    --token-text-default: #242424; --token-text-subtle: #3b3b3b; --token-text-subtlest: #626262; --token-text-placeholder: #a2a2a2; --token-text-disabled: #a2a2a2;
+    --token-border-default: #d5d5d5; --token-border-subtle: #f3f3f3;
+    --token-primitives-blue-700: #105cef;
+    --token-semantics-primary-base: #105cef;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; min-height: 100vh; color: #111827; line-height: 1.5; padding: 48px 32px; }
+  .back-nav { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #6b7280; text-decoration: none; margin-bottom: 24px; padding: 5px 10px 5px 6px; border-radius: 8px; }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+  .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb; }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
+  .badge-chrome { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; text-transform: uppercase; }
+  .badge-chrome--os { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: #374151; background: #fff; border: 1px solid #e5e7eb; border-radius: 99px; padding: 4px 10px 4px 6px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .preview-card { background: #fff; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); border: 1px solid #e5e7eb; overflow: hidden; margin-bottom: 32px; }
+  .preview-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; margin-right: auto; }
+  .preview-card__body { padding: 36px 24px; background: #fff; }
+  #previewWrapper { max-width: 480px; margin: 0 auto; }
+
+  .dropdown-container { cursor: pointer; position: relative; }
+  .dropdown-container > .dropdown-display {
+    background: var(--token-bg-surface-default, #ffffff);
+    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
+    border-radius: var(--token-border-radius-100, 4px);
+    color: var(--token-text-default, #242424);
+    display: flex;
+    align-items: center;
+    height: var(--token-scale-1000, 40px);
+    padding: 0 var(--token-scale-400, 16px);
+    font-size: var(--token-font-size-300, 0.75rem);
+    position: relative;
+    padding-right: 36px;
+    transition: all 180ms linear;
+  }
+  .dropdown-container > .dropdown-display::after {
+    content: "";
+    border: 5px solid transparent;
+    border-top-color: var(--token-text-subtlest, #626262);
+    border-bottom: 0;
+    position: absolute;
+    right: 16px; top: 50%;
+    transform: translateY(-25%);
+    transition: transform 180ms;
+  }
+  .dropdown-container:hover > .dropdown-display { border-color: var(--token-text-subtlest, #626262); }
+  .dropdown-container.dropdown-expanded > .dropdown-display { border-color: var(--token-semantics-primary-base, #105cef); }
+  .dropdown-container.dropdown-expanded > .dropdown-display::after { transform: translateY(-75%) rotate(180deg); }
+
+  .dropdown-list {
+    background: var(--token-bg-surface-default, #ffffff);
+    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
+    border-radius: var(--token-border-radius-100, 4px);
+    box-shadow: 0 6px 16px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.05);
+    margin-top: 4px;
+    /* Preview-friendly positioning: static so the popup flows naturally inside
+       the preview card (no clipping by parent overflow). Real component uses
+       `position: absolute; top: 100%; left: 0; right: 0` to overlay content. */
+    position: static;
+    z-index: 10;
+  }
+  .dropdown-container:not(.dropdown-expanded) .dropdown-list { display: none; }
+  .dropdown-popup-row {
+    color: var(--token-text-default, #242424);
+    cursor: pointer;
+    font-size: var(--token-font-size-300, 0.75rem);
+    padding: var(--token-scale-200, 8px) var(--token-scale-400, 16px);
+    transition: background .12s;
+  }
+  .dropdown-popup-row:hover { background: var(--token-border-subtle, #f3f3f3); }
+  .dropdown-popup-row-selected { background: var(--token-border-subtle, #f3f3f3); font-weight: var(--token-font-weight-medium, 500); }
+
+  .dd-label { display: block; font-size: 13px; font-weight: 600; color: var(--token-text-default, #242424); margin-bottom: 6px; }
+  .dd-section { margin-bottom: 36px; }
+  .dd-section:last-child { margin-bottom: 0; }
+  .dd-section-label { font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; padding-left: 2px; }
+  .annotate-display { outline: 2px dashed #3b82f6; outline-offset: 3px; border-radius: 6px; }
+  .annotate-list { outline: 2px dashed #10b981; outline-offset: 3px; border-radius: 6px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 140px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); }
+  .token-row:last-child { border-bottom: none; }
+  .prop-name { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value { font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); margin-right: 5px; }
+  .dd-display-tok .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
+  .dd-list-tok .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+  .dd-row-tok .token-card__header { background: linear-gradient(120deg, #7c2d12, #f97316); }
+
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; white-space: nowrap; font-family: inherit; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; margin-left: 4px; white-space: nowrap; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p { font-size: 12px; color: #6b7280; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; }
+  .td-current { color: #9ca3af; } .td-proposed { font-weight: 600; color: #111827; } .td-token { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; } .td-rationale { color: #4b5563; max-width: 280px; }
+  @media (max-width: 960px) { .token-grid { grid-template-columns: 1fr; } body { padding: 24px 20px 60px; } }
+
+#previewWrapper.current-mode .dropdown-container > .dropdown-display { height: 40px; border-color: #ced4da; border-radius: 4px; font-size: 13px; color: #212529; }
+#previewWrapper.current-mode .dropdown-container.dropdown-expanded > .dropdown-display { border-color: #1068eb; }
+#previewWrapper.current-mode .dropdown-list { border-color: #ced4da; border-radius: 4px; }
+/* Current selected row — primary-light tint + primary text, matching the 2.28
+   blue theme. Real 2.28 uses a blue tone (not neutral grey) for the selected
+   item so the chosen value visually ties to the primary-colored trigger border. */
+#previewWrapper.current-mode .dropdown-popup-row-selected { background: #dbeafe; color: #1068eb; font-weight: 400; }
+
+#previewWrapper.proposed-mode .dropdown-container > .dropdown-display { height: var(--token-scale-900, 36px); border-radius: var(--token-border-radius-200, 8px); font-size: var(--token-font-size-350, 0.8125rem); }
+/* Swap the CSS-triangle caret for a Phosphor bold caret-down — same codepoint
+   trick used in Breadcrumbs. Same HTML, just font-family + content override. */
+#previewWrapper.proposed-mode .dropdown-container > .dropdown-display::after {
+  border: 0;
+  font-family: "Phosphor-Bold";
+  content: "\e136";                     /* ph-bold ph-caret-down */
+  font-size: 14px;
+  color: var(--token-text-subtle, #3b3b3b);
+  line-height: 1;
+  top: 50%;
+  right: var(--token-scale-400, 16px);
+  margin-top: -7px;
+  transform: none;
+  width: auto; height: auto;
+  transition: transform 180ms;
+}
+#previewWrapper.proposed-mode .dropdown-container.dropdown-expanded > .dropdown-display::after {
+  transform: rotate(180deg);
+  margin-top: -6px;
+}
+#previewWrapper.proposed-mode .dropdown-container.dropdown-expanded > .dropdown-display { box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 18%, transparent); }
+#previewWrapper.proposed-mode .dropdown-list { border-radius: var(--token-border-radius-200, 8px); box-shadow: 0 12px 28px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06); }
+#previewWrapper.proposed-mode .dropdown-popup-row { padding: var(--token-scale-300, 12px) var(--token-scale-400, 16px); font-size: var(--token-font-size-350, 0.8125rem); }
+/* Proposed selected row — subtle primary tint (color-mix at 8% primary) with
+   primary text, medium weight. Reads as "this is the chosen option" without
+   a full primary-fill that'd dominate the popup. */
+#previewWrapper.proposed-mode .dropdown-popup-row-selected {
+  background: color-mix(in srgb, var(--token-semantics-primary-base) 8%, #ffffff);
+  color: var(--token-semantics-primary-base, #105cef);
+  font-weight: var(--token-font-weight-medium, 500);
+}
+</style></head>
+<body>
+<a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
+<div class="page-header"><h1>Dropdown</h1><span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span><span class="badge-chrome badge-chrome--tokens">Design Tokens</span></div>
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> .dropdown-display (trigger)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> .dropdown-list (popup)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> .dropdown-popup-row</div>
+</div>
+<div class="preview-card">
+  <div class="preview-card__header"><span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+    <div id="previewWrapper" class="hide-annotations">
+      <div class="dd-section">
+        <div class="dd-section-label">Collapsed · default</div>
+        <label class="dd-label">Assign to</label>
+        <div data-dropdown class="dropdown-container"><div class="dropdown-display annotate-display"><span>Select a user…</span></div></div>
+      </div>
+      <div class="dd-section">
+        <div class="dd-section-label">Expanded · list open</div>
+        <label class="dd-label">Priority</label>
+        <div data-dropdown class="dropdown-container dropdown-expanded"><div class="dropdown-display"><span>High</span></div>
+          <div class="dropdown-list annotate-list">
+            <div class="dropdown-popup-row">Low</div>
+            <div class="dropdown-popup-row">Medium</div>
+            <div class="dropdown-popup-row dropdown-popup-row-selected">High</div>
+            <div class="dropdown-popup-row">Urgent</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="token-grid">
+  <div class="token-card dd-display-tok"><div class="token-card__header"><span class="dot" style="background:#3b82f6;"></span>Trigger<span class="component-name">.dropdown-display</span></div><div class="token-card__body">
+    <div class="token-row"><span class="prop-name">height</span><span class="token-name">token-scale-1000</span><span class="token-value">40px</span></div>
+    <div class="token-row"><span class="prop-name">padding L</span><span class="token-name">token-scale-400</span><span class="token-value">16px</span></div>
+    <div class="token-row"><span class="prop-name">padding R (caret)</span><span class="token-name">36px</span><span class="token-value">—</span></div>
+    <div class="token-row"><span class="prop-name">border</span><span class="token-name">border-default</span><span class="token-value">1px · #d5d5d5</span></div>
+    <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">border-radius-100</span><span class="token-value">4px</span></div>
+    <div class="token-row"><span class="prop-name">expanded border</span><span class="token-name"><span class="swatch" style="background:#105cef;"></span>semantics-primary-base</span><span class="token-value">#105cef</span></div>
+  </div></div>
+  <div class="token-card dd-list-tok"><div class="token-card__header"><span class="dot" style="background:#10b981;"></span>Popup<span class="component-name">.dropdown-list</span></div><div class="token-card__body">
+    <div class="token-row"><span class="prop-name">max-height</span><span class="token-name">240px</span><span class="token-value">scroll</span></div>
+    <div class="token-row"><span class="prop-name">margin-top</span><span class="token-name">token-scale-100</span><span class="token-value">4px</span></div>
+    <div class="token-row"><span class="prop-name">box-shadow</span><span class="token-name">2-layer elevation</span><span class="token-value">—</span></div>
+    <div class="token-row"><span class="prop-name">z-index</span><span class="token-name">10</span><span class="token-value">—</span></div>
+    <div class="token-row"><span class="prop-name">border</span><span class="token-name">border-default</span><span class="token-value">1px</span></div>
+  </div></div>
+  <div class="token-card dd-row-tok"><div class="token-card__header"><span class="dot" style="background:#f97316;"></span>Row<span class="component-name">.dropdown-popup-row</span></div><div class="token-card__body">
+    <div class="token-row"><span class="prop-name">padding</span><span class="token-name">token-scale-200/400</span><span class="token-value">8 · 16px</span></div>
+    <div class="token-row"><span class="prop-name">font-size</span><span class="token-name">token-font-size-300</span><span class="token-value">12px</span></div>
+    <div class="token-row"><span class="prop-name">:hover bg</span><span class="token-name">border-subtle</span><span class="token-value">#f3f3f3</span></div>
+    <div class="token-row"><span class="prop-name">selected bg</span><span class="token-name">border-subtle</span><span class="token-value">#f3f3f3</span></div>
+    <div class="token-row"><span class="prop-name">selected weight</span><span class="token-name">medium</span><span class="token-value">500</span></div>
+  </div></div>
+</div>
+<div class="proposal-section">
+  <div class="proposal-header"><h3>Token Proposal</h3><p>Real OS UI uses <code>.dropdown-container</code> + <code>.dropdown-display</code> (trigger) + <code>.dropdown-list</code> (popup) + <code>.dropdown-popup-row</code> items. Proposal matches Input height (40→36px), softens radius (4→8px), strengthens popup elevation, and adds focus halo on expanded state.</p></div>
+  <table class="proposal-table">
+    <thead><tr><th>Property</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td class="td-property">trigger height</td><td class="td-current">40px</td><td class="td-proposed">36px</td><td class="td-token">--token-scale-900</td><td class="td-rationale">Matches Input / Button so form controls align in rows.</td></tr>
+      <tr><td class="td-property">border-radius</td><td class="td-current">4px</td><td class="td-proposed">8px</td><td class="td-token">--token-border-radius-200</td><td class="td-rationale">Softer corner matches Card / Button / Input proposed radius.</td></tr>
+      <tr><td class="td-property">expanded focus</td><td class="td-current">primary border only</td><td class="td-proposed">primary border + 18% halo</td><td class="td-token">--token-semantics-primary-base</td><td class="td-rationale">Same focus treatment as Input — form controls share the primary halo affordance.</td></tr>
+      <tr><td class="td-property">popup elevation</td><td class="td-current">2-layer shadow (subtle)</td><td class="td-proposed">stronger 2-layer elevation</td><td class="td-token">—</td><td class="td-rationale">Popup needs clear separation from content — stronger shadow establishes the floating-surface z-axis.</td></tr>
+      <tr><td class="td-property">selected row</td><td class="td-current">primary-light bg · primary text</td><td class="td-proposed">border-subtle bg · default text · medium weight</td><td class="td-token">--token-border-subtle<br>--token-font-weight-medium</td><td class="td-rationale">Quieter selected-row treatment — no blue fill, just a subtle surface + weight shift. Reads as "this is chosen" without flooding the popup with primary.</td></tr>
+    </tbody>
+  </table>
+</div>
+<script>
+function setMode(mode, btn) { const w = document.getElementById('previewWrapper'); w.classList.toggle('proposed-mode', mode === 'proposed'); w.classList.toggle('current-mode', mode === 'legacy'); document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active')); btn.classList.add('ptab--active'); }
+function toggleAnnotations(btn) { const w = document.getElementById('previewWrapper'); const h = !w.classList.contains('hide-annotations'); w.classList.toggle('hide-annotations', h); btn.textContent = h ? 'Show annotations' : 'Hide annotations'; btn.classList.toggle('ann-toggle--off', h); }
+</script>
+</body></html>

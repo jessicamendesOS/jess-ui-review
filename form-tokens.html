@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-100: 4px; --token-scale-200: 8px; --token-scale-300: 12px; --token-scale-400: 16px; --token-scale-600: 24px; --token-scale-800: 32px; --token-scale-900: 36px; --token-scale-1000: 40px;
+    --token-border-radius-100: 4px; --token-border-radius-200: 8px; --token-border-radius-300: 12px;
+    --token-border-size-025: 1px;
+    --token-font-size-300: 0.75rem; --token-font-size-350: 0.8125rem; --token-font-size-400: 1rem;
+    --token-font-weight-medium: 500; --token-font-weight-semi-bold: 600;
+    --token-bg-surface-default: #ffffff;
+    --token-text-default: #242424; --token-text-subtle: #3b3b3b; --token-text-subtlest: #626262; --token-text-placeholder: #a2a2a2; --token-text-disabled: #a2a2a2;
+    --token-border-default: #d5d5d5; --token-border-subtle: #f3f3f3;
+    --token-primitives-blue-700: #105cef;
+    --token-semantics-primary-base: #105cef; --token-semantics-error-base: #dc2020;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; min-height: 100vh; color: #111827; line-height: 1.5; padding: 48px 32px; }
+  .back-nav { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #6b7280; text-decoration: none; margin-bottom: 24px; padding: 5px 10px 5px 6px; border-radius: 8px; }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+  .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb; }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
+  .badge-chrome { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; text-transform: uppercase; }
+  .badge-chrome--os { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: #374151; background: #fff; border: 1px solid #e5e7eb; border-radius: 99px; padding: 4px 10px 4px 6px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .preview-card { background: #fff; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); border: 1px solid #e5e7eb; overflow: hidden; margin-bottom: 32px; }
+  .preview-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; margin-right: auto; }
+  .preview-card__body { padding: 36px 24px; background: #fff; }
+  #previewWrapper { max-width: 560px; margin: 0 auto; }
+
+  /* Form .card host — real 2.28 renders the form inside a .card with
+     border + padding + subtle shadow. Base + current + new-tokens keep
+     that chrome; proposed mode removes it for a cleaner bare-stack look. */
+  [data-form].form {
+    background: var(--token-bg-surface-default, #ffffff);
+    border-radius: var(--token-border-radius-200, 8px);
+    border: var(--token-border-size-025, 1px) solid var(--token-border-subtle, #f3f3f3);
+    padding: var(--token-scale-600, 24px);
+    box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
+  }
+  [data-form] [data-container] { margin-bottom: var(--token-scale-400, 16px); }
+  [data-form] [data-container]:last-child { margin-bottom: 0; }
+  .columns.columns2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--token-scale-400, 16px); margin-bottom: var(--token-scale-400, 16px); }
+  .columns-item { display: flex; flex-direction: column; }
+
+  /* Label */
+  [data-label] { display: block; font-size: 13px; font-weight: 600; color: var(--token-text-default, #242424); margin-bottom: 6px; }
+  [data-label].mandatory::after { content: " *"; color: var(--token-semantics-error-base, #dc2020); }
+
+  /* Inputs */
+  .input-text, .input-email { display: block; }
+  .form-control[data-input] {
+    background-color: var(--token-bg-surface-default, #ffffff);
+    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
+    border-radius: var(--token-border-radius-100, 4px);
+    color: var(--token-text-default, #242424);
+    font-size: var(--token-font-size-300, 0.75rem);
+    height: var(--token-scale-1000, 40px);
+    padding: 0 var(--token-scale-400, 16px);
+    width: 100%;
+    font-family: inherit;
+    transition: all 180ms linear;
+  }
+  .form-control[data-input]:hover { border-color: var(--token-text-subtlest, #626262); }
+  .form-control[data-input]:focus { border-color: var(--token-semantics-primary-base, #105cef); outline: 0; }
+
+  /* Dropdown */
+  .dropdown-container { cursor: pointer; position: relative; }
+  .dropdown-container > .dropdown-display {
+    background: var(--token-bg-surface-default, #ffffff);
+    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
+    border-radius: var(--token-border-radius-100, 4px);
+    color: var(--token-text-default, #242424);
+    display: flex; align-items: center;
+    height: var(--token-scale-1000, 40px);
+    padding: 0 var(--token-scale-400, 16px);
+    padding-right: 36px;
+    font-size: var(--token-font-size-300, 0.75rem);
+    position: relative;
+    transition: all 180ms linear;
+  }
+  .dropdown-container > .dropdown-display::after {
+    content: "";
+    border: 5px solid transparent;
+    border-top-color: var(--token-text-subtlest, #626262);
+    border-bottom: 0;
+    position: absolute;
+    right: 16px; top: 50%;
+    transform: translateY(-25%);
+  }
+  .dropdown-container > .dropdown-display > span { flex: 1; }
+
+  /* Textarea */
+  .form-control[data-textarea] {
+    background-color: var(--token-bg-surface-default, #ffffff);
+    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
+    border-radius: var(--token-border-radius-100, 4px);
+    color: var(--token-text-default, #242424);
+    font-size: var(--token-font-size-300, 0.75rem);
+    padding: var(--token-scale-300, 12px) var(--token-scale-400, 16px);
+    width: 100%;
+    font-family: inherit;
+    resize: auto;
+    transition: all 180ms linear;
+  }
+  .form-control[data-textarea]::placeholder { color: var(--token-text-placeholder, #a2a2a2); }
+  .form-control[data-textarea]:focus { border-color: var(--token-semantics-primary-base, #105cef); outline: 0; }
+
+  /* Checkbox */
+  [data-checkbox] {
+    appearance: none; -webkit-appearance: none;
+    height: 20px; width: 20px; padding: 0; margin: 0;
+    cursor: pointer; position: relative;
+    flex-shrink: 0;
+  }
+  [data-checkbox]:before {
+    content: "";
+    background: var(--token-bg-surface-default, #ffffff);
+    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
+    border-radius: 4px;
+    height: 18px; width: 18px;
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    transition: all 180ms linear;
+  }
+  [data-checkbox]:checked:before {
+    background: var(--token-semantics-primary-base, #105cef);
+    border-color: var(--token-semantics-primary-base, #105cef);
+  }
+  [data-checkbox]:checked:after {
+    content: "";
+    border: 2px solid #ffffff;
+    border-right: 0 !important; border-top: 0 !important;
+    display: block;
+    height: 4px; width: 10px;
+    position: absolute;
+    left: 4px; top: 5px;
+    transform: rotate(-45deg);
+  }
+
+  /* Switch */
+  [data-switch] {
+    appearance: none; -webkit-appearance: none;
+    background: transparent; border-radius: 0; border: 0;
+    height: 24px; width: 40px;
+    padding: 0; margin: 0;
+    cursor: pointer; position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  [data-switch]::before {
+    content: "";
+    background: var(--token-border-default, #d5d5d5);
+    border-radius: 9999px;
+    height: 24px; width: 40px;
+    position: absolute; top: 0; left: 0;
+    transition: background .18s linear;
+  }
+  [data-switch]::after {
+    content: "";
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0,0,0,.2);
+    height: 20px; width: 20px;
+    position: absolute; top: 2px; left: 0;
+    transform: translateX(2px);
+    transition: transform .18s linear;
+  }
+  [data-switch]:checked::before { background: var(--token-semantics-primary-base, #105cef); }
+  [data-switch]:checked::after { transform: translateX(18px); }
+
+  /* Radio */
+  .radio-group { display: flex; flex-direction: column; gap: 10px; }
+  .radio-group > div { display: flex; flex-direction: column; gap: 10px; }
+  .radio-group.is-horizontal > div { flex-direction: row; gap: 20px; }
+  [data-radio-button] { display: flex; align-items: center; gap: 10px; }
+  .radio-button {
+    appearance: none; -webkit-appearance: none;
+    height: 20px; width: 20px; padding: 0; margin: 0;
+    cursor: pointer;
+    border-radius: 50%;
+    background: #ffffff;
+    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
+    flex-shrink: 0;
+    transition: all 180ms linear;
+  }
+  .radio-button:checked {
+    border: 6px solid var(--token-semantics-primary-base, #105cef);
+    background: #ffffff;
+  }
+  [data-radio-button] label { font-size: 13px; color: var(--token-text-default, #242424); cursor: pointer; }
+
+  /* Inline row helper — checkbox / switch beside label */
+  .form-inline { display: flex; align-items: center; gap: 10px; }
+  .form-inline label { font-size: 13px; color: var(--token-text-default, #242424); cursor: pointer; margin: 0; font-weight: 400; }
+
+  /* Submit btn */
+  .btn { display: inline-flex; align-items: center; height: 40px; padding: 0 var(--token-scale-400, 16px); border-radius: var(--token-border-radius-100, 4px); font-family: inherit; font-size: var(--token-font-size-350, 0.8125rem); font-weight: var(--token-font-weight-semi-bold, 600); border: var(--token-border-size-025, 1px) solid transparent; cursor: pointer; }
+  .btn-primary { background: var(--token-semantics-primary-base, #105cef); border-color: var(--token-semantics-primary-base, #105cef); color: #ffffff; }
+
+  .annotate-form { outline: 2px dashed #3b82f6; outline-offset: 4px; border-radius: 10px; }
+  .annotate-column { outline: 2px dashed #f59e0b; outline-offset: 3px; border-radius: 4px; }
+  .annotate-cta { outline: 2px dashed #10b981; outline-offset: 3px; border-radius: 6px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 140px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); }
+  .token-row:last-child { border-bottom: none; }
+  .prop-name { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value { font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); margin-right: 5px; }
+  .fm-card-tok .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
+  .fm-label-tok .token-card__header { background: linear-gradient(120deg, #7c2d12, #f97316); }
+  .fm-layout-tok .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; white-space: nowrap; font-family: inherit; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; margin-left: 4px; white-space: nowrap; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p { font-size: 12px; color: #6b7280; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; }
+  .td-current { color: #9ca3af; } .td-proposed { font-weight: 600; color: #111827; } .td-token { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; } .td-rationale { color: #4b5563; max-width: 280px; }
+  @media (max-width: 960px) { .token-grid { grid-template-columns: 1fr; } body { padding: 24px 20px 60px; } }
+
+/* Current — 2.28 raw: .form.card with 4px radius + neutral-4 border + 24px padding */
+#previewWrapper.current-mode [data-form].form { border-radius: 4px; padding: 24px; border-color: #dee2e6; }
+#previewWrapper.current-mode .form-control[data-input] { height: 40px; border-radius: 4px; border-color: #ced4da; }
+#previewWrapper.current-mode .btn { height: 40px; border-radius: 4px; }
+
+/* Proposed dropdown — consistent with Input (36px, radius 8px, focus halo, Phosphor caret) */
+#previewWrapper.proposed-mode .dropdown-container > .dropdown-display { height: var(--token-scale-900, 36px); border-radius: var(--token-border-radius-200, 8px); font-size: var(--token-font-size-350, 0.8125rem); padding: 0 var(--token-scale-300, 12px); padding-right: 36px; }
+#previewWrapper.proposed-mode .dropdown-container > .dropdown-display::after {
+  border: 0;
+  font-family: "Phosphor-Bold";
+  content: "\e136";
+  font-size: 14px;
+  color: var(--token-text-subtle, #3b3b3b);
+  line-height: 1;
+  top: 50%; right: var(--token-scale-300, 12px);
+  margin-top: -7px;
+  transform: none;
+  width: auto; height: auto;
+}
+#previewWrapper.proposed-mode .dropdown-container:focus-within > .dropdown-display { border-color: var(--token-semantics-primary-base, #105cef); box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 18%, transparent); }
+
+/* Proposed — drops the card chrome: no border, no padding, no shadow.
+   The form is just a vertical stack of fields. Page-level layouts decide
+   whether to wrap it in a surface (card/panel) separately. */
+#previewWrapper.proposed-mode [data-form].form {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+#previewWrapper.proposed-mode .form-control[data-input] { height: var(--token-scale-900, 36px); border-radius: var(--token-border-radius-200, 8px); font-size: var(--token-font-size-350, 0.8125rem); }
+#previewWrapper.proposed-mode .form-control[data-input]:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 18%, transparent); }
+#previewWrapper.proposed-mode .btn { height: var(--token-scale-900, 36px); border-radius: var(--token-border-radius-200, 8px); font-weight: var(--token-font-weight-medium, 500); }
+#previewWrapper.proposed-mode .columns.columns2 { gap: var(--token-scale-600, 24px); }
+#previewWrapper.proposed-mode [data-form] [data-container] { margin-bottom: var(--token-scale-600, 24px); }
+/* Proposed: textarea radius + focus halo consistent with input */
+#previewWrapper.proposed-mode .form-control[data-textarea] { border-radius: var(--token-border-radius-200, 8px); font-size: var(--token-font-size-350, 0.8125rem); }
+#previewWrapper.proposed-mode .form-control[data-textarea]:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 18%, transparent); }
+/* Minor spacing tweaks for inline rows */
+#previewWrapper.proposed-mode .form-inline { gap: var(--token-scale-300, 12px); }
+</style></head>
+<body>
+<a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
+<div class="page-header"><h1>Form</h1><span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span><span class="badge-chrome badge-chrome--tokens">Design Tokens</span></div>
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> [data-form].form.card</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> .columns · .columns2</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> submit CTA</div>
+</div>
+<div class="preview-card">
+  <div class="preview-card__header"><span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+    <div id="previewWrapper" class="hide-annotations">
+      <form data-form class="form card annotate-form">
+        <div data-block="Adaptive.Columns2">
+          <div data-container class="columns columns2">
+            <div class="columns-item annotate-column">
+              <label data-label class="mandatory" for="fm-first">First Name</label>
+              <span class="input-text"><input data-input class="form-control" required type="text" aria-required="true" maxlength="50" id="fm-first" placeholder="Jane"></span>
+            </div>
+            <div class="columns-item">
+              <label data-label for="fm-last">Last Name</label>
+              <span class="input-text"><input data-input class="form-control" type="text" maxlength="50" id="fm-last" placeholder="Doe"></span>
+            </div>
+          </div>
+        </div>
+        <div data-container>
+          <label data-label for="fm-email">Email</label>
+          <span class="input-email"><input data-input class="form-control" type="email" maxlength="250" id="fm-email" placeholder="jane@company.com"></span>
+        </div>
+
+        <div data-container>
+          <label data-label for="fm-country">Country</label>
+          <div data-dropdown class="dropdown-container" id="fm-country" tabindex="0">
+            <div class="dropdown-display"><span>Portugal</span></div>
+          </div>
+        </div>
+
+        <div data-container>
+          <label data-label for="fm-role">Role</label>
+          <div data-radio-group class="radio-group is-horizontal" role="radiogroup">
+            <div>
+              <div data-radio-button><input type="radio" class="radio-button" name="fm-role" value="0" checked id="fm-role-0"><label for="fm-role-0">Admin</label></div>
+              <div data-radio-button><input type="radio" class="radio-button" name="fm-role" value="1" id="fm-role-1"><label for="fm-role-1">Editor</label></div>
+              <div data-radio-button><input type="radio" class="radio-button" name="fm-role" value="2" id="fm-role-2"><label for="fm-role-2">Viewer</label></div>
+            </div>
+          </div>
+        </div>
+
+        <div data-container>
+          <label data-label for="fm-bio">Bio</label>
+          <textarea data-textarea class="form-control" rows="3" placeholder="Tell us a bit about yourself…" maxlength="500" id="fm-bio"></textarea>
+        </div>
+
+        <div data-container class="form-inline">
+          <input data-switch type="checkbox" id="fm-notify" checked>
+          <label for="fm-notify">Send me product update emails</label>
+        </div>
+
+        <div data-container class="form-inline">
+          <input data-checkbox type="checkbox" id="fm-terms">
+          <label for="fm-terms">I agree to the Terms of Service and Privacy Policy</label>
+        </div>
+
+        <div data-container style="text-align: right;">
+          <button data-button class="btn btn-primary annotate-cta" type="submit">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="token-grid">
+  <div class="token-card fm-card-tok"><div class="token-card__header"><span class="dot" style="background:#3b82f6;"></span>Card host<span class="component-name">.form.card</span></div><div class="token-card__body">
+    <div class="token-row"><span class="prop-name">bg</span><span class="token-name">bg-surface-default</span><span class="token-value">#ffffff</span></div>
+    <div class="token-row"><span class="prop-name">padding</span><span class="token-name">token-scale-600</span><span class="token-value">24px</span></div>
+    <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">border-radius-200</span><span class="token-value">8px (4 legacy)</span></div>
+    <div class="token-row"><span class="prop-name">border</span><span class="token-name">border-subtle</span><span class="token-value">1px · #f3f3f3</span></div>
+    <div class="token-row"><span class="prop-name">shadow</span><span class="token-name" style="color:#64748b;">1px 2px 4% black</span><span class="token-value">subtle</span></div>
+  </div></div>
+  <div class="token-card fm-label-tok"><div class="token-card__header"><span class="dot" style="background:#f97316;"></span>Label<span class="component-name">[data-label] · .mandatory</span></div><div class="token-card__body">
+    <div class="token-row"><span class="prop-name">font-size</span><span class="token-name">13px</span><span class="token-value">—</span></div>
+    <div class="token-row"><span class="prop-name">font-weight</span><span class="token-name">semi-bold</span><span class="token-value">600</span></div>
+    <div class="token-row"><span class="prop-name">color</span><span class="token-name">text-default</span><span class="token-value">#242424</span></div>
+    <div class="token-row"><span class="prop-name">margin-bottom</span><span class="token-name">6px</span><span class="token-value">—</span></div>
+    <div class="token-row"><span class="prop-name">.mandatory ·</span><span class="token-name">::after " *" error</span><span class="token-value">#dc2020</span></div>
+  </div></div>
+  <div class="token-card fm-layout-tok"><div class="token-card__header"><span class="dot" style="background:#10b981;"></span>Layout<span class="component-name">.columns2 · [data-container]</span></div><div class="token-card__body">
+    <div class="token-row"><span class="prop-name">grid</span><span class="token-name" style="color:#64748b;">1fr 1fr</span><span class="token-value">2 cols</span></div>
+    <div class="token-row"><span class="prop-name">gutter</span><span class="token-name">token-scale-400</span><span class="token-value">16px</span></div>
+    <div class="token-row"><span class="prop-name">row-gap</span><span class="token-name">token-scale-400</span><span class="token-value">16px (24 proposed)</span></div>
+    <div class="token-row"><span class="prop-name">CTA align</span><span class="token-name">flex-end</span><span class="token-value">right</span></div>
+  </div></div>
+</div>
+<div class="proposal-section">
+  <div class="proposal-header"><h3>Token Proposal</h3><p>Real OS UI uses <code>&lt;form data-form class="form card"&gt;</code> with <code>.columns.columns2</code> for 2-column layouts, <code>[data-label]</code> + <code>.mandatory</code> for required fields, <code>.input-text</code> / <code>.input-email</code> wrappers around <code>.form-control[data-input]</code>. Proposal <strong>softens the card</strong> (radius 4→12px, padding 24→32), adds focus halo, and widens row spacing for breathing room.</p></div>
+  <table class="proposal-table">
+    <thead><tr><th>Property</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td class="td-property">card chrome</td><td class="td-current">border + 24px padding + radius 4px + subtle shadow</td><td class="td-proposed">none — bare stack, no border/padding/shadow</td><td class="td-token">—</td><td class="td-rationale"><strong>Decouple form from surface.</strong> 2.28 ties the form's visual container (border, shadow, padding) to the <code>&lt;form&gt;</code> element via <code>.form.card</code>. Proposal drops that — the form becomes a semantic vertical stack of fields, and any "card" wrapping is the page layout's responsibility. Lets the same form embed into cards, popups, side panels, or full-bleed layouts without fighting the built-in chrome.</td></tr>
+      <tr><td class="td-property">row spacing</td><td class="td-current">16px between containers</td><td class="td-proposed">24px between containers</td><td class="td-token">--token-scale-600</td><td class="td-rationale">16px was cramped — visual rhythm feels rushed. 24px gives the form a confident pace without feeling sparse.</td></tr>
+      <tr><td class="td-property">column gap</td><td class="td-current">16px</td><td class="td-proposed">24px</td><td class="td-token">--token-scale-600</td><td class="td-rationale">Matches row spacing for consistent 2D rhythm.</td></tr>
+      <tr><td class="td-property">input height</td><td class="td-current">40px</td><td class="td-proposed">36px</td><td class="td-token">--token-scale-900</td><td class="td-rationale">Matches proposed Input + Button heights so the form stacks cleanly at consistent row height.</td></tr>
+      <tr><td class="td-property">focus halo</td><td class="td-current">— (border only)</td><td class="td-proposed">border + 18% primary ring</td><td class="td-token">--token-semantics-primary-base</td><td class="td-rationale">Keyboard users navigating a form need unambiguous focus — halo carries through Input / Dropdown / Textarea consistently.</td></tr>
+    </tbody>
+  </table>
+</div>
+<script>
+function setMode(mode, btn) { const w = document.getElementById('previewWrapper'); w.classList.toggle('proposed-mode', mode === 'proposed'); w.classList.toggle('current-mode', mode === 'legacy'); document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active')); btn.classList.add('ptab--active'); }
+function toggleAnnotations(btn) { const w = document.getElementById('previewWrapper'); const h = !w.classList.contains('hide-annotations'); w.classList.toggle('hide-annotations', h); btn.textContent = h ? 'Show annotations' : 'Hide annotations'; btn.classList.toggle('ann-toggle--off', h); }
+</script>
+</body></html>

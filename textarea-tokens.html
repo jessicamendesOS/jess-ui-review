@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Textarea — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-100: 4px; --token-scale-200: 8px; --token-scale-300: 12px; --token-scale-400: 16px; --token-scale-600: 24px;
+    --token-border-radius-100: 4px; --token-border-radius-200: 8px;
+    --token-border-size-025: 1px;
+    --token-font-size-300: 0.75rem; --token-font-size-350: 0.8125rem; --token-font-size-400: 1rem;
+    --token-bg-surface-default: #ffffff;
+    --token-text-default: #242424; --token-text-subtlest: #626262; --token-text-placeholder: #a2a2a2; --token-text-disabled: #a2a2a2;
+    --token-border-default: #d5d5d5; --token-border-subtle: #f3f3f3;
+    --token-primitives-blue-700: #105cef; --token-primitives-red-700: #dc2020;
+    --token-semantics-primary-base: #105cef; --token-semantics-error-base: #dc2020;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; min-height: 100vh; color: #111827; line-height: 1.5; padding: 48px 32px; }
+  .back-nav { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #6b7280; text-decoration: none; margin-bottom: 24px; padding: 5px 10px 5px 6px; border-radius: 8px; }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+  .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb; }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
+  .badge-chrome { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; text-transform: uppercase; }
+  .badge-chrome--os { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: #374151; background: #fff; border: 1px solid #e5e7eb; border-radius: 99px; padding: 4px 10px 4px 6px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .preview-card { background: #fff; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); border: 1px solid #e5e7eb; overflow: hidden; margin-bottom: 32px; }
+  .preview-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; margin-right: auto; }
+  .preview-card__body { padding: 36px 24px; background: #fff; }
+  #previewWrapper { max-width: 480px; margin: 0 auto; }
+
+  .form-control[data-textarea] {
+    background-color: var(--token-bg-surface-default, #ffffff);
+    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
+    border-radius: var(--token-border-radius-100, 4px);
+    color: var(--token-text-default, #242424);
+    font-size: var(--token-font-size-300, 0.75rem);
+    padding: var(--token-scale-400, 16px);
+    width: 100%;
+    font-family: inherit;
+    resize: auto;
+    transition: all 180ms linear;
+  }
+  .form-control[data-textarea]::placeholder { color: var(--token-text-placeholder, #a2a2a2); }
+  .form-control[data-textarea]:hover { border-color: var(--token-text-subtlest, #626262); }
+  .form-control[data-textarea]:focus { border-color: var(--token-semantics-primary-base, #105cef); outline: 0; }
+  .form-control[data-textarea][disabled] { background-color: var(--token-border-subtle, #f3f3f3); border-color: var(--token-border-default, #d5d5d5); color: var(--token-text-disabled, #a2a2a2); }
+  .form-control[data-textarea].not-valid { border-color: var(--token-semantics-error-base, #dc2020); }
+  .form-control.input-small[data-textarea] { font-size: var(--token-font-size-300, 0.75rem); padding: var(--token-scale-200, 8px); }
+  .form-control.input-large[data-textarea] { font-size: var(--token-font-size-400, 1rem); }
+
+  .ta-label { display: block; font-size: 13px; font-weight: 600; color: var(--token-text-default, #242424); margin-bottom: 6px; }
+  .ta-help { font-size: 12px; color: var(--token-text-subtlest, #626262); margin-top: 6px; }
+  .ta-counter { font-size: 11px; color: var(--token-text-subtlest, #626262); margin-top: 6px; text-align: right; }
+  .ta-section { margin-bottom: 28px; }
+  .ta-section:last-child { margin-bottom: 0; }
+  .ta-section-label { font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; padding-left: 2px; }
+  .annotate-ta { outline: 2px dashed #3b82f6; outline-offset: 3px; border-radius: 6px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 140px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); }
+  .token-row:last-child { border-bottom: none; }
+  .prop-name { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value { font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); margin-right: 5px; }
+  .ta-base-tok .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
+  .ta-state-tok .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+  .ta-size-tok .token-card__header { background: linear-gradient(120deg, #7c2d12, #f97316); }
+
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; white-space: nowrap; font-family: inherit; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; margin-left: 4px; white-space: nowrap; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p { font-size: 12px; color: #6b7280; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; }
+  .td-current { color: #9ca3af; } .td-proposed { font-weight: 600; color: #111827; } .td-token { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; } .td-rationale { color: #4b5563; max-width: 280px; }
+  @media (max-width: 960px) { .token-grid { grid-template-columns: 1fr; } body { padding: 24px 20px 60px; } }
+
+#previewWrapper.current-mode .form-control[data-textarea] { border: 1px solid #ced4da; border-radius: 4px; font-size: 13px; padding: 16px; color: #212529; }
+#previewWrapper.current-mode .form-control[data-textarea]:focus { border-color: #1068eb; }
+#previewWrapper.proposed-mode .form-control[data-textarea] { border-radius: var(--token-border-radius-200, 8px); font-size: var(--token-font-size-350, 0.8125rem); padding: var(--token-scale-300, 12px) var(--token-scale-400, 16px); }
+#previewWrapper.proposed-mode .form-control[data-textarea]:focus { border-color: var(--token-semantics-primary-base, #105cef); box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 18%, transparent); }
+</style></head>
+<body>
+<a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
+<div class="page-header"><h1>Textarea</h1><span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span><span class="badge-chrome badge-chrome--tokens">Design Tokens</span></div>
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> .form-control[data-textarea]</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> :hover / :focus</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> resize handle</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#dc2626;"></span> .not-valid</div>
+</div>
+<div class="preview-card">
+  <div class="preview-card__header"><span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+    <div id="previewWrapper" class="hide-annotations">
+      <div class="ta-section">
+        <div class="ta-section-label">Default · with label + counter</div>
+        <label class="ta-label" for="ta1">Comment</label>
+        <textarea data-textarea class="form-control annotate-ta" rows="3" placeholder="Share your thoughts..." maxlength="500" id="ta1"></textarea>
+        <div class="ta-counter">0 / 500 characters</div>
+      </div>
+      <div class="ta-section">
+        <div class="ta-section-label">Filled · 4 rows</div>
+        <textarea data-textarea class="form-control" rows="4">The new onboarding flow is a huge improvement — users are reaching the "aha" moment faster and our conversion has jumped 18% this week.</textarea>
+      </div>
+      <div class="ta-section">
+        <div class="ta-section-label">States · disabled / error</div>
+        <textarea data-textarea class="form-control" rows="2" placeholder="Read-only feedback" disabled style="margin-bottom:12px;"></textarea>
+        <textarea data-textarea class="form-control not-valid" rows="2">Too short</textarea>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="token-grid">
+  <div class="token-card ta-base-tok"><div class="token-card__header"><span class="dot" style="background:#3b82f6;"></span>Base<span class="component-name">.form-control[data-textarea]</span></div><div class="token-card__body">
+    <div class="token-row"><span class="prop-name">padding</span><span class="token-name">token-scale-400</span><span class="token-value">16px</span></div>
+    <div class="token-row"><span class="prop-name">border</span><span class="token-name"><span class="swatch" style="background:#d5d5d5;"></span>border-default</span><span class="token-value">1px · #d5d5d5</span></div>
+    <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">border-radius-100</span><span class="token-value">4px</span></div>
+    <div class="token-row"><span class="prop-name">font-size</span><span class="token-name">font-size-300</span><span class="token-value">12px</span></div>
+    <div class="token-row"><span class="prop-name">resize</span><span class="token-name" style="color:#64748b;">auto (UA default)</span><span class="token-value">—</span></div>
+  </div></div>
+  <div class="token-card ta-state-tok"><div class="token-card__header"><span class="dot" style="background:#10b981;"></span>States<span class="component-name">:hover · :focus · [disabled] · .not-valid</span></div><div class="token-card__body">
+    <div class="token-row"><span class="prop-name">:hover border</span><span class="token-name">text-subtlest</span><span class="token-value">#626262</span></div>
+    <div class="token-row"><span class="prop-name">:focus border</span><span class="token-name"><span class="swatch" style="background:#105cef;"></span>primary-base</span><span class="token-value">#105cef</span></div>
+    <div class="token-row"><span class="prop-name">[disabled]</span><span class="token-name">border-subtle bg</span><span class="token-value">#f3f3f3</span></div>
+    <div class="token-row"><span class="prop-name">.not-valid</span><span class="token-name"><span class="swatch" style="background:#dc2020;"></span>error-base</span><span class="token-value">#dc2020</span></div>
+  </div></div>
+  <div class="token-card ta-size-tok"><div class="token-card__header"><span class="dot" style="background:#f97316;"></span>Sizes + counter<span class="component-name">.input-small · -large · counter</span></div><div class="token-card__body">
+    <div class="token-row"><span class="prop-name">.input-small</span><span class="token-name">fs:12 · p:8</span><span class="token-value">—</span></div>
+    <div class="token-row"><span class="prop-name">.input-large</span><span class="token-name">fs:16</span><span class="token-value">—</span></div>
+    <div class="token-row"><span class="prop-name">rows (html)</span><span class="token-name" style="color:#64748b;">html attribute</span><span class="token-value">3 default</span></div>
+    <div class="token-row"><span class="prop-name">counter color</span><span class="token-name">text-subtlest</span><span class="token-value">#626262</span></div>
+    <div class="token-row"><span class="prop-name">counter size</span><span class="token-name">11px</span><span class="token-value">—</span></div>
+  </div></div>
+</div>
+<div class="proposal-section">
+  <div class="proposal-header"><h3>Token Proposal</h3><p>Real OS UI uses <code>&lt;textarea data-textarea class="form-control"&gt;</code> with the same token chain as the Input component. Proposal softens radius (4→8px) and adds a focus halo — matches Input for consistency. Character counter becomes a formal slot below the textarea.</p></div>
+  <table class="proposal-table">
+    <thead><tr><th>Property</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td class="td-property">border-radius</td><td class="td-current">4px</td><td class="td-proposed">8px</td><td class="td-token">--token-border-radius-200</td><td class="td-rationale">Matches Input + Card softer corner language.</td></tr>
+      <tr><td class="td-property">focus state</td><td class="td-current">primary border only</td><td class="td-proposed">primary border + 18% halo</td><td class="td-token">--token-semantics-primary-base</td><td class="td-rationale">Same focus treatment as Input — form controls share one focus affordance.</td></tr>
+      <tr><td class="td-property">padding</td><td class="td-current">16px all-around</td><td class="td-proposed">12px top/bottom · 16px left/right</td><td class="td-token">--token-scale-300<br>--token-scale-400</td><td class="td-rationale">Tighter vertical padding matches the 36px Input rhythm (taller textareas don't need 16px top).</td></tr>
+      <tr><td class="td-property">character counter</td><td class="td-current">— (not in 2.28)</td><td class="td-proposed">formal slot below textarea</td><td class="td-token">--token-text-subtlest</td><td class="td-rationale">Real 2.28 has no formal counter — teams inline arbitrary spans. Proposal slots it as a convention below the textarea, right-aligned, small and subtlest-coloured.</td></tr>
+    </tbody>
+  </table>
+</div>
+<script>
+function setMode(mode, btn) { const w = document.getElementById('previewWrapper'); w.classList.toggle('proposed-mode', mode === 'proposed'); w.classList.toggle('current-mode', mode === 'legacy'); document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active')); btn.classList.add('ptab--active'); }
+function toggleAnnotations(btn) { const w = document.getElementById('previewWrapper'); const h = !w.classList.contains('hide-annotations'); w.classList.toggle('hide-annotations', h); btn.textContent = h ? 'Show annotations' : 'Hide annotations'; btn.classList.toggle('ann-toggle--off', h); }
+</script>
+</body></html>

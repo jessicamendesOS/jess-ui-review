@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Switch — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-100: 4px; --token-scale-200: 8px; --token-scale-300: 12px; --token-scale-400: 16px; --token-scale-600: 24px; --token-scale-800: 32px;
+    --token-border-radius-100: 4px; --token-border-radius-full: 9999px;
+    --token-border-size-025: 1px; --token-border-size-050: 2px;
+    --token-font-size-350: 0.8125rem;
+    --token-bg-surface-default: #ffffff;
+    --token-text-default: #242424; --token-text-subtle: #3b3b3b; --token-text-subtlest: #626262; --token-text-disabled: #a2a2a2;
+    --token-border-default: #d5d5d5; --token-border-subtle: #f3f3f3;
+    --token-primitives-blue-700: #105cef; --token-primitives-base-white: #ffffff; --token-primitives-neutral-500: #a2a2a2;
+    --token-semantics-primary-base: #105cef; --token-semantics-primary-700: #105cef;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; min-height: 100vh; color: #111827; line-height: 1.5; padding: 48px 32px; }
+  .back-nav { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #6b7280; text-decoration: none; margin-bottom: 24px; padding: 5px 10px 5px 6px; border-radius: 8px; }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+  .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb; }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
+  .badge-chrome { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; text-transform: uppercase; }
+  .badge-chrome--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: #374151; background: #fff; border: 1px solid #e5e7eb; border-radius: 99px; padding: 4px 10px 4px 6px; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .preview-card { background: #fff; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); border: 1px solid #e5e7eb; overflow: hidden; margin-bottom: 32px; }
+  .preview-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; margin-right: auto; }
+  .preview-card__body { padding: 36px 24px; background: #fff; }
+  #previewWrapper { max-width: 520px; margin: 0 auto; }
+
+  /* Switch component — native <input type="checkbox" data-switch> styled as toggle.
+     The element itself is a 50×32 hit area; :before paints the track (48×30),
+     :after paints the thumb (24×24). Thumb translates from x:4 (off) to x:22 (on). */
+  [data-switch] {
+    appearance: none; -webkit-appearance: none;
+    background-color: transparent;
+    border-radius: 0;
+    border: 0;
+    height: 32px;
+    width: 50px;
+    padding: 0; margin: 0;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  [data-switch]::before {
+    content: "";
+    background-color: #ced4da;    /* 2.28 default: color-neutral-5 */
+    border: 1px solid #ced4da;
+    border-radius: 9999px;
+    height: 30px; width: 48px;
+    position: absolute; top: 1px; left: 1px;
+    transition: background-color 180ms linear, border-color 180ms linear;
+  }
+  [data-switch]::after {
+    content: "";
+    background: #ffffff;
+    border: 0; border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0,0,0,.2);
+    height: 24px; width: 24px;
+    position: absolute;
+    top: 4px; left: 0;
+    transform: translateX(4px);
+    transition: transform 180ms linear;
+  }
+  [data-switch]:hover:not([disabled])::before { background-color: #adb5bd; border-color: #adb5bd; }
+  [data-switch]:checked::before { background-color: #1068eb; border-color: #1068eb; }
+  [data-switch]:checked::after { transform: translateX(22px); }
+  [data-switch][disabled] { pointer-events: none; cursor: not-allowed; }
+  [data-switch][disabled]::before { background-color: #f1f3f5; border-color: #dee2e6; }
+  [data-switch][disabled]::after { background: #dee2e6; box-shadow: none; }
+
+  .switch-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+  .switch-row:last-child { margin-bottom: 0; }
+  .switch-row label { font-size: 14px; color: var(--token-text-default, #242424); cursor: pointer; }
+  .switch-section { margin-bottom: 28px; }
+  .switch-section:last-child { margin-bottom: 0; }
+  .switch-row-label { font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; padding-left: 2px; }
+  .annotate-track { outline: 2px dashed #3b82f6; outline-offset: 3px; border-radius: 16px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 140px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); }
+  .token-row:last-child { border-bottom: none; }
+  .prop-name { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; white-space: nowrap; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value { font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; white-space: nowrap; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); margin-right: 5px; }
+  .sw-track-tok .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
+  .sw-thumb-tok .token-card__header { background: linear-gradient(120deg, #7c2d12, #f97316); }
+  .sw-state-tok .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; font-family: inherit; white-space: nowrap; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; font-family: inherit; margin-left: 4px; white-space: nowrap; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p { font-size: 12px; color: #6b7280; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; white-space: nowrap; }
+  .td-current  { color: #9ca3af; } .td-proposed { font-weight: 600; color: #111827; } .td-token { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; } .td-rationale { color: #4b5563; max-width: 280px; }
+  @media (max-width: 960px) { .token-grid { grid-template-columns: 1fr; } body { padding: 24px 20px 60px; } }
+
+/* Current mode — base styles already match 2.28 verbatim. */
+
+/* Proposed — more compact track (40×24), smaller thumb (20), no border on track,
+   explicit checked fill in primary, visible thumb even on disabled. */
+#previewWrapper.proposed-mode [data-switch] { height: 24px; width: 40px; }
+#previewWrapper.proposed-mode [data-switch]::before {
+  height: 24px; width: 40px;
+  top: 0; left: 0;
+  border: 0;
+  background: var(--token-border-default, #d5d5d5);
+  border-radius: 9999px;
+}
+#previewWrapper.proposed-mode [data-switch]:hover:not([disabled])::before { background: var(--token-primitives-neutral-500, #a2a2a2); }
+#previewWrapper.proposed-mode [data-switch]:checked::before {
+  background: var(--token-semantics-primary-base, #105cef);
+  border: 0;
+}
+#previewWrapper.proposed-mode [data-switch]::after {
+  height: 20px; width: 20px;
+  top: 2px;
+  transform: translateX(2px);
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+#previewWrapper.proposed-mode [data-switch]:checked::after { transform: translateX(18px); }
+/* Disabled — keeps the handle visible so the switch still reads as a toggle,
+   just washed out. No more "handle disappears" bug from the initial iteration. */
+/* Disabled — uses the same muted-grey fill as Checkbox/Radio/Button Group
+   disabled-active states for a consistent "locked" treatment across form
+   controls. #8b8b8b carries enough contrast against white to read as "on"
+   while being clearly different from the primary blue of an enabled switch. */
+#previewWrapper.proposed-mode [data-switch][disabled]::before { background: var(--token-border-subtle, #f3f3f3); border: 0; }
+#previewWrapper.proposed-mode [data-switch][disabled]:checked::before { background: #8b8b8b; }
+#previewWrapper.proposed-mode [data-switch][disabled]::after { background: #ffffff; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+#previewWrapper.proposed-mode [data-switch]:focus-visible::before { box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 22%, transparent); }
+</style></head>
+<body>
+<a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
+<div class="page-header"><h1>Switch</h1><span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span><span class="badge-chrome badge-chrome--tokens">Design Tokens</span></div>
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> [data-switch]:before (track)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f97316;"></span> [data-switch]:after (thumb)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> :checked / :hover / [disabled]</div>
+</div>
+<div class="preview-card">
+  <div class="preview-card__header"><span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+    <div id="previewWrapper" class="hide-annotations">
+      <div class="switch-section">
+        <div class="switch-row-label">Default states</div>
+        <div class="switch-row"><input data-switch type="checkbox" id="sw1" class="annotate-track"><label for="sw1">Push notifications</label></div>
+        <div class="switch-row"><input data-switch type="checkbox" id="sw2" checked><label for="sw2">Auto-sync on change</label></div>
+        <div class="switch-row"><input data-switch type="checkbox" id="sw3" disabled><label for="sw3">Beta features (coming soon)</label></div>
+        <div class="switch-row"><input data-switch type="checkbox" id="sw4" checked disabled><label for="sw4">Enterprise SSO (locked)</label></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="token-grid">
+  <div class="token-card sw-track-tok">
+    <div class="token-card__header"><span class="dot" style="background:#3b82f6;"></span>Track<span class="component-name">[data-switch]:before</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">width</span><span class="token-name">48px</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">height</span><span class="token-name">30px</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">token-border-radius-full</span><span class="token-value">9999px</span></div>
+      <div class="token-row"><span class="prop-name">bg (off)</span><span class="token-name"><span class="swatch" style="background:#d5d5d5;"></span>token-border-default</span><span class="token-value">#d5d5d5</span></div>
+      <div class="token-row"><span class="prop-name">bg (on)</span><span class="token-name"><span class="swatch" style="background:#105cef;"></span>semantics-primary-base</span><span class="token-value">#105cef</span></div>
+    </div>
+  </div>
+  <div class="token-card sw-thumb-tok">
+    <div class="token-card__header"><span class="dot" style="background:#f97316;"></span>Thumb<span class="component-name">[data-switch]:after</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">size</span><span class="token-name">token-scale-600</span><span class="token-value">24px</span></div>
+      <div class="token-row"><span class="prop-name">bg</span><span class="token-name"><span class="swatch" style="background:#ffffff;"></span>primitives-base-white</span><span class="token-value">#ffffff</span></div>
+      <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">circle</span><span class="token-value">50%</span></div>
+      <div class="token-row"><span class="prop-name">offset (off)</span><span class="token-name">translateX(4px)</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">offset (on)</span><span class="token-name">translateX(22px)</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">shadow</span><span class="token-name" style="color:#64748b;">0 1px 2px 15% black</span><span class="token-value">—</span></div>
+    </div>
+  </div>
+  <div class="token-card sw-state-tok">
+    <div class="token-card__header"><span class="dot" style="background:#10b981;"></span>States<span class="component-name">:hover · [disabled] · transition</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">:hover bg</span><span class="token-name">neutral-500</span><span class="token-value">#a2a2a2</span></div>
+      <div class="token-row"><span class="prop-name">[disabled] track</span><span class="token-name">border-subtle</span><span class="token-value">#f3f3f3</span></div>
+      <div class="token-row"><span class="prop-name">[disabled] thumb</span><span class="token-name">border-default</span><span class="token-value">#d5d5d5</span></div>
+      <div class="token-row"><span class="prop-name">transition</span><span class="token-name" style="color:#64748b;">all 180ms linear</span><span class="token-value">—</span></div>
+    </div>
+  </div>
+</div>
+<div class="proposal-section">
+  <div class="proposal-header"><h3>Token Proposal</h3><p>Real OS UI uses a native <code>&lt;input type="checkbox" data-switch&gt;</code> styled via <code>:before</code> (track) + <code>:after</code> (thumb) pseudo-elements. Proposal <strong>shrinks the track</strong> (50×32 → 40×24), drops the border (track is now a plain pill), and reduces thumb to 20px to match modern toggles (iOS, Material, Tailwind UI).</p></div>
+  <table class="proposal-table">
+    <thead><tr><th>Property</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td class="td-property">track size</td><td class="td-current">48 × 30px (50 × 32 hit area)</td><td class="td-proposed">40 × 24px (hit area = track)</td><td class="td-token">—</td><td class="td-rationale">2.28's switch is oversized next to form labels. Modern toggles on iOS / Material / Tailwind UI land around 36-40px wide × 20-24px tall — enough to read clearly without dominating the row.</td></tr>
+      <tr><td class="td-property">track border</td><td class="td-current">1px solid (matches bg colour)</td><td class="td-proposed">none (plain pill)</td><td class="td-token">—</td><td class="td-rationale">The 2.28 border duplicates the bg colour — it's invisible on the on/off states and adds nothing. Dropping it simplifies the rule and the rendered pixel count.</td></tr>
+      <tr><td class="td-property">thumb size</td><td class="td-current">24px</td><td class="td-proposed">20px</td><td class="td-token">—</td><td class="td-rationale">Scales proportionally with the narrower track. Keeps the same 2px breathing room on top/bottom.</td></tr>
+      <tr><td class="td-property">off-state bg</td><td class="td-current">color-neutral-5 (#ced4da)</td><td class="td-proposed">token-border-default (#d5d5d5)</td><td class="td-token">--token-border-default</td><td class="td-rationale">Semantic token — similar contrast, now reactive to theming overrides.</td></tr>
+      <tr><td class="td-property">on-state bg</td><td class="td-current">color-primary (#1068eb)</td><td class="td-proposed">token-semantics-primary-base</td><td class="td-token">--token-semantics-primary-base</td><td class="td-rationale">Semantic anchoring — same blue, but reactive to brand / dark-mode overrides.</td></tr>
+      <tr><td class="td-property">focus state</td><td class="td-current">browser default</td><td class="td-proposed">22% primary halo around track</td><td class="td-token">--token-semantics-primary-base (color-mix)</td><td class="td-rationale">Keyboard accessibility — focus halo makes the focused switch unambiguous without adding a second visual layer.</td></tr>
+    </tbody>
+  </table>
+</div>
+<script>
+function setMode(mode, btn) { const w = document.getElementById('previewWrapper'); w.classList.toggle('proposed-mode', mode === 'proposed'); w.classList.toggle('current-mode', mode === 'legacy'); document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active')); btn.classList.add('ptab--active'); }
+function toggleAnnotations(btn) { const w = document.getElementById('previewWrapper'); const h = !w.classList.contains('hide-annotations'); w.classList.toggle('hide-annotations', h); btn.textContent = h ? 'Show annotations' : 'Hide annotations'; btn.classList.toggle('ann-toggle--off', h); }
+</script>
+</body></html>
