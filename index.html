@@ -257,6 +257,31 @@
   .card--form .card-footer         { color: #1e40af; }
   .card--form .token-pill          { background: #eff6ff; color: #1e40af; }
 
+  .card--appproducts .card-accent  { background: linear-gradient(90deg, #dc2020, #f59e0b); }
+  .card--appproducts .card-icon    { background: #fef2f2; color: #b91c1c; }
+  .card--appproducts .card-footer  { color: #b91c1c; }
+  .card--appproducts .token-pill   { background: #fef2f2; color: #b91c1c; }
+
+  /* ─── Section divider for app examples ─── */
+  .section-heading {
+    margin: 56px 0 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .section-heading__eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: #dc2020;
+    margin-bottom: 6px;
+  }
+  .section-heading h2 {
+    font-size: 22px; font-weight: 800; color: #111;
+    letter-spacing: -.015em;
+  }
+  .section-heading p {
+    font-size: 13px; color: #666; margin-top: 6px;
+    max-width: 560px; line-height: 1.5;
+  }
+
   /* ─── Footer ─── */
   .site-footer {
     margin-top: 56px;
@@ -902,6 +927,26 @@
     </div>
   </a>
 
+</main>
+
+<section class="section-heading">
+  <div class="section-heading__eyebrow">App examples</div>
+  <h2>Composition in practice</h2>
+  <p>Full-screen mockups showing how the primitive component tokens compose into real product surfaces.</p>
+</section>
+
+<main class="component-grid">
+  <!-- App example · ACME Products -->
+  <a class="component-card card--appproducts" href="app-products-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="2" width="16" height="4" rx="1" fill="currentColor"/><rect x="2" y="8" width="7" height="4" rx="1" fill="currentColor" opacity=".6"/><rect x="11" y="8" width="7" height="4" rx="1" fill="currentColor" opacity=".6"/><rect x="2" y="14" width="7" height="4" rx="1" fill="currentColor" opacity=".4"/><rect x="11" y="14" width="7" height="4" rx="1" fill="currentColor" opacity=".4"/></svg></div>
+      <div class="card-title">ACME Products</div>
+      <div class="card-desc">Product catalogue screen — top nav, search, card grid, and pagination composed from primitive tokens.</div>
+      <div class="card-tokens"><span class="token-pill">app chrome</span><span class="token-pill">card grid</span><span class="token-pill">composition</span></div>
+    </div>
+    <div class="card-footer">View annotations<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+  </a>
 </main>
 
 <footer class="site-footer">
