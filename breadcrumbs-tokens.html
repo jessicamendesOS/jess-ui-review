@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breadcrumbs — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-0: 0;
+    --token-scale-025: 1px;
+    --token-scale-050: 2px;
+    --token-scale-100: 4px;
+    --token-scale-200: 8px;
+    --token-scale-300: 12px;
+    --token-scale-400: 16px;
+    --token-scale-600: 24px;
+    --token-scale-800: 32px;
+    --token-border-radius-100: 4px;
+    --token-border-radius-200: 8px;
+    --token-border-radius-full: 9999px;
+    --token-font-size-200: 0.625rem;   /* 10px */
+    --token-font-size-300: 0.75rem;    /* 12px */
+    --token-font-size-350: 0.8125rem;  /* 13px */
+    --token-font-size-400: 1rem;       /* 16px */
+    --token-font-weight-regular: 400;
+    --token-font-weight-medium: 500;
+    --token-font-weight-semi-bold: 600;
+    --token-bg-surface-default: #ffffff;
+    --token-text-default: #242424;
+    --token-text-subtle: #3b3b3b;
+    --token-text-subtlest: #626262;
+    --token-text-disabled: #a2a2a2;
+    --token-border-default: #d5d5d5;
+    --token-border-subtle: #f3f3f3;
+    --token-primitives-base-white: #ffffff;
+    --token-primitives-blue-700:    #105cef;
+    --token-primitives-neutral-700: #626262;
+    --token-primitives-neutral-900: #3b3b3b;
+    --token-semantics-primary-base: #105cef;
+    --token-semantics-primary-700:  #105cef;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    color: #111827;
+    line-height: 1.5;
+    padding: 48px 32px;
+  }
+
+  .back-nav {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; color: #6b7280;
+    text-decoration: none; margin-bottom: 24px;
+    padding: 5px 10px 5px 6px; border-radius: 8px;
+    transition: background .15s, color .15s;
+  }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+
+  .page-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
+  .badge-chrome {
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 700; padding: 4px 10px;
+    border-radius: 99px; letter-spacing: .02em; text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .badge-chrome--os    { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens{ background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 600; color: #374151;
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 99px;
+    padding: 4px 10px 4px 6px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  .preview-card {
+    background: #fff; border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07);
+    border: 1px solid #e5e7eb; overflow: hidden;
+    margin-bottom: 32px;
+  }
+  .preview-card__header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa;
+  }
+  .preview-card__label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: #9ca3af; margin-right: auto;
+  }
+  .preview-card__body { padding: 36px 24px; background: #fff; }
+  #previewWrapper { max-width: 640px; margin: 0 auto; }
+
+  /* ─── Breadcrumbs component — faithful to real OS UI 2.27/2.28 CSS ───
+     HTML shape from OSUI:
+       <div class="breadcrumbs-content">
+         <div class="breadcrumbs-item">
+           <a href="#">Home</a>
+           <i class="icon"><!-- separator --></i>
+         </div>
+         ...
+         <div class="breadcrumbs-item">
+           <span>Current page</span>   <!-- no separator on last -->
+         </div>
+       </div>
+  */
+  .breadcrumbs-content {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .breadcrumbs-item {
+    align-items: center;
+    color: var(--token-text-subtle, var(--token-primitives-neutral-900, #3b3b3b));  /* real 2.27: text-color-neutral-8 */
+    display: inline-flex;
+    font-size: var(--token-font-size-350, 0.8125rem);
+  }
+  /* Real 2.28 behaviour: `<a>` inside a breadcrumb inherits OS UI's global
+     link colour (primary blue) — NOT the surrounding neutral-8 of the item.
+     Current-page `<span>`s inherit from `.breadcrumbs-item` so they render
+     in the muted grey. This base rule mirrors that contract for
+     current-mode + new-tokens. Proposed-mode overrides it. */
+  .breadcrumbs-item a {
+    color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
+    text-decoration: none;
+  }
+  .breadcrumbs-item a:hover {
+    text-decoration: underline;
+  }
+  .breadcrumbs-item .icon {
+    color: var(--token-text-subtlest, var(--token-primitives-neutral-700, #626262));  /* real 2.27: text-color-neutral-7 */
+    display: inline-flex;
+    font-size: var(--token-font-size-300, 0.75rem);                                    /* real 2.27: font-size-xs (10px) */
+    justify-content: center;
+    margin: 0 var(--token-scale-200, 8px);                                             /* real 2.27: space-s */
+    width: auto;
+  }
+  /* Drop the trailing separator from the last item (real 2.27 markup leaves
+     it off; the rule below is preview-safety for cases where markup includes
+     a trailing icon). */
+  .breadcrumbs-item:last-child .icon { display: none; }
+
+  /* Home-icon prefix — sits inside the first .breadcrumbs-item before the link.
+     Real 2.28 has no formal home-slot styling, so the base just sets colour +
+     size; vertical alignment tweaks belong to proposed-mode. */
+  .breadcrumbs-home {
+    display: inline-flex;
+    align-items: center;
+    margin-right: var(--token-scale-100, 4px);
+    color: inherit;
+    font-size: 0.9375rem;
+  }
+
+  /* Collapsed / overflow indicator — rendered as a single "…" item that
+     groups ancestors on long paths. Triggered purely via class in markup:
+     `.breadcrumbs-item.breadcrumbs-collapsed`. */
+  .breadcrumbs-item.breadcrumbs-collapsed {
+    color: var(--token-text-subtlest, #626262);
+  }
+  .breadcrumbs-item.breadcrumbs-collapsed .ellipsis {
+    padding: var(--token-scale-050, 2px) var(--token-scale-200, 8px);
+    border-radius: var(--token-border-radius-100, 4px);
+    cursor: pointer;
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+  .breadcrumbs-item.breadcrumbs-collapsed .ellipsis:hover {
+    background: var(--token-border-subtle, #f3f3f3);
+    color: var(--token-text-default, #242424);
+  }
+
+  /* Preview layout helpers */
+  .breadcrumbs-row-label {
+    font-size: 10px; font-weight: 700; color: #9ca3af;
+    text-transform: uppercase; letter-spacing: .08em;
+    margin-bottom: 10px;
+    padding-left: 2px;
+  }
+  .breadcrumbs-section { margin-bottom: 28px; }
+  .breadcrumbs-section:last-child { margin-bottom: 0; }
+
+  /* Annotation outlines */
+  .annotate-container { outline: 2px dashed #8b5cf6; outline-offset: 6px; border-radius: 8px; }
+  .annotate-item      { outline: 2px dashed #3b82f6; outline-offset: 3px; border-radius: 4px; }
+  .annotate-separator { outline: 2px dashed #10b981; outline-offset: 2px; border-radius: 4px; }
+  .annotate-current   { outline: 2px dashed #f59e0b; outline-offset: 3px; border-radius: 4px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+
+  /* ─── Token panel ─── */
+  .token-panel { display: flex; flex-direction: column; gap: 12px; }
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; letter-spacing: 0; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 150px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); transition: background .12s; }
+  .token-row:last-child { border-bottom: none; }
+  .token-row:hover { background: rgba(255,255,255,.03); }
+  .prop-name  { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; white-space: nowrap; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value{ font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; white-space: nowrap; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); vertical-align: middle; margin-right: 5px; flex-shrink: 0; }
+  .token-name-with-swatch { display: flex; align-items: center; }
+
+  .bc-structure-tok  .token-card__header { background: linear-gradient(120deg, #5b21b6, #8b5cf6); }
+  .bc-typography-tok .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+  .bc-states-tok     .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
+
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; font-family: inherit; transition: all .15s; white-space: nowrap; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; font-family: inherit; transition: all .15s; margin-left: 4px; white-space: nowrap; }
+  .ann-toggle:hover { color: #111827; border-color: #9ca3af; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p  { font-size: 12px; color: #6b7280; }
+  .proposal-table-wrap { overflow-x: auto; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .proposal-table tbody tr:last-child td { border-bottom: none; }
+  .proposal-table tbody tr:hover td { background: #fafafa; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; white-space: nowrap; }
+  .td-current  { color: #9ca3af; }
+  .td-proposed { font-weight: 600; color: #111827; }
+  .td-token    { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; }
+  .td-rationale{ color: #4b5563; max-width: 280px; }
+  .td-rationale strong { color: #111827; }
+
+  @media (max-width: 960px) {
+    .token-grid { grid-template-columns: 1fr; }
+    body { padding: 24px 20px 60px; }
+  }
+
+/* ─── Current mode (OutSystems UI 2.28.0) — raw 2.27 values, no tokens ─── */
+/* Real 2.28:
+     - .breadcrumbs-item           → color-neutral-8 (#4f575e)
+     - <a> inside it               → inherits global anchor colour (color-primary #1068eb)
+     - .breadcrumbs-item .icon     → color-neutral-7 (#6a7178), font-size-xs (10px)
+     - font-size                   → 13px
+   No distinction between current-page (span) and ancestors (anchors) apart
+   from the fact that the current is a plain `<span>` so it reads in neutral-8. */
+#previewWrapper.current-mode .breadcrumbs-item {
+  color: #4f575e;
+  font-size: 13px;
+  font-weight: 400;
+}
+#previewWrapper.current-mode .breadcrumbs-item a {
+  color: #1068eb;      /* color-primary — global anchor default */
+  text-decoration: none;
+}
+#previewWrapper.current-mode .breadcrumbs-item a:hover {
+  text-decoration: underline;
+}
+#previewWrapper.current-mode .breadcrumbs-item .icon {
+  color: #6a7178;      /* color-neutral-7 */
+  font-size: 10px;     /* font-size-xs */
+  margin: 0 8px;       /* space-s */
+}
+#previewWrapper.current-mode .breadcrumbs-home {
+  font-size: 14px;
+}
+#previewWrapper.current-mode .breadcrumbs-item.breadcrumbs-collapsed {
+  /* 2.28 has no collapsed variant — rendered here for parity, same palette. */
+  color: #4f575e;
+}
+
+/* ─── Proposed mode — semantic tokens, current-item emphasis, hover polish,
+       collapsed-overflow pattern ─── */
+/*
+  Proposed changes:
+    • Non-current links → token-text-subtle (same visual as 2.28 neutral-8 but
+      semantically anchored), current item → token-text-default + semi-bold for
+      clear "you are here" contrast (2.28 collapses both to one grey).
+    • Separator icon → token-text-subtlest (dim so it reads as punctuation,
+      not as interactive content); swap fa-caret-right for phosphor-bold
+      caret-right (1px stroke tuning for modern look).
+    • Link hover state → subtle background chip (token-border-subtle) instead
+      of primary-blue underline — feels less like "visited" and more like
+      "clickable surface"; respects spacing tokens.
+    • Collapsed / overflow pattern (`…` item) for deep paths — real 2.28 has
+      no convention for truncating long breadcrumb chains; proposal introduces
+      `.breadcrumbs-collapsed` as a recognised pattern for 4+ levels.
+*/
+#previewWrapper.proposed-mode .breadcrumbs-item {
+  font-size: var(--token-font-size-350, 0.8125rem);
+  line-height: 1;
+}
+/* Proposed-only: make every inline child a flex container with centred items
+   so home-icon + text + chevron share one cross-axis. Real 2.28 inherits
+   baseline-alignment for inline `<i>` glyphs, which sinks the house icon a
+   few pixels below the text — faithful to 2.28 and deliberately left there.
+   Proposed mode polishes that out. */
+#previewWrapper.proposed-mode .breadcrumbs-item a {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+#previewWrapper.proposed-mode .breadcrumbs-item .icon {
+  align-items: center;
+  line-height: 1;
+}
+#previewWrapper.proposed-mode .breadcrumbs-item .icon i {
+  display: inline-block;
+  line-height: 1;
+}
+#previewWrapper.proposed-mode .breadcrumbs-home {
+  line-height: 1;
+}
+#previewWrapper.proposed-mode .breadcrumbs-home i {
+  display: inline-block;
+  line-height: 1;
+}
+/* Links drop primary-blue for a quieter flat-tonal treatment — ancestors fade
+   into the background so the current page becomes the only strong element. */
+#previewWrapper.proposed-mode .breadcrumbs-item a {
+  color: var(--token-text-subtlest, #626262);
+  transition: color .12s;
+}
+#previewWrapper.proposed-mode .breadcrumbs-item a:hover {
+  color: var(--token-text-default, #242424);
+  text-decoration: none;
+}
+
+/* Current-item — `token-text-default` (close to pure black) + semi-bold so
+   "you are here" becomes the visual anchor of the chain. */
+#previewWrapper.proposed-mode .breadcrumbs-item:last-child {
+  color: var(--token-text-default, #242424);
+  font-weight: var(--token-font-weight-semi-bold, 600);
+}
+
+/* Separator: dimmer colour + swap glyph from filled triangle (Phosphor-Fill)
+   to outline chevron (Phosphor regular). Same `\e13a` codepoint, different
+   font-family — a pure CSS override keeps the HTML shared with current-mode. */
+#previewWrapper.proposed-mode .breadcrumbs-item .icon {
+  color: var(--token-text-subtlest, #626262);
+  font-size: 0.75rem;  /* 12px */
+}
+#previewWrapper.proposed-mode .breadcrumbs-item .icon i.ph-fill {
+  font-family: "Phosphor" !important;  /* renders caret-right as thin outline `>` */
+}
+
+/* Collapsed ellipsis: match the tonal flat palette — no chip hover. */
+#previewWrapper.proposed-mode .breadcrumbs-item.breadcrumbs-collapsed .ellipsis {
+  padding: 0;
+  border-radius: 0;
+  cursor: pointer;
+}
+#previewWrapper.proposed-mode .breadcrumbs-item.breadcrumbs-collapsed .ellipsis:hover {
+  background: none;
+  color: var(--token-text-default, #242424);
+}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-nav">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  All components
+</a>
+
+<div class="page-header">
+  <h1>Breadcrumbs</h1>
+  <span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span>
+  <span class="badge-chrome badge-chrome--tokens">Design Tokens</span>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6;"></span> .breadcrumbs-content (container)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> .breadcrumbs-item</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> .breadcrumbs-item .icon (separator)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> current page</div>
+</div>
+
+<!-- Preview -->
+<div class="preview-card">
+  <div class="preview-card__header">
+    <span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+  <div id="previewWrapper" class="hide-annotations">
+
+    <!-- Standard 3-level path -->
+    <div class="breadcrumbs-section">
+      <div class="breadcrumbs-row-label">Standard path · 3 levels</div>
+      <div class="breadcrumbs-content annotate-container">
+        <div class="breadcrumbs-item annotate-item">
+          <a href="#">Design System</a>
+          <i class="icon annotate-separator"><i class="ph-fill ph-caret-right"></i></i>
+        </div>
+        <div class="breadcrumbs-item">
+          <a href="#">Components</a>
+          <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
+        </div>
+        <div class="breadcrumbs-item annotate-current">
+          <span>Breadcrumbs</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Home icon prefix -->
+    <div class="breadcrumbs-section">
+      <div class="breadcrumbs-row-label">With home-icon prefix · 4 levels</div>
+      <div class="breadcrumbs-content">
+        <div class="breadcrumbs-item">
+          <a href="#">
+            <span class="breadcrumbs-home"><i class="ph-bold ph-house"></i></span>
+          </a>
+          <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
+        </div>
+        <div class="breadcrumbs-item">
+          <a href="#">Projects</a>
+          <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
+        </div>
+        <div class="breadcrumbs-item">
+          <a href="#">Q1 Campaign</a>
+          <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
+        </div>
+        <div class="breadcrumbs-item">
+          <span>Analytics</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Long / collapsed path — showcases the proposed `…` overflow pattern -->
+    <div class="breadcrumbs-section">
+      <div class="breadcrumbs-row-label">Long path · collapsed overflow (<code>.breadcrumbs-collapsed</code>)</div>
+      <div class="breadcrumbs-content">
+        <div class="breadcrumbs-item">
+          <a href="#">
+            <span class="breadcrumbs-home"><i class="ph-bold ph-house"></i></span>
+          </a>
+          <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
+        </div>
+        <div class="breadcrumbs-item breadcrumbs-collapsed">
+          <span class="ellipsis" title="Workspaces › Marketing › 2026">…</span>
+          <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
+        </div>
+        <div class="breadcrumbs-item">
+          <a href="#">Q1 Campaign</a>
+          <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
+        </div>
+        <div class="breadcrumbs-item">
+          <span>Landing page copy</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+</div>
+
+<!-- Token cards -->
+<div class="token-grid">
+
+  <!-- Item -->
+  <div class="token-card bc-structure-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#8b5cf6;"></span>
+      Item
+      <span class="component-name">.breadcrumbs-item</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">font-size</span>
+        <span class="token-name">token-font-size-350</span>
+        <span class="token-value">13px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">color (link)</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#3b3b3b;"></span>token-text-subtle</span>
+        <span class="token-value">#3b3b3b</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">color (current)</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#242424;"></span>token-text-default</span>
+        <span class="token-value">#242424</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">weight (current)</span>
+        <span class="token-name">token-font-weight-semi-bold</span>
+        <span class="token-value">600</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">link padding</span>
+        <span class="token-name">token-scale-050 · 100</span>
+        <span class="token-value">2px · 4px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">link radius</span>
+        <span class="token-name">token-border-radius-100</span>
+        <span class="token-value">4px</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Separator -->
+  <div class="token-card bc-typography-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#10b981;"></span>
+      Separator
+      <span class="component-name">.breadcrumbs-item .icon</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">glyph</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">ph-bold ph-caret-right</span>
+        <span class="token-value">›</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">font-size</span>
+        <span class="token-name">token-font-size-300</span>
+        <span class="token-value">12px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">color</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#626262;"></span>token-text-subtlest</span>
+        <span class="token-value">#626262</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">h-margin</span>
+        <span class="token-name">token-scale-200</span>
+        <span class="token-value">8px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">last-item</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">display: none</span>
+        <span class="token-value">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- States & variants -->
+  <div class="token-card bc-states-tok">
+    <div class="token-card__header">
+      <span class="dot" style="background:#3b82f6;"></span>
+      States + variants
+      <span class="component-name">hover · home · collapsed</span>
+    </div>
+    <div class="token-card__body">
+      <div class="token-row">
+        <span class="prop-name">hover · bg</span>
+        <span class="token-name token-name-with-swatch"><span class="swatch" style="background:#f3f3f3;"></span>token-border-subtle</span>
+        <span class="token-value">#f3f3f3</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">hover · color</span>
+        <span class="token-name">token-text-default</span>
+        <span class="token-value">#242424</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">home icon</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">ph-bold ph-house</span>
+        <span class="token-value">15px</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">collapsed (ellipsis)</span>
+        <span class="token-name" style="color:#64748b;font-style:italic;">.breadcrumbs-collapsed</span>
+        <span class="token-value">…</span>
+      </div>
+      <div class="token-row">
+        <span class="prop-name">collapsed · color</span>
+        <span class="token-name">token-text-subtlest</span>
+        <span class="token-value">#626262</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Proposal table -->
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Token Proposal</h3>
+    <p>Real OS UI HTML uses <code>.breadcrumbs-content</code> + <code>.breadcrumbs-item</code> + an <code>.icon</code> separator inside each item (except the last). Real 2.28 ships a minimal palette: all items render in <code>color-neutral-8</code>, the separator in <code>color-neutral-7</code>, <code>space-s</code> (8px) between items. Proposal migrates to semantic tokens, <strong>distinguishes the current page</strong> from its ancestors (2.28 makes no visual distinction), adds a <strong>chip-style hover</strong>, and introduces a <strong>collapsed overflow</strong> pattern for deep paths.</p>
+  </div>
+  <div class="proposal-table-wrap">
+    <table class="proposal-table">
+      <thead>
+        <tr>
+          <th>Property</th>
+          <th>Utility class</th>
+          <th>Current (2.28)</th>
+          <th>Proposed</th>
+          <th>Token</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-property">link colour</td>
+          <td class="td-property">.breadcrumbs-item a</td>
+          <td class="td-current">color-primary (#1068eb) — <em>inherits global anchor</em></td>
+          <td class="td-proposed">token-text-subtlest (#626262) — <em>explicit override</em></td>
+          <td class="td-token">--token-text-subtlest</td>
+          <td class="td-rationale">Real 2.28 lets breadcrumb links inherit the global primary-blue anchor colour. That's visually <em>noisy</em> — a 4-level breadcrumb ends up with three bright blue links competing with the actual page CTAs. Proposal quiets the chain by overriding to <code>text-subtlest</code>, pushing ancestors into the background so the current page becomes the only strong element.</td>
+        </tr>
+        <tr>
+          <td class="td-property">current-page colour</td>
+          <td class="td-property">.breadcrumbs-item:last-child</td>
+          <td class="td-current">color-neutral-8 (#4f575e) — <em>same grey as a span</em></td>
+          <td class="td-proposed">token-text-default (#242424) + semi-bold</td>
+          <td class="td-token">--token-text-default<br>--token-font-weight-semi-bold</td>
+          <td class="td-rationale"><strong>"You are here."</strong> 2.28 renders the current page in muted neutral-8 — so in a chain of blue links + grey span, the grey span reads as the <em>weakest</em> item despite being where the user actually is. Proposal lifts the current item to <code>text-default</code> + semi-bold so the active page becomes the strongest thing in the chain, and the ancestors (quieted to <code>text-subtle</code>) recede.</td>
+        </tr>
+        <tr>
+          <td class="td-property">separator colour</td>
+          <td class="td-property">.breadcrumbs-item .icon</td>
+          <td class="td-current">color-neutral-7 (#6a7178)</td>
+          <td class="td-proposed">token-text-subtlest (#626262)</td>
+          <td class="td-token">--token-text-subtlest</td>
+          <td class="td-rationale">Slightly dimmer and semantically tokenised — the chevron reads as punctuation between interactive items rather than as content in its own right.</td>
+        </tr>
+        <tr>
+          <td class="td-property">separator glyph</td>
+          <td class="td-property">.breadcrumbs-item .icon</td>
+          <td class="td-current">filled triangle (fa-caret-right / ph-fill @ 12px)</td>
+          <td class="td-proposed">outline chevron (Phosphor regular @ 12px)</td>
+          <td class="td-token">--token-font-size-300</td>
+          <td class="td-rationale">Swap from filled triangle (▶) to thin outline chevron (›) — reads as <em>punctuation</em> between interactive items rather than a directional arrow. Same Phosphor codepoint <code>\e13a</code>; the override is purely a <code>font-family</code> swap from <code>Phosphor-Fill</code> to <code>Phosphor</code>, keeping the HTML shared with current-mode.</td>
+        </tr>
+        <tr>
+          <td class="td-property">hover state</td>
+          <td class="td-property">.breadcrumbs-item a:hover</td>
+          <td class="td-current">underline only (inherits link colour)</td>
+          <td class="td-proposed">colour shift only (text-subtlest → text-default)</td>
+          <td class="td-token">--token-text-default</td>
+          <td class="td-rationale">Drops the underline and the chip background entirely — hover just deepens the colour. Keeps the breadcrumb chain visually quiet and flat, matching modern tonal navigation patterns (GitHub, Linear, Notion all use this approach).</td>
+        </tr>
+        <tr>
+          <td class="td-property">home-icon prefix</td>
+          <td class="td-property">.breadcrumbs-home</td>
+          <td class="td-current">— (not in 2.28; teams inline arbitrary icons)</td>
+          <td class="td-proposed">formalised as <code>.breadcrumbs-home</code> + <code>ph-house</code></td>
+          <td class="td-token">—</td>
+          <td class="td-rationale">Home-icon breadcrumb starts are a universal pattern (GitHub, GitLab, Linear, every admin console). 2.28 has no formal slot, so teams reach for inline markup that renders inconsistently. Proposal introduces <code>.breadcrumbs-home</code> as the recognised first-item prefix so the icon stays aligned, weighted, and themable.</td>
+        </tr>
+        <tr>
+          <td class="td-property">collapsed overflow</td>
+          <td class="td-property">.breadcrumbs-item.breadcrumbs-collapsed</td>
+          <td class="td-current">— (not in 2.28)</td>
+          <td class="td-proposed"><code>…</code> item · hover chip · title-attr reveals ancestors</td>
+          <td class="td-token">--token-text-subtlest<br>--token-border-subtle</td>
+          <td class="td-rationale"><strong>New pattern.</strong> 2.28 has no convention for truncating deep paths — a 6-level breadcrumb on a narrow modal wraps onto two lines or pushes content out. Proposal introduces <code>.breadcrumbs-collapsed</code> as a single <code>…</code> item that groups middle ancestors. Hoverable (chip style) and ships with a <code>title</code> attr for the concatenated path; clicking can expand inline or open a dropdown (component-level decision).</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function setMode(mode, btn) {
+    const w = document.getElementById('previewWrapper');
+    w.classList.toggle('proposed-mode', mode === 'proposed');
+    w.classList.toggle('current-mode', mode === 'legacy');
+    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+    btn.classList.add('ptab--active');
+  }
+
+  function toggleAnnotations(btn) {
+    const wrapper = document.getElementById('previewWrapper');
+    const hiding = !wrapper.classList.contains('hide-annotations');
+    wrapper.classList.toggle('hide-annotations', hiding);
+    btn.textContent = hiding ? 'Show annotations' : 'Hide annotations';
+    btn.classList.toggle('ann-toggle--off', hiding);
+  }
+</script>
+
+</body>
+</html>

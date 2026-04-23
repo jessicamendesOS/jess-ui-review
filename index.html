@@ -187,6 +187,11 @@
   .card--timeline .card-footer     { color: #0e7490; }
   .card--timeline .token-pill      { background: #ecfeff; color: #0e7490; }
 
+  .card--breadcrumbs .card-accent  { background: linear-gradient(90deg, #6366f1, #ec4899); }
+  .card--breadcrumbs .card-icon    { background: #eef2ff; color: #4f46e5; }
+  .card--breadcrumbs .card-footer  { color: #4338ca; }
+  .card--breadcrumbs .token-pill   { background: #eef2ff; color: #4338ca; }
+
   /* ─── Footer ─── */
   .site-footer {
     margin-top: 56px;
@@ -212,7 +217,7 @@
   <div class="badge-row">
     <span class="badge badge-os">OutSystems UI 2.29</span>
     <span class="badge badge-dt">Design Tokens</span>
-    <span class="badge badge-cnt">16 components</span>
+    <span class="badge badge-cnt">17 components</span>
   </div>
 </header>
 
@@ -566,6 +571,34 @@
         <span class="token-pill">text-subtle</span>
         <span class="token-pill">spacing</span>
         <span class="token-pill">typography</span>
+      </div>
+    </div>
+    <div class="card-footer">
+      View annotations
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </div>
+  </a>
+
+  <!-- Breadcrumbs -->
+  <a class="component-card card--breadcrumbs" href="breadcrumbs-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect x="2" y="8.5" width="3" height="3" rx=".6" fill="currentColor"/>
+          <path d="M6 10h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity=".5"/>
+          <rect x="9" y="8.5" width="3" height="3" rx=".6" fill="currentColor" opacity=".6"/>
+          <path d="M13 10h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity=".5"/>
+          <rect x="16" y="8.5" width="2.5" height="3" rx=".6" fill="currentColor" opacity=".3"/>
+        </svg>
+      </div>
+      <div class="card-title">Breadcrumbs</div>
+      <div class="card-desc">Hierarchical navigation chain with chevron separators, home-icon prefix, current-page emphasis, and collapsed overflow for deep paths.</div>
+      <div class="card-tokens">
+        <span class="token-pill">text-subtle</span>
+        <span class="token-pill">text-default</span>
+        <span class="token-pill">border-subtle</span>
+        <span class="token-pill">states</span>
       </div>
     </div>
     <div class="card-footer">
