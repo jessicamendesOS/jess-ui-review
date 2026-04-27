@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Form — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
+<link rel="stylesheet" href="assets/lab-proposed-overrides.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
     --token-scale-100: 4px; --token-scale-200: 8px; --token-scale-300: 12px; --token-scale-400: 16px; --token-scale-600: 24px; --token-scale-800: 32px; --token-scale-900: 36px; --token-scale-1000: 40px;
-    --token-border-radius-100: 4px; --token-border-radius-200: 8px; --token-border-radius-300: 12px;
-    --token-border-size-025: 1px;
+    --token-border-radius-100: 4px; --token-border-radius-200: 8px; --token-border-radius-300: 12px; --token-border-radius-full: 9999px;
+    --token-border-size-025: 1px; --token-border-size-050: 2px;
     --token-font-size-300: 0.75rem; --token-font-size-350: 0.8125rem; --token-font-size-400: 1rem;
     --token-font-weight-medium: 500; --token-font-weight-semi-bold: 600;
     --token-bg-surface-default: #ffffff;
@@ -32,30 +37,87 @@
   .preview-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
   .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; margin-right: auto; }
   .preview-card__body { padding: 36px 24px; background: #fff; }
-  #previewWrapper { max-width: 560px; margin: 0 auto; }
+  /* Match the 480px preview rail used on Input, Textarea, Dropdown, etc. */
+  #previewWrapper { max-width: 480px; margin: 0 auto; }
 
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  #previewWrapper.proposed-mode [data-form].form { width: 100%; }
+  /* Proposed: full-width fields (not(:proposed) lab block is disabled; otherwise native <input> uses default ~20ch width) */
+  #previewWrapper.proposed-mode .form-control[data-input],
+  #previewWrapper.proposed-mode .form-control[data-textarea] { width: 100%; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode,
+  #previewWrapper.proposed-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
   /* Form .card host — real 2.28 renders the form inside a .card with
      border + padding + subtle shadow. Base + current + new-tokens keep
      that chrome; proposed mode removes it for a cleaner bare-stack look. */
-  [data-form].form {
-    background: var(--token-bg-surface-default, #ffffff);
-    border-radius: var(--token-border-radius-200, 8px);
-    border: var(--token-border-size-025, 1px) solid var(--token-border-subtle, #f3f3f3);
-    padding: var(--token-scale-600, 24px);
-    box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
-  }
-  [data-form] [data-container] { margin-bottom: var(--token-scale-400, 16px); }
-  [data-form] [data-container]:last-child { margin-bottom: 0; }
-  .columns.columns2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--token-scale-400, 16px); margin-bottom: var(--token-scale-400, 16px); }
+  
+  
+  
+  .columns.columns2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--token-scale-400, 16px); margin-bottom: 0; }
+  #previewWrapper.proposed-mode .columns.columns2 { gap: var(--token-scale-600, 24px); }
   .columns-item { display: flex; flex-direction: column; }
 
-  /* Label */
-  [data-label] { display: block; font-size: 13px; font-weight: 600; color: var(--token-text-default, #242424); margin-bottom: 6px; }
-  [data-label].mandatory::after { content: " *"; color: var(--token-semantics-error-base, #dc2020); }
+  /* os-ui applies margin-bottom: 24px only to .dropdown / input[data-input] /
+     textarea[data-textarea] / [data-switch] inside .form, leaving radio-groups,
+     .dropdown-container, and checkboxes with 0 — uneven row spacing.
+     Normalize: every direct row gets 24px bottom; zero inner-control margins
+     so they don't double up. Specificity (1,3,0–1) beats os-ui's (1,2,1). */
+  #previewWrapper.current-mode .form > [data-block],
+  #previewWrapper.current-mode .form > [data-container],
+  #previewWrapper.new-tokens-mode .form > [data-block],
+  #previewWrapper.new-tokens-mode .form > [data-container],
+  #previewWrapper.proposed-mode .form > [data-block],
+  #previewWrapper.proposed-mode .form > [data-container] { margin-bottom: var(--token-scale-600, 24px); }
+  #previewWrapper.current-mode .form > [data-block]:last-child,
+  #previewWrapper.current-mode .form > [data-container]:last-child,
+  #previewWrapper.new-tokens-mode .form > [data-block]:last-child,
+  #previewWrapper.new-tokens-mode .form > [data-container]:last-child,
+  #previewWrapper.proposed-mode .form > [data-block]:last-child,
+  #previewWrapper.proposed-mode .form > [data-container]:last-child { margin-bottom: 0; }
+  #previewWrapper.current-mode .form .form-control[data-input],
+  #previewWrapper.current-mode .form .form-control[data-textarea],
+  #previewWrapper.current-mode .form [data-switch],
+  #previewWrapper.new-tokens-mode .form .form-control[data-input],
+  #previewWrapper.new-tokens-mode .form .form-control[data-textarea],
+  #previewWrapper.new-tokens-mode .form [data-switch],
+  #previewWrapper.proposed-mode .form .form-control[data-input],
+  #previewWrapper.proposed-mode .form .form-control[data-textarea],
+  #previewWrapper.proposed-mode .form [data-switch] { margin-bottom: 0; }
 
-  /* Inputs */
+  /* Label */
+  
+  
+
+  /* Lab-only skins — Current + New tokens. Proposed uses os-ui-229-proposed-scoped.css only. */
   .input-text, .input-email { display: block; }
-  .form-control[data-input] {
+  #previewWrapper:not(.proposed-mode) .form-control[data-input] {
     background-color: var(--token-bg-surface-default, #ffffff);
     border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
     border-radius: var(--token-border-radius-100, 4px);
@@ -67,12 +129,12 @@
     font-family: inherit;
     transition: all 180ms linear;
   }
-  .form-control[data-input]:hover { border-color: var(--token-text-subtlest, #626262); }
-  .form-control[data-input]:focus { border-color: var(--token-semantics-primary-base, #105cef); outline: 0; }
+  #previewWrapper:not(.proposed-mode) .form-control[data-input]:hover { border-color: var(--token-text-subtlest, #626262); }
+  #previewWrapper:not(.proposed-mode) .form-control[data-input]:focus { border-color: var(--token-semantics-primary-base, #105cef); outline: 0; }
 
-  /* Dropdown */
-  .dropdown-container { cursor: pointer; position: relative; }
-  .dropdown-container > .dropdown-display {
+  /* Dropdown — lab triangle caret + 40px row (isolated page parity) */
+  #previewWrapper:not(.proposed-mode) .dropdown-container { cursor: pointer; position: relative; }
+  #previewWrapper:not(.proposed-mode) .dropdown-container > .dropdown-display {
     background: var(--token-bg-surface-default, #ffffff);
     border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
     border-radius: var(--token-border-radius-100, 4px);
@@ -85,7 +147,7 @@
     position: relative;
     transition: all 180ms linear;
   }
-  .dropdown-container > .dropdown-display::after {
+  #previewWrapper:not(.proposed-mode) .dropdown-container > .dropdown-display::after {
     content: "";
     border: 5px solid transparent;
     border-top-color: var(--token-text-subtlest, #626262);
@@ -94,10 +156,9 @@
     right: 16px; top: 50%;
     transform: translateY(-25%);
   }
-  .dropdown-container > .dropdown-display > span { flex: 1; }
+  #previewWrapper:not(.proposed-mode) .dropdown-container .dropdown-display-content span { flex: 1; }
 
-  /* Textarea */
-  .form-control[data-textarea] {
+  #previewWrapper:not(.proposed-mode) .form-control[data-textarea] {
     background-color: var(--token-bg-surface-default, #ffffff);
     border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
     border-radius: var(--token-border-radius-100, 4px);
@@ -109,104 +170,104 @@
     resize: auto;
     transition: all 180ms linear;
   }
-  .form-control[data-textarea]::placeholder { color: var(--token-text-placeholder, #a2a2a2); }
-  .form-control[data-textarea]:focus { border-color: var(--token-semantics-primary-base, #105cef); outline: 0; }
+  #previewWrapper:not(.proposed-mode) .form-control[data-textarea]::placeholder { color: var(--token-text-placeholder, #a2a2a2); }
+  #previewWrapper:not(.proposed-mode) .form-control[data-textarea]:focus { border-color: var(--token-semantics-primary-base, #105cef); outline: 0; }
 
   /* Checkbox */
-  [data-checkbox] {
-    appearance: none; -webkit-appearance: none;
-    height: 20px; width: 20px; padding: 0; margin: 0;
-    cursor: pointer; position: relative;
-    flex-shrink: 0;
-  }
-  [data-checkbox]:before {
-    content: "";
-    background: var(--token-bg-surface-default, #ffffff);
-    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
-    border-radius: 4px;
-    height: 18px; width: 18px;
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    transition: all 180ms linear;
-  }
-  [data-checkbox]:checked:before {
-    background: var(--token-semantics-primary-base, #105cef);
-    border-color: var(--token-semantics-primary-base, #105cef);
-  }
-  [data-checkbox]:checked:after {
-    content: "";
-    border: 2px solid #ffffff;
-    border-right: 0 !important; border-top: 0 !important;
-    display: block;
-    height: 4px; width: 10px;
-    position: absolute;
-    left: 4px; top: 5px;
-    transform: rotate(-45deg);
-  }
+  
+  
+  
+  
 
   /* Switch */
-  [data-switch] {
-    appearance: none; -webkit-appearance: none;
-    background: transparent; border-radius: 0; border: 0;
-    height: 24px; width: 40px;
-    padding: 0; margin: 0;
-    cursor: pointer; position: relative;
-    display: inline-block;
-    flex-shrink: 0;
-  }
-  [data-switch]::before {
-    content: "";
-    background: var(--token-border-default, #d5d5d5);
-    border-radius: 9999px;
-    height: 24px; width: 40px;
-    position: absolute; top: 0; left: 0;
-    transition: background .18s linear;
-  }
-  [data-switch]::after {
-    content: "";
-    background: #ffffff;
-    border-radius: 50%;
-    box-shadow: 0 1px 2px rgba(0,0,0,.2);
-    height: 20px; width: 20px;
-    position: absolute; top: 2px; left: 0;
-    transform: translateX(2px);
-    transition: transform .18s linear;
-  }
-  [data-switch]:checked::before { background: var(--token-semantics-primary-base, #105cef); }
-  [data-switch]:checked::after { transform: translateX(18px); }
+  
+  
+  
+  
+  
 
   /* Radio */
   .radio-group { display: flex; flex-direction: column; gap: 10px; }
   .radio-group > div { display: flex; flex-direction: column; gap: 10px; }
   .radio-group.is-horizontal > div { flex-direction: row; gap: 20px; }
-  [data-radio-button] { display: flex; align-items: center; gap: 10px; }
-  .radio-button {
-    appearance: none; -webkit-appearance: none;
-    height: 20px; width: 20px; padding: 0; margin: 0;
-    cursor: pointer;
-    border-radius: 50%;
-    background: #ffffff;
-    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
-    flex-shrink: 0;
-    transition: all 180ms linear;
-  }
-  .radio-button:checked {
-    border: 6px solid var(--token-semantics-primary-base, #105cef);
-    background: #ffffff;
-  }
-  [data-radio-button] label { font-size: 13px; color: var(--token-text-default, #242424); cursor: pointer; }
+  
+  
+  
+  
 
   /* Inline row helper — checkbox / switch beside label */
   .form-inline { display: flex; align-items: center; gap: 10px; }
-  .form-inline label { font-size: 13px; color: var(--token-text-default, #242424); cursor: pointer; margin: 0; font-weight: 400; }
+  #previewWrapper:not(.proposed-mode) .form-inline label { font-size: 13px; color: var(--token-text-default, #242424); cursor: pointer; margin: 0; font-weight: 400; }
 
-  /* Submit btn */
-  .btn { display: inline-flex; align-items: center; height: 40px; padding: 0 var(--token-scale-400, 16px); border-radius: var(--token-border-radius-100, 4px); font-family: inherit; font-size: var(--token-font-size-350, 0.8125rem); font-weight: var(--token-font-weight-semi-bold, 600); border: var(--token-border-size-025, 1px) solid transparent; cursor: pointer; }
-  .btn-primary { background: var(--token-semantics-primary-base, #105cef); border-color: var(--token-semantics-primary-base, #105cef); color: #ffffff; }
+  /* Submit — filled button look for Current / New only */
+  #previewWrapper:not(.proposed-mode) .btn { display: inline-flex; align-items: center; height: 40px; padding: 0 var(--token-scale-400, 16px); border-radius: var(--token-border-radius-100, 4px); font-family: inherit; font-size: var(--token-font-size-350, 0.8125rem); font-weight: var(--token-font-weight-semi-bold, 600); border: var(--token-border-size-025, 1px) solid transparent; cursor: pointer; }
+  #previewWrapper:not(.proposed-mode) .btn-primary { background: var(--token-semantics-primary-base, #105cef); border-color: var(--token-semantics-primary-base, #105cef); color: #ffffff; }
 
   .annotate-form { outline: 2px dashed #3b82f6; outline-offset: 4px; border-radius: 10px; }
   .annotate-column { outline: 2px dashed #f59e0b; outline-offset: 3px; border-radius: 4px; }
-  .annotate-cta { outline: 2px dashed #10b981; outline-offset: 3px; border-radius: 6px; }
+  .annotate-box { outline: 2px dashed #3b82f6; outline-offset: 3px; border-radius: 4px; }
+  .annotate-cta { outline: 2px dashed #10b981; outline-offset: 3px; }
   #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+
+  #previewWrapper.proposed-mode [data-form].form { font-size: 14px; }
+  #previewWrapper.proposed-mode [data-form] label[data-label] {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--token-text-default, #242424);
+    margin-bottom: var(--token-scale-200, 8px);
+  }
+  /* Checkbox radius comes from os-ui-229-proposed-scoped ([data-checkbox] vars) so it matches checkbox-tokens.html */
+  /* Focus: ensure -webkit- ring (earlier block sets box-shadow: none) + match mock halo on form fields */
+  #previewWrapper.proposed-mode [data-form] .form-control[data-input]:focus,
+  #previewWrapper.proposed-mode [data-form] .form-control[data-textarea]:focus {
+    -webkit-box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 18%, transparent);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 18%, transparent);
+  }
+  #previewWrapper.proposed-mode [data-form] .dropdown-container > div.dropdown-display:focus,
+  #previewWrapper.proposed-mode [data-form] .dropdown-container:focus-within > .dropdown-display {
+    -webkit-box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 18%, transparent);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 18%, transparent);
+  }
+  #previewWrapper.proposed-mode [data-form] .btn.btn-primary:hover:not([disabled]) {
+    background-color: color-mix(in srgb, var(--token-semantics-primary-base) 86%, #0a0a0a);
+    border-color: color-mix(in srgb, var(--token-semantics-primary-base) 86%, #0a0a0a);
+  }
+
+  /* First name: optional trailing “actions” tile — only proposed mode shows
+     the red kebab tile. In current/new-tokens, hide the affix span entirely. */
+  #previewWrapper.current-mode .form-field-row__affix,
+  #previewWrapper.new-tokens-mode .form-field-row__affix { display: none; }
+  /* Even in current/new-tokens, the row wrapper should still lay out as a
+     simple block so the input stretches full-width naturally. */
+  #previewWrapper.proposed-mode .form-field-row {
+    display: flex;
+    align-items: center;
+    gap: var(--token-scale-200, 8px);
+    width: 100%;
+  }
+  #previewWrapper.proposed-mode .form-field-row__input { flex: 1; min-width: 0; }
+  #previewWrapper.proposed-mode .form-field-row__affix {
+    flex: 0 0 auto;
+    width: 36px; height: 36px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--token-semantics-error-base, #dc2020);
+    border-radius: var(--token-border-radius-200, 8px);
+    color: #fff;
+    font-size: 16px; font-weight: 700; line-height: 1;
+  }
+
+  /* os-ui scopes [data-label].mandatory::after with color + margin but
+     forgets the actual content. Add the asterisk in all 3 modes so the
+     required-field marker shows up. */
+  #previewWrapper.current-mode [data-label].mandatory::after,
+  #previewWrapper.new-tokens-mode [data-label].mandatory::after,
+  #previewWrapper.proposed-mode [data-label].mandatory::after {
+    content: " *";
+    color: var(--token-semantics-danger-base, #e52929);
+    margin-left: var(--token-scale-100, 4px);
+    font-weight: 700;
+  }
 
   .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
   .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
@@ -241,47 +302,47 @@
   @media (max-width: 960px) { .token-grid { grid-template-columns: 1fr; } body { padding: 24px 20px 60px; } }
 
 /* Current — 2.28 raw: .form.card with 4px radius + neutral-4 border + 24px padding */
-#previewWrapper.current-mode [data-form].form { border-radius: 4px; padding: 24px; border-color: #dee2e6; }
-#previewWrapper.current-mode .form-control[data-input] { height: 40px; border-radius: 4px; border-color: #ced4da; }
-#previewWrapper.current-mode .btn { height: 40px; border-radius: 4px; }
+
+
+
 
 /* Proposed dropdown — consistent with Input (36px, radius 8px, focus halo, Phosphor caret) */
-#previewWrapper.proposed-mode .dropdown-container > .dropdown-display { height: var(--token-scale-900, 36px); border-radius: var(--token-border-radius-200, 8px); font-size: var(--token-font-size-350, 0.8125rem); padding: 0 var(--token-scale-300, 12px); padding-right: 36px; }
-#previewWrapper.proposed-mode .dropdown-container > .dropdown-display::after {
-  border: 0;
-  font-family: "Phosphor-Bold";
-  content: "\e136";
-  font-size: 14px;
-  color: var(--token-text-subtle, #3b3b3b);
-  line-height: 1;
-  top: 50%; right: var(--token-scale-300, 12px);
-  margin-top: -7px;
-  transform: none;
-  width: auto; height: auto;
-}
-#previewWrapper.proposed-mode .dropdown-container:focus-within > .dropdown-display { border-color: var(--token-semantics-primary-base, #105cef); box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 18%, transparent); }
+
+
+
 
 /* Proposed — drops the card chrome: no border, no padding, no shadow.
    The form is just a vertical stack of fields. Page-level layouts decide
    whether to wrap it in a surface (card/panel) separately. */
-#previewWrapper.proposed-mode [data-form].form {
-  background: transparent;
-  border: 0;
-  padding: 0;
-  box-shadow: none;
-  border-radius: 0;
-}
 
-#previewWrapper.proposed-mode .form-control[data-input] { height: var(--token-scale-900, 36px); border-radius: var(--token-border-radius-200, 8px); font-size: var(--token-font-size-350, 0.8125rem); }
-#previewWrapper.proposed-mode .form-control[data-input]:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 18%, transparent); }
-#previewWrapper.proposed-mode .btn { height: var(--token-scale-900, 36px); border-radius: var(--token-border-radius-200, 8px); font-weight: var(--token-font-weight-medium, 500); }
-#previewWrapper.proposed-mode .columns.columns2 { gap: var(--token-scale-600, 24px); }
-#previewWrapper.proposed-mode [data-form] [data-container] { margin-bottom: var(--token-scale-600, 24px); }
+
+
+
+
+
+
 /* Proposed: textarea radius + focus halo consistent with input */
-#previewWrapper.proposed-mode .form-control[data-textarea] { border-radius: var(--token-border-radius-200, 8px); font-size: var(--token-font-size-350, 0.8125rem); }
-#previewWrapper.proposed-mode .form-control[data-textarea]:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 18%, transparent); }
+
+
 /* Minor spacing tweaks for inline rows */
-#previewWrapper.proposed-mode .form-inline { gap: var(--token-scale-300, 12px); }
+
+
+/* ─── Bespoke proposed-mode overrides (restored from pre-refactor state) ─── */
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
 </style></head>
 <body>
 <a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
@@ -295,35 +356,39 @@
   <div class="preview-card__header"><span class="preview-card__label">Preview</span>
     <div class="preview-tabs">
       <button class="ptab" onclick="setMode('legacy',this)">Current</button>
-      <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
-      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+      <button class="ptab" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button class="ptab ptab--active" onclick="setMode('proposed',this)">Proposed</button>
     </div>
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-    <div id="previewWrapper" class="hide-annotations">
+    <div id="previewWrapper" class="hide-annotations proposed-mode iconLibrary-phosphor">
       <form data-form class="form card annotate-form">
         <div data-block="Adaptive.Columns2">
           <div data-container class="columns columns2">
             <div class="columns-item annotate-column">
               <label data-label class="mandatory" for="fm-first">First Name</label>
-              <span class="input-text"><input data-input class="form-control" required type="text" aria-required="true" maxlength="50" id="fm-first" placeholder="Jane"></span>
+              <div class="form-field-row">
+                <span class="input-text form-field-row__input"><input data-input class="form-control" required type="text" aria-required="true" maxlength="50" id="fm-first" value="Jane" autocomplete="given-name"></span>
+              </div>
             </div>
             <div class="columns-item">
               <label data-label for="fm-last">Last Name</label>
-              <span class="input-text"><input data-input class="form-control" type="text" maxlength="50" id="fm-last" placeholder="Doe"></span>
+              <span class="input-text"><input data-input class="form-control" type="text" maxlength="50" id="fm-last" value="Doe" autocomplete="family-name"></span>
             </div>
           </div>
         </div>
         <div data-container>
           <label data-label for="fm-email">Email</label>
-          <span class="input-email"><input data-input class="form-control" type="email" maxlength="250" id="fm-email" placeholder="jane@company.com"></span>
+          <span class="input-email"><input data-input class="form-control" type="email" maxlength="250" id="fm-email" value="jane@company.com" autocomplete="email"></span>
         </div>
 
         <div data-container>
-          <label data-label for="fm-country">Country</label>
-          <div data-dropdown class="dropdown-container" id="fm-country" tabindex="0">
-            <div class="dropdown-display"><span>Portugal</span></div>
+          <label data-label>Country</label>
+          <div data-dropdown class="dropdown-container dropdown">
+            <div class="dropdown-display" tabindex="0">
+              <div class="dropdown-display-content"><span>Portugal</span></div>
+            </div>
           </div>
         </div>
 
@@ -349,7 +414,7 @@
         </div>
 
         <div data-container class="form-inline">
-          <input data-checkbox type="checkbox" id="fm-terms">
+          <input data-checkbox type="checkbox" class="checkbox annotate-box" id="fm-terms">
           <label for="fm-terms">I agree to the Terms of Service and Privacy Policy</label>
         </div>
 
@@ -377,13 +442,13 @@
   </div></div>
   <div class="token-card fm-layout-tok"><div class="token-card__header"><span class="dot" style="background:#10b981;"></span>Layout<span class="component-name">.columns2 · [data-container]</span></div><div class="token-card__body">
     <div class="token-row"><span class="prop-name">grid</span><span class="token-name" style="color:#64748b;">1fr 1fr</span><span class="token-value">2 cols</span></div>
-    <div class="token-row"><span class="prop-name">gutter</span><span class="token-name">token-scale-400</span><span class="token-value">16px</span></div>
-    <div class="token-row"><span class="prop-name">row-gap</span><span class="token-name">token-scale-400</span><span class="token-value">16px (24 proposed)</span></div>
+    <div class="token-row"><span class="prop-name">gutter</span><span class="token-name">token-scale-600</span><span class="token-value">24px proposed</span></div>
+    <div class="token-row"><span class="prop-name">row-gap</span><span class="token-name">token-scale-600</span><span class="token-value">24px proposed</span></div>
     <div class="token-row"><span class="prop-name">CTA align</span><span class="token-name">flex-end</span><span class="token-value">right</span></div>
   </div></div>
 </div>
 <div class="proposal-section">
-  <div class="proposal-header"><h3>Token Proposal</h3><p>Real OS UI uses <code>&lt;form data-form class="form card"&gt;</code> with <code>.columns.columns2</code> for 2-column layouts, <code>[data-label]</code> + <code>.mandatory</code> for required fields, <code>.input-text</code> / <code>.input-email</code> wrappers around <code>.form-control[data-input]</code>. Proposal <strong>softens the card</strong> (radius 4→12px, padding 24→32), adds focus halo, and widens row spacing for breathing room.</p></div>
+  <div class="proposal-header"><h3>Token Proposal</h3><p>Real OS UI uses <code>&lt;form data-form class="form card"&gt;</code> with <code>.columns.columns2</code> for 2-column layouts, <code>[data-label]</code> + <code>.mandatory</code> for required fields, and <code>.input-text</code> / <code>.input-email</code> around <code>.form-control[data-input]</code>. <strong>Proposed</strong> in this lab matches the <strong>user-profile reference</strong> in <strong>visual styling</strong> (same primary + radii as the component token labs, 1px field borders from <code>--token-border-input-default</code>, 36px control height, focus ring): no card chrome on the form, 24px row rhythm, bold 14px labels, optional trailing <strong>red affix</strong> aligned to the input height, and the same component rules as Input, Dropdown, Radio, Textarea, Switch, Checkbox, and Button in <code>os-ui-229-proposed-scoped.css</code> (same <code>--token-border-input-default</code> chain as the component labs).</p></div>
   <table class="proposal-table">
     <thead><tr><th>Property</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
     <tbody>
@@ -392,11 +457,21 @@
       <tr><td class="td-property">column gap</td><td class="td-current">16px</td><td class="td-proposed">24px</td><td class="td-token">--token-scale-600</td><td class="td-rationale">Matches row spacing for consistent 2D rhythm.</td></tr>
       <tr><td class="td-property">input height</td><td class="td-current">40px</td><td class="td-proposed">36px</td><td class="td-token">--token-scale-900</td><td class="td-rationale">Matches proposed Input + Button heights so the form stacks cleanly at consistent row height.</td></tr>
       <tr><td class="td-property">focus halo</td><td class="td-current">— (border only)</td><td class="td-proposed">border + 18% primary ring</td><td class="td-token">--token-semantics-primary-base</td><td class="td-rationale">Keyboard users navigating a form need unambiguous focus — halo carries through Input / Dropdown / Textarea consistently.</td></tr>
+      <tr><td class="td-property">primary (labs)</td><td class="td-current">#105cef</td><td class="td-proposed">#105cef</td><td class="td-token">--token-semantics-primary-base</td><td class="td-rationale">Form preview uses the same primary as the component token pages (<code>os-ui-229-proposed-scoped</code> + page <code>:root</code>).</td></tr>
+      <tr><td class="td-property">field border</td><td class="td-current">#8c8c8c via <code>--token-border-input-default</code> in scoped CSS</td><td class="td-proposed">same as component labs (scoped + page <code>:root</code>)</td><td class="td-token">--token-border-input-default</td><td class="td-rationale">No per-page lightening on the form preview so computed styles match the Input / Dropdown / Checkbox labs.</td></tr>
+      <tr><td class="td-property">first-name trailing affix</td><td class="td-current">—</td><td class="td-proposed">36×36 red tile, token border-radius-200, white “kebab” glyph, flush with 36px input</td><td class="td-token">--token-semantics-error-base (tile)</td><td class="td-rationale">Reference shows a small red block beside the first field; the tile uses the same height and corner roundness as the text field for visual alignment.</td></tr>
     </tbody>
   </table>
 </div>
 <script>
-function setMode(mode, btn) { const w = document.getElementById('previewWrapper'); w.classList.toggle('proposed-mode', mode === 'proposed'); w.classList.toggle('current-mode', mode === 'legacy'); document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active')); btn.classList.add('ptab--active'); }
+function setMode(mode, btn) {
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 function toggleAnnotations(btn) { const w = document.getElementById('previewWrapper'); const h = !w.classList.contains('hide-annotations'); w.classList.toggle('hide-annotations', h); btn.textContent = h ? 'Show annotations' : 'Hide annotations'; btn.classList.toggle('ann-toggle--off', h); }
 </script>
 </body></html>

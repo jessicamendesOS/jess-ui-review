@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Popup — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
+<!-- Font Awesome: real widget uses .fa; .fa base styles need this. With iconLibrary-phosphor, 229-proposed re-draws the :before with Phosphor Bold X (same look as ph-bold / ph-x). -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -42,18 +48,25 @@
   }
   .popup-dialog {
     background: var(--token-bg-surface-default, #ffffff);
-    border-radius: var(--token-border-radius-200, 8px);
+    border-radius: var(--token-border-radius-100, 4px);
     box-shadow: 0 20px 48px rgba(15, 23, 42, 0.2), 0 4px 12px rgba(15, 23, 42, 0.12);
-    max-width: 480px; width: 100%;
+    max-width: 500px; width: 100%;
     overflow: hidden;
     position: relative;
     z-index: 1;
   }
-  .popup-content { padding: var(--token-scale-600, 24px); text-align: left; }
+  /* Padding lives on .popup-dialog (set by os-ui scoped CSS to scale-600 = 24px in
+     all 3 modes). .popup-content stays padding-less to avoid doubling. */
+  .popup-content { padding: 0; text-align: left; }
   .popup-header { display: flex; align-items: start; gap: var(--token-scale-400, 16px); margin-bottom: var(--token-scale-400, 16px); }
   .heading3 { font-size: var(--token-font-size-500, 1.125rem); font-weight: var(--token-font-weight-semi-bold, 600); color: var(--token-text-default, #242424); flex: 1; line-height: 1.3; }
-  .popup-close { width: 32px; height: 32px; border: 0; background: transparent; color: var(--token-text-subtlest, #626262); cursor: pointer; border-radius: var(--token-border-radius-100, 4px); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .popup-close:hover { background: var(--token-border-subtle, #f3f3f3); color: var(--token-text-default, #242424); }
+  a.popup-close, button.popup-close { width: 32px; height: 32px; border: 0; background: transparent; cursor: pointer; border-radius: var(--token-border-radius-100, 4px); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  a.popup-close:link, a.popup-close:visited, a.popup-close:hover, a.popup-close:focus, a.popup-close:active { text-decoration: none; }
+  a.popup-close:link, a.popup-close:visited { color: var(--token-text-subtlest, #626262); }
+  a.popup-close:hover, a.popup-close:focus, a.popup-close:active { color: var(--token-text-default, #242424); background: var(--token-border-subtle, #f3f3f3); }
+  a.popup-close i.fa { color: currentColor; }
+  button.popup-close { color: var(--token-text-subtlest, #626262); }
+  button.popup-close:hover, button.popup-close:focus { background: var(--token-border-subtle, #f3f3f3); color: var(--token-text-default, #242424); }
   .popup-body { color: var(--token-text-subtle, #3b3b3b); font-size: var(--token-font-size-350, 0.8125rem); margin-bottom: var(--token-scale-600, 24px); }
   /* Separator respects the popup padding (inset on both sides), not a full-bleed
      edge-to-edge divider. */
@@ -72,6 +85,9 @@
   .annotate-header { outline: 2px dashed #f59e0b; outline-offset: 3px; }
   .annotate-actions { outline: 2px dashed #10b981; outline-offset: 3px; }
   #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+  /* Force overflow visible — OSUI 228/229 scope 'body { overflow:hidden }' to these modes, clipping annotations */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ overflow: visible; overflow-x: visible; }
 
   .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
   .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
@@ -105,28 +121,35 @@
   .td-current { color: #9ca3af; } .td-proposed { font-weight: 600; color: #111827; } .td-token { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; } .td-rationale { color: #4b5563; max-width: 280px; }
   @media (max-width: 960px) { .token-grid { grid-template-columns: 1fr; } body { padding: 24px 20px 60px; } }
 
-#previewWrapper.current-mode .popup-dialog { border-radius: 4px; max-width: 480px; }
+
 /* Title — bigger + darker to match the reference (24px heading3) */
-#previewWrapper.current-mode .heading3 { font-size: 24px; color: #212529; font-weight: 700; }
+
 /* Body — text-default (darker) not text-subtle, matching the reference */
-#previewWrapper.current-mode .popup-body { color: #212529; font-size: 14px; }
-#previewWrapper.current-mode .popup-separator { border-color: #dee2e6; }
-#previewWrapper.current-mode .btn { border-radius: 4px; height: 40px; font-weight: 600; font-size: 13px; }
+
+
+
 /* Cancel — real 2.28: white bg + dark neutral-8 border + mid-grey text */
-#previewWrapper.current-mode .btn-cancel { background: #ffffff; border-color: #4f575e; color: #6a7178; }
+
 /* Error (Delete) — real 2.28 solid red fill */
-#previewWrapper.current-mode .btn-error { background: #dc2020; border-color: #dc2020; color: #ffffff; }
+
 /* Close X — bolder + darker to match the reference */
-#previewWrapper.current-mode .popup-close { color: #4f575e; font-size: 20px; }
+
 
 /* ─── Proposed mode — inherits the new-tokens layout, just refines the chrome:
    softer corner (12px), deeper elevation, blurred backdrop, 36px action btns. ─── */
-#previewWrapper.proposed-mode .popup-dialog { border-radius: var(--token-border-radius-300, 12px); box-shadow: 0 24px 64px rgba(15, 23, 42, 0.18), 0 8px 16px rgba(15, 23, 42, 0.1); }
-#previewWrapper.proposed-mode .popup-backdrop { backdrop-filter: blur(4px); background: rgba(15, 23, 42, 0.5); }
-#previewWrapper.proposed-mode .btn { height: var(--token-scale-900, 36px); border-radius: var(--token-border-radius-200, 8px); font-weight: var(--token-font-weight-medium, 500); }
-#previewWrapper.proposed-mode .btn-error { font-weight: var(--token-font-weight-semi-bold, 600); }
+
+
+
+
 /* Vertically centre title with the close button (both share the same row) */
-#previewWrapper.proposed-mode .popup-header { align-items: center; }
+
+
+/* ─── Bespoke proposed-mode overrides (restored from pre-refactor state) ─── */
+
+
+
+
+
 </style></head>
 <body>
 <a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
@@ -146,13 +169,13 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-    <div id="previewWrapper" class="hide-annotations">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
       <div class="popup-backdrop">
         <div data-container class="popup-dialog annotate-dialog">
           <div data-container class="popup-content">
             <div class="popup-header annotate-header">
               <div class="heading3">Delete In-ear Audio Black</div>
-              <button class="popup-close" aria-label="Close"><i class="ph-bold ph-x"></i></button>
+              <a href="#" class="popup-close"><i class="fa fa-times"></i></a>
             </div>
             <div class="popup-body">Are you sure you want to delete In-Ear Audio Black? You'll lose all access to product information and history.</div>
             <div class="popup-separator"></div>
@@ -168,9 +191,9 @@
 </div>
 <div class="token-grid">
   <div class="token-card pop-dialog-tok"><div class="token-card__header"><span class="dot" style="background:#3b82f6;"></span>Dialog<span class="component-name">.popup-dialog</span></div><div class="token-card__body">
-    <div class="token-row"><span class="prop-name">max-width</span><span class="token-name">480px</span><span class="token-value">—</span></div>
+    <div class="token-row"><span class="prop-name">max-width</span><span class="token-name">500px</span><span class="token-value">—</span></div>
     <div class="token-row"><span class="prop-name">bg</span><span class="token-name">bg-surface-default</span><span class="token-value">#ffffff</span></div>
-    <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">border-radius-200</span><span class="token-value">8px</span></div>
+    <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">border-radius-100</span><span class="token-value">4px</span></div>
     <div class="token-row"><span class="prop-name">shadow</span><span class="token-name">2-layer elevation</span><span class="token-value">—</span></div>
   </div></div>
   <div class="token-card pop-content-tok"><div class="token-card__header"><span class="dot" style="background:#10b981;"></span>Content<span class="component-name">.popup-content · .heading3</span></div><div class="token-card__body">
@@ -183,7 +206,9 @@
   <div class="token-card pop-backdrop-tok"><div class="token-card__header"><span class="dot" style="background:#f97316;"></span>Backdrop + actions<span class="component-name">.popup-backdrop · .popup-actions</span></div><div class="token-card__body">
     <div class="token-row"><span class="prop-name">backdrop color</span><span class="token-name" style="color:#64748b;">rgba(15,23,42,.45)</span><span class="token-value">45% slate</span></div>
     <div class="token-row"><span class="prop-name">backdrop blur</span><span class="token-name">4px (proposed)</span><span class="token-value">—</span></div>
-    <div class="token-row"><span class="prop-name">action gap</span><span class="token-name">token-scale-200</span><span class="token-value">8px</span></div>
+    <div class="token-row"><span class="prop-name">action gap</span><span class="token-name">token-scale-200 + no .btn + .btn</span><span class="token-value">8px (proposed cancels 24px global margin)</span></div>
+    <div class="token-row"><span class="prop-name">close (HTML)</span><span class="token-name">fa fa-times · &lt;a href="#"&gt;</span><span class="token-value">—</span></div>
+    <div class="token-row"><span class="prop-name">close look (w/ Phosphor)</span><span class="token-name">.fa:before → Phosphor Bold X (\\e4f6)</span><span class="token-value">same as ph-x</span></div>
     <div class="token-row"><span class="prop-name">action align</span><span class="token-name">flex-end</span><span class="token-value">right</span></div>
   </div></div>
 </div>
@@ -195,13 +220,23 @@
       <tr><td class="td-property">border-radius</td><td class="td-current">4px</td><td class="td-proposed">12px</td><td class="td-token">--token-border-radius-300</td><td class="td-rationale">Modern modal pattern uses larger radius to distinguish floating surfaces from inline form fields. 12px reads as "overlay", 4px reads as "form element".</td></tr>
       <tr><td class="td-property">elevation</td><td class="td-current">subtle shadow</td><td class="td-proposed">deeper 2-layer shadow (24px · 8px)</td><td class="td-token">—</td><td class="td-rationale">Dialogs need real depth to assert themselves as overlay surfaces — a subtle shadow gets lost behind the backdrop dim.</td></tr>
       <tr><td class="td-property">backdrop</td><td class="td-current">rgba(0,0,0,0.5) — flat</td><td class="td-proposed">rgba(15,23,42,0.5) + 4px blur</td><td class="td-token">—</td><td class="td-rationale">Slate-tinted backdrop reads warmer than pure black. The 4px blur softens background UI so the dialog doesn't fight with visible page content.</td></tr>
-      <tr><td class="td-property">actions layout</td><td class="td-current">right-aligned (inline style)</td><td class="td-proposed">right-aligned via flex</td><td class="td-token">--token-scale-200</td><td class="td-rationale">Formalise the action slot — 8px gap between buttons, right-aligned. Works with any button count (1-3 realistically).</td></tr>
-      <tr><td class="td-property">close button</td><td class="td-current">&lt;a&gt; with fa-times icon</td><td class="td-proposed">&lt;button&gt; with ph-x + hover bg</td><td class="td-token">--token-border-subtle</td><td class="td-rationale">Semantic <code>&lt;button&gt;</code> with keyboard-accessible hover chip — <code>&lt;a href="#"&gt;</code> for a close action is an a11y anti-pattern.</td></tr>
+      <tr><td class="td-property">actions layout</td><td class="td-current">right-aligned (inline style)</td><td class="td-proposed">right-aligned via flex, 8px gap only</td><td class="td-token">--token-scale-200</td><td class="td-rationale">The global <code>.btn + .btn</code> 24px side margin is fine for form toolbars, but a modal footer reads better with 8px — reset margin in <code>.popup-actions</code> and use flex <code>gap</code> only.</td></tr>
+      <tr><td class="td-property">close control</td><td class="td-current">&lt;a href="#"&gt; + fa fa-times</td><td class="td-proposed">Same markup — with Phosphor icon library, CSS maps the FA slot to the Bold X glyph (matches the old ph-x preview)</td><td class="td-token">--token-font-size-500</td><td class="td-rationale">No HTML change; only static base .fa styles + Phosphor webfont are required for the lab to match the previous look.</td></tr>
     </tbody>
   </table>
 </div>
 <script>
-function setMode(mode, btn) { const w = document.getElementById('previewWrapper'); w.classList.toggle('proposed-mode', mode === 'proposed'); w.classList.toggle('current-mode', mode === 'legacy'); document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active')); btn.classList.add('ptab--active'); }
+function setMode(mode, btn) {
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 function toggleAnnotations(btn) { const w = document.getElementById('previewWrapper'); const h = !w.classList.contains('hide-annotations'); w.classList.toggle('hide-annotations', h); btn.textContent = h ? 'Show annotations' : 'Hide annotations'; btn.classList.toggle('ann-toggle--off', h); }
+document.getElementById('previewWrapper')?.addEventListener('click', function (e) {
+  if (e.target.closest('a.popup-close')) e.preventDefault();
+});
 </script>
 </body></html>

@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ACME Products (App Mockup) — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -37,6 +41,35 @@
 
   /* ─── App chrome: header bar with logo + nav + user ─── */
   #previewWrapper { font-family: inherit; color: var(--token-text-default, #242424); }
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
   .app-header {
     background: var(--token-bg-surface-default, #ffffff);
     border-bottom: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
@@ -72,14 +105,16 @@
   .app-user:hover { background: var(--token-border-subtle, #f3f3f3); }
   .app-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--token-primitives-neutral-500, #a2a2a2); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
 
-  /* Hero */
+  /* Hero — shares the main container's max-width + padding so the title
+     aligns with the cards below. No separate bg; same surface as main. */
   .app-hero {
-    background: var(--token-bg-surface-subtle, #fafafa);
-    padding: 24px 24px 20px;
+    background: transparent;
+    padding: 24px 0 8px;
   }
   .app-hero__row {
     max-width: 1280px;
     margin: 0 auto;
+    padding: 0 24px;
     display: flex; align-items: center; justify-content: space-between;
     gap: 16px;
   }
@@ -134,7 +169,8 @@
   @media (max-width: 1100px) { .app-gallery { grid-template-columns: repeat(3, 1fr); } }
   @media (max-width: 780px) { .app-gallery { grid-template-columns: repeat(2, 1fr); } }
 
-  /* Product card */
+  /* Product card — real 2.28 values: h4 title (22px semi-bold), space-m
+     padding (24px), radius-soft (4px), neutral-4 border. */
   .card.card-sectioned {
     display: flex; flex-direction: column;
     overflow: hidden;
@@ -147,13 +183,13 @@
   .card.card-sectioned:hover { box-shadow: 0 6px 16px rgba(16,24,40,.1); }
   .card-image { width: 100%; aspect-ratio: 4 / 3; overflow: hidden; background: var(--token-border-subtle, #f3f3f3); }
   .card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .card-sectioned-top { padding: 16px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
-  .card-title { font-size: 15px; font-weight: 600; line-height: 1.35; }
+  .card-sectioned-top { padding: 24px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+  .card-title { font-size: 22px; font-weight: 600; line-height: 1.25; letter-spacing: -.01em; }
   .card-title a { color: var(--token-semantics-primary-base, #105cef); text-decoration: none; }
   .card-title a:hover { text-decoration: underline; }
-  .card-content { display: flex; flex-direction: column; gap: 10px; font-size: 13px; }
-  .card-content label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--token-text-subtlest, #626262); margin-bottom: 2px; }
-  .card-content .value { color: var(--token-text-subtle, #3b3b3b); line-height: 1.4; }
+  .card-content { display: flex; flex-direction: column; gap: 12px; font-size: 14px; }
+  .card-content label { display: block; font-size: 14px; font-weight: 400; color: var(--token-text-subtlest, #626262); margin-bottom: 0; }
+  .card-content .value { color: var(--token-text-default, #242424); line-height: 1.45; }
 
   /* Pagination */
   .app-pagination { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; padding: 12px 0; }
@@ -174,36 +210,50 @@
   .pagination-btn.is--active { border-color: var(--token-semantics-primary-base, #105cef); color: var(--token-semantics-primary-base, #105cef); }
   .pagination-btn:disabled { opacity: .5; cursor: not-allowed; }
 
-  /* ─── Current mode — raw 2.28 palette ─── */
-  #previewWrapper.current-mode .app-header { border-color: #dee2e6; }
-  #previewWrapper.current-mode .app-nav a.active { color: #1068eb; }
-  #previewWrapper.current-mode .app-hero h1 { color: #212529; font-size: 30px; font-weight: 700; }
-  #previewWrapper.current-mode .btn-primary { background: #1068eb; border-color: #1068eb; }
-  #previewWrapper.current-mode .card.card-sectioned { border-color: #dee2e6; border-radius: 4px; }
-  #previewWrapper.current-mode .card-title a { color: #1068eb; }
-  #previewWrapper.current-mode .input-search { border-color: #ced4da; border-radius: 4px; }
-  #previewWrapper.current-mode .pagination-btn { border-color: #dee2e6; }
-  #previewWrapper.current-mode .pagination-btn.is--active { border-color: #1068eb; color: #1068eb; }
+  /* ─── Current mode — raw 2.28 palette + dimensions ─── */
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   /* ─── Proposed — softer radii, primary accent nav underline, richer hover ─── */
-  #previewWrapper.proposed-mode .app-hero h1 { font-size: 28px; font-weight: 700; letter-spacing: -.02em; }
-  #previewWrapper.proposed-mode .btn { height: var(--token-scale-900, 36px); border-radius: var(--token-border-radius-200, 8px); font-weight: var(--token-font-weight-medium, 500); }
-  #previewWrapper.proposed-mode .btn-primary:hover { background: #0b47b8; border-color: #0b47b8; filter: none; }
-  #previewWrapper.proposed-mode .card.card-sectioned { border-radius: var(--token-border-radius-300, 12px); border-color: var(--token-border-subtle, #f3f3f3); box-shadow: 0 1px 3px rgba(16,24,40,.06); }
-  #previewWrapper.proposed-mode .card.card-sectioned:hover { box-shadow: 0 12px 28px rgba(16,24,40,.08), 0 4px 8px rgba(16,24,40,.04); transform: translateY(-2px); transition: box-shadow .2s, transform .2s; }
-  #previewWrapper.proposed-mode .card-title a { color: var(--token-text-default, #242424); font-weight: var(--token-font-weight-semi-bold, 600); }
-  #previewWrapper.proposed-mode .input-search { border-radius: var(--token-border-radius-200, 8px); height: var(--token-scale-900, 36px); }
-  #previewWrapper.proposed-mode .pagination-btn { border: 0; background: transparent; border-radius: var(--token-border-radius-200, 8px); font-weight: var(--token-font-weight-medium, 500); color: var(--token-text-default, #242424); height: var(--token-scale-900, 36px); min-width: var(--token-scale-900, 36px); }
-  #previewWrapper.proposed-mode .pagination-btn.is--active { border: 1px solid var(--token-border-default, #d5d5d5); color: var(--token-text-default, #242424); background: transparent; }
-  #previewWrapper.proposed-mode .pagination-btn:hover:not(:disabled):not(.is--active) { background: var(--token-border-subtle, #f3f3f3); }
-  #previewWrapper.proposed-mode .app-nav a.active { position: relative; }
-  #previewWrapper.proposed-mode .app-nav a.active::after {
-    content: ""; position: absolute;
-    left: 12px; right: 12px; bottom: -1px;
-    height: 2px;
-    background: var(--token-semantics-primary-base, #105cef);
-    border-radius: 2px 2px 0 0;
-  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+/* ─── Bespoke proposed-mode overrides (restored from pre-refactor state) ─── */
+
+
+
+
+
+
+
+
+
+
+
+
 </style></head>
 <body>
 <a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
@@ -219,7 +269,7 @@
     </div>
   </div>
   <div class="preview-card__body">
-    <div id="previewWrapper">
+    <div id="previewWrapper" class="new-tokens-mode iconLibrary-phosphor">
 
       <!-- Header -->
       <header class="app-header">
@@ -368,11 +418,12 @@
 
 <script>
   function setMode(mode, btn) {
-    const w = document.getElementById('previewWrapper');
-    w.classList.toggle('proposed-mode', mode === 'proposed');
-    w.classList.toggle('current-mode', mode === 'legacy');
-    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
-    btn.classList.add('ptab--active');
-  }
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 </script>
 </body></html>

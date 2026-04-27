@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flip content — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-200: 8px; --token-scale-300: 12px; --token-scale-400: 16px; --token-scale-600: 24px;
+    --token-border-radius-200: 8px;
+    --token-font-size-300: 0.75rem; --token-font-size-400: 1rem; --token-font-weight-semi-bold: 600;
+    --token-bg-surface-default: #ffffff; --token-text-default: #242424; --token-text-subtle: #3b3b3b;
+    --token-border-default: #d5d5d5; --token-border-subtle: #f3f3f3; --token-border-size-025: 1px; --token-semantics-primary-base: #105cef;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; min-height: 100vh; padding: 48px 32px; }
+  .back-nav { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #6b7280; text-decoration: none; margin-bottom: 24px; }
+  .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 20px; }
+  .page-header h1 { font-size: 28px; font-weight: 800; }
+  .badge-chrome { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; text-transform: uppercase; }
+  .badge-chrome--os { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens { background: #eff6ff; color: #1d4ed8; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item { font-size: 11px; font-weight: 600; color: #374151; background: #fff; border: 1px solid #e5e7eb; border-radius: 99px; padding: 4px 10px; }
+  .legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+  .preview-card { background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,.07); margin-bottom: 32px; overflow: hidden; }
+  .preview-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: #fafafa; border-bottom: 1px solid #f0f0f0; }
+  .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #9ca3af; margin-right: auto; }
+  .preview-card__body { padding: 40px 32px; }
+  .preview-tabs { display: flex; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { border: 0; border-radius: 7px; padding: 4px 12px; font: 600 11px system-ui; cursor: pointer; background: transparent; color: #6b7280; }
+  .ptab--active { background: #fff; color: #111; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { border: 1px solid #e5e7eb; border-radius: 7px; padding: 4px 10px; font: 600 11px system-ui; background: #fff; margin-left: 4px; cursor: pointer; }
+  .ann-toggle--off { color: #dc2626; background: #fef2f2; border-color: #fca5a5; }
+  #previewWrapper { max-width: 400px; margin: 0 auto; text-align: center; }
+  #previewWrapper.current-mode, #previewWrapper.new-tokens-mode { margin-left: auto; margin-right: auto; }
+  .flip-figure-caption { font-size: 12px; color: #6b7280; margin-top: 16px; }
+  .annotate-root { outline: 2px dashed #3b82f6; outline-offset: 4px; }
+  .annotate-container { outline: 2px dashed #f59e0b; outline-offset: 2px; }
+  .annotate-front { outline: 2px dashed #10b981; outline-offset: 2px; }
+  .annotate-back  { outline: 2px dashed #8b5cf6; outline-offset: 2px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+  .flip-surface {
+    min-height: 120px; padding: var(--token-scale-400, 16px);
+    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
+    border-radius: var(--token-border-radius-200, 8px);
+    display: flex; align-items: center; justify-content: center;
+    font: var(--token-font-weight-semi-bold, 600) var(--token-font-size-400, 1rem) system-ui;
+    color: var(--token-text-default, #242424);
+  }
+  .token-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  .token-card { border-radius: 12px; background: #0f1117; color: #fff; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; }
+  .token-card__header .component-name { margin-left: auto; font: 10px 'SF Mono',monospace; opacity: .6; }
+  .token-row { display: grid; grid-template-columns: 130px 1fr 70px; padding: 8px 14px; font-size: 11px; border-bottom: 1px solid rgba(255,255,255,.05); }
+  .flip-persp-tok .token-card__header { background: linear-gradient(120deg,#1e3a8a,#3b82f6); }
+  .flip-face-tok  .token-card__header { background: linear-gradient(120deg,#065f46,#10b981); }
+  .flip-time-tok  .token-card__header { background: linear-gradient(120deg,#7c2d12,#f97316); }
+  .prop-name { color: #94a3b8; font-family: monospace; } .token-name { color: #a78bfa; font-weight: 600; }
+  .proposal-section { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; margin-top: 20px; overflow: hidden; }
+  .proposal-header { padding: 16px 20px; background: #fafafa; border-bottom: 1px solid #f0f0f0; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; }
+  .proposal-header p { font-size: 12px; color: #6b7280; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table th, .proposal-table td { text-align: left; padding: 9px 16px; }
+  .proposal-table th { background: #f9fafb; color: #6b7280; text-transform: uppercase; font-size: 11px; }
+  .proposal-table td { border-top: 1px solid #f3f4f6; }
+  @media (max-width: 900px) { .token-grid { grid-template-columns: 1fr; } }
+</style></head>
+<body>
+<a href="index.html" class="back-nav">← All components</a>
+<div class="page-header">
+  <h1>Flip content</h1>
+  <span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span>
+  <span class="badge-chrome badge-chrome--tokens">Design Tokens</span>
+</div>
+<div class="legend">
+  <span class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span> <code>.osui-flip-content</code></span>
+  <span class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span> <code>__container</code> (transform · transition)</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#10b981"></span> <code>__front</code> / <code>__back</code></span>
+</div>
+<div class="preview-card">
+  <div class="preview-card__header">
+    <span class="preview-card__label">Preview (rest · not flipped)</span>
+    <div class="preview-tabs">
+      <button type="button" class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button type="button" class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button type="button" class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button type="button" class="ann-toggle ann-toggle--off" onclick="toggleAn(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode">
+      <div class="osui-flip-content annotate-root">
+        <div class="osui-flip-content__container osui-flip-content__container--flip-self annotate-container" title="Click target (flip-self) in runtime">
+          <div class="osui-flip-content__container__front flip-surface annotate-front" style="background: var(--token-bg-surface-default, #fff);">Front</div>
+          <div class="osui-flip-content__container__back flip-surface annotate-back" style="background: var(--token-border-subtle, #f3f3f3);">Back</div>
+        </div>
+      </div>
+      <p class="flip-figure-caption">Runtime adds <code>--flipped</code> on the root; here we show the default rest state so back face stays in the 3D stack per scoped CSS (absolute back, relative front).</p>
+    </div>
+  </div>
+</div>
+<div class="token-grid">
+  <div class="token-card flip-persp-tok">
+    <div class="token-card__header">Perspective + overflow<span class="component-name">.osui-flip-content</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">perspective</span><span class="token-name">200vw</span><span></span></div>
+      <div class="token-row"><span class="prop-name">overflow</span><span class="token-name">hidden</span><span></span></div>
+      <div class="token-row"><span class="prop-name">Firefox</span><span class="token-name">transform perspective(200vw)</span><span></span></div>
+    </div>
+  </div>
+  <div class="token-card flip-face-tok">
+    <div class="token-card__header">Faces<span class="component-name">front · back</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">backface</span><span class="token-name">hidden (both)</span><span></span></div>
+      <div class="token-row"><span class="prop-name">front (rest)</span><span class="token-name">position relative · z-index screen layer</span><span></span></div>
+      <div class="token-row"><span class="prop-name">back (rest)</span><span class="token-name">position absolute · width 100%</span><span></span></div>
+    </div>
+  </div>
+  <div class="token-card flip-time-tok">
+    <div class="token-card__header">Motion<span class="component-name">__container</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">transition</span><span class="token-name">all 630ms cubic-bezier(0.03,0.01,0.67,1.97)</span><span></span></div>
+      <div class="token-row"><span class="prop-name">flipped transform</span><span class="token-name">rotateY(±90deg)</span><span></span></div>
+    </div>
+  </div>
+</div>
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Token proposal</h3>
+    <p>Flip content is mostly engine CSS (3D, timing). Optional design tokens: surface background for each face via <code>--token-bg-surface-default</code> / <code>--token-border-subtle</code> instead of ad-hoc preview colours.</p>
+  </div>
+  <table class="proposal-table">
+    <thead><tr><th>Property</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td>Face background</td><td>User content / no default fill in OSUI</td><td>Default subtle contrast pair</td><td>--token-bg-surface-default / --token-border-subtle as cheap placeholder bg</td><td>Keeps flip demos readable in Service Studio and docs.</td></tr>
+      <tr><td>Animation duration</td><td>630ms unified</td><td>--token-motion-duration-400 (mapped ~400ms)</td><td>TBD</td><td>Aligns flip with other long transitions; respect prefers-reduced-motion in runtime.</td></tr>
+    </tbody>
+  </table>
+</div>
+<script>
+function setMode(m,b){
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', m==='legacy' || m==='current');
+  w.classList.toggle('new-tokens-mode', m==='new-tokens');
+  w.classList.toggle('proposed-mode', m==='proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  b.classList.add('ptab--active');
+}
+function toggleAn(btn){
+  const w = document.getElementById('previewWrapper');
+  const hiding = !w.classList.contains('hide-annotations');
+  w.classList.toggle('hide-annotations', hiding);
+  btn.textContent = hiding ? 'Show annotations' : 'Hide annotations';
+  btn.classList.toggle('ann-toggle--off', hiding);
+}
+</script>
+</body></html>

@@ -257,10 +257,50 @@
   .card--form .card-footer         { color: #1e40af; }
   .card--form .token-pill          { background: #eff6ff; color: #1e40af; }
 
+  .card--carousel .card-accent     { background: linear-gradient(90deg, #ec4899, #f59e0b); }
+  .card--carousel .card-icon       { background: #fdf2f8; color: #be185d; }
+  .card--carousel .card-footer     { color: #be185d; }
+  .card--carousel .token-pill      { background: #fdf2f8; color: #be185d; }
+
+  .card--datepicker .card-accent   { background: linear-gradient(90deg, #0ea5e9, #6366f1); }
+  .card--datepicker .card-icon     { background: #f0f9ff; color: #0369a1; }
+  .card--datepicker .card-footer   { color: #0369a1; }
+  .card--datepicker .token-pill    { background: #f0f9ff; color: #0369a1; }
+
+  .card--rangeslider .card-accent  { background: linear-gradient(90deg, #14b8a6, #10b981); }
+  .card--rangeslider .card-icon    { background: #ecfdf5; color: #0f766e; }
+  .card--rangeslider .card-footer  { color: #0f766e; }
+  .card--rangeslider .token-pill   { background: #ecfdf5; color: #0f766e; }
+
   .card--appproducts .card-accent  { background: linear-gradient(90deg, #dc2020, #f59e0b); }
   .card--appproducts .card-icon    { background: #fef2f2; color: #b91c1c; }
   .card--appproducts .card-footer  { color: #b91c1c; }
   .card--appproducts .token-pill   { background: #fef2f2; color: #b91c1c; }
+
+  .card--tooltip .card-accent      { background: linear-gradient(90deg, #1e293b, #3b82f6); }
+  .card--tooltip .card-icon        { background: #f1f5f9; color: #0f172a; }
+  .card--tooltip .card-footer      { color: #2563eb; }
+  .card--tooltip .token-pill       { background: #eff6ff; color: #1d4ed8; }
+
+  .card--bottomsheet .card-accent   { background: linear-gradient(90deg, #6366f1, #ec4899); }
+  .card--bottomsheet .card-icon     { background: #eef2ff; color: #4f46e5; }
+  .card--bottomsheet .card-footer  { color: #4338ca; }
+  .card--bottomsheet .token-pill   { background: #eef2ff; color: #3730a3; }
+
+  .card--flipcontent .card-accent   { background: linear-gradient(90deg, #0ea5e9, #8b5cf6); }
+  .card--flipcontent .card-icon     { background: #f0f9ff; color: #0369a1; }
+  .card--flipcontent .card-footer    { color: #0369a1; }
+  .card--flipcontent .token-pill     { background: #f0f9ff; color: #0c4a6e; }
+
+  .card--notification .card-accent  { background: linear-gradient(90deg, #1e293b, #f59e0b); }
+  .card--notification .card-icon      { background: #f8fafc; color: #0f172a; }
+  .card--notification .card-footer   { color: #334155; }
+  .card--notification .token-pill  { background: #f1f5f9; color: #334155; }
+
+  .card--sectionindex .card-accent  { background: linear-gradient(90deg, #059669, #0ea5e9); }
+  .card--sectionindex .card-icon     { background: #ecfdf5; color: #047857; }
+  .card--sectionindex .card-footer   { color: #047857; }
+  .card--sectionindex .token-pill   { background: #ecfdf5; color: #047857; }
 
   /* ─── Section divider for app examples ─── */
   .section-heading {
@@ -292,6 +332,51 @@
   }
   .site-footer p { font-size: 12px; color: #aaa; }
 
+  /* Index search + sort */
+  .index-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+    margin-bottom: 24px;
+    max-width: 640px;
+  }
+  .index-search {
+    flex: 1 1 280px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 14px;
+    min-height: 44px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .index-search i {
+    font-size: 20px;
+    color: #9ca3af;
+    flex-shrink: 0;
+  }
+  .index-search input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 15px;
+    color: #111;
+    outline: none;
+  }
+  .index-search input::placeholder { color: #9ca3af; }
+  .index-toolbar__meta {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+  }
+  .index-toolbar--empty .index-toolbar__meta { color: #b45309; }
+  a.component-card[hidden] { display: none !important; }
+
   @media (max-width: 600px) {
     body { padding: 32px 16px; }
     .site-header h1 { font-size: 26px; }
@@ -307,11 +392,19 @@
   <div class="badge-row">
     <span class="badge badge-os">OutSystems UI 2.29</span>
     <span class="badge badge-dt">Design Tokens</span>
-    <span class="badge badge-cnt">30 components</span>
+    <span class="badge badge-cnt" id="index-header-count">38 components</span>
   </div>
 </header>
 
-<main class="component-grid">
+<div class="index-toolbar" id="index-toolbar" aria-label="Component search">
+  <label class="index-search" for="component-search">
+    <i class="ph ph-magnifying-glass" aria-hidden="true"></i>
+    <input type="search" id="component-search" name="q" placeholder="Search components…" autocomplete="off" enterkeyhint="search" />
+  </label>
+  <p class="index-toolbar__meta" id="component-search-count" role="status"></p>
+</div>
+
+<main class="component-grid" id="component-grid-main">
 
   <!-- Accordion -->
   <a class="component-card card--accordion" href="accordion-tokens.html">
@@ -801,6 +894,42 @@
     <div class="card-footer">View annotations<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
   </a>
 
+  <!-- Carousel -->
+  <a class="component-card card--carousel" href="carousel-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="4" width="12" height="12" rx="2" fill="currentColor"/><rect x="1.5" y="6.5" width="2" height="7" rx="1" fill="currentColor" opacity=".4"/><rect x="16.5" y="6.5" width="2" height="7" rx="1" fill="currentColor" opacity=".4"/><circle cx="7" cy="17.5" r="1" fill="currentColor" opacity=".5"/><circle cx="10" cy="17.5" r="1" fill="currentColor"/><circle cx="13" cy="17.5" r="1" fill="currentColor" opacity=".5"/></svg></div>
+      <div class="card-title">Carousel</div>
+      <div class="card-desc">Splide-based slide deck with track, pagination dots, and prev/next arrow controls. Supports overlay images with aspect-ratio fit.</div>
+      <div class="card-tokens"><span class="token-pill">track</span><span class="token-pill">pagination</span><span class="token-pill">arrows</span></div>
+    </div>
+    <div class="card-footer">View annotations<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+  </a>
+
+  <!-- DatePicker -->
+  <a class="component-card card--datepicker" href="datepicker-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="3" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M2 7h16" stroke="currentColor" stroke-width="1.4"/><path d="M6 1v4M14 1v4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><rect x="5.5" y="10" width="3" height="3" rx=".8" fill="currentColor"/><rect x="11" y="10" width="3" height="3" rx=".8" fill="currentColor" opacity=".4"/></svg></div>
+      <div class="card-title">DatePicker</div>
+      <div class="card-desc">Flatpickr-based popup with month header grid, 7-column day grid, optional time picker (12h/24h) and today button shortcut.</div>
+      <div class="card-tokens"><span class="token-pill">calendar</span><span class="token-pill">day cells</span><span class="token-pill">timepicker</span></div>
+    </div>
+    <div class="card-footer">View annotations<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+  </a>
+
+  <!-- Range Slider -->
+  <a class="component-card card--rangeslider" href="range-slider-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><line x1="2" y1="10" x2="18" y2="10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="10" r="3.2" fill="#fff" stroke="currentColor" stroke-width="1.6"/><circle cx="14" cy="10" r="3.2" fill="currentColor" opacity=".4"/></svg></div>
+      <div class="card-title">Range Slider</div>
+      <div class="card-desc">noUiSlider-based track with draggable handle, connect fill, pip markers and value labels. Supports single, vertical and double-handle (interval) variants.</div>
+      <div class="card-tokens"><span class="token-pill">track</span><span class="token-pill">handle</span><span class="token-pill">pips</span></div>
+    </div>
+    <div class="card-footer">View annotations<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+  </a>
+
   <!-- Form -->
   <a class="component-card card--form" href="form-tokens.html">
     <div class="card-accent"></div>
@@ -927,6 +1056,114 @@
     </div>
   </a>
 
+  <!-- Tooltip -->
+  <a class="component-card card--tooltip" href="tooltip-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <rect x="3" y="3" width="14" height="10" rx="2" fill="currentColor" opacity=".25"/>
+          <rect x="7" y="4" width="1.5" height="4" rx="0.75" fill="currentColor"/>
+          <rect x="7" y="10" width="6" height="1" rx="0.5" fill="currentColor" opacity=".5"/>
+        </svg>
+      </div>
+      <div class="card-title">Tooltip</div>
+      <div class="card-desc">Contextual tooltip with Phosphor-style balloon: neutral-9 fill, 250px cap, 10px arrow, pointer-safe hit area in Service Studio.</div>
+      <div class="card-tokens">
+        <span class="token-pill">--osui-tooltip-background-color</span>
+        <span class="token-pill">font-size-s</span>
+        <span class="token-pill">border-radius-soft</span>
+      </div>
+    </div>
+    <div class="card-footer">View annotations<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+  </a>
+
+  <!-- Bottom sheet -->
+  <a class="component-card card--bottomsheet" href="bottom-sheet-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <rect x="1" y="1" width="18" height="11" rx="1.5" fill="currentColor" opacity=".2"/>
+          <rect x="1" y="5" width="18" height="14" rx="2" fill="currentColor" opacity=".35"/>
+        </svg>
+      </div>
+      <div class="card-title">Bottom sheet</div>
+      <div class="card-desc">Mobile off-canvas panel: drag handle, safe-area padding, shadow-l chrome, transform slide + paired overlay scrim.</div>
+      <div class="card-tokens">
+        <span class="token-pill">--osui-bottom-sheet-layer</span>
+        <span class="token-pill">--bottom-sheet-max-height</span>
+        <span class="token-pill">--shadow-l</span>
+      </div>
+    </div>
+    <div class="card-footer">View annotations<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+  </a>
+
+  <!-- Flip content -->
+  <a class="component-card card--flipcontent" href="flip-content-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <rect x="3" y="3" width="6" height="8" fill="currentColor" opacity=".9"/>
+          <rect x="11" y="3" width="6" height="8" fill="currentColor" opacity=".35" transform="skewY(-4)"/>
+        </svg>
+      </div>
+      <div class="card-title">Flip content</div>
+      <div class="card-desc">3D rotateY swap between a front and back slot—630ms bezier, preserve-3d, backface hidden. Used for reveal cards.</div>
+      <div class="card-tokens">
+        <span class="token-pill">perspective 200vw</span>
+        <span class="token-pill">transition 630ms</span>
+        <span class="token-pill">layer z-index</span>
+      </div>
+    </div>
+    <div class="card-footer">View annotations<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+  </a>
+
+  <!-- Notification (toast) -->
+  <a class="component-card card--notification" href="notification-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <rect x="2" y="2" width="16" height="4" rx="1" fill="currentColor" opacity=".25"/>
+          <rect x="2" y="8" width="16" height="10" rx="1" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="card-title">Notification</div>
+      <div class="card-desc">Global toast stack with nine anchor modifiers, shadow-xl, and the --is-open opacity or transform. Distinct from the inline Alert block.</div>
+      <div class="card-tokens">
+        <span class="token-pill">--osui-notification-layer</span>
+        <span class="token-pill">--osui-notification-margin</span>
+        <span class="token-pill">shadow-xl</span>
+      </div>
+    </div>
+    <div class="card-footer">View annotations<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+  </a>
+
+  <!-- Section index -->
+  <a class="component-card card--sectionindex" href="section-index-tokens.html">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <rect x="2" y="2" width="1.5" height="16" fill="currentColor" opacity=".35"/>
+          <rect x="5" y="2" width="13" height="1.2" fill="currentColor" opacity=".8"/>
+          <rect x="5" y="5" width="10" height="1" fill="currentColor" opacity=".45"/>
+          <rect x="5" y="9" width="13" height="1.2" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="card-title">Section index</div>
+      <div class="card-desc">Long-page mini TOC with a 1px neutral rail, primary bar on the active item, and a sticky --top-position chain in native shells.</div>
+      <div class="card-tokens">
+        <span class="token-pill">text-neutral-8</span>
+        <span class="token-pill">color-primary bar</span>
+        <span class="token-pill">scroll-margin</span>
+      </div>
+    </div>
+    <div class="card-footer">View annotations<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+  </a>
+
 </main>
 
 <section class="section-heading">
@@ -953,6 +1190,47 @@
   <p>OutSystems UI 2.29 · Design Token Annotations</p>
   <p>jessicamendesOS · jess-ui-review</p>
 </footer>
+
+<script>
+(function () {
+  const grid = document.getElementById("component-grid-main");
+  if (!grid) return;
+  const cards = Array.from(grid.querySelectorAll("a.component-card"));
+  const titleOf = (a) => (a.querySelector(".card-title") && a.querySelector(".card-title").textContent) || "";
+  cards.sort((a, b) => titleOf(a).localeCompare(titleOf(b), "en", { sensitivity: "base" }));
+  cards.forEach((card) => {
+    card.dataset.search = card.textContent.replace(/\s+/g, " ").trim().toLowerCase();
+    grid.appendChild(card);
+  });
+  const total = cards.length;
+  const countEl = document.getElementById("component-search-count");
+  const headerCount = document.getElementById("index-header-count");
+  const input = document.getElementById("component-search");
+  const toolbar = document.getElementById("index-toolbar");
+  function setHeaderLabel() {
+    if (headerCount) headerCount.textContent = total + (total === 1 ? " component" : " components");
+  }
+  setHeaderLabel();
+  function refilter() {
+    const q = (input && input.value) ? input.value.trim().toLowerCase() : "";
+    let n = 0;
+    cards.forEach((card) => {
+      const show = !q || (card.dataset.search && card.dataset.search.indexOf(q) !== -1);
+      if (show) n++;
+      card.hidden = !show;
+    });
+    if (countEl) {
+      if (!q) countEl.textContent = "A–Z · " + total + (total === 1 ? " component" : " components");
+      else {
+        countEl.textContent = n + " of " + total + (n === 1 ? " match" : " matches");
+      }
+    }
+    if (toolbar) toolbar.classList.toggle("index-toolbar--empty", q.length > 0 && n === 0);
+  }
+  if (input) input.addEventListener("input", refilter);
+  refilter();
+})();
+</script>
 
 </body>
 </html>

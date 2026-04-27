@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Checkbox — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -37,6 +41,35 @@
   .preview-card__body { padding: 36px 24px; background: #fff; }
   #previewWrapper { max-width: 520px; margin: 0 auto; }
 
+
+  /* Preview content: start-aligned (checkbox rows are list-like, not centered hero blocks) */
+  #previewWrapper { text-align: start; }
+  /* Restore horizontal centering of the preview block when mode classes are applied */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode,
+  #previewWrapper.proposed-mode { margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
   /* ─── Checkbox component — real OSUI uses native <input type="checkbox" data-checkbox>.
      Sizing via [data-checkbox] selector + :before/:after pseudo-elements. */
   [data-checkbox] {
@@ -51,23 +84,17 @@
     margin: 0;
     vertical-align: middle;
   }
+  /* :before / :hover / :checked (box) = defined per mode in os-ui-*-scoped; keep only layout for cascade fallback */
   [data-checkbox]:before {
     content: "";
-    background: var(--token-bg-surface-default, #ffffff);
-    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
-    border-radius: var(--token-border-radius-100, 4px);
-    height: 22px;
-    width: 22px;
     position: absolute;
     top: 50%; left: 50%;
+    box-sizing: border-box;
     transform: translate(-50%, -50%);
+    height: 22px;
+    width: 22px;
     transition: all 180ms linear;
     opacity: 1;
-  }
-  [data-checkbox]:hover:before { border-color: var(--token-text-subtlest, #626262); }
-  [data-checkbox]:checked:before {
-    background: var(--token-semantics-primary-base, #105cef);
-    border-color: var(--token-semantics-primary-base, #105cef);
   }
   [data-checkbox]:checked:after {
     content: "";
@@ -75,18 +102,27 @@
     border-right: 0 !important;
     border-top: 0 !important;
     display: block;
-    height: 4px;
-    width: 12px;
+    height: 3px;
+    width: 10px;
+    margin: 0;
     position: absolute;
-    left: 5px; top: 7px;
-    transform: rotate(-45deg);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
   }
   [data-checkbox][disabled] { pointer-events: none; }
   [data-checkbox][disabled]:before,
   [data-checkbox][disabled]:checked:before { background: var(--token-border-subtle, #f3f3f3); border-color: var(--token-border-default, #d5d5d5); }
   [data-checkbox][disabled]:checked:after { border-color: var(--token-text-disabled, #a2a2a2); }
 
-  .checkbox-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  /* Scoped overrides — os-ui-*-scoped.css ships `[data-checkbox]:before { top: 0; left: 0 }`
+     which clashes with our centered-via-translate approach. Re-assert centering at the
+     scoped selector level so our rules win on order (equal specificity, later in source). */
+  #previewWrapper.current-mode [data-checkbox]:before,
+  #previewWrapper.new-tokens-mode [data-checkbox]:before,
+  #previewWrapper.proposed-mode [data-checkbox]:before { top: 50%; left: 50%; }
+
+  .checkbox-row { display: flex; align-items: center; justify-content: flex-start; gap: 12px; margin-bottom: 12px; }
   .checkbox-row:last-child { margin-bottom: 0; }
   .checkbox-row label { font-size: 14px; color: var(--token-text-default, #242424); cursor: pointer; }
   .checkbox-section { margin-bottom: 28px; }
@@ -131,32 +167,30 @@
   .td-rationale{ color: #4b5563; max-width: 280px; }
   @media (max-width: 960px) { .token-grid { grid-template-columns: 1fr; } body { padding: 24px 20px 60px; } }
 
-/* Current mode — raw 2.28 palette */
-#previewWrapper.current-mode [data-checkbox] { height: 24px; width: 24px; }
-#previewWrapper.current-mode [data-checkbox]:before { height: 22px; width: 22px; border: 1px solid #ced4da; border-radius: 4px; background: #ffffff; }
-#previewWrapper.current-mode [data-checkbox]:hover:before { border-color: #adb5bd; }
-#previewWrapper.current-mode [data-checkbox]:checked:before { background: #1068eb; border-color: #1068eb; }
-/* Disabled — faithful 2.28 palette: neutral-2 bg + neutral-4 border; check glyph uses neutral-6 */
-#previewWrapper.current-mode [data-checkbox][disabled]:before { background: #f1f3f5; border-color: #dee2e6; }
-#previewWrapper.current-mode [data-checkbox][disabled]:checked:before { background: #f1f3f5; border-color: #dee2e6; }
-#previewWrapper.current-mode [data-checkbox][disabled]:checked:after { border-color: #adb5bd; }
+/* Current mode: borders match os-ui-228-current (same tokens as .form-control — neutral-5) */
 
-/* Proposed — mid-grey filled for disabled-checked (matches reference image),
-   slightly bigger hit area, thicker border, primary focus halo, red invalid */
-#previewWrapper.proposed-mode [data-checkbox] { height: 20px; width: 20px; }
-#previewWrapper.proposed-mode [data-checkbox]:before { height: 18px; width: 18px; border-width: var(--token-border-size-050, 2px); border-radius: var(--token-border-radius-100, 4px); }
-#previewWrapper.proposed-mode [data-checkbox]:focus-visible:before { box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 22%, transparent); }
-#previewWrapper.proposed-mode [data-checkbox]:checked:after { left: 3px; top: 5px; }
-/* Disabled unchecked — muted surface with clear outline */
-#previewWrapper.proposed-mode [data-checkbox][disabled]:before { background: var(--token-bg-surface-default, #ffffff); border-color: var(--token-border-default, #d5d5d5); opacity: .6; }
-/* Disabled checked — MID-GREY filled box with white checkmark (reference-matched) */
-#previewWrapper.proposed-mode [data-checkbox][disabled]:checked:before { background: #8b8b8b; border-color: #8b8b8b; opacity: 1; }
-#previewWrapper.proposed-mode [data-checkbox][disabled]:checked:after { border-color: #ffffff; }
-/* Invalid — red border only */
-#previewWrapper.proposed-mode [data-checkbox].not-valid:before { border-color: #dc2020; }
+/* Proposed: sizes + states live in os-ui-229-proposed-scoped (24×24 hit, 22×22 box, input-matched border). */
+
+
+
+
+
+
+
+  
+  
 </style>
 </head>
 <body>
+<!-- Aviso só em file:// — muitos browsers limitam ficheiros locais; o CSS em assets/ pode não carregar. Usa ./serve e abre o URL em http. -->
+<div id="localFileHint" style="display:none; margin-bottom:20px; padding:12px 16px; background:#fff7ed; border:1px solid #fed7aa; border-radius:10px; color:#9a3412; font-size:13px; line-height:1.5;">
+  <strong>Estás a abrir este ficheiro como <code>file://</code></strong> — o estilo (CSS em <code>assets/os-ui/</code>) pode não carregar. No Terminal, a partir desta pasta do projeto, corre: <code style="background:#ffedd5;padding:2px 6px;border-radius:4px;">./serve</code> e abre
+  <a href="http://127.0.0.1:8765/checkbox-tokens.html" id="localFileLink">http://127.0.0.1:8765/checkbox-tokens.html</a> (porta 8765 por omissão).
+  <button type="button" onclick="document.getElementById('localFileHint').style.display='none'" style="float:right; margin-top:-2px; padding:2px 8px; font-size:12px; cursor:pointer; border:1px solid #fdba74; background:#fff; border-radius:6px;">Fechar</button>
+</div>
+<script>
+  (function () { if (location.protocol === "file:") { var b = document.getElementById("localFileHint"); if (b) b.style.display = "block"; } })();
+</script>
 <a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
 
 <div class="page-header"><h1>Checkbox</h1><span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span><span class="badge-chrome badge-chrome--tokens">Design Tokens</span></div>
@@ -177,14 +211,14 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-    <div id="previewWrapper" class="hide-annotations">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
       <div class="checkbox-section">
         <div class="checkbox-row-label">Default states</div>
-        <div class="checkbox-row"><input data-checkbox type="checkbox" id="cb1" class="annotate-box"><label for="cb1">Send me updates</label></div>
-        <div class="checkbox-row"><input data-checkbox type="checkbox" id="cb2" checked><label for="cb2">Subscribe to newsletter</label></div>
-        <div class="checkbox-row"><input data-checkbox type="checkbox" id="cb3" disabled><label for="cb3">Disabled option</label></div>
-        <div class="checkbox-row"><input data-checkbox type="checkbox" id="cb4" checked disabled><label for="cb4">Disabled + checked</label></div>
-        <div class="checkbox-row"><input data-checkbox type="checkbox" id="cb5" class="not-valid"><label for="cb5">Invalid (required — please confirm)</label></div>
+        <div class="checkbox-row"><input data-checkbox type="checkbox" id="cb1" class="checkbox annotate-box"><label for="cb1">Send me updates</label></div>
+        <div class="checkbox-row"><input data-checkbox type="checkbox" id="cb2" class="checkbox" checked><label for="cb2">Subscribe to newsletter</label></div>
+        <div class="checkbox-row"><input data-checkbox type="checkbox" id="cb3" class="checkbox" disabled><label for="cb3">Disabled option</label></div>
+        <div class="checkbox-row"><input data-checkbox type="checkbox" id="cb4" class="checkbox" checked disabled><label for="cb4">Disabled + checked</label></div>
+        <div class="checkbox-row"><input data-checkbox type="checkbox" id="cb5" class="checkbox not-valid"><label for="cb5">Invalid (required — please confirm)</label></div>
       </div>
     </div>
   </div>
@@ -196,9 +230,9 @@
     <div class="token-card__body">
       <div class="token-row"><span class="prop-name">hit area</span><span class="token-name">token-scale-600</span><span class="token-value">24px</span></div>
       <div class="token-row"><span class="prop-name">visible box</span><span class="token-name" style="color:#64748b;">22px</span><span class="token-value">22px</span></div>
-      <div class="token-row"><span class="prop-name">border</span><span class="token-name">token-border-default</span><span class="token-value">1px · #d5d5d5</span></div>
-      <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">token-border-radius-100</span><span class="token-value">4px</span></div>
-      <div class="token-row"><span class="prop-name">bg</span><span class="token-name">bg-surface-default</span><span class="token-value">#ffffff</span></div>
+      <div class="token-row"><span class="prop-name">border</span><span class="token-name">token-border-input-default</span><span class="token-value">1px (same as input)</span></div>
+      <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">token-border-radius-200</span><span class="token-value">8px (input)</span></div>
+      <div class="token-row"><span class="prop-name">bg</span><span class="token-name">token-bg-input-default</span><span class="token-value">#ffffff</span></div>
     </div>
   </div>
   <div class="token-card cb-state-tok">
@@ -224,22 +258,31 @@
 <div class="proposal-section">
   <div class="proposal-header">
     <h3>Token Proposal</h3>
-    <p>Real OS UI uses a native <code>&lt;input type="checkbox" data-checkbox&gt;</code> styled via <code>:before</code> (box) + <code>:after</code> (checkmark) pseudo-elements. Proposal <strong>shrinks the visible box</strong> (22→18px), thickens the border to 2px for better high-DPI rendering, and adds a focus halo for keyboard a11y.</p>
+    <p>Real OS UI uses a native <code>&lt;input type="checkbox" data-checkbox&gt;</code> styled via <code>:before</code> (box) + <code>:after</code> (checkmark) pseudo-elements. The proposed box uses the <strong>same border, radius, and background tokens as <code>.form-control</code> inputs</strong> (1px, 8px radius, <code>token-border-input-default</code>), with the <strong>same 24×24px hit / 22×22px visible</strong> geometry as New tokens, plus a focus halo for keyboard a11y.</p>
   </div>
   <table class="proposal-table">
     <thead><tr><th>Property</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
     <tbody>
-      <tr><td class="td-property">box size</td><td class="td-current">22×22px visible</td><td class="td-proposed">18×18px visible (20px hit area)</td><td class="td-token">—</td><td class="td-rationale">Current boxes feel chunky next to inline text at 14-16px. Shrinking the <em>visible</em> rectangle to 18px keeps the hit area generous (20px) while sitting proportionally to body copy.</td></tr>
-      <tr><td class="td-property">border</td><td class="td-current">1px neutral-5 (#ced4da)</td><td class="td-proposed">2px token-border-default</td><td class="td-token">--token-border-size-050<br>--token-border-default</td><td class="td-rationale">1px disappears at high-DPI zoom levels (especially when the box is mostly whitespace). 2px gives the unchecked state a crisper, deliberate outline.</td></tr>
+      <tr><td class="td-property">box size</td><td class="td-current">22×22px visible</td><td class="td-proposed">22×22px visible (24px hit) — same as New tokens</td><td class="td-token">—</td><td class="td-rationale">Aligns with the 2.29 / new-tokens field scale so the control is not visually smaller than text inputs; border tokens still match <code>.form-control</code>.</td></tr>
+      <tr><td class="td-property">border</td><td class="td-current">1px neutral-5 (input palette)</td><td class="td-proposed">1px <code>token-border-input-default</code> (matches input)</td><td class="td-token">--token-border-size-025<br>--token-border-input-default</td><td class="td-rationale">Parity with <code>.form-control</code> so checkbox and text field read as one family; same stroke as the 2.29 / new-tokens field border.</td></tr>
       <tr><td class="td-property">:checked bg</td><td class="td-current">color-primary (#1068eb)</td><td class="td-proposed">token-semantics-primary-base</td><td class="td-token">--token-semantics-primary-base</td><td class="td-rationale">Semantic anchoring — same blue, but flips consistently through dark-mode / brand overrides.</td></tr>
       <tr><td class="td-property">focus state</td><td class="td-current">browser default outline</td><td class="td-proposed">22% primary halo (box-shadow ring)</td><td class="td-token">--token-semantics-primary-base (color-mix)</td><td class="td-rationale">Keyboard users need a clear focus affordance. A subtle 3px primary halo around the box is unambiguous without dominating the form.</td></tr>
-      <tr><td class="td-property">disabled state</td><td class="td-current">neutral-2 bg · neutral-4 border · neutral-6 check</td><td class="td-proposed">border-subtle bg · border-default border · text-disabled check</td><td class="td-token">--token-border-subtle<br>--token-border-default<br>--token-text-disabled</td><td class="td-rationale">Three raw palette tokens collapse into a semantic trio. Visual washed-out intent preserved.</td></tr>
+      <tr><td class="td-property">disabled state</td><td class="td-current">neutral-2 bg · neutral-4 border · neutral-6 check</td><td class="td-proposed">Same as input <code>[disabled]</code> (bg + border) + white check on grey when checked</td><td class="td-token">--token-bg-input-disabled<br>--token-border-default</td><td class="td-rationale">Disabled checkbox border tracks the same tokens as a disabled text field.</td></tr>
+      <tr><td class="td-property">checkmark glyph</td><td class="td-current"><em>missing</em> — base CSS provides the L-shaped border but no rotation</td><td class="td-proposed">10×3 px L at 2px, <code>translate(-50%,-50%)</code> + <code>rotate(-45deg)</code> (≈55% inner @ 22px)</td><td class="td-token">—</td><td class="td-rationale">2.28/2.29 ship the L-border tick but not rotation. Proposed centers the mark and scales the L from the 22px (12×4) baseline so the ✓ has even margin, matching product targets.</td></tr>
+      <tr><td class="td-property">:before centering</td><td class="td-current"><code>top: 0; left: 0</code> — visible box anchored to top-left corner</td><td class="td-proposed"><code>top: 50%; left: 50%</code> + <code>translate(-50%, -50%)</code></td><td class="td-token">—</td><td class="td-rationale">Anchoring the visible 22×22 box to the top-left of a 24×24 hit area leaves a phantom 2px gap on the right/bottom edges. Centering it keeps the hit area symmetric around the visible box, which matters for keyboard focus rings and label baseline alignment.</td></tr>
     </tbody>
   </table>
 </div>
 
 <script>
-  function setMode(mode, btn) { const w = document.getElementById('previewWrapper'); w.classList.toggle('proposed-mode', mode === 'proposed'); w.classList.toggle('current-mode', mode === 'legacy'); document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active')); btn.classList.add('ptab--active'); }
+  function setMode(mode, btn) {
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
   function toggleAnnotations(btn) { const w = document.getElementById('previewWrapper'); const hiding = !w.classList.contains('hide-annotations'); w.classList.toggle('hide-annotations', hiding); btn.textContent = hiding ? 'Show annotations' : 'Hide annotations'; btn.classList.toggle('ann-toggle--off', hiding); }
 </script>
 </body>

@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Accordion — Design Token Annotations</title>
+<!-- Phosphor icon font (used by both OSUI 2.28 and 2.29 after FA→Phosphor swap) -->
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <style>
   :root {
     --token-scale-0: 0;
@@ -154,6 +160,36 @@
   .preview-card__body { padding: 20px; }
   #previewWrapper { max-width: 460px; margin: 0 auto; }
 
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode,
+  #previewWrapper.proposed-mode { margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
   /* ─── Accordion (OutSystems UI 2.29.0) ─── */
   /* 6.2.1 — Accordion wrapper — first/last child border-radius */
   .osui-accordion > :first-child > .osui-accordion-item,
@@ -470,487 +506,68 @@
   
   
 /* ─── Current mode (OutSystems UI 2.28.0) ─── */
-#previewWrapper.current-mode {
-  /*! Typography - Size */
-  --font-size-h1:32px;
-  --font-size-h2:28px;
-  --font-size-h3:26px;
-  --font-size-h4:22px;
-  --font-size-h5:20px;
-  --font-size-h6:18px;
-  --font-size-display:36px;
-  --font-size-base:16px;
-  --font-size-s:14px;
-  --font-size-xs:12px;
-  --font-size-label:11px;
-  /*! Typography - Weight */
-  --font-light:300;
-  --font-regular:400;
-  --font-semi-bold:600;
-  --font-bold:700;
-  /*! Color - Brand */
-  --color-primary:#1068eb;
-  --color-secondary:#303d60;
-  --color-primary-hover:#295fd6;
-  --color-primary-selected:rgba(20, 110, 245, 0.12);
-  --color-primary-lightest:linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9));
-  /*! Color - Focus */
-  --color-focus-outer:#ffd337;
-  --color-focus-inner:var(--color-neutral-10);
-  /*! Color - Extended */
-  --color-red-lightest:#faeaea;
-  --color-red-lighter:#e9aaaa;
-  --color-red-light:#d96a6a;
-  --color-red:#c92a2a;
-  --color-red-dark:#ab2424;
-  --color-red-darker:#8d1d1d;
-  --color-red-darkest:#6f1717;
-  --color-orange-lightest:#fef0e6;
-  --color-orange-lighter:#fcc29c;
-  --color-orange-light:#f99551;
-  --color-orange:#f76707;
-  --color-orange-dark:#d25806;
-  --color-orange-darker:#ad4805;
-  --color-orange-darkest:#883904;
-  --color-yellow-lightest:#fef5e5;
-  --color-yellow-lighter:#fbd999;
-  --color-yellow-light:#f8bc4c;
-  --color-yellow:#f59f00;
-  --color-yellow-dark:#d08700;
-  --color-yellow-darker:#ac6f00;
-  --color-yellow-darkest:#875700;
-  --color-lime-lightest:#f1f8e8;
-  --color-lime-lighter:#c7e3a2;
-  --color-lime-light:#9ecd5c;
-  --color-lime:#74b816;
-  --color-lime-dark:#639c13;
-  --color-lime-darker:#51810f;
-  --color-lime-darkest:#40650c;
-  --color-green-lightest:#ebf7ed;
-  --color-green-lighter:#afe0b8;
-  --color-green-light:#73c982;
-  --color-green:#37b24d;
-  --color-green-dark:#2f9741;
-  --color-green-darker:#267d36;
-  --color-green-darkest:#1e622a;
-  --color-teal-lightest:#e6f2ef;
-  --color-teal-lighter:#9cccbd;
-  --color-teal-light:#52a58c;
-  --color-teal:#087f5b;
-  --color-teal-dark:#076c4d;
-  --color-teal-darker:#065940;
-  --color-teal-darkest:#044632;
-  --color-cyan-lightest:#e7f2f4;
-  --color-cyan-lighter:#9eccd3;
-  --color-cyan-light:#56a6b2;
-  --color-cyan:#0d8091;
-  --color-cyan-dark:#0b6d7b;
-  --color-cyan-darker:#095a66;
-  --color-cyan-darkest:#074650;
-  --color-blue-lightest:#e8f2fa;
-  --color-blue-lighter:#a3c9ea;
-  --color-blue-light:#5fa1db;
-  --color-blue:#1a79cb;
-  --color-blue-dark:#1667ad;
-  --color-blue-darker:#12558e;
-  --color-blue-darkest:#0e4370;
-  --color-indigo-lightest:#eceffd;
-  --color-indigo-lighter:#b3c1f7;
-  --color-indigo-light:#7b92f1;
-  --color-indigo:#4263eb;
-  --color-indigo-dark:#3854c8;
-  --color-indigo-darker:#2e45a5;
-  --color-indigo-darkest:#243681;
-  --color-violet-lightest:#f1edfd;
-  --color-violet-lighter:#c6b6f6;
-  --color-violet-light:#9b7fef;
-  --color-violet:#7048e8;
-  --color-violet-dark:#5f3dc5;
-  --color-violet-darker:#4e32a2;
-  --color-violet-darkest:#3e2880;
-  --color-grape-lightest:#f7ecfa;
-  --color-grape-lighter:#dfb2e9;
-  --color-grape-light:#c678d9;
-  --color-grape:#ae3ec9;
-  --color-grape-dark:#9435ab;
-  --color-grape-darker:#7a2b8d;
-  --color-grape-darkest:#60226f;
-  --color-pink-lightest:#fbebf0;
-  --color-pink-lighter:#efadc4;
-  --color-pink-light:#e27098;
-  --color-pink:#d6336c;
-  --color-pink-dark:#b62b5c;
-  --color-pink-darker:#96244c;
-  --color-pink-darkest:#761c3b;
-  /*! Color - Neutral */
-  --color-neutral-0:#ffffff;
-  --color-neutral-1:#f8f9fa;
-  --color-neutral-2:#f1f3f5;
-  --color-neutral-3:#e9ecef;
-  --color-neutral-4:#dee2e6;
-  --color-neutral-5:#ced4da;
-  --color-neutral-6:#adb5bd;
-  --color-neutral-7:#6a7178;
-  --color-neutral-8:#4f575e;
-  --color-neutral-9:#272b30;
-  --color-neutral-10:#101213;
-  /*! Color - Semantic */
-  --color-error-light:#fceaea;
-  --color-error:#dc2020;
-  --color-warning-light:#fdf6e5;
-  --color-warning:#e9a100;
-  --color-success-light:#eaf3eb;
-  --color-success:#29823b;
-  --color-info-light:#e5f5fc;
-  --color-info:#017aad;
-  /*! Overlays */
-  --overlay-background:rgba(0, 0, 0, 0.25);
-  /*! Space - Sizes */
-  --space-none:0;
-  --space-xs:4px;
-  --space-s:8px;
-  --space-base:16px;
-  --space-m:24px;
-  --space-l:32px;
-  --space-xl:40px;
-  --space-xxl:48px;
-  /*! Border Radius */
-  --border-radius-none:0;
-  --border-radius-soft:4px;
-  --border-radius-rounded:100px;
-  --border-radius-circle:100%;
-  /*! Border Size */
-  --border-size-none:0;
-  --border-size-s:1px;
-  --border-size-m:2px;
-  --border-size-l:3px;
-  /*! Elevation / Shadow */
-  --shadow-none:none;
-  --shadow-xs:0 1px 2px rgba(0, 0, 0, 0.1);
-  --shadow-s:0 2px 4px rgba(0, 0, 0, 0.1);
-  --shadow-m:0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-l:0 6px 8px rgba(0, 0, 0, 0.1);
-  --shadow-xl:0 8px 10px rgba(0, 0, 0, 0.1);
-  /*! App Settings */
-  --header-color:#ffffff;
-  --color-background-body:#f3f6f8;
-  --color-background-login:#ffffff;
-  --header-size:56px;
-  --header-size-content:48px;
-  --side-menu-size:300px;
-  --bottom-bar-size:56px;
-  --footer-height:0px;
-  /*! iOS Safe Areas (Notch Support) */
-  /*! Before MABS12, the insets were obtained via env(safe-area-inset-*)
-      for iOS, as for Android the values were reported incorrectly.
-      From MABS12 onwards, the native shell is injecting the CSS variables
-      "--safe-area-inset-*".
-      To ensure retro-compatibility, we use max() to get the highest value
-      between env() and the CSS variable.
-  */
-  --os-safe-area-top:max(env(safe-area-inset-top), var(--safe-area-inset-top, 0px));
-  --os-safe-area-right:max(env(safe-area-inset-right), var(--safe-area-inset-right, 0px));
-  --os-safe-area-bottom:max(env(safe-area-inset-bottom), var(--safe-area-inset-bottom, 0px));
-  --os-safe-area-left:max(env(safe-area-inset-left), var(--safe-area-inset-left, 0px));
-  /*! Layer System */
-  --layer-system-scale:5;
-  --layer-above:var(--layer-system-scale);
-  --layer-below:calc(-1 * var(--layer-system-scale));
-  /*! Global Layers */
-  --layer-global-screen:0;
-  --layer-global-elevated:calc(var(--layer-above) + var(--layer-global-screen));
-  --layer-global-navigation:calc(var(--layer-above) + var(--layer-global-elevated));
-  --layer-global-off-canvas:calc(var(--layer-above) + var(--layer-global-navigation));
-  --layer-global-instant-interaction:calc(var(--layer-above) + var(--layer-global-off-canvas));
-  /*! Auxiliary */
-  --layer-global-negative:-1;
-  --layer-global-auto:auto;
-  /*! Local Layers */
-  --layer-local-tier-1:1;
-  --layer-local-tier-2:2;
-  --layer-local-tier-3:3;
-  --layer-local-tier-4:4;
-  --layer-local-tier-5:5;
-  /*! Fixed/Absolute Patterns that need their variables on a global level to be referenced on all DOM contexts */
-  --osui-bottom-sheet-layer:var(--layer-global-off-canvas);
-  --osui-notification-layer:var(--layer-global-instant-interaction);
-  --osui-popup-layer:var(--layer-global-off-canvas);
-  --osui-sidebar-layer:var(--layer-global-off-canvas);
-  --osui-menu-layer:calc(var(--layer-global-navigation) + var(--layer-local-tier-2));
-}
+
 
 /*! 6.2.1. Accordion */
-#previewWrapper.current-mode .osui-accordion :first-child:not(.list) > .osui-accordion-item,
-#previewWrapper.current-mode .osui-accordion .list :first-child > .osui-accordion-item {
-  border-radius:var(--border-radius-none);
-  border-top-left-radius:var(--border-radius-soft);
-  border-top-right-radius:var(--border-radius-soft);
-}
-#previewWrapper.current-mode .osui-accordion :last-child:not(.list) > .osui-accordion-item,
-#previewWrapper.current-mode .osui-accordion .list :last-child > .osui-accordion-item {
-  border-bottom-width:var(--border-size-s);
-  border-radius:var(--border-radius-none);
-  border-bottom-left-radius:var(--border-radius-soft);
-  border-bottom-right-radius:var(--border-radius-soft);
-}
-#previewWrapper.current-mode .osui-accordion :only-child > .osui-accordion-item,
-#previewWrapper.current-mode .osui-accordion .list :only-child > .osui-accordion-item {
-  border-radius:var(--border-radius-soft);
-}
-#previewWrapper.current-mode .osui-accordion :first-child:not(.list) > .osui-accordion-item::after {
-  border-top-left-radius:var(--border-radius-soft);
-  border-top-right-radius:var(--border-radius-soft);
-}
-#previewWrapper.current-mode .osui-accordion .osui-accordion-item,
-#previewWrapper.current-mode .osui-accordion .list .osui-accordion-item {
-  border-radius:var(--border-radius-none);
-}
-#previewWrapper.current-mode .osui-accordion .osui-accordion-item {
-  border-bottom-width:var(--border-size-none);
-}
-#previewWrapper.current-mode .osui-accordion .osui-accordion-item::after {
-  border-top-left-radius:var(--border-radius-none);
-  border-top-right-radius:var(--border-radius-none);
-}
-#previewWrapper.current-mode .osui-accordion .osui-accordion-item {
-  -servicestudio-border-bottom-width:var(--border-size-s);
-}
+
+
+
+
+
+
+
+
 /*! 6.2.2. Accordion Item */
-#previewWrapper.current-mode .osui-accordion-item {
-  --accordion-active-border-size:2px;
-  background-color:var(--background-color-neutral-0, var(--color-neutral-0));
-  border:var(--border-size-s) solid var(--border-color-neutral-4, var(--color-neutral-4));
-  border-bottom-width:var(--border-size-s);
-  border-radius:var(--border-radius-soft);
-  position:relative;
-}
-#previewWrapper.current-mode .osui-accordion-item__click_zone {
-  cursor:pointer;
-}
-#previewWrapper.current-mode .osui-accordion-item--toggle-with-icon .osui-accordion-item__title {
-  cursor:default;
-}
-#previewWrapper.current-mode .osui-accordion-item--toggle-with-icon .osui-accordion-item__icon {
-  cursor:pointer;
-}
-#previewWrapper.current-mode .osui-accordion-item:after {
-  background-color:transparent;
-  border-color:transparent;
-  border-style:solid;
-  border-top-left-radius:var(--border-radius-soft);
-  border-top-right-radius:var(--border-radius-soft);
-  border-width:var(--accordion-active-border-size) var(--border-size-none) var(--border-size-none) var(--border-size-none);
-  content:"";
-  left:0;
-  height:100%;
-  pointer-events:none;
-  position:absolute;
-  opacity:0;
-  top:-1px;
-  width:100%;
-}
-#previewWrapper.current-mode .osui-accordion-item--is-open > .osui-accordion-item__title {
-  font-weight:var(--font-semi-bold);
-}
-#previewWrapper.current-mode .osui-accordion-item--is-open > .osui-accordion-item__title > .osui-accordion-item__icon--caret {
-  -webkit-transform:rotate(180deg);
-      -ms-transform:rotate(180deg);
-          transform:rotate(180deg);
-}
-#previewWrapper.current-mode .osui-accordion-item--is-open > .osui-accordion-item__title > .osui-accordion-item__icon--plus-minus:after {
-  -webkit-transform:rotate(90deg);
-      -ms-transform:rotate(90deg);
-          transform:rotate(90deg);
-}
-#previewWrapper.current-mode .osui-accordion-item--is-open.osui-accordion-item--is-disabled::after {
-  border-color:var(--border-color-neutral-6, var(--color-neutral-6));
-}
-#previewWrapper.current-mode .osui-accordion-item--is-open::after {
-  border-color:var(--border-color-primary, var(--color-primary));
-  opacity:1;
-  -webkit-transition:opacity 300ms ease-in;
-  transition:opacity 300ms ease-in;
-}
-#previewWrapper.current-mode .osui-accordion-item--is-disabled {
-  color:var(--text-color-neutral-7, var(--color-neutral-7));
-  pointer-events:none;
-}
-#previewWrapper.current-mode .osui-accordion-item--is-disabled .osui-accordion-item__icon {
-  color:var(--text-color-neutral-6, var(--color-neutral-6));
-}
-#previewWrapper.current-mode .osui-accordion-item--is-disabled .osui-accordion-item__icon--plus-minus:after,
-#previewWrapper.current-mode .osui-accordion-item--is-disabled .osui-accordion-item__icon--plus-minus:before {
-  background-color:var(--background-color-neutral-6, var(--color-neutral-6));
-}
-#previewWrapper.current-mode .osui-accordion-item__title {
-  -webkit-box-align:center;
-      -ms-flex-align:center;
-          align-items:center;
-  direction:ltr;
-  display:-webkit-box;
-  display:-ms-flexbox;
-  display:flex;
-  font-size:var(--font-size-h6);
-  line-height:1;
-  padding:var(--space-m);
-  width:100%;
-}
-#previewWrapper.current-mode .osui-accordion-item__title__placeholder {
-  text-overflow:ellipsis;
-  width:100%;
-}
-#previewWrapper.current-mode .osui-accordion-item__title--is-left {
-  -webkit-box-orient:horizontal;
-  -webkit-box-direction:reverse;
-      -ms-flex-direction:row-reverse;
-          flex-direction:row-reverse;
-}
-#previewWrapper.current-mode .osui-accordion-item__title--is-left .osui-accordion-item__title__placeholder {
-  padding-left:var(--space-s);
-}
-#previewWrapper.current-mode .osui-accordion-item__icon {
-  -webkit-box-align:center;
-      -ms-flex-align:center;
-          align-items:center;
-  color:var(--text-color-primary, var(--color-primary));
-  display:-webkit-box;
-  display:-ms-flexbox;
-  display:flex;
-  font-family:FontAwesome;
-  font-size:var(--font-size-h4);
-  font-weight:var(--font-regular);
-  height:16px;
-  -webkit-box-pack:center;
-      -ms-flex-pack:center;
-          justify-content:center;
-  -webkit-transition:all 300ms ease-in-out;
-  transition:all 300ms ease-in-out;
-  width:16px;
-}
-#previewWrapper.current-mode .osui-accordion-item__icon--plus-minus:after {
-  background-color:var(--background-color-primary, var(--color-primary));
-  content:" ";
-  height:100%;
-  -webkit-transition:-webkit-transform 300ms ease-in-out;
-  transition:-webkit-transform 300ms ease-in-out;
-  transition:transform 300ms ease-in-out;
-  transition:transform 300ms ease-in-out, -webkit-transform 300ms ease-in-out;
-  width:2px;
-}
-#previewWrapper.current-mode .osui-accordion-item__icon--plus-minus:before {
-  background-color:var(--background-color-primary, var(--color-primary));
-  content:" ";
-  height:2px;
-  position:absolute;
-  width:16px;
-}
-#previewWrapper.current-mode .osui-accordion-item__icon--custom:not(.osui-accordion-item__click_zone) {
-  pointer-events:none;
-  -servicestudio-height:auto;
-  -servicestudio-width:auto;
-}
-#previewWrapper.current-mode .osui-accordion-item__icon--hidden {
-  display:none;
-  height:0;
-  width:0;
-  -servicestudio-z-index:var(--layer-global-negative);
-}
-#previewWrapper.current-mode .osui-accordion-item__content {
-  display:block;
-  overflow:hidden;
-  padding:var(--space-none) var(--space-m);
-}
-#previewWrapper.current-mode .osui-accordion-item__content--is-collapsed {
-  height:0;
-  visibility:hidden;
-}
-#previewWrapper.current-mode .osui-accordion-item__content--is-collapsed > div {
-  display:none;
-}
-#previewWrapper.current-mode .osui-accordion-item__content--is-expanded {
-  height:auto;
-  padding:var(--space-none) var(--space-m) var(--space-m);
-  visibility:visible;
-}
-#previewWrapper.current-mode .osui-accordion-item__content--is-animating {
-  -webkit-transition:all 300ms ease-in-out;
-  transition:all 300ms ease-in-out;
-}
-#previewWrapper.current-mode .osui-accordion-item__content {
-}
-#previewWrapper.current-mode .osui-accordion-item__content [data-block*=AnimatedLabel]:first-child .animated-label {
-  margin-top:var(--space-s);
-}
-#previewWrapper.current-mode .osui-accordion-item .choices__list.choices__list--dropdown,
-#previewWrapper.current-mode .osui-accordion-item [data-dropdown] > div.dropdown-list {
-  position:initial;
-}
-#previewWrapper.current-mode .osui-accordion-item .osui-accordion {
-  margin-top:var(--accordion-active-border-size);
-}
-#previewWrapper.current-mode .phone .osui-accordion-item .osui-accordion-item__title {
-  font-size:calc(var(--font-size-base));
-}
-#previewWrapper.current-mode .layout-native .osui-accordion-item__title {
-  padding:var(--space-base);
-}
-#previewWrapper.current-mode .layout-native .osui-accordion-item__content {
-  padding:var(--space-none) var(--space-base);
-}
-#previewWrapper.current-mode .layout-native .osui-accordion-item__content--is-collapsed {
-  padding:var(--space-none) var(--space-base);
-}
-#previewWrapper.current-mode .layout-native .osui-accordion-item__content--is-expanded {
-  padding:var(--space-none) var(--space-base) var(--space-base);
-}
-#previewWrapper.current-mode .has-accessible-features .osui-accordion-item__title:focus,
-#previewWrapper.current-mode .has-accessible-features .osui-accordion-item__content:focus {
-  -webkit-box-shadow:none;
-          box-shadow:none;
-}
-#previewWrapper.current-mode .has-accessible-features .osui-accordion-item__title:focus-visible,
-#previewWrapper.current-mode .has-accessible-features .osui-accordion-item__content:focus-visible {
-  outline:var(--border-size-l) solid var(--border-color-focus-outer, var(--color-focus-outer));
-}
-#previewWrapper.current-mode .is-rtl .osui-accordion-item__title__placeholder {
-  direction:rtl;
-  margin-right:var(--space-s);
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* ─── Proposed mode — Accordion ─── */
-  #previewWrapper.proposed-mode .osui-accordion > * > .osui-accordion-item {
-    --osui-accordion-item-border-color: rgba(0,0,0,.07);
-    border-left: none;
-    border-right: none;
-  }
-  #previewWrapper.proposed-mode .osui-accordion > :first-child > .osui-accordion-item {
-    border-top: none;
-  }
-  #previewWrapper.proposed-mode .osui-accordion > :last-child > .osui-accordion-item {
-    border-bottom: none;
-  }
-  #previewWrapper.proposed-mode .osui-accordion > * > .osui-accordion-item,
-  #previewWrapper.proposed-mode .osui-accordion > :first-child > .osui-accordion-item,
-  #previewWrapper.proposed-mode .osui-accordion > :last-child > .osui-accordion-item,
-  #previewWrapper.proposed-mode .osui-accordion > :only-child > .osui-accordion-item {
-    border-radius: 0;
-  }
-  #previewWrapper.proposed-mode .osui-accordion-item__title {
-    padding: var(--token-scale-300) var(--token-scale-600);
-    font-size: var(--token-font-size-400);
-  }
-  #previewWrapper.proposed-mode .osui-accordion-item__title:hover {
-    background: rgba(0,0,0,.04);
-  }
-  #previewWrapper.proposed-mode .osui-accordion-item__content--is-expanded {
-    padding: var(--token-scale-300) var(--token-scale-600) var(--token-scale-600);
-  }
-  #previewWrapper.proposed-mode .osui-accordion-item::after {
-    display: none;
-  }
-  #previewWrapper.proposed-mode .osui-accordion-item--is-open .osui-accordion-item__title {
-    font-weight: var(--token-font-weight-semi-bold);
-  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   /* ─── Token Editor ─── */
   .edit-fab {
@@ -1001,6 +618,17 @@
     transition: background .15s;
   }
   .te-reset:hover { background: rgba(255,255,255,.1); color: #e2e8f0; }
+
+/* Proposed-mode accordion (open/close, tokens): assets/os-ui/os-ui-229-proposed-scoped.css
+   see “BESPOKE PROPOSED-MODE OVERRIDES” at end of file; export = that file. */
+
+
+
+
+
+
+  
+  
 </style>
 </head>
 <body>
@@ -1036,7 +664,7 @@
       <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
     </div>
     <div class="preview-card__body">
-    <div id="previewWrapper" class="hide-annotations">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
     <div class="osui-accordion">
 
       <!-- Item 1 — open (wrapper div matches production HTML pattern) -->
@@ -1333,6 +961,20 @@
           <td class="td-token">token-font-weight-semi-bold</td>
           <td class="td-rationale">Weight change communicates open state without colour or background</td>
         </tr>
+        <tr>
+          <td class="td-property">caret size</td>
+          <td class="td-current">16×16, 1.5 stroke</td>
+          <td class="td-proposed">20×20, 2 stroke</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale">A 12px caret with hairline stroke nearly disappeared against the title row — the affordance was technically present but visually unfindable, especially on disabled items. 20px with a 2 stroke weight gives the caret enough optical mass to read clearly without dominating the title (still smaller than the title's 16px text-x-height).</td>
+        </tr>
+        <tr>
+          <td class="td-property">open/close animation</td>
+          <td class="td-current">none (instant height swap)</td>
+          <td class="td-proposed">0.4s <code>grid-template-rows</code> 0fr↔1fr + opacity/slide on body · <code>--acc-proposed-ease</code></td>
+          <td class="td-token">--acc-proposed-dur, --acc-proposed-ease</td>
+          <td class="td-rationale">CSS grid row animation avoids <code>height: auto</code> interpolation; ease-out gives a light settle. <code>prefers-reduced-motion</code> shortens duration via the same custom properties.</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -1440,11 +1082,12 @@ function toggleAnnotations(btn){
   btn.textContent=hidden?'Show annotations':'Hide annotations';
   btn.classList.toggle('ann-toggle--off',hidden);
 }
-function setMode(mode,btn){
-  const w=document.getElementById('previewWrapper');
-  w.classList.toggle('proposed-mode', mode==='proposed');
-  w.classList.toggle('current-mode', mode==='legacy');
-  document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('ptab--active'));
+function setMode(mode, btn) {
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
   btn.classList.add('ptab--active');
 }
 function toggleAccordion(item){

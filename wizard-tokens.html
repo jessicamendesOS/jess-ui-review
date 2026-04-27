@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wizard — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -116,6 +120,35 @@
   .preview-card__body { padding: 36px 24px; background: #fff; }
   #previewWrapper { max-width: 620px; margin: 0 auto; }
 
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
   /* ─── Wizard component — faithful to real OS UI 2.27/2.28/2.29 CSS ───
        Structure (from real OSUI):
        <div class="wizard-wrapper">
@@ -344,67 +377,26 @@
   }
 
 /* ─── Current mode (OutSystems UI 2.28.0) — raw values from real 2.27/2.28 CSS, no tokens ─── */
-/* All values below come verbatim from the real OSUI 2.27 wizard rules at /* 6.4.9 */. */
-#previewWrapper.current-mode .wizard-item-icon {
-  background-color: #ffffff;       /* color-neutral-0 */
-  border: 1px solid #ced4da;       /* border-size-s + color-neutral-5 */
-  color: #6a7178;                  /* color-neutral-7 */
-  height: 32px;
-  width: 32px;
-}
-#previewWrapper.current-mode .wizard-item-icon:empty {
-  height: 8px; width: 8px;
-}
-#previewWrapper.current-mode .wizard-item-icon-wrapper::before {
-  height: 2px;                     /* hardcoded in 2.28 */
-  background-color: #ced4da;       /* color-neutral-5 (future/default connector) */
-}
+/* All current-mode rules now come from linked os-ui-228-current-scoped.css */
+
+
 /* Vertical variant needs the tall line back — the horizontal-connector rule
    above has higher specificity than the base `.wizard-vertical … ::before`
    rule (ID vs. classes), so restore the vertical connector dimensions here. */
-#previewWrapper.current-mode .wizard-wrapper.wizard-vertical .wizard-item-icon-wrapper::before {
-  height: calc(100% + 18px);
-  width: 2px;
-}
-#previewWrapper.current-mode .wizard-wrapper [data-block*="WizardItem"] .wizard-item-label {
-  color: #6a7178;                  /* color-neutral-7 */
-}
+
+
 /* States — raw 2.28 palette */
-#previewWrapper.current-mode .wizard-wrapper-item.active .wizard-item-icon {
-  border-color: #1068eb;           /* color-primary */
-  color: #1068eb;
-  background-color: #ffffff;
-}
-#previewWrapper.current-mode .wizard-wrapper-item.active .wizard-item-icon-wrapper::before {
-  background-color: #1068eb;
-}
-#previewWrapper.current-mode .wizard-wrapper-item.active .wizard-item-label {
-  color: #212529;                  /* color-neutral-10 */
-  font-weight: 600;
-}
-#previewWrapper.current-mode .wizard-wrapper-item.past .wizard-item-icon {
-  background-color: #1068eb;
-  border-color: #1068eb;
-  color: #ffffff;                  /* color-neutral-0 */
-}
-#previewWrapper.current-mode .wizard-wrapper-item.past .wizard-item-icon-wrapper::before {
-  background-color: #1068eb;
-}
-#previewWrapper.current-mode .wizard-wrapper-item.past .wizard-item-label {
-  color: #4f575e;                  /* color-neutral-8 */
-}
-#previewWrapper.current-mode .wizard-wrapper-item.next .wizard-item-icon-wrapper::before {
-  background-color: #ced4da;       /* color-neutral-5 */
-}
+
+
+
+
+
+
+
 /* Real 2.27/2.28 only dims the NEXT-state colour on `.fa-fw` glyphs (icon fonts)
    — plain text/numbers inside .wizard-item-icon keep the base `color-neutral-7`
    (#6a7178). Targeting <i> / .ph / .fa-fw keeps number labels legible. */
-#previewWrapper.current-mode .wizard-wrapper-item.next .wizard-item-icon i,
-#previewWrapper.current-mode .wizard-wrapper-item.next .wizard-item-icon .ph,
-#previewWrapper.current-mode .wizard-wrapper-item.next .wizard-item-icon .ph-bold,
-#previewWrapper.current-mode .wizard-wrapper-item.next .wizard-item-icon .fa-fw {
-  color: #ced4da;
-}
+
 
 /* ─── Proposed mode — semantic tokens, larger hit area, disabled state ─── */
 /*
@@ -423,64 +415,41 @@
     • Add `.disabled` state (not in 2.28) — greyed icon + disabled text token
       for flows with conditionally locked steps.
 */
-#previewWrapper.proposed-mode .wizard-item-icon {
-  height: 36px;
-  width: 36px;
-  border-width: var(--token-border-size-050, 2px);
-  font-size: var(--token-font-size-300, 0.75rem);  /* 12px — proportioned to 36px bubble */
-}
-#previewWrapper.proposed-mode .wizard-item-icon .ph,
-#previewWrapper.proposed-mode .wizard-item-icon .ph-bold,
-#previewWrapper.proposed-mode .wizard-item-icon i {
-  font-size: 0.875rem;  /* 14px checkmark — slightly bigger than step-number glyph */
-}
+
+
 /* Empty-dot variant keeps the compact 8px footprint from the base rule — the
    .proposed-mode override above has ID specificity that out-specs
    `.wizard-item-icon:empty`, so restore the :empty behaviour here. */
-#previewWrapper.proposed-mode .wizard-item-icon:empty {
-  height: var(--token-scale-200, 8px);
-  width: var(--token-scale-200, 8px);
-}
-#previewWrapper.proposed-mode .wizard-item-icon-wrapper::before {
-  height: var(--token-border-size-050, 2px);
-}
+
+
 /* Same specificity fix as current-mode: the horizontal override above wins
    against the vertical rule (ID vs. classes), so restore the tall connector. */
-#previewWrapper.proposed-mode .wizard-wrapper.wizard-vertical .wizard-item-icon-wrapper::before {
-  height: calc(100% + 18px);
-  width: var(--token-border-size-050, 2px);
-}
+
 /* Past → PRIMARY semantic (same family as active; distinction is fill vs.
    outline, not hue — the wizard reads as a single brand-colour journey). */
-#previewWrapper.proposed-mode .wizard-wrapper-item.past .wizard-item-icon {
-  background-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
-  border-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
-  color: var(--token-text-inverse, #ffffff);
-}
-#previewWrapper.proposed-mode .wizard-wrapper-item.past .wizard-item-icon-wrapper::before {
-  background-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef)));
-}
-#previewWrapper.proposed-mode .wizard-wrapper-item.past .wizard-item-label {
-  color: var(--token-text-subtle, #3b3b3b);
-}
+
+
+
 /* Active keeps primary ring + focus halo for keyboard a11y */
-#previewWrapper.proposed-mode .wizard-wrapper-item.active .wizard-item-icon {
-  box-shadow: 0 0 0 4px color-mix(in srgb,
-    var(--token-semantics-primary-base, #105cef) 18%, transparent);
-}
+
 /* Disabled state — new, not in 2.28 */
-#previewWrapper.proposed-mode .wizard-wrapper-item.disabled .wizard-item-icon {
-  background-color: var(--token-bg-surface-default, #ffffff);
-  border-color: var(--token-border-subtle, #f3f3f3);
-  color: var(--token-text-disabled, #a2a2a2);
-  opacity: .6;
-}
-#previewWrapper.proposed-mode .wizard-wrapper-item.disabled .wizard-item-icon-wrapper::before {
-  background-color: var(--token-border-subtle, #f3f3f3);
-}
-#previewWrapper.proposed-mode .wizard-wrapper-item.disabled .wizard-item-label {
-  color: var(--token-text-disabled, #a2a2a2);
-}
+
+
+
+
+/* ─── Bespoke proposed-mode overrides (restored from pre-refactor state) ─── */
+
+
+
+
+
+
+
+
+
+
+
+
 </style>
 </head>
 <body>
@@ -515,7 +484,7 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-  <div id="previewWrapper" class="hide-annotations">
+  <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
 
     <!-- Horizontal — completed flow (step 3 of 4 active) -->
     <div class="wizard-row">
@@ -902,12 +871,13 @@
 
 <script>
   function setMode(mode, btn) {
-    const w = document.getElementById('previewWrapper');
-    w.classList.toggle('proposed-mode', mode === 'proposed');
-    w.classList.toggle('current-mode', mode === 'legacy');
-    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
-    btn.classList.add('ptab--active');
-  }
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 
   function toggleAnnotations(btn) {
     const wrapper = document.getElementById('previewWrapper');

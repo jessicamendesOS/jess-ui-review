@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notification — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-200: 8px; --token-scale-300: 12px; --token-scale-400: 16px; --token-scale-600: 24px;
+    --token-border-radius-100: 4px; --token-border-size-025: 1px; --token-border-size-050: 2px;
+    --token-font-size-300: 0.75rem; --token-font-size-400: 1rem; --token-font-weight-semi-bold: 600;
+    --token-bg-surface-default: #ffffff; --token-text-default: #242424; --token-text-subtle: #3b3b3b;
+    --token-border-subtle: #f3f3f3; --token-border-default: #d5d5d5;
+    --token-semantics-primary-base: #105cef; --token-semantics-success-base: #29823b; --token-semantics-error-base: #dc2020;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; padding: 48px 32px; line-height: 1.5; }
+  .back-nav { display: inline-flex; font-size: 12px; font-weight: 600; color: #6b7280; text-decoration: none; margin-bottom: 24px; }
+  .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 20px; }
+  .page-header h1 { font-size: 28px; font-weight: 800; }
+  .badge-chrome { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; text-transform: uppercase; }
+  .badge-chrome--os { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens { background: #eff6ff; color: #1d4ed8; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item { font-size: 11px; font-weight: 600; background: #fff; border: 1px solid #e5e7eb; border-radius: 99px; padding: 4px 10px; }
+  .legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+  .preview-card { background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,.07); margin-bottom: 32px; }
+  .preview-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: #fafafa; border-bottom: 1px solid #f0f0f0; }
+  .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #9ca3af; margin-right: auto; }
+  .preview-card__body { position: relative; min-height: 200px; padding: 0; }
+  .preview-tabs { display: flex; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { border: 0; border-radius: 7px; padding: 4px 12px; font: 600 11px system-ui; cursor: pointer; background: transparent; color: #6b7280; }
+  .ptab--active { background: #fff; color: #111; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { border: 1px solid #e5e7eb; border-radius: 7px; padding: 4px 10px; font: 600 11px system-ui; background: #fff; margin-left: 4px; cursor: pointer; }
+  .ann-toggle--off { color: #dc2626; background: #fef2f2; }
+  .notif-stage { position: relative; min-height: 200px; background: linear-gradient(180deg, #e5e7eb, #d1d5db); }
+  .notif-caption { font-size: 12px; color: #6b7280; padding: 12px 20px; }
+  /* Contain fixed toast; runtime uses position:fixed + transforms */
+  #previewWrapper.current-mode .notif-stage .osui-notification,
+  #previewWrapper.new-tokens-mode .notif-stage .osui-notification,
+  #previewWrapper.proposed-mode .notif-stage .osui-notification {
+    position: absolute !important;
+    --notification-width: 320px;
+    --osui-notification-margin: var(--token-scale-200, 8px);
+  }
+  #previewWrapper.current-mode .notif-stage .osui-notification--is-top,
+  #previewWrapper.new-tokens-mode .notif-stage .osui-notification--is-top,
+  #previewWrapper.proposed-mode .notif-stage .osui-notification--is-top {
+    top: 16px !important;
+    left: 50% !important;
+    -webkit-transform: translate(-50%,0) !important;
+    transform: translate(-50%,0) !important;
+  }
+  .annotate-toast { outline: 2px dashed #3b82f6; outline-offset: 2px; border-radius: 4px; }
+  .annotate-content { outline: 2px dashed #10b981; outline-offset: 2px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+  .token-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  .token-card { border-radius: 12px; background: #0f1117; color: #fff; overflow: hidden; }
+  .token-card__header { padding: 10px 14px; font-size: 12px; font-weight: 700; display: flex; align-items: center; }
+  .token-card__header .component-name { margin-left: auto; font: 10px monospace; opacity: .6; }
+  .n-surf .token-card__header { background: linear-gradient(120deg,#1e3a8a,#3b82f6); }
+  .n-pos  .token-card__header { background: linear-gradient(120deg,#065f46,#10b981); }
+  .n-mot  .token-card__header { background: linear-gradient(120deg,#7c2d12,#f97316); }
+  .token-row { display: grid; grid-template-columns: 130px 1fr 80px; font-size: 11px; padding: 8px 14px; border-bottom: 1px solid rgba(255,255,255,.05); }
+  .prop-name { color: #94a3b8; } .token-name { color: #a78bfa; font-weight: 600; }
+  .proposal-section { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; margin-top: 20px; }
+  .proposal-header { padding: 16px 20px; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; }
+  .proposal-table { width: 100%; font-size: 12px; border-collapse: collapse; }
+  .proposal-table th, .proposal-table td { text-align: left; padding: 9px 16px; }
+  .proposal-table th { background: #f9fafb; color: #6b7280; text-transform: uppercase; font-size: 11px; }
+  .proposal-table td { border-top: 1px solid #f3f4f6; }
+  @media (max-width: 900px) { .token-grid { grid-template-columns: 1fr; } }
+</style></head>
+<body>
+<a href="index.html" class="back-nav">← All components</a>
+<div class="page-header">
+  <h1>Notification</h1>
+  <span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span>
+  <span class="badge-chrome badge-chrome--tokens">Design Tokens</span>
+</div>
+  <div class="legend">
+  <span class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span> <code>.osui-notification</code> (fixed toast)</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#10b981"></span> <code>--is-open</code> opacity + transform</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span> Chrome (border, shadow, padding) vs body text</span>
+</div>
+<div class="preview-card">
+  <div class="preview-card__header">
+    <span class="preview-card__label">Preview (top / open)</span>
+    <div class="preview-tabs">
+      <button type="button" class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button type="button" class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button type="button" class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button type="button" class="ann-toggle ann-toggle--off" onclick="toggleA(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode notif-box">
+      <div class="notif-stage notif-nested">
+        <div class="osui-notification osui-notification--is-open osui-notification--is-top annotate-toast" style="--notification-width: 320px;">
+          <p class="annotate-content" style="margin:0; font: var(--token-font-size-300,0.75rem) system-ui; color: var(--token-text-default, #242424);">Background operation finished.</p>
+        </div>
+        <p class="notif-caption">Body text is inside the toast. Chrome (border, radius, shadow-xl, space-m padding) is on the <code>.osui-notification</code> box. Static preview uses <code>position: absolute</code> inside a fake viewport.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="token-grid">
+  <div class="token-card n-surf">
+    <div class="token-card__header">Surface<span class="component-name">.osui-notification</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">background</span><span class="token-name">color-neutral-0</span><span>—</span></div>
+      <div class="token-row"><span class="prop-name">border</span><span class="token-name">border-size-s + neutral-4</span><span>1px</span></div>
+      <div class="token-row"><span class="prop-name">radius</span><span class="token-name">border-radius-soft</span><span>4px</span></div>
+      <div class="token-row"><span class="prop-name">elevation</span><span class="token-name">shadow-xl</span><span>—</span></div>
+      <div class="token-row"><span class="prop-name">padding</span><span class="token-name">space-m</span><span>24px</span></div>
+      <div class="token-row"><span class="prop-name">text</span><span class="token-name">color-neutral-10</span><span>—</span></div>
+    </div>
+  </div>
+  <div class="token-card n-pos">
+    <div class="token-card__header">Placement + open<span class="component-name">modifiers</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">--osui-notification-margin</span><span class="token-name">space-m (default)</span><span>24px</span></div>
+      <div class="token-row"><span class="prop-name">--notification-width</span><span class="token-name">theme (required)</span><span>var</span></div>
+      <div class="token-row"><span class="prop-name">z-index</span><span class="token-name">osui-notification-layer</span><span>—</span></div>
+    </div>
+  </div>
+  <div class="token-card n-mot">
+    <div class="token-card__header">Visibility<span class="component-name">.--is-open</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">rest</span><span class="token-name">opacity:0, pointer-events:none</span><span>—</span></div>
+      <div class="token-row"><span class="prop-name">open</span><span class="token-name">opacity:1, pointer-events:auto + transform to slot</span><span>—</span></div>
+    </div>
+  </div>
+</div>
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Token proposal</h3>
+    <p>OS UI 2.28/2.29 uses the legacy <code>--color-neutral-*</code> chain for the toast card. Align border + fill with <code>--token-border-default</code> and <code>--token-bg-surface-default</code> so the notification matches Alert / Popup in themed apps.</p>
+  </div>
+  <table class="proposal-table">
+    <thead><tr><th>Property</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td>Border</td><td>1px · neutral-4 (palette)</td><td>token-border-default (same value)</td><td>--token-border-default</td><td>Single source for all floating neutral borders.</td></tr>
+      <tr><td>Width cap</td><td>100vw - 2× margin</td><td>clamped with --token-… max width</td><td>TBD</td><td>Prevents ultra-wide toasts on desktop when notification-width is set large.</td></tr>
+    </tbody>
+  </table>
+</div>
+<script>
+function setMode(m,b){
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', m==='legacy' || m==='current');
+  w.classList.toggle('new-tokens-mode', m==='new-tokens');
+  w.classList.toggle('proposed-mode', m==='proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  b.classList.add('ptab--active');
+}
+function toggleA(btn){
+  const w = document.getElementById('previewWrapper');
+  const hiding = !w.classList.contains('hide-annotations');
+  w.classList.toggle('hide-annotations', hiding);
+  btn.textContent = hiding ? 'Show annotations' : 'Hide annotations';
+  btn.classList.toggle('ann-toggle--off', hiding);
+}
+</script>
+</body></html>

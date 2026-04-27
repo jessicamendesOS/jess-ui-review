@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Breadcrumbs — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -104,18 +108,49 @@
   .preview-card__body { padding: 36px 24px; background: #fff; }
   #previewWrapper { max-width: 640px; margin: 0 auto; }
 
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
   /* ─── Breadcrumbs component — faithful to real OS UI 2.27/2.28 CSS ───
      HTML shape from OSUI:
-       <div class="breadcrumbs-content">
-         <div class="breadcrumbs-item">
-           <a href="#">Home</a>
-           <i class="icon"><!-- separator --></i>
+       <nav class="breadcrumbs" aria-label="breadcrumb">
+         <div class="breadcrumbs-content">
+           <div class="breadcrumbs-item">
+             <a href="#">Home</a>
+             <i class="icon"><!-- separator --></i>
+           </div>
+           ...
+           <div class="breadcrumbs-item">
+             <span>Current page</span>   <!-- no separator on last -->
+           </div>
          </div>
-         ...
-         <div class="breadcrumbs-item">
-           <span>Current page</span>   <!-- no separator on last -->
-         </div>
-       </div>
+       </nav>
   */
   .breadcrumbs-content {
     align-items: center;
@@ -256,30 +291,12 @@
      - font-size                   → 13px
    No distinction between current-page (span) and ancestors (anchors) apart
    from the fact that the current is a plain `<span>` so it reads in neutral-8. */
-#previewWrapper.current-mode .breadcrumbs-item {
-  color: #4f575e;
-  font-size: 13px;
-  font-weight: 400;
-}
-#previewWrapper.current-mode .breadcrumbs-item a {
-  color: #1068eb;      /* color-primary — global anchor default */
-  text-decoration: none;
-}
-#previewWrapper.current-mode .breadcrumbs-item a:hover {
-  text-decoration: underline;
-}
-#previewWrapper.current-mode .breadcrumbs-item .icon {
-  color: #6a7178;      /* color-neutral-7 */
-  font-size: 10px;     /* font-size-xs */
-  margin: 0 8px;       /* space-s */
-}
-#previewWrapper.current-mode .breadcrumbs-home {
-  font-size: 14px;
-}
-#previewWrapper.current-mode .breadcrumbs-item.breadcrumbs-collapsed {
-  /* 2.28 has no collapsed variant — rendered here for parity, same palette. */
-  color: #4f575e;
-}
+
+
+
+
+
+
 
 /* ─── Proposed mode — semantic tokens, current-item emphasis, hover polish,
        collapsed-overflow pattern ─── */
@@ -298,74 +315,52 @@
       no convention for truncating long breadcrumb chains; proposal introduces
       `.breadcrumbs-collapsed` as a recognised pattern for 4+ levels.
 */
-#previewWrapper.proposed-mode .breadcrumbs-item {
-  font-size: var(--token-font-size-350, 0.8125rem);
-  line-height: 1;
-}
+
 /* Proposed-only: make every inline child a flex container with centred items
    so home-icon + text + chevron share one cross-axis. Real 2.28 inherits
    baseline-alignment for inline `<i>` glyphs, which sinks the house icon a
    few pixels below the text — faithful to 2.28 and deliberately left there.
    Proposed mode polishes that out. */
-#previewWrapper.proposed-mode .breadcrumbs-item a {
-  display: inline-flex;
-  align-items: center;
-  line-height: 1;
-}
-#previewWrapper.proposed-mode .breadcrumbs-item .icon {
-  align-items: center;
-  line-height: 1;
-}
-#previewWrapper.proposed-mode .breadcrumbs-item .icon i {
-  display: inline-block;
-  line-height: 1;
-}
-#previewWrapper.proposed-mode .breadcrumbs-home {
-  line-height: 1;
-}
-#previewWrapper.proposed-mode .breadcrumbs-home i {
-  display: inline-block;
-  line-height: 1;
-}
+
+
+
+
+
 /* Links drop primary-blue for a quieter flat-tonal treatment — ancestors fade
    into the background so the current page becomes the only strong element. */
-#previewWrapper.proposed-mode .breadcrumbs-item a {
-  color: var(--token-text-subtlest, #626262);
-  transition: color .12s;
-}
-#previewWrapper.proposed-mode .breadcrumbs-item a:hover {
-  color: var(--token-text-default, #242424);
-  text-decoration: none;
-}
+
+
 
 /* Current-item — `token-text-default` (close to pure black) + semi-bold so
    "you are here" becomes the visual anchor of the chain. */
-#previewWrapper.proposed-mode .breadcrumbs-item:last-child {
-  color: var(--token-text-default, #242424);
-  font-weight: var(--token-font-weight-semi-bold, 600);
-}
+
 
 /* Separator: dimmer colour + swap glyph from filled triangle (Phosphor-Fill)
    to outline chevron (Phosphor regular). Same `\e13a` codepoint, different
    font-family — a pure CSS override keeps the HTML shared with current-mode. */
-#previewWrapper.proposed-mode .breadcrumbs-item .icon {
-  color: var(--token-text-subtlest, #626262);
-  font-size: 0.75rem;  /* 12px */
-}
-#previewWrapper.proposed-mode .breadcrumbs-item .icon i.ph-fill {
-  font-family: "Phosphor" !important;  /* renders caret-right as thin outline `>` */
-}
+
+
 
 /* Collapsed ellipsis: match the tonal flat palette — no chip hover. */
-#previewWrapper.proposed-mode .breadcrumbs-item.breadcrumbs-collapsed .ellipsis {
-  padding: 0;
-  border-radius: 0;
-  cursor: pointer;
-}
-#previewWrapper.proposed-mode .breadcrumbs-item.breadcrumbs-collapsed .ellipsis:hover {
-  background: none;
-  color: var(--token-text-default, #242424);
-}
+
+
+
+/* ─── Bespoke proposed-mode overrides (restored from pre-refactor state) ─── */
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
 </style>
 </head>
 <body>
@@ -400,72 +395,78 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-  <div id="previewWrapper" class="hide-annotations">
+  <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
 
     <!-- Standard 3-level path -->
     <div class="breadcrumbs-section">
       <div class="breadcrumbs-row-label">Standard path · 3 levels</div>
-      <div class="breadcrumbs-content annotate-container">
-        <div class="breadcrumbs-item annotate-item">
-          <a href="#">Design System</a>
-          <i class="icon annotate-separator"><i class="ph-fill ph-caret-right"></i></i>
+      <nav class="breadcrumbs" aria-label="breadcrumb">
+        <div class="breadcrumbs-content annotate-container">
+          <div class="breadcrumbs-item annotate-item">
+            <a href="#">Design System</a>
+            <i class="icon annotate-separator"><i class="ph-fill ph-caret-right"></i></i>
+          </div>
+          <div class="breadcrumbs-item">
+            <a href="#">Components</a>
+            <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
+          </div>
+          <div class="breadcrumbs-item annotate-current">
+            <span>Breadcrumbs</span>
+          </div>
         </div>
-        <div class="breadcrumbs-item">
-          <a href="#">Components</a>
-          <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
-        </div>
-        <div class="breadcrumbs-item annotate-current">
-          <span>Breadcrumbs</span>
-        </div>
-      </div>
+      </nav>
     </div>
 
     <!-- Home icon prefix -->
     <div class="breadcrumbs-section">
       <div class="breadcrumbs-row-label">With home-icon prefix · 4 levels</div>
-      <div class="breadcrumbs-content">
-        <div class="breadcrumbs-item">
-          <a href="#">
-            <span class="breadcrumbs-home"><i class="ph-bold ph-house"></i></span>
-          </a>
-          <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
+      <nav class="breadcrumbs" aria-label="breadcrumb">
+        <div class="breadcrumbs-content">
+          <div class="breadcrumbs-item">
+            <a href="#">
+              <span class="breadcrumbs-home"><i class="ph-bold ph-house"></i></span>
+            </a>
+            <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
+          </div>
+          <div class="breadcrumbs-item">
+            <a href="#">Projects</a>
+            <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
+          </div>
+          <div class="breadcrumbs-item">
+            <a href="#">Q1 Campaign</a>
+            <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
+          </div>
+          <div class="breadcrumbs-item">
+            <span>Analytics</span>
+          </div>
         </div>
-        <div class="breadcrumbs-item">
-          <a href="#">Projects</a>
-          <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
-        </div>
-        <div class="breadcrumbs-item">
-          <a href="#">Q1 Campaign</a>
-          <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
-        </div>
-        <div class="breadcrumbs-item">
-          <span>Analytics</span>
-        </div>
-      </div>
+      </nav>
     </div>
 
     <!-- Long / collapsed path — showcases the proposed `…` overflow pattern -->
     <div class="breadcrumbs-section">
       <div class="breadcrumbs-row-label">Long path · collapsed overflow (<code>.breadcrumbs-collapsed</code>)</div>
-      <div class="breadcrumbs-content">
-        <div class="breadcrumbs-item">
-          <a href="#">
-            <span class="breadcrumbs-home"><i class="ph-bold ph-house"></i></span>
-          </a>
-          <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
+      <nav class="breadcrumbs" aria-label="breadcrumb">
+        <div class="breadcrumbs-content">
+          <div class="breadcrumbs-item">
+            <a href="#">
+              <span class="breadcrumbs-home"><i class="ph-bold ph-house"></i></span>
+            </a>
+            <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
+          </div>
+          <div class="breadcrumbs-item breadcrumbs-collapsed">
+            <span class="ellipsis" title="Workspaces › Marketing › 2026">…</span>
+            <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
+          </div>
+          <div class="breadcrumbs-item">
+            <a href="#">Q1 Campaign</a>
+            <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
+          </div>
+          <div class="breadcrumbs-item">
+            <span>Landing page copy</span>
+          </div>
         </div>
-        <div class="breadcrumbs-item breadcrumbs-collapsed">
-          <span class="ellipsis" title="Workspaces › Marketing › 2026">…</span>
-          <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
-        </div>
-        <div class="breadcrumbs-item">
-          <a href="#">Q1 Campaign</a>
-          <i class="icon"><i class="ph-fill ph-caret-right"></i></i>
-        </div>
-        <div class="breadcrumbs-item">
-          <span>Landing page copy</span>
-        </div>
-      </div>
+      </nav>
     </div>
 
   </div>
@@ -672,12 +673,13 @@
 
 <script>
   function setMode(mode, btn) {
-    const w = document.getElementById('previewWrapper');
-    w.classList.toggle('proposed-mode', mode === 'proposed');
-    w.classList.toggle('current-mode', mode === 'legacy');
-    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
-    btn.classList.add('ptab--active');
-  }
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 
   function toggleAnnotations(btn) {
     const wrapper = document.getElementById('previewWrapper');

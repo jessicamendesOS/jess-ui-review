@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Section index — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-200: 8px; --token-scale-300: 12px; --token-scale-400: 16px;
+    --token-border-radius-100: 4px; --token-border-size-050: 2px;
+    --token-font-size-300: 0.75rem; --token-font-size-400: 1rem; --token-font-weight-semi-bold: 600;
+    --token-text-default: #242424; --token-text-subtle: #3b3b3b;
+    --token-border-default: #d5d5d5; --token-semantics-primary-base: #105cef;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; padding: 48px 32px; }
+  .back-nav { font-size: 12px; font-weight: 600; color: #6b7280; text-decoration: none; display: inline-flex; margin-bottom: 24px; }
+  .page-header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 20px; }
+  .page-header h1 { font-size: 28px; font-weight: 800; }
+  .badge-chrome { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; text-transform: uppercase; }
+  .badge-chrome--os { background: #f5f0fb; color: #7c3aed; }
+  .badge-chrome--tokens { background: #eff6ff; color: #1d4ed8; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item { font-size: 11px; font-weight: 600; background: #fff; border: 1px solid #e5e7eb; border-radius: 99px; padding: 4px 10px; }
+  .legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+  .preview-card { background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0,0,0,.07); margin-bottom: 32px; }
+  .preview-card__header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 14px; background: #fafafa; border-bottom: 1px solid #f0f0f0; }
+  .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #9ca3af; margin-right: auto; }
+  .preview-card__body { padding: 32px; }
+  .preview-tabs { display: flex; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { border: 0; border-radius: 7px; padding: 4px 12px; font: 600 11px system-ui; background: transparent; color: #6b7280; cursor: pointer; }
+  .ptab--active { background: #fff; color: #111; }
+  .ann-toggle { border: 1px solid #e5e7eb; border-radius: 7px; padding: 4px 10px; font: 600 11px system-ui; margin-left: 4px; cursor: pointer; background: #fff; }
+  .ann-toggle--off { color: #dc2626; background: #fef2f2; }
+  #previewWrapper { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; justify-content: center; text-align: left; }
+  #previewWrapper [class*="osui-"] { text-align: start; }
+  #previewWrapper.current-mode, #previewWrapper.new-tokens-mode { margin: 0 auto; overflow: visible; }
+  /* Static page: no header chrome — top anchor for index */
+  .si-fake-page { --header-size: 0px; --header-size-content: 0px; flex: 1; min-width: 200px; }
+  .annotate-rail  { outline: 2px dashed #3b82f6; outline-offset: 4px; border-radius: 4px; }
+  .annotate-item   { outline: 2px dashed #10b981; outline-offset: 2px; }
+  .annotate-active { outline: 2px dashed #f59e0b; outline-offset: 2px; }
+  .si-article h2 { font: var(--token-font-weight-semi-bold, 600) var(--token-font-size-400, 1rem) system-ui; color: var(--token-text-default, #242424); margin: 0 0 8px; }
+  .si-article p  { font-size: var(--token-font-size-300, 0.75rem); color: var(--token-text-subtle, #3b3b3b); margin: 0; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+  .token-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  .token-card { border-radius: 12px; background: #0f1117; color: #fff; overflow: hidden; }
+  .token-card__header { padding: 10px 14px; font-size: 12px; font-weight: 700; display: flex; }
+  .token-card__header .n { margin-left: auto; font: 10px monospace; opacity: .6; }
+  .t-rail .token-card__header  { background: linear-gradient(120deg,#1e3a8a,#3b82f6); }
+  .t-item .token-card__header  { background: linear-gradient(120deg,#065f46,#10b981); }
+  .t-a11y .token-card__header   { background: linear-gradient(120deg,#7c2d12,#f97316); }
+  .token-row { display: grid; grid-template-columns: 150px 1fr 100px; font-size: 11px; padding: 8px 14px; border-bottom: 1px solid rgba(255,255,255,.05); }
+  .prop { color: #94a3b8; } .name { color: #a78bfa; font-weight: 600; }
+  .proposal-section { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; margin-top: 20px; }
+  .proposal-header { padding: 16px 20px; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; }
+  .proposal-header p { font-size: 12px; color: #6b7280; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table th, .proposal-table td { text-align: left; padding: 9px 16px; }
+  .proposal-table th { background: #f9fafb; color: #6b7280; text-transform: uppercase; font-size: 11px; }
+  .proposal-table td { border-top: 1px solid #f3f4f6; }
+  @media (max-width: 1000px) { .token-grid { grid-template-columns: 1fr; } }
+</style></head>
+<body>
+<a href="index.html" class="back-nav">← All components</a>
+<div class="page-header">
+  <h1>Section index</h1>
+  <span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span>
+  <span class="badge-chrome badge-chrome--tokens">Design Tokens</span>
+</div>
+<div class="legend">
+  <span class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span> <code>::before</code> left rail (neutral-5, 1px)</span>
+  <span class="legend-item"><span class="legend-dot" style="background:#10b981"></span> <code>.osui-section-index-item</code></span>
+  <span class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span> <code>--is-active</code> bar (primary) + font-weight</span>
+</div>
+<div class="preview-card">
+  <div class="preview-card__header">
+    <span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button type="button" class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button type="button" class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button type="button" class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button type="button" class="ann-toggle ann-toggle--off" onclick="tog(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode" style="max-width: 720px;">
+      <div class="si-fake-page">
+        <nav class="osui-section-index annotate-rail" aria-label="Section index" style="--target-scroll-margin: 80px;" lang="en">
+          <a class="osui-section-index-item" href="#sec-a" id="l1" lang="en">Introduction</a>
+          <a class="osui-section-index-item" href="#sec-b" id="l2" lang="en">Data model</a>
+          <a class="osui-section-index-item osui-section-index-item--is-active annotate-active" href="#sec-c" id="l3" aria-current="true" lang="en">API</a>
+          <a class="osui-section-index-item annotate-item" href="#sec-d" id="l4" lang="en">Deployment</a>
+        </nav>
+        <p style="font-size:11px;color:#6b7280;margin:12px 0 0 0;">Active: API. Variant names are plain text, not numeric badges.</p>
+      </div>
+      <div class="si-article" style="max-width: 280px; flex: 1;">
+        <h2>Article</h2>
+        <p>Right column is filler—real apps pair the index with long content; tokens apply to the nav rail and links only.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="token-grid">
+  <div class="token-card t-rail">
+    <div class="token-card__header">Rail + sticky<span class="n">.osui-section-index</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop">--top-position</span><span class="name">header + safe area</span><span>var chain</span></div>
+      <div class="token-row"><span class="prop">::before</span><span class="name">neutral-5, 1px, full height</span><span>—</span></div>
+      <div class="token-row"><span class="prop">.--is-sticky</span><span class="name">position sticky, top: var(--top-position)</span><span>—</span></div>
+    </div>
+  </div>
+  <div class="token-card t-item">
+    <div class="token-card__header">Link rows<span class="n">.osui-section-index-item</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop">text (rest / visited)</span><span class="name">color-neutral-8</span><span>—</span></div>
+      <div class="token-row"><span class="prop">:hover</span><span class="name">color-neutral-9</span><span>—</span></div>
+      <div class="token-row"><span class="prop">--is-active</span><span class="name">neutral-9 + font-semi-bold</span><span>—</span></div>
+      <div class="token-row"><span class="prop">--is-active::before</span><span class="name">background-color-primary, 2px, full height</span><span>—</span></div>
+      <div class="token-row"><span class="prop">padding</span><span class="name">space-m left · space-xs block</span><span>—</span></div>
+    </div>
+  </div>
+  <div class="token-card t-a11y">
+    <div class="token-card__header">Target + a11y<span class="n">__target / focus</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop">.osui-section-index-item__target</span><span class="name">scroll-margin: var(--target-scroll-margin)</span><span>—</span></div>
+      <div class="token-row"><span class="prop">:focus (a11y)</span><span class="name">focus-outer box-shadow ring</span><span>—</span></div>
+    </div>
+  </div>
+</div>
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Token proposal</h3>
+    <p>The vertical rail and active bar still reference <code>--color-primary</code> / <code>--color-neutral-*</code>. In 2.29, point them to <code>--token-semantics-primary-base</code> and <code>--token-text-subtle</code> for hover/rest parity with Breadcrumbs / List.</p>
+  </div>
+  <table class="proposal-table">
+    <thead><tr><th>Property</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td>Active bar</td><td>--background-color-primary</td><td>--token-semantics-primary-base (same #105cef default)</td><td>--token-semantics-primary-base</td><td>Same visual, explicit semantic token for theme overrides.</td></tr>
+      <tr><td>Rest + hover</td><td>neutral-8 → neutral-9 on hover</td><td>--token-text-subtle + --token-text-default</td><td>--token-text-subtle, --token-text-default</td><td>Brings long-form in-page nav in line with global type ramp.</td></tr>
+    </tbody>
+  </table>
+</div>
+<script>
+function setMode(m,b){
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', m==='legacy' || m==='current');
+  w.classList.toggle('new-tokens-mode', m==='new-tokens');
+  w.classList.toggle('proposed-mode', m==='proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  b.classList.add('ptab--active');
+}
+function tog(btn){
+  const w = document.getElementById('previewWrapper');
+  const h = !w.classList.contains('hide-annotations');
+  w.classList.toggle('hide-annotations', h);
+  btn.classList.toggle('ann-toggle--off', h);
+  btn.textContent = h ? 'Show annotations' : 'Hide annotations';
+}
+</script>
+</body></html>

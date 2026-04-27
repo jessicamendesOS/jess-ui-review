@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Progress Bar — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -115,6 +119,35 @@
   .preview-card__body { padding: 20px; background: #fff; }
   #previewWrapper { max-width: 520px; margin: 0 auto; }
 
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
   /* ─── Progress Bar (real OS UI HTML shape) ───
      <div class="osui-progress-bar"
           role="progressbar" valuemin="0" valuemax="100" aria-valuenow="70"
@@ -239,31 +272,19 @@
        .progress     { background-color: var(--background-color-primary, var(--color-primary)); }       // #1068eb
      No border-radius on the element (squared corners). No __content overlay — real .progress-bar-text { display: none }.
   */
-  #previewWrapper.current-mode .osui-progress-bar { border-radius: 0; }
-  #previewWrapper.current-mode .osui-progress-bar__container {
-    background-color: var(--color-neutral-3, #e9ecef);
-    border-radius: 0;
-  }
-  #previewWrapper.current-mode .osui-progress-bar__value {
-    background-color: var(--color-primary, #1068eb);
-    border-radius: 0;
-  }
-  #previewWrapper.current-mode .osui-progress-bar[data-variant="success"] .osui-progress-bar__value {
-    background-color: var(--color-success, #29823b);
-  }
-  #previewWrapper.current-mode .osui-progress-bar[data-variant="error"] .osui-progress-bar__value {
-    background-color: var(--color-error, #dc2020);
-  }
+  
+  
+  
+  
+  
   /* 2.28 hid the label entirely (.progress-bar-text { display: none }) */
   #previewWrapper.current-mode .osui-progress-bar__content { display: none; }
 
-  /* ─── Proposed mode — explicit text-primary utility inside content for legibility ─── */
-  /* Real 2.29 HTML already reads CSS custom props — proposal is to map those props to semantic tokens
-     at the runtime level, and expose text-* utilities for the __content overlay. */
+  /* Proposed: __content label (percentagem) igual a New tokens — à direita, cor default */
   #previewWrapper.proposed-mode .osui-progress-bar__content {
-    color: var(--token-text-inverse, var(--token-primitives-base-white, #ffffff));
-    justify-content: center;
-    mix-blend-mode: difference; /* legibility across track + value */
+    color: var(--token-text-default, var(--token-primitives-neutral-1200, #242424));
+    justify-content: flex-end;
+    mix-blend-mode: normal;
   }
   /* Align trail colour with Progress Circle proposal — both tokenise --trail-color
      to the lighter subtle border semantic (neutral-100) instead of the hardcoded
@@ -271,6 +292,11 @@
   #previewWrapper.proposed-mode .osui-progress-bar__container {
     background-color: var(--token-border-subtle, var(--token-primitives-neutral-100, #f3f3f3));
   }
+
+/* ─── Bespoke proposed-mode overrides (restored from pre-refactor state) ─── */
+
+
+  
 </style>
 </head>
 <body>
@@ -304,7 +330,7 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-  <div id="previewWrapper" class="hide-annotations">
+  <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
 
     <p class="variant-section-title">Progress states</p>
 
@@ -617,6 +643,14 @@
           <td class="td-token">--token-scale-100 / -200 / -400</td>
           <td class="td-rationale">Thickness joins the spacing scale — <strong>scales proportionally</strong> with density adjustments rather than living as three magic numbers.</td>
         </tr>
+        <tr>
+          <td class="td-property">label (percent)</td>
+          <td class="td-property">.osui-progress-bar__content</td>
+          <td class="td-current">dark text on track (illegible over fill)</td>
+          <td class="td-proposed">Same as New tokens: <code>token-text-default</code>, <code>justify-content: flex-end</code> (no mix-blend)</td>
+          <td class="td-token">--token-text-default</td>
+          <td class="td-rationale">The New tokens bar keeps the value label end-aligned for consistency with 2.29; proposed matches that <strong>instead of</strong> inverse + <code>mix-blend</code>, which clashed with the same layout.</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -624,12 +658,13 @@
 
 <script>
   function setMode(mode, btn) {
-    const w = document.getElementById('previewWrapper');
-    w.classList.toggle('proposed-mode', mode === 'proposed');
-    w.classList.toggle('current-mode', mode === 'legacy');
-    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
-    btn.classList.add('ptab--active');
-  }
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 
   function toggleAnnotations(btn) {
     const wrapper = document.getElementById('previewWrapper');

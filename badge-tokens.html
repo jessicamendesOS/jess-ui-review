@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Badge — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -139,6 +143,35 @@
   .preview-card__body { padding: 40px 20px; background: #fff; }
   #previewWrapper { max-width: 520px; margin: 0 auto; }
 
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
   /* ─── Badge component (real OS UI utility-class HTML) ─── */
   /*
     HTML shape:
@@ -180,40 +213,38 @@
   .border-radius-soft     { border-radius: var(--token-border-radius-100, var(--token-scale-100, 4px)); }        /* soft — 2.29 resolves to 4px (was 8px) */
   .border-radius-rounded  { border-radius: var(--token-border-radius-full, 999px); }                             /* round — 999px (was 9999px) */
 
-  /* Background utilities (solid) */
-  .background-primary { background-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef))); }
-  .background-error   { background-color: var(--token-semantics-error-base,   var(--token-semantics-error-700,   var(--token-primitives-red-700,    #dc2020))); }
-  .background-success { background-color: var(--token-semantics-success-base, var(--token-semantics-success-700, var(--token-primitives-green-700,  #29823b))); }
-  .background-warning { background-color: var(--token-semantics-warning-base, var(--token-semantics-warning-700, var(--token-primitives-yellow-700, #e9a100))); }
-  /* .background-info / -pink / -indigo are hardcoded literals in real 2.29 (no var chain).
-     .background-neutral / -purple don't exist in 2.29 (invented — real uses .background-neutral-N / .background-violet). */
-  .background-info    { background-color: var(--token-semantics-info-base,    #017aad); }  /* real 2.29: hardcoded #017aad */
-  .background-neutral { background-color: var(--token-semantics-neutral-base, #6a7178); }  /* invented — real has no .background-neutral, closest is .background-neutral-7 #6a7178 */
-  .background-purple  { background-color: var(--token-semantics-purple-base, #7048e8); }   /* invented — real 2.29 has .background-violet #7048e8 */
-  .background-pink    { background-color: var(--token-semantics-pink-base,   #d6336c); }   /* real 2.29: hardcoded #d6336c */
-  .background-indigo  { background-color: var(--token-semantics-indigo-base, #4263eb); }   /* real 2.29: hardcoded #4263eb */
+  /* Background utilities (solid) — scoped via #previewWrapper .badge to beat OSUI's #previewWrapper.current-mode .badge (0,2,1) */
+  #previewWrapper .badge.background-primary { background-color: var(--token-semantics-primary-base, var(--token-semantics-primary-700, var(--token-primitives-blue-700, #105cef))); }
+  #previewWrapper .badge.background-error   { background-color: var(--token-semantics-error-base,   var(--token-semantics-error-700,   var(--token-primitives-red-700,    #dc2020))); }
+  #previewWrapper .badge.background-success { background-color: var(--token-semantics-success-base, var(--token-semantics-success-700, var(--token-primitives-green-700,  #29823b))); }
+  #previewWrapper .badge.background-warning { background-color: var(--token-semantics-warning-base, var(--token-semantics-warning-700, var(--token-primitives-yellow-700, #e9a100))); }
+  #previewWrapper .badge.background-info    { background-color: var(--token-semantics-info-base,    #017aad); }
+  #previewWrapper .badge.background-neutral { background-color: var(--token-semantics-neutral-base, #6a7178); }
+  #previewWrapper .badge.background-purple  { background-color: var(--token-semantics-purple-base, #7048e8); }
+  #previewWrapper .badge.background-pink    { background-color: var(--token-semantics-pink-base,   #d6336c); }
+  #previewWrapper .badge.background-indigo  { background-color: var(--token-semantics-indigo-base, #4263eb); }
 
-  /* Lightest background utilities (real OS UI HTML uses .background-{color}-lightest) */
-  .background-primary-lightest { background-color: var(--token-semantics-primary-light); }
-  .background-error-lightest   { background-color: var(--token-semantics-error-light);   }
-  .background-success-lightest { background-color: var(--token-semantics-success-light); }
-  .background-warning-lightest { background-color: var(--token-semantics-warning-light); }
-  .background-info-lightest    { background-color: var(--token-semantics-info-light);    }
-  .background-neutral-lightest { background-color: var(--token-semantics-neutral-light); }
-  .background-purple-lightest  { background-color: var(--token-semantics-purple-light);  }
-  .background-pink-lightest    { background-color: var(--token-semantics-pink-light);    }
-  .background-indigo-lightest  { background-color: var(--token-semantics-indigo-light);  }
+  /* Lightest background utilities */
+  #previewWrapper .badge.background-primary-lightest { background-color: var(--token-semantics-primary-light); }
+  #previewWrapper .badge.background-error-lightest   { background-color: var(--token-semantics-error-light);   }
+  #previewWrapper .badge.background-success-lightest { background-color: var(--token-semantics-success-light); }
+  #previewWrapper .badge.background-warning-lightest { background-color: var(--token-semantics-warning-light); }
+  #previewWrapper .badge.background-info-lightest    { background-color: var(--token-semantics-info-light);    }
+  #previewWrapper .badge.background-neutral-lightest { background-color: var(--token-semantics-neutral-light); }
+  #previewWrapper .badge.background-purple-lightest  { background-color: var(--token-semantics-purple-light);  }
+  #previewWrapper .badge.background-pink-lightest    { background-color: var(--token-semantics-pink-light);    }
+  #previewWrapper .badge.background-indigo-lightest  { background-color: var(--token-semantics-indigo-light);  }
 
-  /* Darker text utilities (real OS UI HTML uses .text-{color}-darker) */
-  .text-primary-darker { color: var(--token-semantics-primary-text); }
-  .text-error-darker   { color: var(--token-semantics-error-text);   }
-  .text-success-darker { color: var(--token-semantics-success-text); }
-  .text-warning-darker { color: var(--token-semantics-warning-text); }
-  .text-info-darker    { color: var(--token-semantics-info-text);    }
-  .text-neutral-darker { color: var(--token-semantics-neutral-text); }
-  .text-purple-darker  { color: var(--token-semantics-purple-text);  }
-  .text-pink-darker    { color: var(--token-semantics-pink-text);    }
-  .text-indigo-darker  { color: var(--token-semantics-indigo-text);  }
+  /* Darker text utilities */
+  #previewWrapper .badge.text-primary-darker { color: var(--token-semantics-primary-text); }
+  #previewWrapper .badge.text-error-darker   { color: var(--token-semantics-error-text);   }
+  #previewWrapper .badge.text-success-darker { color: var(--token-semantics-success-text); }
+  #previewWrapper .badge.text-warning-darker { color: var(--token-semantics-warning-text); }
+  #previewWrapper .badge.text-info-darker    { color: var(--token-semantics-info-text);    }
+  #previewWrapper .badge.text-neutral-darker { color: var(--token-semantics-neutral-text); }
+  #previewWrapper .badge.text-purple-darker  { color: var(--token-semantics-purple-text);  }
+  #previewWrapper .badge.text-pink-darker    { color: var(--token-semantics-pink-text);    }
+  #previewWrapper .badge.text-indigo-darker  { color: var(--token-semantics-indigo-text);  }
 
   /* Preview layout */
   .badge-row {
@@ -294,69 +325,49 @@
 
 /* ─── Current mode (OutSystems UI 2.28.0) — raw values from real 2.28 CSS, no tokens ─── */
 /* Base .badge rule from 2.28 — height-driven shape, white text, flex centering. */
-#previewWrapper.current-mode .badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 32px;
-  min-width: 32px;
-  color: #ffffff;
-  font-weight: 600;
-  line-height: 1;
-  padding: 0;
-}
+
 /* Size classes — real 2.28 .badge-small / .badge-medium dimensions */
-#previewWrapper.current-mode .badge.badge-small {
-  font-size: 12px;
-  height: 24px;
-  min-width: 24px;
-  padding: 0 4px;
-}
-#previewWrapper.current-mode .badge.badge-medium {
-  font-size: 16px;
-  height: 40px;
-  min-width: 40px;
-  padding: 0;
-}
+
+
 /* Shape utilities — real 2.28 resolved values */
-#previewWrapper.current-mode .border-radius-        { border-radius: 0; }    /* invented class — 2.28 uses .border-radius-none */
-#previewWrapper.current-mode .border-radius-soft    { border-radius: 4px; }  /* 2.28 --border-radius-soft: 4px (was mis-shown as 8px) */
-#previewWrapper.current-mode .border-radius-rounded { border-radius: 100px; }
+    /* invented class — 2.28 uses .border-radius-none */
+  /* 2.28 --border-radius-soft: 4px (was mis-shown as 8px) */
+
 
 /* Solid backgrounds — real 2.28 palette values. White text inherited from .badge base. */
-#previewWrapper.current-mode .background-primary { background-color: #1068eb; }  /* --color-primary */
-#previewWrapper.current-mode .background-error   { background-color: #dc2020; }  /* --color-error (was mis-shown as #c92a2a = --color-red) */
-#previewWrapper.current-mode .background-success { background-color: #29823b; }  /* --color-success (was #37b24d = --color-green) */
-#previewWrapper.current-mode .background-warning { background-color: #e9a100; }  /* --color-warning (was #f59f00 = --color-yellow) */
-#previewWrapper.current-mode .background-info    { background-color: #017aad; }  /* --color-info (was #0d8091 = --color-cyan) */
-#previewWrapper.current-mode .background-neutral { background-color: #6a7178; }  /* invented — proxies --color-neutral-7 */
-#previewWrapper.current-mode .background-indigo  { background-color: #4263eb; }  /* --color-indigo */
-#previewWrapper.current-mode .background-purple  { background-color: #7048e8; }  /* proxies 2.28 .background-violet (real class name) */
-#previewWrapper.current-mode .background-pink    { background-color: #d6336c; }  /* --color-pink */
+  /* --color-primary */
+  /* --color-error (was mis-shown as #c92a2a = --color-red) */
+  /* --color-success (was #37b24d = --color-green) */
+  /* --color-warning (was #f59f00 = --color-yellow) */
+  /* --color-info (was #0d8091 = --color-cyan) */
+  /* invented — proxies --color-neutral-7 */
+  /* --color-indigo */
+  /* proxies 2.28 .background-violet (real class name) */
+  /* --color-pink */
 
 /* Lightest-tint backgrounds — real 2.28 resolved values.
    Note: in 2.28, .background-{primary|error|success|warning|info}-lightest resolves to neutral-0 (#ffffff)
    or to the -light value. Showing the page's paired-light tints here using 2.28's -light hex where available. */
-#previewWrapper.current-mode .background-primary-lightest { background-color: #ffffff; }  /* 2.28 resolves to neutral-0 */
-#previewWrapper.current-mode .background-error-lightest   { background-color: #fceaea; }  /* --color-error-light */
-#previewWrapper.current-mode .background-success-lightest { background-color: #eaf3eb; }  /* --color-success-light */
-#previewWrapper.current-mode .background-warning-lightest { background-color: #fdf6e5; }  /* --color-warning-light */
-#previewWrapper.current-mode .background-info-lightest    { background-color: #e5f5fc; }  /* --color-info-light */
-#previewWrapper.current-mode .background-neutral-lightest { background-color: #f8f9fa; }  /* --color-neutral-1 proxy */
-#previewWrapper.current-mode .background-indigo-lightest  { background-color: #eceffd; }  /* --color-indigo-lightest */
-#previewWrapper.current-mode .background-purple-lightest  { background-color: #f1edfd; }  /* 2.28 --color-violet-lightest */
-#previewWrapper.current-mode .background-pink-lightest    { background-color: #fbebf0; }  /* --color-pink-lightest */
+  /* 2.28 resolves to neutral-0 */
+  /* --color-error-light */
+  /* --color-success-light */
+  /* --color-warning-light */
+  /* --color-info-light */
+  /* --color-neutral-1 proxy */
+  /* --color-indigo-lightest */
+  /* 2.28 --color-violet-lightest */
+  /* --color-pink-lightest */
 
 /* Paired "darker" text — in 2.28 .text-{color}-darker resolves to the base color token */
-#previewWrapper.current-mode .text-primary-darker { color: #1068eb; }  /* 2.28 resolves to --color-primary */
-#previewWrapper.current-mode .text-error-darker   { color: #dc2020; }
-#previewWrapper.current-mode .text-success-darker { color: #29823b; }
-#previewWrapper.current-mode .text-warning-darker { color: #e9a100; }
-#previewWrapper.current-mode .text-info-darker    { color: #017aad; }
-#previewWrapper.current-mode .text-neutral-darker { color: #4f575e; }  /* --color-neutral-8 */
-#previewWrapper.current-mode .text-indigo-darker  { color: #2e45a5; }  /* --color-indigo-darker */
-#previewWrapper.current-mode .text-purple-darker  { color: #4e32a2; }  /* --color-violet-darker */
-#previewWrapper.current-mode .text-pink-darker    { color: #96244c; }  /* --color-pink-darker */
+  /* 2.28 resolves to --color-primary */
+
+
+
+
+  /* --color-neutral-8 */
+  /* --color-indigo-darker */
+  /* --color-violet-darker */
+  /* --color-pink-darker */
 
 /* ─── Proposed mode — expanded palette + proper shape proportions ─── */
 /*
@@ -373,25 +384,14 @@
 
 /* Default size applies to ALL shape variants (sharp/soft/round) so shapes share
    the same footprint — only the corner-radius differs between them. */
-#previewWrapper.proposed-mode .badge {
-  height: 20px;
-  min-width: 20px;
-  padding: 0 6px;
-  font-size: 12px; /* token-font-size-300 — sits well inside 20px height */
-  line-height: 1;
-}
-#previewWrapper.proposed-mode .badge.badge-small {
-  height: 16px;
-  min-width: 16px;
-  padding: 0 4px;
-  font-size: 10px;
-}
-#previewWrapper.proposed-mode .badge.badge-medium {
-  height: 28px;
-  min-width: 28px;
-  padding: 0 8px;
-  font-size: 14px;
-}
+
+
+
+
+/* ─── Bespoke proposed-mode overrides (restored from pre-refactor state) ─── */
+
+
+
 </style>
 </head>
 <body>
@@ -426,7 +426,7 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-  <div id="previewWrapper" class="hide-annotations">
+  <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
 
     <div class="badge-row">
       <div class="badge-row-label">Solid · semantic backgrounds</div>
@@ -822,12 +822,13 @@
 
 <script>
   function setMode(mode, btn) {
-    const w = document.getElementById('previewWrapper');
-    w.classList.toggle('proposed-mode', mode === 'proposed');
-    w.classList.toggle('current-mode', mode === 'legacy');
-    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
-    btn.classList.add('ptab--active');
-  }
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 
   function toggleAnnotations(btn) {
     const wrapper = document.getElementById('previewWrapper');

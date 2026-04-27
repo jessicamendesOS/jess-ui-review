@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Radio Group — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -32,29 +36,47 @@
   .preview-card__body { padding: 36px 24px; background: #fff; }
   #previewWrapper { max-width: 520px; margin: 0 auto; }
 
-  .radio-group { display: flex; flex-direction: column; gap: 12px; }
-  .radio-group > div { display: flex; flex-direction: column; gap: 12px; }
-  [data-radio-button] { display: flex; align-items: center; gap: 10px; }
-  .radio-button {
-    appearance: none; -webkit-appearance: none;
-    cursor: pointer;
-    height: 20px; width: 20px; padding: 0; margin: 0;
-    border-radius: 50%;
-    background: var(--token-bg-surface-default, #ffffff);
-    border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
-    position: relative;
-    flex-shrink: 0;
-    transition: all 180ms linear;
-  }
-  .radio-button:hover { border-color: var(--token-text-subtlest, #626262); }
-  .radio-button:checked { border: 5px solid var(--token-semantics-primary-base, #105cef); background: var(--token-primitives-base-white, #ffffff); }
-  .radio-button:disabled { background: var(--token-border-subtle, #f3f3f3); border-color: var(--token-border-default, #d5d5d5); cursor: not-allowed; }
+
+  /* Preview: start-aligned (radio list + group, like checkbox / switch) */
+  #previewWrapper { text-align: start; }
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode,
+  #previewWrapper.proposed-mode { margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
+  .radio-group { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .radio-group > div { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+  
+  
+  
+  
+  
   /* Disabled-checked uses the same #8b8b8b muted-grey as Checkbox/Switch/Button
      Group for a consistent "locked + active" treatment across form controls. */
-  .radio-button:disabled:checked { border: 5px solid #8b8b8b; background: #ffffff; }
-  [data-radio-button] label { font-size: 14px; color: var(--token-text-default, #242424); cursor: pointer; }
-  [data-radio-button] .radio-button:disabled ~ label,
-  [data-radio-button]:has(.radio-button:disabled) label { color: var(--token-text-disabled, #a2a2a2); cursor: not-allowed; }
+  
+  
+  
 
   /* Horizontal modifier */
   .radio-group.is-horizontal > div { flex-direction: row; gap: 20px; }
@@ -99,20 +121,26 @@
   @media (max-width: 960px) { .token-grid { grid-template-columns: 1fr; } body { padding: 24px 20px 60px; } }
 
 /* Current mode — 2.28 raw */
-#previewWrapper.current-mode .radio-button { height: 20px; width: 20px; border: 1px solid #ced4da; }
-#previewWrapper.current-mode .radio-button:hover { border-color: #adb5bd; }
-#previewWrapper.current-mode .radio-button:checked { border: 5px solid #1068eb; }
+
+
+
 
 /* Proposed — selected uses primary-blue (consistent with Checkbox :checked,
    Button btn-primary, Button Group selected). Donut created via thick border
    trick (6px solid primary), inner circle = white bg. */
-#previewWrapper.proposed-mode .radio-button { border-width: var(--token-border-size-050, 2px); }
-#previewWrapper.proposed-mode .radio-button:checked { border: 6px solid var(--token-semantics-primary-base, #105cef); background: #ffffff; }
+
+
 /* Disabled-checked uses #8b8b8b (same muted-grey as Checkbox/Switch/Button
    Group) — ID specificity on the :checked rule above would otherwise force
    primary even on disabled, so restate it here. */
-#previewWrapper.proposed-mode .radio-button:disabled:checked { border: 6px solid #8b8b8b; background: #ffffff; }
-#previewWrapper.proposed-mode .radio-button:focus-visible { box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 22%, transparent); }
+
+
+
+/* ─── Bespoke proposed-mode overrides ─── */
+/* OSUI 229 renders the radio circle via ::before — do NOT set border on the element itself */
+
+
+
 </style></head>
 <body>
 <a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
@@ -132,7 +160,7 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-    <div id="previewWrapper" class="hide-annotations">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
       <div class="rg-section">
         <div class="rg-section-label">Vertical (default)</div>
         <div data-radio-group class="radio-group" role="radiogroup">
@@ -160,9 +188,9 @@
 </div>
 <div class="token-grid">
   <div class="token-card rb-dot-tok"><div class="token-card__header"><span class="dot" style="background:#3b82f6;"></span>Dot<span class="component-name">.radio-button</span></div><div class="token-card__body">
-    <div class="token-row"><span class="prop-name">size</span><span class="token-name">20px</span><span class="token-value">—</span></div>
-    <div class="token-row"><span class="prop-name">border</span><span class="token-name">token-border-default</span><span class="token-value">1px · #d5d5d5</span></div>
-    <div class="token-row"><span class="prop-name">bg</span><span class="token-name">bg-surface-default</span><span class="token-value">#ffffff</span></div>
+    <div class="token-row"><span class="prop-name">size</span><span class="token-name">24px (proposed, = checkbox hit)</span><span class="token-value">—</span></div>
+    <div class="token-row"><span class="prop-name">rest border</span><span class="token-name">token-border-input-default</span><span class="token-value">1px (input)</span></div>
+    <div class="token-row"><span class="prop-name">bg</span><span class="token-name">token-bg-input-default</span><span class="token-value">#ffffff</span></div>
     <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">circle</span><span class="token-value">50%</span></div>
   </div></div>
   <div class="token-card rb-state-tok"><div class="token-card__header"><span class="dot" style="background:#10b981;"></span>States<span class="component-name">:checked · :hover · :disabled</span></div><div class="token-card__body">
@@ -179,19 +207,28 @@
   </div></div>
 </div>
 <div class="proposal-section">
-  <div class="proposal-header"><h3>Token Proposal</h3><p>Real OS UI uses native <code>&lt;input type="radio" class="radio-button"&gt;</code> inside <code>[data-radio-button]</code> wrappers, grouped by <code>.radio-group</code>. Checked state uses a thick border trick (<code>border: 5px solid primary</code>) instead of an inner dot — preserves that mechanism. Proposal <strong>thickens the rest border</strong> (1→2px) for better high-DPI rendering and adds a focus halo.</p></div>
+  <div class="proposal-header"><h3>Token Proposal</h3><p>Real OS UI uses native <code>&lt;input type="radio" class="radio-button"&gt;</code> inside <code>[data-radio-button]</code> wrappers, grouped by <code>.radio-group</code>. Checked state uses a thick border trick (primary ring) instead of an inner dot. Proposed aligns the <strong>rest state</strong> with <code>.form-control</code> and <code>[data-checkbox]</code>: 1px <code>token-border-input-default</code>, <code>token-bg-input-default</code>, 24×24px control, the same <strong>22% primary</strong> focus halo as checkbox, and <strong>#8b8b8b</strong> for disabled+checked.</p></div>
   <table class="proposal-table">
     <thead><tr><th>Property</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
     <tbody>
-      <tr><td class="td-property">rest border</td><td class="td-current">1px solid color-neutral-5</td><td class="td-proposed">2px solid token-border-default</td><td class="td-token">--token-border-size-050<br>--token-border-default</td><td class="td-rationale">Matches the thickened checkbox border — 1px hairlines vanish on high-DPI; 2px gives unchecked radios a visible presence.</td></tr>
-      <tr><td class="td-property">checked style</td><td class="td-current">5px primary border (no inner dot)</td><td class="td-proposed">5px primary border (unchanged)</td><td class="td-token">--token-semantics-primary-base</td><td class="td-rationale">Mechanism preserved — the "thick border becomes the dot" CSS trick from 2.28 works cleanly and stays pure CSS. Token migration only.</td></tr>
+      <tr><td class="td-property">rest border</td><td class="td-current">1px solid color-neutral-5</td><td class="td-proposed">1px <code>token-border-input-default</code> (same as input + checkbox)</td><td class="td-token">--token-border-size-025<br>--token-border-input-default</td><td class="td-rationale">Single stroke family with text fields and <code>[data-checkbox]</code> in proposed mode; neutral-600 edge matches default input outline.</td></tr>
+      <tr><td class="td-property">control size</td><td class="td-current">20px</td><td class="td-proposed">24px (= checkbox hit target)</td><td class="td-token">—</td><td class="td-rationale">Same outer box as the proposed checkbox (24) so radios and checkboxes line up in mixed forms.</td></tr>
+      <tr><td class="td-property">checked style</td><td class="td-current">5px primary border (no inner dot)</td><td class="td-proposed">6px solid primary (thick-ring trick; inner hole scales with 24px)</td><td class="td-token">--token-semantics-primary-base</td><td class="td-rationale">Mechanism preserved — the thick border is the "dot". 6px keeps the white centre visible with a 1px rest border.</td></tr>
+      <tr><td class="td-property">disabled + checked color</td><td class="td-property">.radio-button:disabled:checked</td><td class="td-current">color-neutral-4 (#d5d5d5, very pale)</td><td class="td-proposed">#8b8b8b (medium muted-grey)</td><td class="td-token">—</td><td class="td-rationale">Aligns with Checkbox / Switch / Button Group disabled-active treatment — one consistent "locked but selected" colour across all form controls. The previous very-pale #d5d5d5 made the locked option read as <em>unchecked-and-disabled</em>; #8b8b8b reads clearly as <em>checked-but-locked</em>.</td></tr>
       <tr><td class="td-property">focus state</td><td class="td-current">browser default outline</td><td class="td-proposed">22% primary halo (3px ring)</td><td class="td-token">--token-semantics-primary-base (color-mix)</td><td class="td-rationale">Keyboard a11y — same focus treatment as Checkbox / Switch so form controls share one focus language.</td></tr>
       <tr><td class="td-property">horizontal layout</td><td class="td-current">.radio-group.is-horizontal (row)</td><td class="td-proposed">unchanged — keep as-is</td><td class="td-token">—</td><td class="td-rationale">Real 2.28 supports a horizontal variant; proposal keeps the existing modifier. Row gap stays at 20px (wider than vertical's 12px so adjacent labels don't crowd).</td></tr>
     </tbody>
   </table>
 </div>
 <script>
-function setMode(mode, btn) { const w = document.getElementById('previewWrapper'); w.classList.toggle('proposed-mode', mode === 'proposed'); w.classList.toggle('current-mode', mode === 'legacy'); document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active')); btn.classList.add('ptab--active'); }
+function setMode(mode, btn) {
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 function toggleAnnotations(btn) { const w = document.getElementById('previewWrapper'); const h = !w.classList.contains('hide-annotations'); w.classList.toggle('hide-annotations', h); btn.textContent = h ? 'Show annotations' : 'Hide annotations'; btn.classList.toggle('ann-toggle--off', h); }
 </script>
 </body></html>

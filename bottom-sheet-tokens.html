@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bottom sheet — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-100: 4px; --token-scale-200: 8px; --token-scale-300: 12px; --token-scale-400: 16px; --token-scale-600: 24px;
+    --token-border-radius-200: 8px; --token-border-radius-300: 12px; --token-border-size-025: 1px; --token-border-size-050: 2px;
+    --token-font-size-300: 0.75rem; --token-font-size-400: 1rem; --token-font-weight-semi-bold: 600;
+    --token-bg-surface-default: #ffffff;
+    --token-text-default: #242424; --token-text-subtle: #3b3b3b;
+    --token-border-subtle: #f3f3f3; --token-semantics-primary-base: #105cef;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; min-height: 100vh; color: #111827; line-height: 1.5; padding: 48px 32px; }
+  .back-nav { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #6b7280; text-decoration: none; margin-bottom: 24px; }
+  .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb; }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; }
+  .badge-chrome { display: inline-flex; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; text-transform: uppercase; }
+  .badge-chrome--os { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: #374151; background: #fff; border: 1px solid #e5e7eb; border-radius: 99px; padding: 4px 10px 4px 6px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .preview-card { background: #fff; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); border: 1px solid #e5e7eb; margin-bottom: 32px; overflow: hidden; }
+  .preview-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #9ca3af; margin-right: auto; letter-spacing: .08em; }
+  .preview-card__body { padding: 0; background: #e5e7eb; }
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; background: #fff; color: #6b7280; margin-left: 4px; cursor: pointer; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+  .bs-stage {
+    position: relative;
+    height: 380px;
+    overflow: hidden;
+    /* Theme vars expected by app shell — sheet uses --bottom-sheet-shape from theme */
+    --bottom-sheet-shape: var(--token-border-radius-200, 16px);
+  }
+  /* Contain fixed layers inside the preview card; avoid full-viewport fixed */
+  #previewWrapper.current-mode .bs-stage .osui-bottom-sheet,
+  #previewWrapper.new-tokens-mode .bs-stage .osui-bottom-sheet,
+  #previewWrapper.proposed-mode .bs-stage .osui-bottom-sheet {
+    position: absolute !important;
+    left: 0; right: 0; bottom: 0; width: 100% !important;
+    -webkit-transform: translateY(0) !important;
+    transform: translateY(0) !important;
+    z-index: 2;
+  }
+  #previewWrapper.current-mode .bs-stage .osui-bottom-sheet-overlay,
+  #previewWrapper.new-tokens-mode .bs-stage .osui-bottom-sheet-overlay,
+  #previewWrapper.proposed-mode .bs-stage .osui-bottom-sheet-overlay {
+    position: absolute !important;
+    inset: 0;
+    width: 100% !important; height: 100% !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    z-index: 1;
+  }
+  #previewWrapper.current-mode .bs-stage .osui-bottom-sheet,
+  #previewWrapper.new-tokens-mode .bs-stage .osui-bottom-sheet,
+  #previewWrapper.proposed-mode .bs-stage .osui-bottom-sheet {
+    min-height: 42vh;
+    text-align: left;
+  }
+  .annotate-overlay { outline: 2px dashed #f59e0b; outline-offset: -2px; }
+  .annotate-sheet   { outline: 2px dashed #3b82f6; outline-offset: -3px; border-radius: 16px 16px 0 0; }
+  .annotate-handle  { outline: 2px dashed #10b981; outline-offset: 2px; border-radius: 99px; }
+  .annotate-content { outline: 2px dashed #8b5cf6; outline-offset: -2px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15); background: #0f1117; }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .token-card__header .component-name { font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; }
+  .token-row { display: grid; grid-template-columns: 140px 1fr auto; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); font-size: 11px; }
+  .prop-name { color: #64748b; font-family: monospace; }
+  .token-name { color: #a78bfa; font-weight: 600; font-family: monospace; }
+  .token-value { color: #94a3b8; font-family: monospace; text-align: right; }
+  .bs-overlay-tok .token-card__header   { background: linear-gradient(120deg, #78350f, #f59e0b); }
+  .bs-sheet-tok .token-card__header     { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
+  .bs-mech-tok .token-card__header     { background: linear-gradient(120deg, #065f46, #10b981); }
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; overflow: hidden; }
+  .proposal-header { padding: 16px 20px; background: #fafafa; border-bottom: 1px solid #f0f0f0; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; }
+  .proposal-header p { font-size: 12px; color: #6b7280; margin-top: 4px; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table th { text-align: left; padding: 9px 16px; background: #f9fafb; color: #6b7280; text-transform: uppercase; font-size: 11px; }
+  .proposal-table td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; }
+  .td-property { font-family: monospace; font-size: 11px; }
+  .td-current { color: #9ca3af; } .td-proposed { font-weight: 600; } .td-token { font-family: monospace; color: #7c3aed; } .td-rationale { color: #4b5563; }
+  @media (max-width: 960px) { .token-grid { grid-template-columns: 1fr; } }
+</style></head>
+<body>
+<a href="index.html" class="back-nav">← All components</a>
+<div class="page-header">
+  <h1>Bottom sheet</h1>
+  <span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span>
+  <span class="badge-chrome badge-chrome--tokens">Design Tokens</span>
+</div>
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> <code>.osui-bottom-sheet-overlay</code></div>
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> <code>.osui-bottom-sheet</code> (surface)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> Drag handle · header · content</div>
+</div>
+<div class="preview-card">
+  <div class="preview-card__header">
+    <span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button type="button" class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button type="button" class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button type="button" class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button type="button" class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode">
+      <div class="bs-stage" aria-label="Bottom sheet preview (figure 1: overlay, 2: sheet, 3: handle)">
+        <div class="osui-bottom-sheet osui-bottom-sheet--is-open osui-bottom-sheet--has-handler annotate-sheet" role="dialog" aria-label="Example bottom sheet">
+          <div class="osui-bottom-sheet__header">
+            <div class="osui-bottom-sheet__header__top-bar annotate-handle"></div>
+          </div>
+          <div class="osui-bottom-sheet__content annotate-content">
+            <p style="margin:0; font-size: var(--token-font-size-300, 0.75rem); color: var(--token-text-default, #242424);">Content uses <code>--bottom-sheet-max-height</code> and <code>space-base</code> padding. The drag handle above is 40×4px neutral-5 when <code>--has-handler</code> is set.</p>
+          </div>
+        </div>
+        <div class="osui-bottom-sheet-overlay annotate-overlay" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="token-grid">
+  <div class="token-card bs-overlay-tok">
+    <div class="token-card__header"><span class="dot" style="background:#f59e0b;"></span>Overlay<span class="component-name">.osui-bottom-sheet-overlay</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">background</span><span class="token-name">--overlay-background</span><span class="token-value">rgba(0,0,0,.25)</span></div>
+      <div class="token-row"><span class="prop-name">opacity (open + adj)</span><span class="token-name">0 → 1 with sheet</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">z-index</span><span class="token-name">layer-below + osui-bottom-sheet-layer</span><span class="token-value">—</span></div>
+    </div>
+  </div>
+  <div class="token-card bs-sheet-tok">
+    <div class="token-card__header"><span class="dot" style="background:#3b82f6;"></span>Sheet surface<span class="component-name">.osui-bottom-sheet</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">bg</span><span class="token-name">color-neutral-0 / background-color-neutral-0</span><span class="token-value">#fff</span></div>
+      <div class="token-row"><span class="prop-name">top radius</span><span class="token-name">--bottom-sheet-shape</span><span class="token-value">16px (demo)</span></div>
+      <div class="token-row"><span class="prop-name">shadow</span><span class="token-name">--shadow-l</span><span class="token-value">6px/8px blur</span></div>
+      <div class="token-row"><span class="prop-name">--bottom-sheet-max-height</span><span class="token-name">100vh - 54px (default)</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">transition (open)</span><span class="token-name">transform 350ms · var(--osui-bottom-sheet-transition-function)</span><span class="token-value">—</span></div>
+    </div>
+  </div>
+  <div class="token-card bs-mech-tok">
+    <div class="token-card__header"><span class="dot" style="background:#10b981;"></span>Mechanics<span class="component-name">handler · content</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">Handler pill</span><span class="token-name">neutral-5 bg · 4px height · 40px width</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">--osui-bottom-sheet-draggable-area</span><span class="token-name">56px (0 when --has-scroll)</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">content padding</span><span class="token-name">space-base + bottom-bar + safe</span><span class="token-value">—</span></div>
+    </div>
+  </div>
+</div>
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Token proposal</h3>
+    <p>Sheet chrome is still partly legacy (<code>--space-*</code>, <code>--shadow-l</code>). Map surface and radius to <code>--token-bg-surface-default</code> and <code>--token-border-radius-300</code> for a single 2.29 entry point; keep <code>--osui-bottom-sheet-transition-function</code> for motion continuity.</p>
+  </div>
+  <table class="proposal-table">
+    <thead><tr><th>Property</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td class="td-property">Sheet background</td><td class="td-current">palette neutral-0</td><td class="td-proposed">token-bg-surface-default</td><td class="td-token">--token-bg-surface-default</td><td class="td-rationale">Same value today, but themable for future dark sheets.</td></tr>
+      <tr><td class="td-property">Top corner radius</td><td class="td-current">--bottom-sheet-shape (theme, often 16px)</td><td class="td-proposed">--token-border-radius-300 (12px) or keep 16 via alias</td><td class="td-token">--token-border-radius-300</td><td class="td-rationale">Aligns with large surfaces (cards, modals) once theme defines an explicit large-radius token.</td></tr>
+      <tr><td class="td-property">Overlay scrim</td><td class="td-current">--overlay-background 25% black</td><td class="td-proposed">semantics focus/dim token (single source)</td><td class="td-token">TBD dim token</td><td class="td-rationale">Bottom sheet + modal + menu should not fork three different scrim opacities.</td></tr>
+    </tbody>
+  </table>
+</div>
+<script>
+function setMode(m, b) {
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', m === 'legacy' || m === 'current');
+  w.classList.toggle('new-tokens-mode', m === 'new-tokens');
+  w.classList.toggle('proposed-mode', m === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  b.classList.add('ptab--active');
+}
+function toggleAnnotations(btn) {
+  const w = document.getElementById('previewWrapper');
+  const hide = !w.classList.contains('hide-annotations');
+  w.classList.toggle('hide-annotations', hide);
+  btn.textContent = hide ? 'Show annotations' : 'Hide annotations';
+  btn.classList.toggle('ann-toggle--off', hide);
+}
+</script>
+</body></html>

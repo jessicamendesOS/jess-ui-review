@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carousel — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-100: 4px; --token-scale-200: 8px; --token-scale-300: 12px; --token-scale-400: 16px; --token-scale-600: 24px; --token-scale-800: 32px; --token-scale-1000: 40px;
+    --token-border-radius-100: 4px; --token-border-radius-200: 8px; --token-border-radius-300: 12px; --token-border-radius-full: 9999px;
+    --token-border-size-025: 1px; --token-border-size-050: 2px;
+    --token-font-size-300: 0.75rem; --token-font-size-350: 0.8125rem; --token-font-size-400: 1rem;
+    --token-font-weight-medium: 500; --token-font-weight-semi-bold: 600;
+    --token-bg-surface-default: #ffffff;
+    --token-text-default: #242424; --token-text-subtle: #3b3b3b; --token-text-subtlest: #626262;
+    --token-border-default: #d5d5d5; --token-border-subtle: #f3f3f3;
+    --token-primitives-base-white: #ffffff; --token-primitives-neutral-400: #d5d5d5;
+    --token-semantics-primary-base: #105cef; --token-semantics-primary-700: #105cef;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; min-height: 100vh; color: #111827; line-height: 1.5; padding: 48px 32px; }
+  .back-nav { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #6b7280; text-decoration: none; margin-bottom: 24px; padding: 5px 10px 5px 6px; border-radius: 8px; }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+  .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb; }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
+  .badge-chrome { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; text-transform: uppercase; }
+  .badge-chrome--os { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: #374151; background: #fff; border: 1px solid #e5e7eb; border-radius: 99px; padding: 4px 10px 4px 6px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .preview-card { background: #fff; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); border: 1px solid #e5e7eb; overflow: hidden; margin-bottom: 32px; }
+  .preview-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; margin-right: auto; }
+  .preview-card__body { padding: 48px 40px; background: #fff; }
+  #previewWrapper { max-width: 720px; margin: 0 auto; }
+
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
+  /* Carousel — faithful to real OSUI 2.27/2.28 .osui-carousel structure
+     HTML shape from OSUI (Splide library ships parallel classes):
+       <div class="osui-carousel splide osui-carousel--has-pagination"
+            role="region" aria-roledescription="carousel">
+         <div class="osui-carousel__track splide__track">
+           <div class="osui-carousel__content splide__list" role="presentation">
+             <img class="OSFillParent splide__slide"
+                  role="tabpanel" aria-roledescription="slide" aria-label="1 of N">
+             ...
+           </div>
+         </div>
+         <ul class="splide__pagination" role="tablist" aria-label="Select a slide to show">
+           <li role="presentation">
+             <button class="splide__pagination__page is-active" type="button"
+                     role="tab" aria-selected="true"></button>
+           </li>
+         </ul>
+       </div>
+  */
+  .osui-carousel {
+    --osui-carousel-pagination-margin: 30px;
+    position: relative;
+  }
+  /* Splide hides .splide until its JS lib boots — we render statically, so force visible.
+     Specificity must match the os-ui scoped rule (1,2,0). */
+  #previewWrapper.current-mode .splide,
+  #previewWrapper.new-tokens-mode .splide,
+  #previewWrapper.proposed-mode .splide { visibility: visible; }
+  .osui-carousel.osui-carousel--has-pagination { padding-bottom: var(--osui-carousel-pagination-margin); }
+  /* Arrow vertical centering: offset by half the pagination margin so arrows align with the image, not the full carousel box */
+  .osui-carousel.osui-carousel--has-pagination .splide__arrow { top: calc(50% - var(--osui-carousel-pagination-margin) / 2); }
+  .osui-carousel__track {
+    overflow: hidden;
+    position: relative;
+    border-radius: var(--token-border-radius-100, 4px);
+  }
+  .osui-carousel__content { display: flex; transition: transform .3s ease; }
+  .splide__slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 320px;
+  }
+  .splide__slide img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Arrows */
+  .splide__arrow {
+    background: var(--token-bg-surface-default, #ffffff);
+    border: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
+    width: var(--token-scale-1000, 40px);
+    height: var(--token-scale-1000, 40px);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--token-text-subtlest, #626262);
+    z-index: 2;
+    transition: opacity 150ms linear;
+  }
+  .splide__arrow--prev { left: 12px; }
+  .splide__arrow--next { right: 12px; }
+  .splide__arrow svg { width: 14px; height: 14px; }
+  /* Disabled — real 2.28 behaviour: opacity .3 on the whole button + default cursor */
+  .splide__arrow[disabled] { opacity: .3; cursor: default; }
+  /* Proposed disabled — aligns with other components (icon #8b8b8b) but keeps a softer opacity so it reads as disabled over imagery */
+  
+
+  /* Pagination — absolutely positioned below carousel, dot indicators */
+  .splide__pagination {
+    list-style: none;
+    position: absolute;
+    left: 0; right: 0;
+    bottom: calc(var(--osui-carousel-pagination-margin) * -1 + 18px);
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    padding: 0;
+    z-index: 2;
+  }
+  .splide__pagination li { list-style: none; }
+  .splide__pagination__page {
+    background: #ccc;
+    border: 0;
+    border-radius: 50%;
+    display: inline-block;
+    height: 8px; width: 8px;
+    margin: 3px;
+    opacity: .7;
+    padding: 0;
+    cursor: pointer;
+    transition: transform .2s linear, background-color .2s;
+  }
+  .splide__pagination__page:hover { opacity: .9; }
+  .splide__pagination__page.is-active {
+    background: var(--token-semantics-primary-base, #105cef);
+    transform: scale(1.4);
+    opacity: 1;
+  }
+
+  .annotate-track     { outline: 2px dashed #3b82f6; outline-offset: 3px; border-radius: 6px; }
+  .annotate-pagination{ outline: 2px dashed #10b981; outline-offset: 3px; border-radius: 4px; }
+  .annotate-arrow     { outline: 2px dashed #f59e0b; outline-offset: 3px; border-radius: 50%; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+
+  .car-section { margin-bottom: 56px; }
+  .car-section:last-child { margin-bottom: 0; }
+  .car-section-label { font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 16px; padding-left: 2px; }
+
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 140px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); }
+  .token-row:last-child { border-bottom: none; }
+  .prop-name { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value { font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); margin-right: 5px; }
+  .car-track-tok .token-card__header { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
+  .car-pag-tok .token-card__header { background: linear-gradient(120deg, #065f46, #10b981); }
+  .car-arrow-tok .token-card__header { background: linear-gradient(120deg, #7c2d12, #f97316); }
+
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; white-space: nowrap; font-family: inherit; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; margin-left: 4px; white-space: nowrap; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p { font-size: 12px; color: #6b7280; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; }
+  .td-current { color: #9ca3af; } .td-proposed { font-weight: 600; color: #111827; } .td-token { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; } .td-rationale { color: #4b5563; max-width: 280px; }
+  @media (max-width: 960px) { .token-grid { grid-template-columns: 1fr; } body { padding: 24px 20px 60px; } }
+
+/* Current mode — raw 2.28 values */
+
+
+
+
+
+/* Proposed — softer radius, bar-style pagination (width changes on active),
+   primary accent, larger arrows with stronger shadow */
+
+
+
+
+
+
+
+
+/* ─── Bespoke proposed-mode overrides (restored from session transcript) ─── */
+
+
+
+
+
+
+
+</style></head>
+<body>
+<a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
+<div class="page-header"><h1>Carousel</h1><span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span><span class="badge-chrome badge-chrome--tokens">Design Tokens</span></div>
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> .osui-carousel__track</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> .splide__pagination</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> .splide__arrow (prev/next)</div>
+</div>
+<div class="preview-card">
+  <div class="preview-card__header"><span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
+      <div class="car-section">
+        <div class="car-section-label">Carousel · 5 slides, current = 1 of 5 (prev arrow disabled)</div>
+        <div data-container class="osui-carousel splide is-overflow osui-carousel--has-pagination" role="region" aria-roledescription="carousel">
+          <div class="osui-carousel__track splide__track annotate-track">
+            <div class="osui-carousel__content splide__list" id="carousel-content" role="presentation">
+              <img class="OSFillParent splide__slide" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&auto=format&fit=crop" alt="Mountain landscape" role="tabpanel" aria-roledescription="slide" aria-label="1 of 5">
+              <img class="OSFillParent splide__slide" src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1400&auto=format&fit=crop" alt="Alpine valley" role="tabpanel" aria-roledescription="slide" aria-label="2 of 5">
+              <img class="OSFillParent splide__slide" src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1400&auto=format&fit=crop" alt="Milky Way galaxy" role="tabpanel" aria-roledescription="slide" aria-label="3 of 5">
+              <img class="OSFillParent splide__slide" src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1400&auto=format&fit=crop" alt="Coastal cliff at sunset" role="tabpanel" aria-roledescription="slide" aria-label="4 of 5">
+              <img class="OSFillParent splide__slide" src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1400&auto=format&fit=crop" alt="Lake at golden hour" role="tabpanel" aria-roledescription="slide" aria-label="5 of 5">
+            </div>
+          </div>
+          <button class="splide__arrow splide__arrow--prev annotate-arrow" type="button" aria-label="Previous slide" disabled><i class="ph-bold ph-caret-left"></i></button>
+          <button class="splide__arrow splide__arrow--next" type="button" aria-label="Next slide"><i class="ph-bold ph-caret-right"></i></button>
+          <ul class="splide__pagination annotate-pagination" role="tablist" aria-label="Select a slide to show">
+            <li role="presentation"><button class="splide__pagination__page is-active" type="button" role="tab" aria-label="Go to slide 1" aria-selected="true"></button></li>
+            <li role="presentation"><button class="splide__pagination__page" type="button" role="tab" aria-label="Go to slide 2"></button></li>
+            <li role="presentation"><button class="splide__pagination__page" type="button" role="tab" aria-label="Go to slide 3"></button></li>
+            <li role="presentation"><button class="splide__pagination__page" type="button" role="tab" aria-label="Go to slide 4"></button></li>
+            <li role="presentation"><button class="splide__pagination__page" type="button" role="tab" aria-label="Go to slide 5"></button></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="token-grid">
+  <div class="token-card car-track-tok">
+    <div class="token-card__header"><span class="dot" style="background:#3b82f6;"></span>Track<span class="component-name">.osui-carousel__track</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">token-border-radius-100</span><span class="token-value">4px</span></div>
+      <div class="token-row"><span class="prop-name">overflow</span><span class="token-name">hidden</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">slide fit</span><span class="token-name" style="color:#64748b;">object-fit: cover</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">slide height</span><span class="token-name">320px (preview)</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">transition</span><span class="token-name">transform .3s ease</span><span class="token-value">—</span></div>
+    </div>
+  </div>
+  <div class="token-card car-pag-tok">
+    <div class="token-card__header"><span class="dot" style="background:#10b981;"></span>Pagination<span class="component-name">.splide__pagination__page</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">size</span><span class="token-name">8px</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">rest colour</span><span class="token-name token-name-with-swatch"><span class="swatch" style="background:#cccccc;"></span>#ccc (70% opacity)</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">active colour</span><span class="token-name token-name-with-swatch"><span class="swatch" style="background:#105cef;"></span>semantics-primary-base</span><span class="token-value">#105cef</span></div>
+      <div class="token-row"><span class="prop-name">active scale</span><span class="token-name">1.4×</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">margin</span><span class="token-name">3px (gap 6px)</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">bottom offset</span><span class="token-name">--osui-carousel-pagination-margin</span><span class="token-value">30px</span></div>
+    </div>
+  </div>
+  <div class="token-card car-arrow-tok">
+    <div class="token-card__header"><span class="dot" style="background:#f97316;"></span>Arrow<span class="component-name">.splide__arrow</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">size</span><span class="token-name">token-scale-1000</span><span class="token-value">40px</span></div>
+      <div class="token-row"><span class="prop-name">bg</span><span class="token-name">bg-surface-default</span><span class="token-value">#ffffff</span></div>
+      <div class="token-row"><span class="prop-name">color</span><span class="token-name">text-subtlest</span><span class="token-value">#626262</span></div>
+      <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">token-border-radius-full</span><span class="token-value">50%</span></div>
+      <div class="token-row"><span class="prop-name">shadow</span><span class="token-name" style="color:#64748b;">0 2px 8px 12% black</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">[disabled]</span><span class="token-name" style="color:#64748b;">opacity 0.3</span><span class="token-value">—</span></div>
+    </div>
+  </div>
+</div>
+<div class="proposal-section">
+  <div class="proposal-header"><h3>Token Proposal</h3><p>Real OS UI HTML uses the Splide-based <code>.osui-carousel</code> wrapping <code>.osui-carousel__track</code> + <code>.splide__list</code> slides + <code>.splide__pagination</code> dot strip + <code>.splide__arrow</code> prev/next buttons. Proposal softens the track corner (4→12px), swaps the dot scale trick for a <strong>bar-style active indicator</strong> (width animates from 8 → 28px), and lifts the arrows with a deeper shadow.</p></div>
+  <table class="proposal-table">
+    <thead><tr><th>Property</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td class="td-property">track radius</td><td class="td-current">4px (radius-soft)</td><td class="td-proposed">12px (token-border-radius-300)</td><td class="td-token">--token-border-radius-300</td><td class="td-rationale">Softer corner matches Card / Popover proposed radii — the carousel reads as a content surface rather than a sharp media frame.</td></tr>
+      <tr><td class="td-property">pagination indicator</td><td class="td-current">scale(1.4) on active dot + colour change</td><td class="td-proposed">width 8 → 28px bar · same 8px height</td><td class="td-token">--token-semantics-primary-base</td><td class="td-rationale">Bar-style active indicator reads as "position in sequence" (matches iOS / Material / modern web patterns) while scale feels dated. Width animation is hardware-accelerated and communicates direction.</td></tr>
+      <tr><td class="td-property">pagination rest</td><td class="td-current">#ccc · 70% opacity</td><td class="td-proposed">token-border-default · full opacity</td><td class="td-token">--token-border-default</td><td class="td-rationale">Semantic token replaces the hardcoded grey. Full opacity + smaller size lets the active bar carry the emphasis.</td></tr>
+      <tr><td class="td-property">pagination gap</td><td class="td-current">6px (3px margin each side)</td><td class="td-proposed">6px gap (via flex gap)</td><td class="td-token">--token-scale-050</td><td class="td-rationale">Same visual spacing, expressed via modern <code>flex gap</code> instead of sibling margins — simpler rule set.</td></tr>
+      <tr><td class="td-property">arrow size</td><td class="td-current">40px</td><td class="td-proposed">38px</td><td class="td-token">—</td><td class="td-rationale">Slightly smaller arrow sits more discreetly over the image, letting the content breathe. The deeper shadow compensates for the reduced size by maintaining visual presence.</td></tr>
+      <tr><td class="td-property">arrow shadow</td><td class="td-current">shadow-xs (subtle)</td><td class="td-proposed">deeper 2-layer elevation</td><td class="td-token">—</td><td class="td-rationale">Arrows sit <em>on top of</em> the image content — they need real depth to separate visually from busy photos. A 12% / 8% 2-layer shadow establishes that z-axis.</td></tr>
+      <tr><td class="td-property">arrow icon colour</td><td class="td-current">color-neutral-7 (#6a7178)</td><td class="td-proposed">token-text-default (#242424)</td><td class="td-token">--token-text-default</td><td class="td-rationale">Darker icon reads crisper against the white arrow bg — especially important when the carousel is over high-contrast imagery.</td></tr>
+      <tr><td class="td-property">arrow [disabled]</td><td class="td-current">opacity 0.3 (whole button fades)</td><td class="td-proposed">icon #8b8b8b · opacity .55</td><td class="td-token">—</td><td class="td-rationale">Matches the disabled language of Checkbox / Switch / Radio / Button Group (icon uses neutral #8b8b8b). Keeps a slight fade so it still reads as inert over imagery, but avoids the semi-transparent "ghost circle" look of a pure 0.3 opacity on the full button.</td></tr>
+    </tbody>
+  </table>
+</div>
+<script>
+function setMode(mode, btn) {
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
+function toggleAnnotations(btn) { const w = document.getElementById('previewWrapper'); const h = !w.classList.contains('hide-annotations'); w.classList.toggle('hide-annotations', h); btn.textContent = h ? 'Show annotations' : 'Hide annotations'; btn.classList.toggle('ann-toggle--off', h); }
+// Show slide 3 as active — shift the content strip so the 3rd image is visible
+document.addEventListener('DOMContentLoaded', () => {
+  // Slide 1 is active — no translateX needed
+});
+</script>
+</body></html>

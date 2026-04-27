@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Switch — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
+<link rel="stylesheet" href="assets/lab-proposed-overrides.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -33,7 +38,35 @@
   .preview-card__body { padding: 36px 24px; background: #fff; }
   #previewWrapper { max-width: 520px; margin: 0 auto; }
 
-  /* Switch component — native <input type="checkbox" data-switch> styled as toggle.
+
+  /* Preview content: start-aligned (switch rows are list-like) */
+  #previewWrapper { text-align: start; }
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode,
+  #previewWrapper.proposed-mode { margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
+  /* Switch component — real OSUI uses native <input type="checkbox" data-switch> styled as toggle.
      The element itself is a 50×32 hit area; :before paints the track (48×30),
      :after paints the thumb (24×24). Thumb translates from x:4 (off) to x:22 (on). */
   [data-switch] {
@@ -51,7 +84,7 @@
   }
   [data-switch]::before {
     content: "";
-    background-color: #ced4da;    /* 2.28 default: color-neutral-5 */
+    background-color: #ced4da;
     border: 1px solid #ced4da;
     border-radius: 9999px;
     height: 30px; width: 48px;
@@ -76,7 +109,7 @@
   [data-switch][disabled]::before { background-color: #f1f3f5; border-color: #dee2e6; }
   [data-switch][disabled]::after { background: #dee2e6; box-shadow: none; }
 
-  .switch-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+  .switch-row { display: flex; align-items: center; justify-content: flex-start; gap: 16px; margin-bottom: 16px; }
   .switch-row:last-child { margin-bottom: 0; }
   .switch-row label { font-size: 14px; color: var(--token-text-default, #242424); cursor: pointer; }
   .switch-section { margin-bottom: 28px; }
@@ -119,39 +152,20 @@
 
 /* Current mode — base styles already match 2.28 verbatim. */
 
-/* Proposed — more compact track (40×24), smaller thumb (20), no border on track,
-   explicit checked fill in primary, visible thumb even on disabled. */
-#previewWrapper.proposed-mode [data-switch] { height: 24px; width: 40px; }
-#previewWrapper.proposed-mode [data-switch]::before {
-  height: 24px; width: 40px;
-  top: 0; left: 0;
-  border: 0;
-  background: var(--token-border-default, #d5d5d5);
-  border-radius: 9999px;
-}
-#previewWrapper.proposed-mode [data-switch]:hover:not([disabled])::before { background: var(--token-primitives-neutral-500, #a2a2a2); }
-#previewWrapper.proposed-mode [data-switch]:checked::before {
-  background: var(--token-semantics-primary-base, #105cef);
-  border: 0;
-}
-#previewWrapper.proposed-mode [data-switch]::after {
-  height: 20px; width: 20px;
-  top: 2px;
-  transform: translateX(2px);
-  background: #ffffff;
-  box-shadow: 0 1px 2px rgba(0,0,0,.2);
-}
-#previewWrapper.proposed-mode [data-switch]:checked::after { transform: translateX(18px); }
-/* Disabled — keeps the handle visible so the switch still reads as a toggle,
-   just washed out. No more "handle disappears" bug from the initial iteration. */
-/* Disabled — uses the same muted-grey fill as Checkbox/Radio/Button Group
-   disabled-active states for a consistent "locked" treatment across form
-   controls. #8b8b8b carries enough contrast against white to read as "on"
-   while being clearly different from the primary blue of an enabled switch. */
-#previewWrapper.proposed-mode [data-switch][disabled]::before { background: var(--token-border-subtle, #f3f3f3); border: 0; }
-#previewWrapper.proposed-mode [data-switch][disabled]:checked::before { background: #8b8b8b; }
-#previewWrapper.proposed-mode [data-switch][disabled]::after { background: #ffffff; box-shadow: 0 1px 2px rgba(0,0,0,.08); }
-#previewWrapper.proposed-mode [data-switch]:focus-visible::before { box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 22%, transparent); }
+/* Proposed switch track/thumb: assets/lab-proposed-overrides.css (shared with form-tokens.html) */
+
+/* ─── Bespoke lab-only (this page) ─── */
+
+
+
+
+
+
+
+
+
+
+  
 </style></head>
 <body>
 <a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
@@ -171,13 +185,13 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-    <div id="previewWrapper" class="hide-annotations">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
       <div class="switch-section">
         <div class="switch-row-label">Default states</div>
-        <div class="switch-row"><input data-switch type="checkbox" id="sw1" class="annotate-track"><label for="sw1">Push notifications</label></div>
-        <div class="switch-row"><input data-switch type="checkbox" id="sw2" checked><label for="sw2">Auto-sync on change</label></div>
-        <div class="switch-row"><input data-switch type="checkbox" id="sw3" disabled><label for="sw3">Beta features (coming soon)</label></div>
-        <div class="switch-row"><input data-switch type="checkbox" id="sw4" checked disabled><label for="sw4">Enterprise SSO (locked)</label></div>
+        <div class="switch-row"><input data-switch type="checkbox" id="sw1" class="switch annotate-track"><label for="sw1">Push notifications</label></div>
+        <div class="switch-row"><input data-switch type="checkbox" id="sw2" class="switch" checked><label for="sw2">Auto-sync on change</label></div>
+        <div class="switch-row"><input data-switch type="checkbox" id="sw3" class="switch" disabled><label for="sw3">Beta features (coming soon)</label></div>
+        <div class="switch-row"><input data-switch type="checkbox" id="sw4" class="switch" checked disabled><label for="sw4">Enterprise SSO (locked)</label></div>
       </div>
     </div>
   </div>
@@ -229,7 +243,14 @@
   </table>
 </div>
 <script>
-function setMode(mode, btn) { const w = document.getElementById('previewWrapper'); w.classList.toggle('proposed-mode', mode === 'proposed'); w.classList.toggle('current-mode', mode === 'legacy'); document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active')); btn.classList.add('ptab--active'); }
+function setMode(mode, btn) {
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 function toggleAnnotations(btn) { const w = document.getElementById('previewWrapper'); const h = !w.classList.contains('hide-annotations'); w.classList.toggle('hide-annotations', h); btn.textContent = h ? 'Show annotations' : 'Hide annotations'; btn.classList.toggle('ann-toggle--off', h); }
 </script>
 </body></html>

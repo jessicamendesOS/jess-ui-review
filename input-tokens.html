@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Input — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -34,6 +38,35 @@
   .preview-card__body { padding: 36px 24px; background: #fff; }
   #previewWrapper { max-width: 480px; margin: 0 auto; }
 
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
   .form-control[data-input] {
     background-color: var(--token-bg-surface-default, #ffffff);
     border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
@@ -48,7 +81,8 @@
   }
   .form-control[data-input]::placeholder { color: var(--token-text-placeholder, #a2a2a2); }
   .form-control[data-input]:hover { border-color: var(--token-text-subtlest, #626262); }
-  .form-control[data-input]:focus { border-color: var(--token-semantics-primary-base, #105cef); outline: 0; }
+  /* Focus: outline ring for Current / New tokens. Proposed uses single border from os-ui-229-proposed only (no double ring). */
+  #previewWrapper:not(.proposed-mode) .form-control[data-input]:focus { border-color: var(--token-border-default, #d5d5d5); outline: 2px solid var(--token-semantics-primary-base, #105cef); outline-offset: 1px; }
   .form-control[data-input][disabled] { background-color: var(--token-border-subtle, #f3f3f3); border-color: var(--token-border-default, #d5d5d5); color: var(--token-text-disabled, #a2a2a2); cursor: not-allowed; }
   .form-control[data-input].not-valid { border-color: var(--token-semantics-error-base, #dc2020); }
   .form-control.input-small[data-input] { font-size: var(--token-font-size-300, 0.75rem); height: var(--token-scale-800, 32px); padding: 0 var(--token-scale-200, 8px); }
@@ -98,23 +132,26 @@
   @media (max-width: 960px) { .token-grid { grid-template-columns: 1fr; } body { padding: 24px 20px 60px; } }
 
 /* Current mode */
-#previewWrapper.current-mode .form-control[data-input] { height: 40px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px; padding: 0 16px; color: #212529; }
-#previewWrapper.current-mode .form-control[data-input]:hover { border-color: #adb5bd; }
-#previewWrapper.current-mode .form-control[data-input]:focus { border-color: #1068eb; outline: 0; }
-#previewWrapper.current-mode .form-control[data-input][disabled] { background: #dee2e6; border-color: #dee2e6; color: #adb5bd; }
+
+
+
+
 
 /* Proposed — softer radius, smaller padding, scaled size variants, focus halo */
-#previewWrapper.proposed-mode .form-control[data-input] {
-  height: var(--token-scale-900, 36px);
-  border-radius: var(--token-border-radius-200, 8px);
-  border-width: var(--token-border-size-025, 1px);
-  font-size: var(--token-font-size-350, 0.8125rem);
-  padding: 0 var(--token-scale-300, 12px);   /* was 16px — tighter horizontal padding */
-}
+
 /* Size variants: small actually smaller, large actually larger */
-#previewWrapper.proposed-mode .form-control.input-small[data-input] { height: 28px; font-size: var(--token-font-size-300, 0.75rem); padding: 0 var(--token-scale-200, 8px); }
-#previewWrapper.proposed-mode .form-control.input-large[data-input] { height: 44px; font-size: var(--token-font-size-400, 1rem); padding: 0 var(--token-scale-400, 16px); }
-#previewWrapper.proposed-mode .form-control[data-input]:focus { border-color: var(--token-semantics-primary-base, #105cef); box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 18%, transparent); }
+
+
+
+
+/* ─── Bespoke proposed-mode overrides (restored from pre-refactor state) ─── */
+
+
+
+
+  
+  
+  
 </style></head>
 <body>
 <a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
@@ -135,7 +172,7 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-    <div id="previewWrapper" class="hide-annotations">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
       <div class="input-section">
         <div class="input-section-label">Default · with label + helper</div>
         <label class="input-label mandatory" for="inp1">Email address</label>
@@ -191,14 +228,21 @@
       <tr><td class="td-property">height</td><td class="td-current">40px</td><td class="td-proposed">36px (token-scale-900)</td><td class="td-token">--token-scale-900</td><td class="td-rationale">Matches Button — form inputs and their CTA button should stack cleanly at the same height.</td></tr>
       <tr><td class="td-property">border-radius</td><td class="td-current">4px</td><td class="td-proposed">8px (token-border-radius-200)</td><td class="td-token">--token-border-radius-200</td><td class="td-rationale">Softer corners align with Card / Popover / Button proposed radius — inputs feel part of the same surface vocabulary.</td></tr>
       <tr><td class="td-property">rest border</td><td class="td-current">1px color-neutral-5</td><td class="td-proposed">1px token-border-default</td><td class="td-token">--token-border-default</td><td class="td-rationale">Semantic token anchoring — theming now inherits the input palette automatically.</td></tr>
-      <tr><td class="td-property">focus state</td><td class="td-current">primary border only</td><td class="td-proposed">primary border + 18% primary halo (3px ring)</td><td class="td-token">--token-semantics-primary-base (color-mix)</td><td class="td-rationale">Border-colour-only focus can be easy to miss at a glance — especially when focus lands on an input in a busy form. The 3px color-mix halo lifts the focused input unambiguously without adding a second chrome layer.</td></tr>
+      <tr><td class="td-property">focus state</td><td class="td-current">primary border only</td><td class="td-proposed">2px primary outline (1px offset), border stays neutral</td><td class="td-token">--token-semantics-primary-base</td><td class="td-rationale">Outline sits outside the box so it doesn't shift layout, and stays distinct from the neutral resting border. Replaces the easy-to-miss border-colour-only treatment without adding a halo layer.</td></tr>
       <tr><td class="td-property">error state</td><td class="td-current">1px color-error border</td><td class="td-proposed">1px token-semantics-error-base</td><td class="td-token">--token-semantics-error-base</td><td class="td-rationale">Semantic anchoring — error states across Input / Dropdown / Form now share one decision point.</td></tr>
       <tr><td class="td-property">placeholder</td><td class="td-current">browser default (~#757575)</td><td class="td-proposed">token-text-placeholder (#a2a2a2)</td><td class="td-token">--token-text-placeholder</td><td class="td-rationale">Explicit token for placeholder colour — lighter than body text so empty inputs don't read as "filled with greyed-out content".</td></tr>
     </tbody>
   </table>
 </div>
 <script>
-function setMode(mode, btn) { const w = document.getElementById('previewWrapper'); w.classList.toggle('proposed-mode', mode === 'proposed'); w.classList.toggle('current-mode', mode === 'legacy'); document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active')); btn.classList.add('ptab--active'); }
+function setMode(mode, btn) {
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 function toggleAnnotations(btn) { const w = document.getElementById('previewWrapper'); const h = !w.classList.contains('hide-annotations'); w.classList.toggle('hide-annotations', h); btn.textContent = h ? 'Show annotations' : 'Hide annotations'; btn.classList.toggle('ann-toggle--off', h); }
 </script>
 </body></html>

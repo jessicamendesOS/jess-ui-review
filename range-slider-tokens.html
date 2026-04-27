@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Range Slider — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-100: 4px; --token-scale-200: 8px; --token-scale-300: 12px; --token-scale-400: 16px; --token-scale-600: 24px;
+    --token-border-radius-100: 4px; --token-border-radius-200: 8px; --token-border-radius-full: 9999px;
+    --token-border-size-025: 1px; --token-border-size-050: 2px;
+    --token-bg-surface-default: #ffffff;
+    --token-text-default: #242424; --token-text-subtle: #3b3b3b; --token-text-subtlest: #626262;
+    --token-border-default: #d5d5d5; --token-border-subtle: #ececec;
+    --token-semantics-primary-base: #105cef; --token-semantics-primary-hover: #0e52d6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; min-height: 100vh; color: #111827; line-height: 1.5; padding: 48px 32px; }
+  .back-nav { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #6b7280; text-decoration: none; margin-bottom: 24px; padding: 5px 10px 5px 6px; border-radius: 8px; }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+  .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb; }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
+  .badge-chrome { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; text-transform: uppercase; }
+  .badge-chrome--os { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: #374151; background: #fff; border: 1px solid #e5e7eb; border-radius: 99px; padding: 4px 10px 4px 6px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .preview-card { background: #fff; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); border: 1px solid #e5e7eb; overflow: hidden; margin-bottom: 32px; }
+  .preview-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; margin-right: auto; }
+  .preview-card__body { padding: 48px 40px 60px; background: #fff; overflow-x: auto; }
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; white-space: nowrap; font-family: inherit; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; margin-left: 4px; white-space: nowrap; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+  .token-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 0; }
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 120px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); }
+  .token-row:last-child { border-bottom: none; }
+  .prop-name { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value { font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); margin-right: 5px; vertical-align: middle; }
+  .rs-track-tok  .token-card__header  { background: linear-gradient(120deg, #334155, #64748b); }
+  .rs-fill-tok   .token-card__header  { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
+  .rs-handle-tok .token-card__header  { background: linear-gradient(120deg, #065f46, #10b981); }
+  .rs-pips-tok   .token-card__header  { background: linear-gradient(120deg, #92400e, #f59e0b); }
+  .proposal-section { margin-top: 32px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p { font-size: 12px; color: #6b7280; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; }
+  .td-current { color: #9ca3af; } .td-proposed { font-weight: 600; color: #111827; }
+  .td-token { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; }
+  .td-rationale { color: #4b5563; max-width: 280px; }
+  @media (max-width: 1200px) { .token-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 700px)  { .token-grid { grid-template-columns: 1fr; } body { padding: 24px 16px 60px; } }
+
+  /* ── PREVIEW LAYOUT ── */
+  #previewWrapper { display: flex; gap: 72px; align-items: flex-start; flex-wrap: wrap; }
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
+  .rs-section { flex: 0 0 auto; }
+  .rs-section-label { font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 24px; }
+  .rs-section--horizontal { width: 320px; }
+  .rs-section--vertical   { width: 60px; height: 200px; }
+  .rs-section--interval   { width: 320px; }
+
+  /* ── OSUI WRAPPER ── */
+  .osui-range-slider {
+    padding: 8px 0;
+  }
+  .osui-range-slider--is-vertical {
+    padding: 0 40px 0 0;
+    height: 100%;
+  }
+
+  /* ── noUI TARGET (track) ── */
+  .noUi-target {
+    position: relative;
+    direction: ltr;
+    background: #e5e5e5;
+    border-radius: 9999px;
+    box-sizing: border-box;
+  }
+  .noUi-horizontal { height: 4px; width: 100%; }
+  .noUi-vertical   { width: 4px; height: 100%; }
+
+  /* ── BASE LAYER ── */
+  .noUi-base, .noUi-connects {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .noUi-connects {
+    overflow: hidden;
+    z-index: 0;
+    border-radius: 9999px;
+  }
+
+  /* ── CONNECT (fill) ── */
+  .noUi-connect {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #1068eb;
+    transform-origin: 0 0;
+    will-change: transform;
+  }
+
+  /* ── ORIGIN (handle positioning) ── */
+  .noUi-origin {
+    position: absolute;
+    top: 0;
+    height: 100%; width: 100%;
+    z-index: 1;
+  }
+  .noUi-horizontal .noUi-origin { right: 0; left: auto; }
+  .noUi-vertical   .noUi-origin { left: 0; right: auto; top: 0; }
+
+  /* ── HANDLE ── */
+  .noUi-handle {
+    position: absolute;
+    background: #fff;
+    border: 2px solid #1068eb;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,.15);
+    cursor: grab;
+    width: 20px; height: 20px;
+    box-sizing: border-box;
+    outline: none;
+  }
+  .noUi-handle:hover { box-shadow: 0 2px 6px rgba(16,104,235,.25); }
+  .noUi-handle:focus { box-shadow: 0 0 0 4px rgba(16,104,235,.15); }
+  .noUi-horizontal .noUi-handle { top: -8px; right: -10px; }
+  .noUi-vertical   .noUi-handle { left: -8px; bottom: -10px; }
+  .noUi-touch-area { position: absolute; inset: -6px; }
+
+  /* ── PIPS (ticks + labels) ── */
+  .noUi-pips {
+    position: absolute;
+    color: #6a7178;
+    font-family: inherit;
+    font-size: 12px;
+    box-sizing: border-box;
+  }
+  .noUi-pips-horizontal {
+    height: 32px; top: 100%; left: 0; width: 100%;
+    padding: 0;
+  }
+  .noUi-pips-vertical {
+    width: 32px; top: 0; left: 100%; height: 100%;
+    padding: 0;
+  }
+
+  .noUi-marker { position: absolute; background: #b4b4b4; }
+  .noUi-marker-horizontal {
+    width: 1px; height: 6px; margin-left: -0.5px; top: 6px;
+  }
+  .noUi-marker-vertical {
+    width: 6px; height: 1px; margin-top: -0.5px; left: 6px;
+  }
+
+  .noUi-value {
+    position: absolute;
+    white-space: nowrap;
+    text-align: center;
+    font-weight: 400;
+  }
+  .noUi-value-horizontal { transform: translate(-50%, 0); top: 16px; }
+  .noUi-value-vertical   { transform: translate(0, -50%); left: 16px; }
+
+  /* ── ANNOTATIONS ── */
+  .annotate-track   { outline: 2px dashed #64748b; outline-offset: 10px; border-radius: 9999px; }
+  .annotate-fill    { outline: 2px dashed #3b82f6; outline-offset: 4px; border-radius: 9999px; }
+  .annotate-handle  { outline: 2px dashed #10b981 !important; outline-offset: 4px; border-radius: 50%; }
+  .annotate-pips    { outline: 2px dashed #f59e0b; outline-offset: 2px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none !important; }
+
+  /* ── PROPOSED MODE ── */
+  /* Thicker track + rounder handle with filled look */
+  
+  
+
+  
+
+  
+
+  /* Handle: larger tap target, white core with primary ring, stronger elevation */
+  
+  
+  
+
+  
+  
+
+  /* Pips: bolder markers + better value contrast */
+  
+  
+  
+  
+
+/* ─── Bespoke proposed-mode overrides (restored from session transcript) ─── */
+
+
+
+
+
+
+
+
+
+
+
+
+
+</style></head>
+<body>
+<a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
+<div class="page-header">
+  <h1>Range Slider</h1>
+  <span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span>
+  <span class="badge-chrome badge-chrome--tokens">Design Tokens</span>
+</div>
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#64748b;"></span> .noUi-target (track)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> .noUi-connect (fill)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> .noUi-handle</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> .noUi-pips (ticks + labels)</div>
+</div>
+
+<div class="preview-card">
+  <div class="preview-card__header">
+    <span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
+
+      <!-- 1 · Single horizontal · value 5 of 1–12 -->
+      <div class="rs-section rs-section--horizontal">
+        <div class="rs-section-label">Single — horizontal</div>
+        <div class="osui-range-slider osui-range-slider--has-ticks" style="--range-slider-size: 100%;">
+          <div class="osui-range-slider__provider noUi-target noUi-ltr noUi-horizontal noUi-txt-dir-ltr annotate-track">
+            <div class="noUi-base">
+              <div class="noUi-connects">
+                <div class="noUi-connect annotate-fill" style="transform: translate(0%, 0px) scale(0.363636, 1);"></div>
+              </div>
+              <div class="noUi-origin" style="transform: translate(-63.6364%, 0px); z-index: 4;">
+                <div class="noUi-handle noUi-handle-lower annotate-handle" data-handle="0" tabindex="0" aria-label="handler" role="slider" aria-orientation="horizontal" aria-valuemin="1" aria-valuemax="12" aria-valuenow="5" aria-valuetext="5">
+                  <div class="noUi-touch-area"></div>
+                </div>
+              </div>
+            </div>
+            <div class="noUi-pips noUi-pips-horizontal annotate-pips">
+              <div class="noUi-marker noUi-marker-horizontal noUi-marker-large" style="left: 0%;"></div>
+              <div class="noUi-value noUi-value-horizontal noUi-value-large" data-value="1" style="left: 0%;">1</div>
+              <div class="noUi-marker noUi-marker-horizontal noUi-marker-large" style="left: 100%;"></div>
+              <div class="noUi-value noUi-value-horizontal noUi-value-large" data-value="12" style="left: 100%;">12</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 · Vertical · value 3 of 1–12 -->
+      <div class="rs-section rs-section--vertical">
+        <div class="rs-section-label">Vertical</div>
+        <div class="osui-range-slider osui-range-slider--is-vertical osui-range-slider--has-ticks" style="--range-slider-size: 200px;">
+          <div class="osui-range-slider__provider noUi-target noUi-ltr noUi-vertical noUi-txt-dir-ltr annotate-track">
+            <div class="noUi-base">
+              <div class="noUi-connects">
+                <div class="noUi-connect annotate-fill" style="transform: translate(0px, 0%) scale(1, 0.181818);"></div>
+              </div>
+              <div class="noUi-origin" style="transform: translate(0px, 18.1818%); z-index: 4;">
+                <div class="noUi-handle noUi-handle-lower annotate-handle" data-handle="0" tabindex="0" aria-label="handler" role="slider" aria-orientation="vertical" aria-valuemin="1" aria-valuemax="12" aria-valuenow="3" aria-valuetext="3">
+                  <div class="noUi-touch-area"></div>
+                </div>
+              </div>
+            </div>
+            <div class="noUi-pips noUi-pips-vertical annotate-pips">
+              <div class="noUi-marker noUi-marker-vertical noUi-marker-large" style="top: 0%;"></div>
+              <div class="noUi-value noUi-value-vertical noUi-value-large" data-value="1" style="top: 0%;">1</div>
+              <div class="noUi-marker noUi-marker-vertical noUi-marker-large" style="top: 100%;"></div>
+              <div class="noUi-value noUi-value-vertical noUi-value-large" data-value="12" style="top: 100%;">12</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 · Interval (double handle) · lower 4, upper 7 -->
+      <div class="rs-section rs-section--interval">
+        <div class="rs-section-label">Interval — double handle</div>
+        <div class="osui-range-slider osui-range-slider--is-interval osui-range-slider--has-ticks" style="--range-slider-size: 100%;">
+          <div class="osui-range-slider__provider noUi-target noUi-ltr noUi-horizontal noUi-txt-dir-ltr annotate-track">
+            <div class="noUi-base">
+              <div class="noUi-connects">
+                <div class="noUi-connect annotate-fill" style="transform: translate(27.2727%, 0px) scale(0.272727, 1);"></div>
+              </div>
+              <div class="noUi-origin" style="transform: translate(-72.7273%, 0px); z-index: 5;">
+                <div class="noUi-handle noUi-handle-lower annotate-handle" data-handle="0" tabindex="0" aria-label="handler" role="slider" aria-orientation="horizontal" aria-valuemin="1" aria-valuemax="7" aria-valuenow="4" aria-valuetext="4">
+                  <div class="noUi-touch-area"></div>
+                </div>
+              </div>
+              <div class="noUi-origin" style="transform: translate(-45.4545%, 0px); z-index: 4;">
+                <div class="noUi-handle noUi-handle-upper annotate-handle" data-handle="1" tabindex="0" aria-label="handler" role="slider" aria-orientation="horizontal" aria-valuemin="4" aria-valuemax="12" aria-valuenow="7" aria-valuetext="7">
+                  <div class="noUi-touch-area"></div>
+                </div>
+              </div>
+            </div>
+            <div class="noUi-pips noUi-pips-horizontal annotate-pips">
+              <div class="noUi-marker noUi-marker-horizontal noUi-marker-large" style="left: 0%;"></div>
+              <div class="noUi-value noUi-value-horizontal noUi-value-large" data-value="1" style="left: 0%;">1</div>
+              <div class="noUi-marker noUi-marker-horizontal noUi-marker-large" style="left: 100%;"></div>
+              <div class="noUi-value noUi-value-horizontal noUi-value-large" data-value="12" style="left: 100%;">12</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /previewWrapper -->
+  </div>
+</div>
+
+<!-- Token cards -->
+<div class="token-grid">
+  <div class="token-card rs-track-tok">
+    <div class="token-card__header"><span class="dot" style="background:#64748b;"></span>Track<span class="component-name">.noUi-target</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">height (h)</span><span class="token-name">scale-100</span><span class="token-value">4px</span></div>
+      <div class="token-row"><span class="prop-name">width (v)</span><span class="token-name">scale-100</span><span class="token-value">4px</span></div>
+      <div class="token-row"><span class="prop-name">background</span><span class="token-name"><span class="swatch" style="background:#e5e5e5;"></span>bg-neutral-3</span><span class="token-value">#e5e5e5</span></div>
+      <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">radius-full</span><span class="token-value">9999px</span></div>
+      <div class="token-row"><span class="prop-name">overflow</span><span class="token-name" style="color:#64748b;">hidden</span><span class="token-value">—</span></div>
+    </div>
+  </div>
+  <div class="token-card rs-fill-tok">
+    <div class="token-card__header"><span class="dot" style="background:#3b82f6;"></span>Fill<span class="component-name">.noUi-connect</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">background</span><span class="token-name"><span class="swatch" style="background:#1068eb;"></span>bg-primary</span><span class="token-value">#1068eb</span></div>
+      <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">inherits pill</span><span class="token-value">9999px</span></div>
+      <div class="token-row"><span class="prop-name">transform</span><span class="token-name" style="color:#64748b;">translate + scale</span><span class="token-value">inline</span></div>
+      <div class="token-row"><span class="prop-name">transform-origin</span><span class="token-name" style="color:#64748b;">0 0</span><span class="token-value">top-left</span></div>
+      <div class="token-row"><span class="prop-name">position</span><span class="token-name" style="color:#64748b;">absolute</span><span class="token-value">—</span></div>
+    </div>
+  </div>
+  <div class="token-card rs-handle-tok">
+    <div class="token-card__header"><span class="dot" style="background:#10b981;"></span>Handle<span class="component-name">.noUi-handle</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">size</span><span class="token-name">scale-500</span><span class="token-value">20×20px</span></div>
+      <div class="token-row"><span class="prop-name">background</span><span class="token-name"><span class="swatch" style="background:#fff; border-color:#ccc;"></span>bg-neutral-0</span><span class="token-value">#ffffff</span></div>
+      <div class="token-row"><span class="prop-name">border</span><span class="token-name"><span class="swatch" style="background:#1068eb;"></span>2px primary</span><span class="token-value">#1068eb</span></div>
+      <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">radius-circle</span><span class="token-value">50%</span></div>
+      <div class="token-row"><span class="prop-name">box-shadow</span><span class="token-name" style="color:#64748b;">shadow-xs</span><span class="token-value">0 1 3 /.15</span></div>
+      <div class="token-row"><span class="prop-name">:focus ring</span><span class="token-name"><span class="swatch" style="background:#1068eb; opacity:.15;"></span>primary/15%</span><span class="token-value">4px</span></div>
+    </div>
+  </div>
+  <div class="token-card rs-pips-tok">
+    <div class="token-card__header"><span class="dot" style="background:#f59e0b;"></span>Ticks + Values<span class="component-name">.noUi-pips</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">marker w×h</span><span class="token-name" style="color:#64748b;">1×6px</span><span class="token-value">thin tick</span></div>
+      <div class="token-row"><span class="prop-name">marker color</span><span class="token-name"><span class="swatch" style="background:#b4b4b4;"></span>border-neutral-5</span><span class="token-value">#b4b4b4</span></div>
+      <div class="token-row"><span class="prop-name">value color</span><span class="token-name"><span class="swatch" style="background:#6a7178;"></span>text-neutral-7</span><span class="token-value">#6a7178</span></div>
+      <div class="token-row"><span class="prop-name">value size</span><span class="token-name">text-caption</span><span class="token-value">12px / 400</span></div>
+      <div class="token-row"><span class="prop-name">pips height (h)</span><span class="token-name" style="color:#64748b;">spacer</span><span class="token-value">32px</span></div>
+      <div class="token-row"><span class="prop-name">pips width (v)</span><span class="token-name" style="color:#64748b;">spacer</span><span class="token-value">32px</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Token Proposal</h3>
+    <p>OSUI Range Slider wraps <strong>noUiSlider</strong> as <code>.osui-range-slider</code> (host) + <code>.noUi-target</code> (track). The handle sits on a <code>.noUi-origin</code> positioned via <code>translate()</code>, and the fill uses <code>.noUi-connect</code> with <code>translate + scale</code> from a top-left origin. <strong>Proposed</strong> uses a flat look: a light gray pill track, <strong>primary</strong> filled range, and a white circular thumb with a 2px ring in the same primary color (no drop shadow).</p>
+  </div>
+  <table class="proposal-table">
+    <thead><tr><th>Property</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td class="td-property">track thickness</td><td class="td-current">4px</td><td class="td-proposed">4px</td><td class="td-token">—</td><td class="td-rationale">A thin rail keeps the layout quiet; the thumb carries most of the affordance, matching a minimal slider reference (flat track, dominant circular handle).</td></tr>
+      <tr><td class="td-property">track + fill shape</td><td class="td-current">rounded</td><td class="td-proposed">full pill (capsule)</td><td class="td-token">--token-border-radius-full</td><td class="td-rationale">A continuous rounded track reads as one stretchable control and aligns the unfilled and filled ends visually.</td></tr>
+      <tr><td class="td-property">track (unfilled) background</td><td class="td-current">#e5e5e5</td><td class="td-proposed">#e8e8e8 (neutral-200)</td><td class="td-token">--token-primitives-neutral-200</td><td class="td-rationale">Very light gray so the inactive segment reads behind the primary fill and white thumb.</td></tr>
+      <tr><td class="td-property">range (filled) color</td><td class="td-current">#1068eb (primary)</td><td class="td-proposed">primary (e.g. #105cef)</td><td class="td-token">--token-semantics-primary-base</td><td class="td-rationale">Brand-aligned value segment; the thumb border matches this same token so the ring and the filled track read as one system.</td></tr>
+      <tr><td class="td-property">handle</td><td class="td-current">20×20px, 1px border, shadow</td><td class="td-proposed">20×20px, white, 2px primary border</td><td class="td-token">--osui-range-slider-active-fill (same as fill)</td><td class="td-rationale">Thumb is clearly larger than the 4px track (~5×); no inner “grip” lines so the read stays a simple disk.</td></tr>
+      <tr><td class="td-property">handle :hover / :focus (visual)</td><td class="td-current">primary-tinted shadow / ring</td><td class="td-proposed">same flat thumb, no extra shadow</td><td class="td-token">—</td><td class="td-rationale">Stays in the same flat, non-chromatic system; <code>has-accessible-features</code> can still add a focus ring for keyboard users.</td></tr>
+      <tr><td class="td-property">handle elevation</td><td class="td-current">soft shadow</td><td class="td-proposed">none</td><td class="td-token">—</td><td class="td-rationale">No elevation keeps the look strictly 2D, per the reference.</td></tr>
+      <tr><td class="td-property">tick marker size</td><td class="td-current">1×6px</td><td class="td-proposed">2×8px</td><td class="td-token">—</td><td class="td-rationale">Sub-pixel ticks often render uneven or invisible on standard DPI displays. 2px guarantees crisp rendering; 8px length gives enough visual weight to anchor the value labels.</td></tr>
+      <tr><td class="td-property">tick marker color</td><td class="td-current">#b4b4b4 (border-neutral-5)</td><td class="td-proposed">#626262 (text-subtlest)</td><td class="td-token">--token-text-subtlest</td><td class="td-rationale">Darker ticks match the value labels they anchor, forming a single scale unit rather than two disconnected layers.</td></tr>
+      <tr><td class="td-property">value label</td><td class="td-current">#6a7178 · 400 weight</td><td class="td-proposed">#242424 · 500 weight</td><td class="td-token">--token-text-default</td><td class="td-rationale">The scale endpoints are the only numeric context users have without a tooltip. Stronger contrast makes the range immediately legible; medium weight keeps hierarchy below the value-in-use.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+function setMode(mode, btn) {
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
+function toggleAnnotations(btn) {
+  const w = document.getElementById('previewWrapper');
+  const h = !w.classList.contains('hide-annotations');
+  w.classList.toggle('hide-annotations', h);
+  btn.textContent = h ? 'Show annotations' : 'Hide annotations';
+  btn.classList.toggle('ann-toggle--off', h);
+}
+</script>
+</body></html>

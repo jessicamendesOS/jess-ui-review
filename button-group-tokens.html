@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Button Group — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -34,6 +38,35 @@
   .preview-card__body { padding: 36px 24px; background: #fff; }
   #previewWrapper { max-width: 560px; margin: 0 auto; }
 
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
   [data-button-group] { background: transparent; border-radius: 0; padding: 0; }
   [data-button-group] > div { display: inline-flex; }
   .button-group-item {
@@ -106,55 +139,43 @@
   @media (max-width: 960px) { .token-grid { grid-template-columns: 1fr; } body { padding: 24px 20px 60px; } }
 
 /* Current — 2.28 raw */
-#previewWrapper.current-mode .button-group-item { height: 40px; border-color: #1068eb; color: #1068eb; font-size: 13px; padding: 0 16px; }
-#previewWrapper.current-mode .button-group-item.button-group-selected-item { background-color: #1068eb; color: #ffffff; }
-#previewWrapper.current-mode .button-group-item:first-child { border-radius: 4px 0 0 4px; }
-#previewWrapper.current-mode .button-group-item:last-child { border-radius: 0 4px 4px 0; }
+
+
+
+
 
 /* Proposed — reference-matched minimal pill with thin separators.
    Rest state: transparent bg, dark text, neutral border, medium weight.
    Selected: subtle filled chip (border-subtle bg) — reads as "currently
    chosen" without shouting primary-blue at the user. Matches Button
    proposed (36px height, radius-200, medium weight, text-default). */
-#previewWrapper.proposed-mode .button-group-item {
-  height: var(--token-scale-900, 36px);
-  border-color: var(--token-border-default, #d5d5d5);
-  color: var(--token-text-default, #242424);
-  background: var(--token-bg-surface-default, #ffffff);
-  font-weight: var(--token-font-weight-medium, 500);
-  padding: 0 var(--token-scale-400, 16px);
-  font-size: var(--token-font-size-350, 0.8125rem);
-}
-#previewWrapper.proposed-mode .button-group-item:first-child { border-radius: var(--token-border-radius-200, 8px) 0 0 var(--token-border-radius-200, 8px); }
-#previewWrapper.proposed-mode .button-group-item:last-child  { border-radius: 0 var(--token-border-radius-200, 8px) var(--token-border-radius-200, 8px) 0; }
+
+
+
 /* Selected: primary-filled chip — consistent with Checkbox :checked + Button
    btn-primary. Selection is the user's confirmed choice, so it gets the same
    brand-colour weight as other "active" affordances. */
-#previewWrapper.proposed-mode .button-group-item.button-group-selected-item {
-  background: var(--token-semantics-primary-base, #105cef);
-  color: var(--token-text-inverse, #ffffff);
-  border-color: var(--token-semantics-primary-base, #105cef);
-  font-weight: var(--token-font-weight-semi-bold, 600);
-}
-#previewWrapper.proposed-mode .button-group-item:hover:not([disabled]):not(.button-group-selected-item) {
-  background: var(--token-border-subtle, #f3f3f3);
-}
+
+
 /* Disabled (non-selected) — washed-out surface matches Input / Button
    disabled treatment (border-subtle bg + text-disabled). Proposed text-default
    rule has higher specificity than the base disabled, so restate here. */
-#previewWrapper.proposed-mode .button-group-item[disabled]:not(.button-group-selected-item) {
-  background: var(--token-border-subtle, #f3f3f3);
-  border-color: var(--token-border-default, #d5d5d5);
-  color: var(--token-text-disabled, #a2a2a2);
-}
+
 /* Disabled-selected — uses the same #8b8b8b muted-grey fill as Checkbox /
    Switch / Radio disabled-active states for a consistent "locked + active"
    treatment across form controls. */
-#previewWrapper.proposed-mode .button-group-item[disabled].button-group-selected-item {
-  background: #8b8b8b;
-  border-color: #8b8b8b;
-  color: #ffffff;
-}
+
+
+/* ─── Bespoke proposed-mode overrides (restored from pre-refactor state) ─── */
+
+
+
+
+
+
+
+  
+  
 </style></head>
 <body>
 <a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
@@ -174,7 +195,7 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-    <div id="previewWrapper" class="hide-annotations">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
       <div class="bg-section">
         <div class="bg-section-label">3-item segmented · current = All</div>
         <div data-button-group class="button-group" role="radiogroup"><div>
@@ -243,12 +264,20 @@
       <tr><td class="td-property">rest colour</td><td class="td-current">color-primary (#1068eb)</td><td class="td-proposed">token-text-default (#242424)</td><td class="td-token">--token-text-default</td><td class="td-rationale">Same reasoning — unselected items shouldn't be blue. Dark text reads as neutral "option", blue fill alone reads as "chosen".</td></tr>
       <tr><td class="td-property">border-radius</td><td class="td-current">4px (corners only)</td><td class="td-proposed">8px (corners only)</td><td class="td-token">--token-border-radius-200</td><td class="td-rationale">Matches Button + Card softer corner language across 2.29. Still only applied on the first/last items so adjacent items share seamless edges.</td></tr>
       <tr><td class="td-property">hover state</td><td class="td-current">—</td><td class="td-proposed">bg → border-subtle (rest only)</td><td class="td-token">--token-border-subtle</td><td class="td-rationale">Real 2.28 has no hover feedback — the button-group feels frozen. Proposal adds a quiet surface hover on non-selected items so the control feels interactive.</td></tr>
+      <tr><td class="td-property">item layout</td><td class="td-property">.button-group &gt; div</td><td class="td-current">inline-block (4px whitespace gap between items)</td><td class="td-proposed">inline-flex (no gap)</td><td class="td-token">—</td><td class="td-rationale">2.28 lays items out as <code>inline-block</code>, so any whitespace in the source HTML between <code>&lt;button&gt;</code> tags renders as a ~4px gap — making the segmented control look like detached pills with broken shared borders. Switching the inner wrapper to <code>inline-flex</code> collapses inter-item whitespace, so adjacent items butt up flush and the <code>border-left: 0</code> on non-first items produces one continuous shared edge — the segmented-control look the component intends.</td></tr>
       <tr><td class="td-property">semantic palette</td><td class="td-property">selected bg</td><td class="td-current">color-primary (#1068eb)</td><td class="td-proposed">token-semantics-primary-base</td><td class="td-token">--token-semantics-primary-base</td></tr>
     </tbody>
   </table>
 </div>
 <script>
-function setMode(mode, btn) { const w = document.getElementById('previewWrapper'); w.classList.toggle('proposed-mode', mode === 'proposed'); w.classList.toggle('current-mode', mode === 'legacy'); document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active')); btn.classList.add('ptab--active'); }
+function setMode(mode, btn) {
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 function toggleAnnotations(btn) { const w = document.getElementById('previewWrapper'); const h = !w.classList.contains('hide-annotations'); w.classList.toggle('hide-annotations', h); btn.textContent = h ? 'Show annotations' : 'Hide annotations'; btn.classList.toggle('ann-toggle--off', h); }
 </script>
 </body></html>

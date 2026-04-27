@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>List — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -34,21 +38,64 @@
   .preview-card__body { padding: 24px 0; background: #fff; }
   #previewWrapper { max-width: 560px; margin: 0 auto; padding: 0 20px; }
 
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
   /* List component — real OSUI uses [data-list] + .list + .list-item + .list-item-content */
-  [data-list], .list-group { display: flex; flex-direction: column; }
-  .list-item { background: var(--token-bg-surface-default, #ffffff); border-bottom: var(--token-border-size-025, 1px) solid var(--token-border-subtle, #f3f3f3); transition: background .12s; cursor: pointer; }
+   .list-group { display: flex; flex-direction: column; }
+  .list-item { background: var(--token-bg-surface-default, #ffffff); border-bottom: var(--token-border-size-025, 1px) solid var(--token-border-subtle, #f3f3f3); transition: background .12s; cursor: pointer; padding: 0; }
+  #previewWrapper.current-mode .list-item,
+  #previewWrapper.new-tokens-mode .list-item,
+  #previewWrapper.proposed-mode .list-item { padding: 0; }
   .list-item:last-of-type { border-bottom: 0; }
   .list-item:hover { background: var(--token-border-subtle, #f3f3f3); }
 
-  .list-item-content { align-items: center; display: flex; padding: var(--token-scale-600, 24px); gap: var(--token-scale-400, 16px); }
+  .list-item-content { align-items: center; display: flex; padding: var(--token-scale-400, 16px); gap: var(--token-scale-300, 12px); }
   .list-item-content-left { max-width: 120px; flex-shrink: 0; }
   .list-item-content-center { flex: 1; overflow: hidden; }
-  .list-item-content-right { padding-left: var(--token-scale-400, 16px); flex-shrink: 0; color: var(--token-text-subtlest, #626262); font-size: 20px; }
+  .list-item-content-right { padding-left: var(--token-scale-300, 12px); flex-shrink: 0; color: var(--token-text-subtlest, #626262); font-size: 16px; }
 
-  /* Title uses h5 (20px) / semi-bold / neutral-10 — real 2.28 values */
-  .list-item-content-title { color: var(--token-text-default, #242424); font-weight: var(--token-font-weight-semi-bold, 600); font-size: 20px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .list-item-content-text { color: var(--token-text-subtlest, #626262); font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px; }
-  .img-circle { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; display: block; background: var(--token-border-subtle, #f3f3f3); }
+  /* Title/subtitle sized to match master-detail row rhythm — beats os-ui scoped specificity */
+  #previewWrapper.current-mode .list-item-content-title,
+  #previewWrapper.new-tokens-mode .list-item-content-title,
+  #previewWrapper.proposed-mode .list-item-content-title { color: var(--token-text-default, #242424); font-weight: var(--token-font-weight-semi-bold, 600); font-size: 16px; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #previewWrapper.current-mode .list-item-content-text,
+  #previewWrapper.new-tokens-mode .list-item-content-text,
+  #previewWrapper.proposed-mode .list-item-content-text { color: var(--token-text-subtlest, #626262); font-size: 12px; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px; }
+  #previewWrapper.current-mode .img-circle,
+  #previewWrapper.new-tokens-mode .img-circle,
+  #previewWrapper.proposed-mode .img-circle { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; background: var(--token-border-subtle, #f3f3f3); }
+  #previewWrapper.current-mode .list-item-content,
+  #previewWrapper.new-tokens-mode .list-item-content { padding: var(--token-scale-400, 16px); gap: var(--token-scale-300, 12px); }
+  #previewWrapper.proposed-mode .list-item-content { padding: var(--token-scale-400, 16px); gap: var(--token-scale-200, 8px); }
+  /* Proposed: left column only as wide as the avatar — avoids a 120px “dead zone” before the title */
+  #previewWrapper.proposed-mode .list-item-content-left { max-width: none; flex: 0 0 auto; }
 
   .list-section { margin-bottom: 28px; }
   .list-section:last-child { margin-bottom: 0; }
@@ -93,20 +140,29 @@
 
 /* Current mode — verbatim 2.28: h5 title (20px semi-bold neutral-10) +
    neutral-7 text, 52px avatar, neutral-4 divider, generous row padding. */
-#previewWrapper.current-mode .list-item-content { padding: 24px; gap: 16px; }
-#previewWrapper.current-mode .list-item { border-bottom: 1px solid #dee2e6; }
-#previewWrapper.current-mode .img-circle { width: 56px; height: 56px; }
-#previewWrapper.current-mode .list-item-content-title { color: #212529; font-weight: 600; font-size: 20px; }
-#previewWrapper.current-mode .list-item-content-text { color: #6a7178; font-size: 16px; }
-#previewWrapper.current-mode .list-item-content-right { font-size: 20px; color: #6a7178; }
+
+
+
+
+
+
 
 /* Proposed mode — more compact rows (20px padding), slightly tighter text
    hierarchy (18/14), subtler dividers (border-subtle), firmer chevron. */
-#previewWrapper.proposed-mode .list-item { border-bottom: var(--token-border-size-025, 1px) solid var(--token-border-subtle, #f3f3f3); }
-#previewWrapper.proposed-mode .list-item-content { padding: var(--token-scale-400, 16px) var(--token-scale-600, 24px); gap: var(--token-scale-400, 16px); }
-#previewWrapper.proposed-mode .img-circle { width: 48px; height: 48px; }
-#previewWrapper.proposed-mode .list-item-content-title { font-size: var(--token-font-size-400, 1rem); font-weight: var(--token-font-weight-semi-bold, 600); }
-#previewWrapper.proposed-mode .list-item-content-text { color: var(--token-text-subtle, #3b3b3b); font-size: var(--token-font-size-350, 0.8125rem); }
+
+
+
+
+
+
+/* ─── Bespoke proposed-mode overrides (restored from pre-refactor state) ─── */
+
+
+
+
+
+  
+  
 </style></head>
 <body>
 <a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
@@ -127,7 +183,7 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-    <div id="previewWrapper" class="hide-annotations">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
       <div class="list-section-label">Contacts · list-group</div>
       <div data-list class="list list-group">
         <div data-list-item class="list-item annotate-item">
@@ -207,12 +263,13 @@
   </div></div>
 </div>
 <div class="proposal-section">
-  <div class="proposal-header"><h3>Token Proposal</h3><p>Real OS UI uses <code>[data-list]</code> + <code>.list-item</code> + <code>.list-item-content</code> with left/center/right slots. Proposal <strong>lightens dividers</strong> (neutral-4 → border-subtle), bumps avatar size (40→44px), and widens row padding for more breathing room.</p></div>
+  <div class="proposal-header"><h3>Token Proposal</h3><p>Real OS UI uses <code>[data-list]</code> + <code>.list-item</code> + <code>.list-item-content</code> with left/center/right slots. Proposal <strong>lightens dividers</strong> (neutral-4 → border-subtle), bumps avatar size (40→44px), <strong>tightens the gap between avatar and text</strong> (left column no longer a fixed 120px strip), and uses comfortable row padding.</p></div>
   <table class="proposal-table">
     <thead><tr><th>Property</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
     <tbody>
       <tr><td class="td-property">row padding</td><td class="td-current">12px 16px</td><td class="td-proposed">16px all-around</td><td class="td-token">--token-scale-400</td><td class="td-rationale">Taller rows give the avatar room to breathe and make the list feel less cramped for scan-based reading.</td></tr>
       <tr><td class="td-property">divider</td><td class="td-current">1px color-neutral-4 (#dee2e6)</td><td class="td-proposed">1px token-border-subtle (#f3f3f3)</td><td class="td-token">--token-border-subtle</td><td class="td-rationale">Softer divider — still clear but doesn't fight with the avatar colours.</td></tr>
+      <tr><td class="td-property">avatar / title gap</td><td class="td-current">~40px+ (120px max-width left column + 24px padding + flex gap)</td><td class="td-proposed">~16px (hug-avatar left column + 8px padding + 8px row gap)</td><td class="td-token">--token-scale-200</td><td class="td-rationale">The list row should read as “avatar, then name” — a wide empty band between them looks broken.</td></tr>
       <tr><td class="td-property">avatar size</td><td class="td-current">40px (inline style)</td><td class="td-proposed">44px</td><td class="td-token">—</td><td class="td-rationale">44px is the mobile tap-target minimum and gives the photo more presence on desktop too.</td></tr>
       <tr><td class="td-property">text colour</td><td class="td-current">neutral-7 (#6a7178)</td><td class="td-proposed">text-subtle (#3b3b3b)</td><td class="td-token">--token-text-subtle</td><td class="td-rationale">Slightly darker subtext improves the scan-ability of the secondary line.</td></tr>
       <tr><td class="td-property">:hover bg</td><td class="td-current">— (no hover feedback)</td><td class="td-proposed">border-subtle (#f3f3f3)</td><td class="td-token">--token-border-subtle</td><td class="td-rationale">Clickable rows need hover feedback — subtle surface change confirms interactivity without shouting.</td></tr>
@@ -220,7 +277,14 @@
   </table>
 </div>
 <script>
-function setMode(mode, btn) { const w = document.getElementById('previewWrapper'); w.classList.toggle('proposed-mode', mode === 'proposed'); w.classList.toggle('current-mode', mode === 'legacy'); document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active')); btn.classList.add('ptab--active'); }
+function setMode(mode, btn) {
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 function toggleAnnotations(btn) { const w = document.getElementById('previewWrapper'); const h = !w.classList.contains('hide-annotations'); w.classList.toggle('hide-annotations', h); btn.textContent = h ? 'Show annotations' : 'Hide annotations'; btn.classList.toggle('ann-toggle--off', h); }
 </script>
 </body></html>

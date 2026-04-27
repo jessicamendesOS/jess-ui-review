@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# Editor / tooling
+.claude/
+.mcp.json
+.playwright-mcp/
+node_modules/
+
+# Local dev artefacts (debug screenshots, scratch outputs, helper binaries)
+*.png
+serve
+computed-snapshot-diff.txt

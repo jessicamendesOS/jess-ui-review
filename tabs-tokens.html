@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tabs — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -110,6 +114,35 @@
   .preview-card__body { padding: 24px; background: #fff; }
   #previewWrapper { max-width: 520px; margin: 0 auto; }
 
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
   /* ─── Tabs (OutSystems UI 2.29.0) — faithful to real CSS ───
      Real .osui-tabs base: display:grid; height:var(--tabs-height); overflow:hidden.
      No background, no border-radius, no padding on the component itself — any card
@@ -221,11 +254,14 @@
   .osui-tabs__header-item {
     align-items: center;
     background-color: transparent;
+    border: 0;                /* reset default <button> border */
     color: var(--osui-tabs-header-item-color);
     cursor: pointer;
     display: flex;
+    font-family: inherit;     /* reset default <button> font */
     font-size: 13px;
     min-height: 42px;
+    padding: 0 var(--token-scale-400, 16px);
     text-align: unset;
     width: 100%;
     transition: color 200ms linear;
@@ -351,29 +387,11 @@
 /* ─── Current mode (OutSystems UI 2.28.0) — faithful to real 2.28 palette ───
    2.28 did not use per-component CSS vars. The palette values come directly from
    --color-neutral-5/8/10 and --color-primary, and the separator uses --border-color-neutral-5. */
-#previewWrapper.current-mode {
-  --color-neutral-5: #ced4da;
-  --color-neutral-8: #4f575e;
-  --color-neutral-10: #101213;
-  --color-primary: #1068eb;
-  --space-s: 8px;
-  --space-base: 16px;
-  --space-m: 24px;
-}
 
-#previewWrapper.current-mode .osui-tabs {
-  /* Override the 2.29 CSS vars so the component derives from palette tokens */
-  --osui-tabs-border-color: var(--color-neutral-5, #ced4da);
-  --osui-tabs-header-item-color: var(--color-neutral-8, #4f575e);
-  --osui-tabs-header-item-color-active: var(--color-neutral-10, #101213);
-  --osui-tabs-indicator-color: var(--color-primary, #1068eb);
-}
 
-#previewWrapper.current-mode .osui-tabs__header-item.osui-tabs--is-active {
-  /* 2.28 used font-weight:semi-bold instead of the 2.29 text-shadow trick */
-  font-weight: 600;
-  text-shadow: none;
-}
+
+
+
 
 /* ─── Proposed mode ───
    Two proposals on top of the 2.29 baseline:
@@ -381,29 +399,22 @@
        for a stronger state cue;
    (2) Lighter separator (token-border-subtle) so the active indicator is the dominant
        visual cue, and a soft hover background fill on inactive items for affordance. */
-#previewWrapper.proposed-mode .osui-tabs {
-  --osui-tabs-border-color: var(--token-border-subtle, var(--token-primitives-neutral-100, #f3f3f3));
-  --osui-tabs-header-item-color-active: var(--token-semantics-primary-base,
-                                          var(--token-semantics-primary-700,
-                                            var(--token-primitives-blue-700, #105cef)));
-}
 
-#previewWrapper.proposed-mode .osui-tabs__header-item {
-  transition: color 150ms ease, background-color 150ms ease;
-}
-#previewWrapper.proposed-mode .osui-tabs__header-item:hover:not(.osui-tabs--is-active) {
-  background-color: rgba(0, 0, 0, .04);
-  /* Proposal: hover goes to text-default (black), not the active/primary colour, to
-     keep the primary colour reserved for the active state and avoid confusing a hover
-     with an activation. */
-  color: var(--token-text-default, var(--token-primitives-neutral-1200, #242424));
-}
-#previewWrapper.proposed-mode .osui-tabs--is-horizontal .osui-tabs__header-item {
-  border-radius: var(--token-border-radius-100, 4px) var(--token-border-radius-100, 4px) 0 0;
-}
-#previewWrapper.proposed-mode .osui-tabs--is-vertical .osui-tabs__header-item {
-  border-radius: var(--token-border-radius-100, 4px) 0 0 var(--token-border-radius-100, 4px);
-}
+
+
+
+
+
+
+/* ─── Bespoke proposed-mode overrides (restored from pre-refactor state) ─── */
+
+
+
+
+
+  
+  
+  
 </style>
 </head>
 <body>
@@ -437,37 +448,37 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-  <div id="previewWrapper" class="hide-annotations">
+  <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
 
     <!-- Variant 1: Horizontal, 3 tabs, justified -->
     <p class="variant-label">Horizontal — Justified</p>
 
     <div id="tabs-wrap-1" data-block="OutSystemsUI.Tabs">
-      <div class="osui-tabs osui-tabs--is-horizontal osui-tabs--is-justified" id="osui-tabs-1" name="osui-tabs-1">
-        <div class="osui-tabs__header annotate-header">
-          <div class="osui-tabs__header-item osui-tabs--is-active annotate-active"
-               id="osui-tab1-h1" name="osui-tab1-h1" role="tab">Overview</div>
-          <div class="osui-tabs__header-item"
-               id="osui-tab1-h2" name="osui-tab1-h2" role="tab">Details</div>
-          <div class="osui-tabs__header-item"
-               id="osui-tab1-h3" name="osui-tab1-h3" role="tab">Settings</div>
-          <span class="osui-tabs__header__indicator annotate-indicator" aria-hidden="true"></span>
-        </div>
-        <div class="osui-tabs__content annotate-content">
-          <div class="osui-tabs__content-item osui-tabs--is-active"
-               id="osui-tab1-c1" name="osui-tab1-c1" role="tabpanel">
+      <section class="osui-tabs osui-tabs--is-horizontal osui-tabs--is-justified" id="osui-tabs-1" name="osui-tabs-1">
+        <header class="osui-tabs__header annotate-header">
+          <button class="osui-tabs__header-item osui-tabs--is-active annotate-active"
+                  id="osui-tab1-h1" name="osui-tab1-h1" role="tab">Overview</button>
+          <button class="osui-tabs__header-item"
+                  id="osui-tab1-h2" name="osui-tab1-h2" role="tab">Details</button>
+          <button class="osui-tabs__header-item"
+                  id="osui-tab1-h3" name="osui-tab1-h3" role="tab">Settings</button>
+          <div class="osui-tabs__header__indicator annotate-indicator" aria-hidden="true"></div>
+        </header>
+        <section class="osui-tabs__content annotate-content">
+          <article class="osui-tabs__content-item osui-tabs--is-active"
+                   id="osui-tab1-c1" name="osui-tab1-c1" role="tabpanel">
             <p class="tab-content-placeholder">Overview of the component. This area renders the active panel content.</p>
-          </div>
-          <div class="osui-tabs__content-item"
-               id="osui-tab1-c2" name="osui-tab1-c2" role="tabpanel">
+          </article>
+          <article class="osui-tabs__content-item"
+                   id="osui-tab1-c2" name="osui-tab1-c2" role="tabpanel">
             <p class="tab-content-placeholder">Detailed specifications and configuration options.</p>
-          </div>
-          <div class="osui-tabs__content-item"
-               id="osui-tab1-c3" name="osui-tab1-c3" role="tabpanel">
+          </article>
+          <article class="osui-tabs__content-item"
+                   id="osui-tab1-c3" name="osui-tab1-c3" role="tabpanel">
             <p class="tab-content-placeholder">Settings and advanced preferences.</p>
-          </div>
-        </div>
-      </div>
+          </article>
+        </section>
+      </section>
     </div>
 
     <hr class="variant-sep">
@@ -476,31 +487,31 @@
     <p class="variant-label">Horizontal — Non-justified (default)</p>
 
     <div id="tabs-wrap-2" data-block="OutSystemsUI.Tabs">
-      <div class="osui-tabs osui-tabs--is-horizontal" id="osui-tabs-2" name="osui-tabs-2">
-        <div class="osui-tabs__header">
-          <div class="osui-tabs__header-item osui-tabs--is-active"
-               id="osui-tab2-h1" name="osui-tab2-h1" role="tab">Overview</div>
-          <div class="osui-tabs__header-item"
-               id="osui-tab2-h2" name="osui-tab2-h2" role="tab">Details</div>
-          <div class="osui-tabs__header-item"
-               id="osui-tab2-h3" name="osui-tab2-h3" role="tab">Settings</div>
-          <span class="osui-tabs__header__indicator" aria-hidden="true"></span>
-        </div>
-        <div class="osui-tabs__content">
-          <div class="osui-tabs__content-item osui-tabs--is-active"
-               id="osui-tab2-c1" name="osui-tab2-c1" role="tabpanel">
+      <section class="osui-tabs osui-tabs--is-horizontal" id="osui-tabs-2" name="osui-tabs-2">
+        <header class="osui-tabs__header">
+          <button class="osui-tabs__header-item osui-tabs--is-active"
+                  id="osui-tab2-h1" name="osui-tab2-h1" role="tab">Overview</button>
+          <button class="osui-tabs__header-item"
+                  id="osui-tab2-h2" name="osui-tab2-h2" role="tab">Details</button>
+          <button class="osui-tabs__header-item"
+                  id="osui-tab2-h3" name="osui-tab2-h3" role="tab">Settings</button>
+          <div class="osui-tabs__header__indicator" aria-hidden="true"></div>
+        </header>
+        <section class="osui-tabs__content">
+          <article class="osui-tabs__content-item osui-tabs--is-active"
+                   id="osui-tab2-c1" name="osui-tab2-c1" role="tabpanel">
             <p class="tab-content-placeholder">Overview of the component. This area renders the active panel content.</p>
-          </div>
-          <div class="osui-tabs__content-item"
-               id="osui-tab2-c2" name="osui-tab2-c2" role="tabpanel">
+          </article>
+          <article class="osui-tabs__content-item"
+                   id="osui-tab2-c2" name="osui-tab2-c2" role="tabpanel">
             <p class="tab-content-placeholder">Detailed specifications and configuration options.</p>
-          </div>
-          <div class="osui-tabs__content-item"
-               id="osui-tab2-c3" name="osui-tab2-c3" role="tabpanel">
+          </article>
+          <article class="osui-tabs__content-item"
+                   id="osui-tab2-c3" name="osui-tab2-c3" role="tabpanel">
             <p class="tab-content-placeholder">Settings and advanced preferences.</p>
-          </div>
-        </div>
-      </div>
+          </article>
+        </section>
+      </section>
     </div>
 
     <hr class="variant-sep">
@@ -509,31 +520,31 @@
     <p class="variant-label">Vertical</p>
 
     <div id="tabs-wrap-v" data-block="OutSystemsUI.Tabs">
-      <div class="osui-tabs osui-tabs--is-vertical osui-tabs--is-left osui-tabs--is-justified" id="osui-tabs-v" name="osui-tabs-v">
-        <div class="osui-tabs__header">
-          <div class="osui-tabs__header-item osui-tabs--is-active"
-               id="osui-tabv-h1" name="osui-tabv-h1" role="tab">Overview</div>
-          <div class="osui-tabs__header-item"
-               id="osui-tabv-h2" name="osui-tabv-h2" role="tab">Details</div>
-          <div class="osui-tabs__header-item"
-               id="osui-tabv-h3" name="osui-tabv-h3" role="tab">Settings</div>
-          <span class="osui-tabs__header__indicator" aria-hidden="true"></span>
-        </div>
-        <div class="osui-tabs__content">
-          <div class="osui-tabs__content-item osui-tabs--is-active"
-               id="osui-tabv-c1" name="osui-tabv-c1" role="tabpanel">
+      <section class="osui-tabs osui-tabs--is-vertical osui-tabs--is-left osui-tabs--is-justified" id="osui-tabs-v" name="osui-tabs-v">
+        <header class="osui-tabs__header">
+          <button class="osui-tabs__header-item osui-tabs--is-active"
+                  id="osui-tabv-h1" name="osui-tabv-h1" role="tab">Overview</button>
+          <button class="osui-tabs__header-item"
+                  id="osui-tabv-h2" name="osui-tabv-h2" role="tab">Details</button>
+          <button class="osui-tabs__header-item"
+                  id="osui-tabv-h3" name="osui-tabv-h3" role="tab">Settings</button>
+          <div class="osui-tabs__header__indicator" aria-hidden="true"></div>
+        </header>
+        <section class="osui-tabs__content">
+          <article class="osui-tabs__content-item osui-tabs--is-active"
+                   id="osui-tabv-c1" name="osui-tabv-c1" role="tabpanel">
             <p class="tab-content-placeholder">Overview of the component. This area renders the active panel content.</p>
-          </div>
-          <div class="osui-tabs__content-item"
-               id="osui-tabv-c2" name="osui-tabv-c2" role="tabpanel">
+          </article>
+          <article class="osui-tabs__content-item"
+                   id="osui-tabv-c2" name="osui-tabv-c2" role="tabpanel">
             <p class="tab-content-placeholder">Detailed specifications and configuration options.</p>
-          </div>
-          <div class="osui-tabs__content-item"
-               id="osui-tabv-c3" name="osui-tabv-c3" role="tabpanel">
+          </article>
+          <article class="osui-tabs__content-item"
+                   id="osui-tabv-c3" name="osui-tabv-c3" role="tabpanel">
             <p class="tab-content-placeholder">Settings and advanced preferences.</p>
-          </div>
-        </div>
-      </div>
+          </article>
+        </section>
+      </section>
     </div>
 
   </div>
@@ -818,13 +829,13 @@
   document.querySelectorAll('.osui-tabs').forEach(el => initTabsInteractive(el));
 
   function setMode(mode, btn) {
-    const w = document.getElementById('previewWrapper');
-    w.classList.toggle('proposed-mode', mode === 'proposed');
-    w.classList.toggle('current-mode', mode === 'legacy');
-    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
-    btn.classList.add('ptab--active');
-    requestAnimationFrame(() => tabsInstances.forEach(inst => inst.refresh()));
-  }
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 
   function toggleAnnotations(btn) {
     const wrapper = document.getElementById('previewWrapper');

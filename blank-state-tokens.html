@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Blank State — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -119,6 +123,35 @@
   .preview-card__body { padding: 20px; background: #fff; }
   #previewWrapper { max-width: 460px; margin: 0 auto; }
 
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
   /* ─── Blank State (OutSystems UI 2.29.0) ───
      Real 2.29 CSS (verbatim):
        .blank-slate {
@@ -280,136 +313,39 @@
   }
 
 /* ─── Current mode (OutSystems UI 2.28.0) ─── */
-#previewWrapper.current-mode {
-  --font-semi-bold: 600;
-  --color-neutral-0: #ffffff;
-  --color-neutral-6: #adb5bd;
-  --color-neutral-7: #6a7178;
-  --color-neutral-8: #4f575e;
-  --color-neutral-9: #272b30;
-  --color-primary: #1068eb;
-  --space-none: 0;
-  --space-xs: 4px;
-  --space-s: 8px;
-  --space-base: 16px;
-  --space-m: 24px;
-  --space-xl: 40px;
-  --space-xxl: 48px;
-  --border-radius-soft: 4px;
-  --border-size-s: 1px;
-  --text-color-neutral-0: var(--color-neutral-0);
-  --text-color-neutral-6: var(--color-neutral-6);
-  --text-color-neutral-7: var(--color-neutral-7);
-  --text-color-neutral-9: var(--color-neutral-9);
-  --text-color-primary: var(--color-primary);
-  --background-color-neutral-0: var(--color-neutral-0);
-  --background-color-primary: var(--color-primary);
-  --border-color-neutral-8: var(--color-neutral-8);
-  --border-color-primary: var(--color-primary);
-}
 
-#previewWrapper.current-mode .blank-slate {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -ms-flex-pack: distribute;
-  justify-content: space-around;
-  text-align: center;
-}
-#previewWrapper.current-mode .blank-slate.large {
-  height: 100%;
-}
-#previewWrapper.current-mode .blank-slate-icon {
-  color: var(--text-color-neutral-6, var(--color-neutral-6));
-  font-size: 70px;
-}
-#previewWrapper.current-mode .blank-slate.large .blank-slate-icon {
-  font-size: 120px;
-}
-#previewWrapper.current-mode .blank-slate-description {
-  color: var(--text-color-neutral-9, var(--color-neutral-9));
-  padding: var(--space-none) var(--space-base);
-}
-#previewWrapper.current-mode .blank-slate-actions {
-  padding: var(--space-base);
-}
-#previewWrapper.current-mode .blank-slate.large .blank-slate-actions {
-  padding: var(--space-xxl) var(--space-base);
-}
-#previewWrapper.current-mode .btn {
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background-color: var(--background-color-neutral-0, var(--color-neutral-0));
-  border: var(--border-size-s) solid currentColor;
-  border-radius: var(--border-radius-soft);
-  color: var(--text-color-primary, var(--color-primary));
-  cursor: pointer;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  font-weight: var(--font-semi-bold);
-  height: 40px;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  line-height: 1;
-  margin: 0;
-  padding: var(--space-none) var(--space-base);
-  -webkit-transition: all 100ms linear;
-  transition: all 100ms linear;
-}
-#previewWrapper.current-mode .btn-cancel {
-  background-color: var(--background-color-neutral-0, var(--color-neutral-0));
-  border: var(--border-size-s) solid var(--border-color-neutral-8, var(--color-neutral-8));
-  color: var(--text-color-neutral-7, var(--color-neutral-7));
-}
+
+
+
+
+
+
+
+
+
+
 
 /* ─── Proposed mode — Blank State ─── */
-#previewWrapper.proposed-mode .blank-slate {
-  gap: var(--token-scale-600, 24px);
-  justify-content: center;
-  padding: var(--token-scale-800, 32px) var(--token-scale-400, 16px);
-}
-#previewWrapper.proposed-mode .blank-slate.large {
-  padding: var(--token-scale-1200, 48px) var(--token-scale-600, 24px);
-}
-#previewWrapper.proposed-mode .blank-slate-icon {
-  color: var(--token-text-placeholder, #acacac);
-  font-size: 72px;
-  transition: color .2s ease;
-}
-#previewWrapper.proposed-mode .blank-slate.large .blank-slate-icon {
-  font-size: 120px;
-}
-#previewWrapper.proposed-mode .blank-slate-description {
-  color: var(--token-text-subtle, var(--token-primitives-neutral-1000, #3b3b3b));
-  font-size: var(--token-font-size-400, 1rem);
-  padding: 0;
-  line-height: 1.5;
-}
-#previewWrapper.proposed-mode .blank-slate-actions {
-  padding: 0;
-}
-#previewWrapper.proposed-mode .blank-slate.large .blank-slate-actions {
-  padding: 0;
-}
-#previewWrapper.proposed-mode .btn-cancel {
-  border-radius: var(--token-border-radius-200, 8px);
-  border-color: var(--token-border-default, var(--token-primitives-neutral-400, #d5d5d5));
-  color: var(--token-text-subtle, var(--token-primitives-neutral-1000, #3b3b3b));
-  padding: 0 var(--token-scale-800, 32px);
-  transition: border-color .15s, color .15s, box-shadow .15s;
-}
-#previewWrapper.proposed-mode .btn-cancel:hover {
-  border-color: #9ca3af;
-  color: #374151;
-  box-shadow: 0 1px 4px rgba(0,0,0,.08);
-}
+
+
+
+
+
+
+
+
+
+
+/* ─── Bespoke proposed-mode overrides (restored from pre-refactor state) ─── */
+
+
+
+
+
+
+
+
+
 </style>
 </head>
 <body>
@@ -443,7 +379,7 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-  <div id="previewWrapper" class="hide-annotations">
+  <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
 
     <!-- Default -->
     <p class="variant-label">Default</p>
@@ -703,12 +639,13 @@
 
 <script>
   function setMode(mode, btn) {
-    const w = document.getElementById('previewWrapper');
-    w.classList.toggle('proposed-mode', mode === 'proposed');
-    w.classList.toggle('current-mode', mode === 'legacy');
-    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
-    btn.classList.add('ptab--active');
-  }
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 
   function toggleAnnotations(btn) {
     const wrapper = document.getElementById('previewWrapper');

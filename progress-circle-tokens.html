@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Progress Circle — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -119,6 +123,35 @@
   .preview-card__body { padding: 32px 20px; background: #fff; }
   #previewWrapper { max-width: 640px; margin: 0 auto; }
 
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
   /* ─── Progress Circle (real OS UI HTML shape) ───
      <div class="osui-progress-circle" role="progressbar"
           style="--thickness: 8px; --progress-color: #105cef; --shape: round;
@@ -216,7 +249,7 @@
   .circle-item__label {
     font-size: 11px; font-weight: 600; color: #6b7280;
   }
-  .section-title {
+  .preview-section-title {
     font-size: 10px; font-weight: 700; text-transform: uppercase;
     letter-spacing: .08em; color: #9ca3af; margin-bottom: 14px;
   }
@@ -283,33 +316,20 @@
      .progress-circle svg → stroke-linecap: round (hardcoded — same in 2.28 & 2.29)
      .font-size-display   → font-size: var(--font-size-display) = 36px; font-weight: var(--font-semi-bold) = 600
 */
-#previewWrapper.current-mode .osui-progress-circle__container__trail-path {
-  stroke: var(--color-neutral-3, #e9ecef);
-}
-#previewWrapper.current-mode .osui-progress-circle__container__progress-path {
-  stroke: var(--color-primary, #1068eb);
-  /* stroke-linecap stays round — real 2.28 applies it via .progress-circle svg { stroke-linecap:round } */
-}
-#previewWrapper.current-mode .osui-progress-circle[data-variant="success"] .osui-progress-circle__container__progress-path {
-  stroke: var(--color-success, #29823b);
-}
-#previewWrapper.current-mode .osui-progress-circle[data-variant="warning"] .osui-progress-circle__container__progress-path {
-  stroke: var(--color-warning, #e9a100);
-}
-#previewWrapper.current-mode .osui-progress-circle[data-variant="error"] .osui-progress-circle__container__progress-path {
-  stroke: var(--color-error, #dc2020);
-}
-#previewWrapper.current-mode .font-size-display {
-  font-size: var(--font-size-display, 36px);
-  font-weight: var(--font-semi-bold, 600);
-}
+
+
+
+
+
+
 
 /* ─── Proposed mode ───
    Proposal: tokenise --trail-color to a semantic token (lighter subtle border) and
    introduce a gradient-ready slot (--progress-circle-gradient-url) already present in real 2.29. */
-#previewWrapper.proposed-mode .osui-progress-circle__container__trail-path {
-  stroke: var(--token-border-subtle, var(--token-primitives-neutral-100, #f3f3f3));
-}
+
+
+/* ─── Bespoke proposed-mode overrides (restored from pre-refactor state) ─── */
+
 </style>
 </head>
 <body>
@@ -343,9 +363,9 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-  <div id="previewWrapper" class="hide-annotations">
+  <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
 
-    <p class="section-title" style="text-align:center;">Hero — 150px · 50% primary</p>
+    <p class="preview-section-title" style="text-align:center;">Hero — 150px · 50% primary</p>
     <div class="circle-row">
       <div class="circle-item">
         <div class="osui-progress-circle annotate-container" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"
@@ -369,7 +389,7 @@
     </div>
 
     <hr class="section-sep">
-    <p class="section-title" style="text-align:center;">Semantic variants — 100px</p>
+    <p class="preview-section-title" style="text-align:center;">Semantic variants — 100px</p>
 
     <div class="circle-row">
       <div class="circle-item">
@@ -677,12 +697,13 @@
 
 <script>
   function setMode(mode, btn) {
-    const w = document.getElementById('previewWrapper');
-    w.classList.toggle('proposed-mode', mode === 'proposed');
-    w.classList.toggle('current-mode', mode === 'legacy');
-    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
-    btn.classList.add('ptab--active');
-  }
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 
   function toggleAnnotations(btn) {
     const wrapper = document.getElementById('previewWrapper');

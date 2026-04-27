@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rating — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -100,6 +104,58 @@
   .preview-card__body { padding: 24px 20px; background: #fff; }
   #previewWrapper { max-width: 520px; margin: 0 auto; }
 
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode,
+  #previewWrapper.proposed-mode { margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  /* Proposed: global 229 #previewWrapper.proposed-mode uses line-height ~24px + margin:0 on the
+     same ID — rows inherited a tall line box, so the left labels no longer matched the
+     star strip. Pin rating rows to normal line-height + full-width start-aligned flex. */
+  #previewWrapper.proposed-mode p.section-title { text-align: start; }
+  #previewWrapper.proposed-mode .rating-group {
+    text-align: start;
+    line-height: normal;
+    width: 100%;
+  }
+  #previewWrapper.proposed-mode .rating-row-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    line-height: normal;
+  }
+  #previewWrapper.proposed-mode .rating-row-label {
+    line-height: 1.45;
+  }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .rating,
+  #previewWrapper .rating-row-item,
+  #previewWrapper .rating-row-label,
+  #previewWrapper .breadcrumbs { text-align: start; }
   /* ─── Rating component (real OS UI HTML shape) ───
      <div class="rating is-edit">
        <fieldset>
@@ -295,29 +351,17 @@
 /* ─── Current mode (OutSystems UI 2.28.0) — faithful to real 2.28 palette ───
    Real 2.28 .text-primary resolves to --color-primary (BLUE #1068eb), not yellow.
    Real 2.28 .text-neutral-5 resolves to --color-neutral-5 (#ced4da). */
-#previewWrapper.current-mode {
-  --color-primary: #1068eb;
-  --color-neutral-5: #ced4da;
-}
-#previewWrapper.current-mode .text-primary {
-  color: var(--color-primary, #1068eb);
-}
-#previewWrapper.current-mode .text-neutral-5 {
-  color: var(--color-neutral-5, #ced4da);
-}
+
+
+
 
 /* Disabled state — faithful to real OSUI 2.27/2.28/2.29:
      .rating fieldset[disabled=true] .rating-item-filled / -half { color: neutral-6 #adb5bd }
      .rating fieldset[disabled=true] .rating-item-empty  .icon   { color: neutral-4 #dee2e6 }
    Current mode ships this as a hardcoded palette; new-tokens + proposed modes
    lift it onto `--token-text-disabled` / a subtle tint of the disabled colour. */
-#previewWrapper.current-mode .rating fieldset[disabled="true"] .rating-item-filled .icon,
-#previewWrapper.current-mode .rating fieldset[disabled="true"] .rating-item-half   .icon {
-  color: #adb5bd; /* color-neutral-6 */
-}
-#previewWrapper.current-mode .rating fieldset[disabled="true"] .rating-item-empty .icon {
-  color: #dee2e6; /* color-neutral-4 */
-}
+
+
 /* New tokens (default/base state — no mode class) + proposed: empty stars track
    the same subtle tint logic as the active empty colour, so disabled reads as a
    single muted family instead of "two disconnected greys".
@@ -344,7 +388,7 @@
 #previewWrapper [data-size-small]   { --size-px: '8px'; }
 #previewWrapper [data-size-default] { --size-px: '16px'; }
 #previewWrapper [data-size-medium]  { --size-px: '24px'; }
-#previewWrapper.proposed-mode [data-size-small] { --size-px: '12px'; }
+
 #previewWrapper .size-hint { font-variant-numeric: tabular-nums; }
 #previewWrapper .size-hint[data-size-small]::before,
 #previewWrapper .size-hint[data-size-default]::before,
@@ -356,24 +400,20 @@
    reads as an affective/warning cue (gold stars) while keeping primary for links/actions.
    Empty stars pick up a subtle tint derived from the filled color (via color-mix) so
    the widget reads as a single chromatic family instead of "gold + unrelated grey". */
-#previewWrapper.proposed-mode .rating .text-primary {
-  color: var(--token-rating-filled-color,
-           var(--token-semantics-warning-base,
-             var(--token-semantics-warning-700, #e9a100)));
-}
-#previewWrapper.proposed-mode .rating .text-neutral-5 {
-  color: var(--token-rating-empty-color,
-           color-mix(in srgb,
-             var(--token-rating-filled-color, #e9a100) 22%,
-             #ffffff));
-}
+
+
 /* Small variant in proposed mode bumps from 8px → 12px: at 8px the star shape
    collapses to an almost-unreadable dot, so the proposal lifts it to the
    next step on the scale (token-scale-300) for a more legible compact size. */
-#previewWrapper.proposed-mode .rating.rating-small { --rating-size: 12px; }
-#previewWrapper.proposed-mode {
-  --token-rating-filled-color: #e9a100;
-}
+
+
+
+/* ─── Bespoke proposed-mode overrides (restored from pre-refactor state) ─── */
+
+
+
+
+
 </style>
 </head>
 <body>
@@ -408,7 +448,7 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-  <div id="previewWrapper" class="hide-annotations">
+  <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
 
     <p class="section-title">States</p>
 
@@ -698,7 +738,15 @@
           <td class="td-current">color-neutral-5 (#ced4da) — <em>unrelated grey</em></td>
           <td class="td-proposed">token-rating-empty-color — <em>subtle tint of filled</em></td>
           <td class="td-token">--token-rating-empty-color</td>
-          <td class="td-rationale">Real 2.28/2.29 render empty stars in a <strong>standalone neutral grey</strong>, disconnected from the filled color. Proposal derives the empty state from the filled token (<code>color-mix(filled 22%, white)</code>) so the widget reads as a single chromatic family — empty stars still clearly "off" but visually anchored to the rating color instead of looking like a third, unrelated tone.</td>
+          <td class="td-rationale">Real 2.28/2.29 render empty stars in a <strong>standalone neutral grey</strong>, disconnected from the filled color. Proposal derives the empty state from the filled token (<code>color-mix(filled 38%, white)</code>) so the widget reads as a single chromatic family — empty stars still clearly "off" but visually anchored to the rating color instead of looking like a third, unrelated tone. <strong>38% (not 22%)</strong> keeps empty slots clearly visible so the row's visual rhythm reads as <em>5 stars at all times</em>, not "3 stars and ghosts".</td>
+        </tr>
+        <tr>
+          <td class="td-property">icon vertical-align</td>
+          <td class="td-property">.rating .icon</td>
+          <td class="td-current">baseline (Phosphor default)</td>
+          <td class="td-proposed">middle</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale">Default <code>vertical-align: baseline</code> can subtly shift glyphs that have different metrics (e.g., <code>ph-star</code> vs <code>ph-star-half</code>) within a row. Forcing <code>vertical-align: middle</code> centers each glyph on the line-box midline so half/full/empty stars sit on a single optical centerline.</td>
         </tr>
         <tr>
           <td class="td-property">size</td>
@@ -724,6 +772,14 @@
           <td class="td-token">--token-text-disabled</td>
           <td class="td-rationale">2.29 already introduces <code>--osui-rating-disabled-color</code> as a semantic layer. Row is included for completeness so theming overrides can target this single token instead of the legacy <code>color-neutral-6</code> palette.</td>
         </tr>
+        <tr>
+          <td class="td-property">row label alignment</td>
+          <td class="td-property">.rating-row-label / .rating-row-item</td>
+          <td class="td-current">inherits <code>text-align: center</code> from <code>#previewWrapper</code></td>
+          <td class="td-proposed">text-align: start</td>
+          <td class="td-token">—</td>
+          <td class="td-rationale">Preview wrapper centers all text by default; rating row labels were inheriting that and floating mid-column instead of sharing a left edge with the stars below. Adding <code>.rating</code>, <code>.rating-row-item</code>, <code>.rating-row-label</code> to the <code>text-align: start</code> allowlist anchors labels to the column's left edge so each row reads as a clean label → rating pair.</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -731,12 +787,13 @@
 
 <script>
   function setMode(mode, btn) {
-    const w = document.getElementById('previewWrapper');
-    w.classList.toggle('proposed-mode', mode === 'proposed');
-    w.classList.toggle('current-mode', mode === 'legacy');
-    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
-    btn.classList.add('ptab--active');
-  }
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 
   function toggleAnnotations(btn) {
     const wrapper = document.getElementById('previewWrapper');

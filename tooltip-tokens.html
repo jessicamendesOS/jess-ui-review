@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tooltip — Design Token Annotations</title>
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-025: 1px; --token-scale-100: 4px; --token-scale-200: 8px; --token-scale-300: 12px; --token-scale-400: 16px;
+    --token-border-radius-100: 4px; --token-border-radius-200: 8px;
+    --token-border-size-025: 1px; --token-border-size-050: 2px;
+    --token-font-size-300: 0.75rem; --token-font-size-350: 0.8125rem; --token-font-size-400: 1rem;
+    --token-font-weight-regular: 400; --token-font-weight-medium: 500; --token-font-weight-semi-bold: 600;
+    --token-bg-surface-default: #ffffff;
+    --token-text-default: #242424; --token-text-subtle: #3b3b3b; --token-text-subtlest: #626262; --token-text-inverse: #ffffff;
+    --token-border-default: #d5d5d5; --token-border-subtle: #f3f3f3;
+    --token-primitives-base-white: #ffffff; --token-primitives-neutral-1200: #242424;
+    --token-semantics-primary-base: #105cef;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; min-height: 100vh; color: #111827; line-height: 1.5; padding: 48px 32px; }
+  .back-nav { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #6b7280; text-decoration: none; margin-bottom: 24px; padding: 5px 10px 5px 6px; border-radius: 8px; }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+  .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb; }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
+  .badge-chrome { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; text-transform: uppercase; }
+  .badge-chrome--os { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: #374151; background: #fff; border: 1px solid #e5e7eb; border-radius: 99px; padding: 4px 10px 4px 6px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .preview-card { background: #fff; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); border: 1px solid #e5e7eb; overflow: hidden; margin-bottom: 32px; }
+  .preview-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; margin-right: auto; }
+  .preview-card__body { padding: 40px 32px; background: #fff; }
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; font-family: inherit; white-space: nowrap; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; margin-left: 4px; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 130px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); }
+  .token-row:last-child { border-bottom: none; }
+  .prop-name { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value { font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); margin-right: 5px; vertical-align: middle; }
+  .tt-wrap-tok .token-card__header  { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
+  .tt-surf-tok .token-card__header   { background: linear-gradient(120deg, #065f46, #10b981); }
+  .tt-arrow-tok .token-card__header  { background: linear-gradient(120deg, #92400e, #f59e0b); }
+  .proposal-section { margin-top: 20px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p { font-size: 12px; color: #6b7280; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; }
+  .td-current { color: #9ca3af; } .td-proposed { font-weight: 600; color: #111827; }
+  .td-token { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; }
+  .td-rationale { color: #4b5563; max-width: 300px; }
+  @media (max-width: 1000px) { .token-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 700px)  { body { padding: 24px 16px; } }
+  #previewWrapper { text-align: center; max-width: 560px; margin: 0 auto; }
+  #previewWrapper.current-mode, #previewWrapper.new-tokens-mode { margin-left: auto; margin-right: auto; overflow: visible; }
+  #previewWrapper [class*="osui-"] { text-align: start; }
+  .tt-caption { font-size: 11px; color: #6b7280; margin-top: 8px; }
+  /* Static open tooltip — JS would toggle visibility; scoped CSS hides children on generic .osui-balloon */
+  #previewWrapper.current-mode .demo-tt,
+  #previewWrapper.new-tokens-mode .demo-tt,
+  #previewWrapper.proposed-mode .demo-tt {
+    display: inline-flex !important;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--token-scale-200, 8px);
+    text-align: start;
+  }
+  #previewWrapper.current-mode .demo-tt .osui-balloon,
+  #previewWrapper.new-tokens-mode .demo-tt .osui-balloon,
+  #previewWrapper.proposed-mode .demo-tt .osui-balloon {
+    position: static !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    left: auto !important;
+    top: auto !important;
+  }
+  #previewWrapper.current-mode .demo-tt .osui-balloon > *,
+  #previewWrapper.new-tokens-mode .demo-tt .osui-balloon > *,
+  #previewWrapper.proposed-mode .demo-tt .osui-balloon > * {
+    display: block !important;
+  }
+  .annotate-tt     { outline: 2px dashed #3b82f6; outline-offset: 3px; border-radius: 4px; }
+  .annotate-ball   { outline: 2px dashed #10b981; outline-offset: 3px; border-radius: 4px; }
+  .annotate-trig   { outline: 2px dashed #f59e0b; outline-offset: 2px; border-radius: 2px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+</style></head>
+<body>
+<a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
+<div class="page-header"><h1>Tooltip</h1><span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span><span class="badge-chrome badge-chrome--tokens">Design Tokens</span></div>
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> <code>.osui-tooltip__content</code> (trigger)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> <code>.osui-tooltip .osui-balloon</code> (surface)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> <code>.osui-tooltip</code> (wrapper · inline + vars)</div>
+</div>
+<div class="preview-card">
+  <div class="preview-card__header">
+    <span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button class="ann-toggle ann-toggle--off" type="button" onclick="toggleAnnotations(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
+      <span class="osui-tooltip demo-tt annotate-tt" style="display:inline-block;">
+        <span class="osui-tooltip__content annotate-trig" tabindex="0">i</span>
+        <div class="osui-balloon top annotate-ball" role="tooltip">Short help text for this control. Uses the same <code>.osui-balloon</code> node as live tooltips.</div>
+      </span>
+      <p class="tt-caption">Trigger uses a single letter; balloon body is the semantic surface (neutral-9 in 2.28, token-backed in 2.29 new tokens).</p>
+    </div>
+  </div>
+</div>
+<div class="token-grid">
+  <div class="token-card tt-wrap-tok">
+    <div class="token-card__header"><span class="dot" style="background:#3b82f6;"></span>Wrapper<span class="component-name">.osui-tooltip</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">--osui-tooltip-bg (229)</span><span class="token-name">(maps to --osui-tooltip-background-color)</span><span class="token-value">242424</span></div>
+      <div class="token-row"><span class="prop-name">--osui-tooltip-arrow-size</span><span class="token-name">literal</span><span class="token-value">10px</span></div>
+      <div class="token-row"><span class="prop-name">--osui-floating-offset</span><span class="token-name">space-s (228)</span><span class="token-value">8px</span></div>
+      <div class="token-row"><span class="prop-name">display (228)</span><span class="token-name">inline-block</span><span class="token-value">—</span></div>
+    </div>
+  </div>
+  <div class="token-card tt-surf-tok">
+    <div class="token-card__header"><span class="dot" style="background:#10b981;"></span>Balloon surface<span class="component-name">.osui-tooltip .osui-balloon</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">background (228)</span><span class="token-name token-name-with-swatch"><span class="swatch" style="background:#272b30;"></span>neutral-9 chain</span><span class="token-value">#272b30</span></div>
+      <div class="token-row"><span class="prop-name">text (228)</span><span class="token-name token-name-with-swatch"><span class="swatch" style="background:#fff;"></span>neutral-0</span><span class="token-value">#fff</span></div>
+      <div class="token-row"><span class="prop-name">border-radius (228)</span><span class="token-name">border-radius-soft</span><span class="token-value">4px</span></div>
+      <div class="token-row"><span class="prop-name">padding (228)</span><span class="token-name">space-s</span><span class="token-value">8px</span></div>
+      <div class="token-row"><span class="prop-name">font (228)</span><span class="token-name">font-size-s · font-regular</span><span class="token-value">—</span></div>
+      <div class="token-row"><span class="prop-name">max-width</span><span class="token-name" style="color:#64748b;">250px (fixed)</span><span class="token-value">—</span></div>
+    </div>
+  </div>
+  <div class="token-card tt-arrow-tok">
+    <div class="token-card__header"><span class="dot" style="background:#f59e0b;"></span>Arrow + new tokens<span class="component-name">.osui-tooltip__balloon-arrow (229)</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">bg (229)</span><span class="token-name">--osui-tooltip-background / token-text-default</span><span class="token-value">#242424</span></div>
+      <div class="token-row"><span class="prop-name">text (229)</span><span class="token-name">--osui-tooltip-color / token-text-inverse</span><span class="token-value">#fff</span></div>
+      <div class="token-row"><span class="prop-name">radius (229)</span><span class="token-name">--osui-tooltip-border-radius / token-border-radius-100</span><span class="token-value">4px</span></div>
+      <div class="token-row"><span class="prop-name">padding (229)</span><span class="token-name">--osui-tooltip-padding / token-scale-200</span><span class="token-value">8px</span></div>
+    </div>
+  </div>
+</div>
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Token proposal</h3>
+    <p><code>os-ui-228-current-scoped.css</code> wires tooltip to legacy <code>--color-neutral-9 / --color-neutral-0</code>. <code>os-ui-229-new-tokens-scoped.css</code> switches to <code>--token-text-default</code> + <code>--token-text-inverse</code> and explicit tooltip custom properties. Proposed: keep max-width on a <code>--osui-tooltip-max-width</code> token instead of 250px magic number.</p>
+  </div>
+  <div class="proposal-table-wrap" style="overflow-x:auto">
+    <table class="proposal-table">
+      <thead><tr><th>Property</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
+      <tbody>
+        <tr><td class="td-property">Surface background</td><td class="td-current">neutral-9 (hard palette)</td><td class="td-proposed">token-text-default (same #242424)</td><td class="td-token">--token-text-default</td><td class="td-rationale">2.29 already maps tooltip fill to the default text colour; keeps tooltip readable on light pages and aligns with inverse text token.</td></tr>
+        <tr><td class="td-property">Body text (balloon)</td><td class="td-current">neutral-0</td><td class="td-proposed">token-text-inverse on dark fill</td><td class="td-token">--token-text-inverse</td><td class="td-rationale">The pairing is the standard light-on-dark pass for floating hints.</td></tr>
+        <tr><td class="td-property">Max width</td><td class="td-current">250px fixed in CSS</td><td class="td-proposed">--osui-tooltip-max-width: 280px or clamp</td><td class="td-token">— (new component var)</td><td class="td-rationale">Longer helper strings (a11y copy) are cut awkwardly at 250px; a single variable lets themes tune without a forked rule set.</td></tr>
+        <tr><td class="td-property">Border radius (229)</td><td class="td-current">4px (soft)</td><td class="td-proposed">token-border-radius-200 (8px) optional</td><td class="td-token">--token-border-radius-200</td><td class="td-rationale">Softer bubble matches Popover/Menu proposed radii; may stay 4px if tooltips must read smaller than popovers.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+function setMode(mode, btn) {
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
+function toggleAnnotations(btn) {
+  const w = document.getElementById('previewWrapper');
+  const hiding = !w.classList.contains('hide-annotations');
+  w.classList.toggle('hide-annotations', hiding);
+  btn.textContent = hiding ? 'Show annotations' : 'Hide annotations';
+  btn.classList.toggle('ann-toggle--off', hiding);
+}
+</script>
+</body></html>

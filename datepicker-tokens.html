@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DatePicker — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
+<link rel="stylesheet" href="assets/phosphor/phosphor.css">
+<style>
+  :root {
+    --token-scale-100: 4px; --token-scale-200: 8px; --token-scale-300: 12px; --token-scale-400: 16px; --token-scale-600: 24px; --token-scale-800: 32px; --token-scale-1000: 40px;
+    --token-border-radius-100: 4px; --token-border-radius-200: 8px; --token-border-radius-300: 12px; --token-border-radius-full: 9999px;
+    --token-border-size-025: 1px;
+    --token-bg-surface-default: #ffffff;
+    --token-text-default: #242424; --token-text-subtle: #3b3b3b; --token-text-subtlest: #626262;
+    --token-border-default: #d5d5d5; --token-border-subtle: #f3f3f3;
+    --token-semantics-primary-base: #105cef; --token-semantics-primary-hover: #0e52d6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; min-height: 100vh; color: #111827; line-height: 1.5; padding: 48px 32px; }
+  .back-nav { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #6b7280; text-decoration: none; margin-bottom: 24px; padding: 5px 10px 5px 6px; border-radius: 8px; }
+  .back-nav:hover { background: rgba(0,0,0,.05); color: #111827; }
+  .page-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb; }
+  .page-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; letter-spacing: -.025em; }
+  .badge-chrome { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; text-transform: uppercase; }
+  .badge-chrome--os { background: #f5f0fb; color: #7c3aed; border: 1px solid #ede9fe; }
+  .badge-chrome--tokens { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: #374151; background: #fff; border: 1px solid #e5e7eb; border-radius: 99px; padding: 4px 10px 4px 6px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .preview-card { background: #fff; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); border: 1px solid #e5e7eb; overflow: hidden; margin-bottom: 32px; }
+  .preview-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .preview-card__label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; margin-right: auto; }
+  .preview-card__body { padding: 40px; background: #fff; overflow-x: auto; }
+  .preview-tabs { display: flex; align-items: center; gap: 2px; padding: 3px; background: #f3f4f6; border-radius: 9px; border: 1px solid #e5e7eb; }
+  .ptab { padding: 4px 12px; font-size: 11px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; background: transparent; color: #6b7280; white-space: nowrap; font-family: inherit; }
+  .ptab--active { background: #fff; color: #111827; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .ann-toggle { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #e5e7eb; border-radius: 7px; cursor: pointer; background: #fff; color: #6b7280; margin-left: 4px; white-space: nowrap; }
+  .ann-toggle--off { color: #dc2626; border-color: #fca5a5; background: #fef2f2; }
+  .token-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 0; }
+  .token-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.15), 0 0 0 1px rgba(0,0,0,.06); background: #0f1117; }
+  .token-card__header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 12px; font-weight: 700; color: #fff; }
+  .token-card__header .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .token-card__header .component-name { font-size: 10px; font-weight: 500; font-family: 'SF Mono','Fira Code',monospace; opacity: .6; margin-left: auto; text-transform: none; }
+  .token-card__body { background: #0f1117; }
+  .token-row { display: grid; grid-template-columns: 130px 1fr auto; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.04); }
+  .token-row:last-child { border-bottom: none; }
+  .prop-name { font-size: 11px; color: #64748b; font-family: 'SF Mono','Fira Code',monospace; }
+  .token-name { font-size: 11px; font-family: 'SF Mono','Fira Code',monospace; color: #a78bfa; font-weight: 600; }
+  .token-value { font-size: 10px; font-family: 'SF Mono','Fira Code',monospace; color: #374151; text-align: right; }
+  .swatch { display: inline-block; width: 11px; height: 11px; border-radius: 3px; border: 1px solid rgba(255,255,255,.12); margin-right: 5px; vertical-align: middle; }
+  .dp-input-tok .token-card__header  { background: linear-gradient(120deg, #1e3a8a, #3b82f6); }
+  .dp-cal-tok .token-card__header    { background: linear-gradient(120deg, #065f46, #10b981); }
+  .dp-day-tok .token-card__header    { background: linear-gradient(120deg, #92400e, #f59e0b); }
+  .dp-time-tok .token-card__header   { background: linear-gradient(120deg, #4c1d95, #8b5cf6); }
+  .proposal-section { margin-top: 32px; background: #fff; border-radius: 16px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.07); overflow: hidden; }
+  .proposal-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; background: #fafafa; }
+  .proposal-header h3 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+  .proposal-header p { font-size: 12px; color: #6b7280; }
+  .proposal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .proposal-table thead th { padding: 9px 16px; background: #f9fafb; text-align: left; font-weight: 600; color: #6b7280; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; border-bottom: 1px solid #e5e7eb; }
+  .proposal-table tbody td { padding: 10px 16px; border-bottom: 1px solid #f3f4f6; vertical-align: top; line-height: 1.5; }
+  .td-property { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #374151; }
+  .td-current { color: #9ca3af; } .td-proposed { font-weight: 600; color: #111827; }
+  .td-token { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; }
+  .td-rationale { color: #4b5563; max-width: 280px; }
+  @media (max-width: 1100px) { .token-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 700px)  { .token-grid { grid-template-columns: 1fr; } body { padding: 24px 16px 60px; } }
+
+  /* ── PREVIEW LAYOUT ── */
+  #previewWrapper { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; }
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
+  .dp-section { flex: 0 0 auto; }
+  .dp-section-label { font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; }
+
+  /* ── INPUT  (width matches calendar) ── */
+  .osui-datepicker { display: block; width: 320px; margin-bottom: 8px; }
+  /* Flatpickr's runtime CSS hides the original input (replaces it with its own).
+     We render statically, so force the input visible across all 3 modes. */
+  #previewWrapper.current-mode .osui-datepicker input[type="text"],
+  #previewWrapper.new-tokens-mode .osui-datepicker input[type="text"],
+  #previewWrapper.proposed-mode .osui-datepicker input[type="text"] { display: block !important; }
+  /* Same for the calendar — os-ui scopes it as display:none/visibility:hidden/opacity:0
+     until the JS lib opens it, plus position:absolute/fixed to float over the page.
+     We render the calendar inline below its input, so force static + visible. */
+  #previewWrapper.current-mode .flatpickr-calendar,
+  #previewWrapper.new-tokens-mode .flatpickr-calendar,
+  #previewWrapper.proposed-mode .flatpickr-calendar { display: block !important; visibility: visible !important; opacity: 1 !important; position: static !important; }
+  /* Legacy preview look — Current / New tokens (not Proposed: real OSUI proposed CSS must win) */
+  #previewWrapper.current-mode .osui-datepicker input[type="text"],
+  #previewWrapper.new-tokens-mode .osui-datepicker input[type="text"] {
+    width: 100%; height: 40px; padding: 0 14px;
+    border: 1px solid #d5d5d5; border-radius: 4px;
+    background: #fff; color: #242424;
+    font-size: 14px; font-family: inherit; outline: none; cursor: pointer;
+  }
+  #previewWrapper.proposed-mode .osui-datepicker input[type="text"] {
+    width: 100%;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  #previewWrapper.current-mode .osui-datepicker input[type="text"]::placeholder,
+  #previewWrapper.new-tokens-mode .osui-datepicker input[type="text"]::placeholder { color: #9a9a9a; }
+  #previewWrapper.current-mode .osui-datepicker.is-open input[type="text"],
+  #previewWrapper.new-tokens-mode .osui-datepicker.is-open input[type="text"] { border-color: #1068eb; }
+
+  /* ── CALENDAR CONTAINER ── */
+  .flatpickr-calendar {
+    background: #fff;
+    border: 1px solid #d5d5d5;
+    border-radius: 4px;
+    box-shadow: none;
+    width: 320px;
+    font-family: inherit;
+    font-size: 14px;
+    display: block;
+    position: relative;
+  }
+
+  /* ── MONTH HEADER ── */
+  .flatpickr-months {
+    display: grid;
+    grid-template-areas: 'date prev next';
+    grid-template-columns: 1fr 32px 32px;
+    align-items: center;
+    padding: 12px 12px 8px;
+  }
+  .flatpickr-month      { grid-area: date; }
+  .flatpickr-prev-month { grid-area: prev; justify-self: flex-end; }
+  .flatpickr-next-month { grid-area: next; justify-self: flex-end; }
+
+  .flatpickr-current-month { display: inline-flex; align-items: center; color: #1068eb; font-size: 14px; gap: 2px; }
+
+  /* Month select */
+  .flatpickr-monthDropdown-months {
+    appearance: none; -webkit-appearance: none;
+    border: none; background: transparent;
+    color: #1068eb; font-size: 14px; font-weight: 600; font-family: inherit;
+    cursor: pointer; padding: 4px 8px; border-radius: 4px; margin: 0; order: 2;
+  }
+  .flatpickr-monthDropdown-months:hover { background: #f3f3f3; }
+
+  /* Year input wrapper */
+  .numInputWrapper { position: relative; display: inline-block; padding: 0 4px; width: 56px; }
+  .numInputWrapper span.arrowUp, .numInputWrapper span.arrowDown { display: none; }
+  .numInput.cur-year {
+    border: 1px solid transparent; border-radius: 4px; background: transparent;
+    color: #1068eb; font-size: 14px; font-weight: 600; font-family: inherit;
+    width: 100%; height: 32px; padding: 0 4px;
+    -moz-appearance: textfield; outline: none;
+  }
+  .numInput.cur-year::-webkit-outer-spin-button,
+  .numInput.cur-year::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  /* Nav arrows */
+  .flatpickr-prev-month, .flatpickr-next-month {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; cursor: pointer; text-decoration: none; color: inherit;
+  }
+  .flatpickr-prev-month:hover, .flatpickr-next-month:hover { background: #f3f3f3; }
+  .flatpickr-prev-month svg, .flatpickr-next-month svg { width: 12px; height: 12px; display: block; }
+  .flatpickr-prev-month svg path, .flatpickr-next-month svg path { stroke: #1068eb; fill: none; stroke-width: 1.5px; }
+
+  /* ── DAY GRID CONTAINER ── */
+  .flatpickr-innerContainer { padding: 0 12px 12px; }
+  .flatpickr-rContainer, .flatpickr-days { width: 100%; }
+  .dayContainer { display: flex; flex-wrap: wrap; width: 100%; }
+
+  /* ── WEEKDAY HEADERS ── */
+  .flatpickr-weekdays { padding-bottom: 6px; }
+  .flatpickr-weekdaycontainer { display: flex; width: 100%; }
+  span.flatpickr-weekday {
+    flex: 1; text-align: center;
+    font-size: 12px; font-weight: 400; color: #6a7178; user-select: none;
+  }
+
+  /* ── DAY CELLS ── */
+  span.flatpickr-day {
+    flex: 1 0 calc(100% / 7); max-width: calc(100% / 7);
+    height: 37px; line-height: 37px; text-align: center;
+    font-size: 13px; color: #242424;
+    border: 1px solid transparent; border-radius: 50%;
+    cursor: pointer; user-select: none; position: relative; display: inline-block;
+  }
+  span.flatpickr-day:hover { background: #f3f3f3; border-color: #f3f3f3; }
+  span.flatpickr-day.prevMonthDay,
+  span.flatpickr-day.nextMonthDay { color: #b4b4b4; }
+  span.flatpickr-day.prevMonthDay:hover,
+  span.flatpickr-day.nextMonthDay:hover { color: #6a7178; background: #f3f3f3; border-color: #f3f3f3; }
+  span.flatpickr-day.selected {
+    background: #1068eb; border-color: #1068eb;
+    color: #fff; border-radius: 50px;
+  }
+  span.flatpickr-day.today { border-color: #9a9a9a; }
+
+  /* ── TIME PICKER ── */
+  .flatpickr-time {
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 12px 10px; position: relative;
+  }
+  .flatpickr-time .numInputWrapper { width: auto; min-width: 40px; padding: 0 6px; height: 34px; }
+  .flatpickr-time .numInput {
+    border: none; background: transparent;
+    font-size: 14px; font-weight: 600; font-family: inherit;
+    text-align: center; width: 100%; color: #242424;
+    height: 34px; line-height: 34px; padding: 0;
+    -moz-appearance: textfield; outline: none;
+  }
+  .flatpickr-time .numInput::-webkit-outer-spin-button,
+  .flatpickr-time .numInput::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .flatpickr-time-separator { color: #242424; font-size: 14px; font-weight: 600; line-height: 34px; }
+  .flatpickr-am-pm {
+    background: #1068eb; border-radius: 4px;
+    color: #fff; font-size: 11px; font-weight: 600;
+    height: 22px; line-height: 22px;
+    position: absolute; right: 16px;
+    width: 40px; text-align: center; cursor: pointer;
+    text-transform: lowercase;
+  }
+
+  /* ── TODAY BUTTON ── */
+  .flatpickr-today-button {
+    padding: 0 12px 12px; user-select: none;
+    text-align: center;
+  }
+  .flatpickr-today-button a {
+    color: #1068eb; font-size: 14px; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+  }
+  .flatpickr-today-button a:hover { text-decoration: underline; }
+
+  /* ── ANNOTATIONS ── */
+  .annotate-input    { outline: 2px dashed #3b82f6; outline-offset: 3px; border-radius: 6px; }
+  .annotate-calendar { outline: 2px dashed #10b981; outline-offset: 4px; border-radius: 6px; }
+  .annotate-header   { outline: 2px dashed #f59e0b; outline-offset: 3px; }
+  .annotate-day      { outline: 2px dashed #f97316; outline-offset: 1px; border-radius: 50%; }
+  .annotate-time     { outline: 2px dashed #8b5cf6; outline-offset: 3px; }
+  .annotate-today    { outline: 2px dashed #ec4899; outline-offset: 3px; }
+  #previewWrapper.hide-annotations [class*="annotate-"] { outline: none; }
+
+  /* ── PROPOSED MODE ── */
+  /* Overall compacter footprint: narrower calendar, shorter input, tighter days + paddings */
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  /* Square day cells (squircle shape via 8px radius) — applies to default, hover AND selected */
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+/* ─── Bespoke proposed-mode overrides (restored from session transcript) ─── */
+
+
+
+
+
+
+
+
+
+
+
+
+</style></head>
+<body>
+<a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
+<div class="page-header">
+  <h1>DatePicker</h1>
+  <span class="badge-chrome badge-chrome--os">OutSystems UI 2.29</span>
+  <span class="badge-chrome badge-chrome--tokens">Design Tokens</span>
+</div>
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot" style="background:#3b82f6;"></span> .osui-datepicker (input)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#10b981;"></span> .flatpickr-calendar</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f59e0b;"></span> .flatpickr-months (header)</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#f97316;"></span> .flatpickr-day.selected</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#8b5cf6;"></span> .flatpickr-time</div>
+  <div class="legend-item"><span class="legend-dot" style="background:#ec4899;"></span> .flatpickr-today-button</div>
+</div>
+
+<div class="preview-card">
+  <div class="preview-card__header">
+    <span class="preview-card__label">Preview</span>
+    <div class="preview-tabs">
+      <button class="ptab" onclick="setMode('legacy',this)">Current</button>
+      <button class="ptab ptab--active" onclick="setMode('new-tokens',this)">New tokens</button>
+      <button class="ptab" onclick="setMode('proposed',this)">Proposed</button>
+    </div>
+    <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
+  </div>
+  <div class="preview-card__body">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
+
+      <!-- 1 · Closed input -->
+      <div class="dp-section">
+        <div class="dp-section-label">Closed</div>
+        <div class="osui-datepicker annotate-input">
+          <span class="input-text">
+            <input type="text" placeholder="Select Date" readonly>
+          </span>
+        </div>
+      </div>
+
+      <!-- 2 · Open — date only (input + calendar stacked) -->
+      <div class="dp-section">
+        <div class="dp-section-label">Open — date only · 14 Feb 2021 selected</div>
+        <div class="osui-datepicker is-open annotate-input">
+          <span class="input-text">
+            <input type="text" value="14 Feb 2021" readonly>
+          </span>
+        </div>
+        <div class="flatpickr-calendar osui-datepicker-calendar annotate-calendar">
+          <div class="flatpickr-months annotate-header">
+            <div class="flatpickr-month">
+              <div class="flatpickr-current-month">
+                <div class="numInputWrapper"><input class="numInput cur-year" type="number" value="2021" aria-label="Year"></div>
+                <select class="flatpickr-monthDropdown-months" aria-label="Month">
+                  <option value="0">January</option><option value="1" selected>February</option><option value="2">March</option>
+                  <option value="3">April</option><option value="4">May</option><option value="5">June</option>
+                  <option value="6">July</option><option value="7">August</option><option value="8">September</option>
+                  <option value="9">October</option><option value="10">November</option><option value="11">December</option>
+                </select>
+              </div>
+            </div>
+            <span class="flatpickr-prev-month" role="button" aria-label="Previous month">
+              <svg viewBox="0 0 17 17"><path d="M5.207 8.471l7.146 7.147-0.707 0.707-7.853-7.854 7.854-7.853 0.707 0.707-7.147 7.146z"></path></svg>
+            </span>
+            <span class="flatpickr-next-month" role="button" aria-label="Next month">
+              <svg viewBox="0 0 17 17"><path d="M13.207 8.472l-7.854 7.854-0.707-0.707 7.146-7.146-7.146-7.148 0.707-0.707 7.854 7.854z"></path></svg>
+            </span>
+          </div>
+          <div class="flatpickr-innerContainer">
+            <div class="flatpickr-rContainer">
+              <div class="flatpickr-weekdays">
+                <div class="flatpickr-weekdaycontainer">
+                  <span class="flatpickr-weekday">Sun</span><span class="flatpickr-weekday">Mon</span><span class="flatpickr-weekday">Tue</span><span class="flatpickr-weekday">Wed</span><span class="flatpickr-weekday">Thu</span><span class="flatpickr-weekday">Fri</span><span class="flatpickr-weekday">Sat</span>
+                </div>
+              </div>
+              <div class="flatpickr-days"><div class="dayContainer">
+                <span class="flatpickr-day prevMonthDay">31</span>
+                <span class="flatpickr-day">1</span><span class="flatpickr-day">2</span><span class="flatpickr-day">3</span><span class="flatpickr-day">4</span><span class="flatpickr-day">5</span><span class="flatpickr-day">6</span>
+                <span class="flatpickr-day">7</span><span class="flatpickr-day">8</span><span class="flatpickr-day">9</span><span class="flatpickr-day">10</span><span class="flatpickr-day">11</span><span class="flatpickr-day">12</span><span class="flatpickr-day">13</span>
+                <span class="flatpickr-day selected annotate-day">14</span>
+                <span class="flatpickr-day">15</span><span class="flatpickr-day">16</span><span class="flatpickr-day">17</span><span class="flatpickr-day">18</span><span class="flatpickr-day">19</span><span class="flatpickr-day">20</span>
+                <span class="flatpickr-day">21</span><span class="flatpickr-day">22</span><span class="flatpickr-day">23</span><span class="flatpickr-day">24</span><span class="flatpickr-day">25</span><span class="flatpickr-day">26</span><span class="flatpickr-day">27</span>
+                <span class="flatpickr-day">28</span>
+                <span class="flatpickr-day nextMonthDay">1</span><span class="flatpickr-day nextMonthDay">2</span><span class="flatpickr-day nextMonthDay">3</span><span class="flatpickr-day nextMonthDay">4</span><span class="flatpickr-day nextMonthDay">5</span><span class="flatpickr-day nextMonthDay">6</span>
+                <span class="flatpickr-day nextMonthDay">7</span><span class="flatpickr-day nextMonthDay">8</span><span class="flatpickr-day nextMonthDay">9</span><span class="flatpickr-day nextMonthDay">10</span><span class="flatpickr-day nextMonthDay">11</span><span class="flatpickr-day nextMonthDay">12</span><span class="flatpickr-day nextMonthDay">13</span>
+              </div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 · Open — timepicker + today (input + calendar stacked) -->
+      <div class="dp-section">
+        <div class="dp-section-label">Open — timepicker + today button</div>
+        <div class="osui-datepicker is-open annotate-input">
+          <span class="input-text">
+            <input type="text" value="14 Feb 2021 - 12:00 PM" readonly>
+          </span>
+        </div>
+        <div class="flatpickr-calendar hasTime osui-datepicker-calendar annotate-calendar">
+          <div class="flatpickr-months annotate-header">
+            <div class="flatpickr-month">
+              <div class="flatpickr-current-month">
+                <div class="numInputWrapper"><input class="numInput cur-year" type="number" value="2021" aria-label="Year"></div>
+                <select class="flatpickr-monthDropdown-months" aria-label="Month">
+                  <option value="0">January</option><option value="1" selected>February</option><option value="2">March</option>
+                  <option value="3">April</option><option value="4">May</option><option value="5">June</option>
+                  <option value="6">July</option><option value="7">August</option><option value="8">September</option>
+                  <option value="9">October</option><option value="10">November</option><option value="11">December</option>
+                </select>
+              </div>
+            </div>
+            <span class="flatpickr-prev-month" role="button" aria-label="Previous month">
+              <svg viewBox="0 0 17 17"><path d="M5.207 8.471l7.146 7.147-0.707 0.707-7.853-7.854 7.854-7.853 0.707 0.707-7.147 7.146z"></path></svg>
+            </span>
+            <span class="flatpickr-next-month" role="button" aria-label="Next month">
+              <svg viewBox="0 0 17 17"><path d="M13.207 8.472l-7.854 7.854-0.707-0.707 7.146-7.146-7.146-7.148 0.707-0.707 7.854 7.854z"></path></svg>
+            </span>
+          </div>
+          <div class="flatpickr-innerContainer">
+            <div class="flatpickr-rContainer">
+              <div class="flatpickr-weekdays">
+                <div class="flatpickr-weekdaycontainer">
+                  <span class="flatpickr-weekday">Sun</span><span class="flatpickr-weekday">Mon</span><span class="flatpickr-weekday">Tue</span><span class="flatpickr-weekday">Wed</span><span class="flatpickr-weekday">Thu</span><span class="flatpickr-weekday">Fri</span><span class="flatpickr-weekday">Sat</span>
+                </div>
+              </div>
+              <div class="flatpickr-days"><div class="dayContainer">
+                <span class="flatpickr-day prevMonthDay">31</span>
+                <span class="flatpickr-day">1</span><span class="flatpickr-day">2</span><span class="flatpickr-day">3</span><span class="flatpickr-day">4</span><span class="flatpickr-day">5</span><span class="flatpickr-day">6</span>
+                <span class="flatpickr-day">7</span><span class="flatpickr-day">8</span><span class="flatpickr-day">9</span><span class="flatpickr-day">10</span><span class="flatpickr-day">11</span><span class="flatpickr-day">12</span><span class="flatpickr-day">13</span>
+                <span class="flatpickr-day selected">14</span>
+                <span class="flatpickr-day">15</span><span class="flatpickr-day">16</span><span class="flatpickr-day">17</span><span class="flatpickr-day">18</span><span class="flatpickr-day">19</span><span class="flatpickr-day">20</span>
+                <span class="flatpickr-day">21</span><span class="flatpickr-day">22</span><span class="flatpickr-day">23</span><span class="flatpickr-day">24</span><span class="flatpickr-day">25</span><span class="flatpickr-day">26</span><span class="flatpickr-day">27</span>
+                <span class="flatpickr-day">28</span>
+                <span class="flatpickr-day nextMonthDay">1</span><span class="flatpickr-day nextMonthDay">2</span><span class="flatpickr-day nextMonthDay">3</span><span class="flatpickr-day nextMonthDay">4</span><span class="flatpickr-day nextMonthDay">5</span><span class="flatpickr-day nextMonthDay">6</span>
+                <span class="flatpickr-day nextMonthDay">7</span><span class="flatpickr-day nextMonthDay">8</span><span class="flatpickr-day nextMonthDay">9</span><span class="flatpickr-day nextMonthDay">10</span><span class="flatpickr-day nextMonthDay">11</span><span class="flatpickr-day nextMonthDay">12</span><span class="flatpickr-day nextMonthDay">13</span>
+              </div></div>
+            </div>
+          </div>
+          <!-- Time picker -->
+          <div class="flatpickr-time annotate-time">
+            <div class="numInputWrapper">
+              <input class="numInput flatpickr-hour" type="number" value="12" min="1" max="12" aria-label="Hour">
+            </div>
+            <span class="flatpickr-time-separator">:</span>
+            <div class="numInputWrapper">
+              <input class="numInput flatpickr-minute" type="number" value="00" min="0" max="59" aria-label="Minute">
+            </div>
+            <span class="flatpickr-am-pm" aria-live="polite">pm</span>
+          </div>
+          <!-- Today button -->
+          <div class="flatpickr-today-button annotate-today">
+            <a tabindex="0">Today</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /previewWrapper -->
+  </div>
+</div>
+
+<!-- Token cards -->
+<div class="token-grid">
+  <div class="token-card dp-input-tok">
+    <div class="token-card__header"><span class="dot" style="background:#3b82f6;"></span>Input<span class="component-name">.osui-datepicker input</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">height</span><span class="token-name">token-scale-1000</span><span class="token-value">40px</span></div>
+      <div class="token-row"><span class="prop-name">border</span><span class="token-name"><span class="swatch" style="background:#d5d5d5;"></span>border-default</span><span class="token-value">#d5d5d5</span></div>
+      <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">border-radius-soft</span><span class="token-value">4px</span></div>
+      <div class="token-row"><span class="prop-name">background</span><span class="token-name"><span class="swatch" style="background:#fff; border-color:#ccc;"></span>bg-neutral-0</span><span class="token-value">#ffffff</span></div>
+      <div class="token-row"><span class="prop-name">placeholder</span><span class="token-name"><span class="swatch" style="background:#9a9a9a;"></span>text-neutral-5</span><span class="token-value">#9a9a9a</span></div>
+      <div class="token-row"><span class="prop-name">focus border</span><span class="token-name"><span class="swatch" style="background:#1068eb;"></span>border-primary</span><span class="token-value">#1068eb</span></div>
+      <div class="token-row"><span class="prop-name">[disabled] bg</span><span class="token-name"><span class="swatch" style="background:#f3f3f3;"></span>bg-neutral-2</span><span class="token-value">#f3f3f3</span></div>
+    </div>
+  </div>
+  <div class="token-card dp-cal-tok">
+    <div class="token-card__header"><span class="dot" style="background:#10b981;"></span>Calendar + Header<span class="component-name">.flatpickr-calendar</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">background</span><span class="token-name"><span class="swatch" style="background:#fff; border-color:#ccc;"></span>bg-neutral-0</span><span class="token-value">#ffffff</span></div>
+      <div class="token-row"><span class="prop-name">border</span><span class="token-name"><span class="swatch" style="background:#d5d5d5;"></span>border-neutral-5</span><span class="token-value">1px #d5d5d5</span></div>
+      <div class="token-row"><span class="prop-name">border-radius</span><span class="token-name">border-radius-soft</span><span class="token-value">4px</span></div>
+      <div class="token-row"><span class="prop-name">box-shadow</span><span class="token-name" style="color:#64748b;">shadow-none</span><span class="token-value">none</span></div>
+      <div class="token-row"><span class="prop-name">month/yr color</span><span class="token-name"><span class="swatch" style="background:#1068eb;"></span>text-primary</span><span class="token-value">#1068eb</span></div>
+      <div class="token-row"><span class="prop-name">nav arrow</span><span class="token-name"><span class="swatch" style="background:#1068eb;"></span>stroke primary</span><span class="token-value">34×34px btn</span></div>
+      <div class="token-row"><span class="prop-name">weekday color</span><span class="token-name"><span class="swatch" style="background:#6a7178;"></span>text-neutral-7</span><span class="token-value">#6a7178</span></div>
+    </div>
+  </div>
+  <div class="token-card dp-day-tok">
+    <div class="token-card__header"><span class="dot" style="background:#f59e0b;"></span>Day cells<span class="component-name">.flatpickr-day</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">color</span><span class="token-name"><span class="swatch" style="background:#242424;"></span>text-neutral-9</span><span class="token-value">#242424</span></div>
+      <div class="token-row"><span class="prop-name">hover bg</span><span class="token-name"><span class="swatch" style="background:#f3f3f3;"></span>bg-neutral-2</span><span class="token-value">#f3f3f3</span></div>
+      <div class="token-row"><span class="prop-name">selected bg</span><span class="token-name"><span class="swatch" style="background:#1068eb;"></span>bg-primary</span><span class="token-value">#1068eb</span></div>
+      <div class="token-row"><span class="prop-name">selected radius</span><span class="token-name">border-radius-circle</span><span class="token-value">50px</span></div>
+      <div class="token-row"><span class="prop-name">prev/next mo.</span><span class="token-name"><span class="swatch" style="background:#b4b4b4;"></span>text-neutral-5</span><span class="token-value">#b4b4b4</span></div>
+      <div class="token-row"><span class="prop-name">today border</span><span class="token-name"><span class="swatch" style="background:#9a9a9a;"></span>border-neutral-6</span><span class="token-value">#9a9a9a</span></div>
+    </div>
+  </div>
+  <div class="token-card dp-time-tok">
+    <div class="token-card__header"><span class="dot" style="background:#8b5cf6;"></span>Time + Today<span class="component-name">.flatpickr-time · .flatpickr-today-button</span></div>
+    <div class="token-card__body">
+      <div class="token-row"><span class="prop-name">time padding</span><span class="token-name" style="color:#64748b;">0 space-base space-base</span><span class="token-value">0 16px 16px</span></div>
+      <div class="token-row"><span class="prop-name">am/pm bg</span><span class="token-name"><span class="swatch" style="background:#1068eb;"></span>bg-primary</span><span class="token-value">#1068eb</span></div>
+      <div class="token-row"><span class="prop-name">am/pm color</span><span class="token-name"><span class="swatch" style="background:#fff; border-color:#aaa;"></span>text-neutral-0</span><span class="token-value">#ffffff</span></div>
+      <div class="token-row"><span class="prop-name">am/pm radius</span><span class="token-name">border-radius-soft</span><span class="token-value">4px</span></div>
+      <div class="token-row"><span class="prop-name">today color</span><span class="token-name"><span class="swatch" style="background:#1068eb;"></span>text-primary</span><span class="token-value">#1068eb</span></div>
+      <div class="token-row"><span class="prop-name">today padding</span><span class="token-name" style="color:#64748b;">0 space-base space-base</span><span class="token-value">0 16px 16px</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="proposal-section">
+  <div class="proposal-header">
+    <h3>Token Proposal</h3>
+    <p>OSUI DatePicker wraps <strong>Flatpickr</strong> as <code>.osui-datepicker</code> (input) + <code>.flatpickr-calendar.osui-datepicker-calendar</code> (popup). Calendar structure: month header grid (date | prev | next), weekday strip, 7-col day grid, optional time picker, optional today button. Proposals add elevation via shadow, soften radii, neutralise the month/year text, and modernise the selected day shape and today action.</p>
+  </div>
+  <table class="proposal-table">
+    <thead><tr><th>Property</th><th>Current (2.28)</th><th>Proposed</th><th>Token</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td class="td-property">input border-radius</td><td class="td-current">4px (border-radius-soft)</td><td class="td-proposed">8px</td><td class="td-token">--token-border-radius-200</td><td class="td-rationale">Consistent with Input and Textarea proposed radii — the date field reads as the same family of form control.</td></tr>
+      <tr><td class="td-property">calendar border-radius</td><td class="td-current">4px (border-radius-soft)</td><td class="td-proposed">12px</td><td class="td-token">--token-border-radius-300</td><td class="td-rationale">Matches Card / Popup / Popover proposed surface radius — floating calendar is a content surface and should share that language.</td></tr>
+      <tr><td class="td-property">calendar elevation</td><td class="td-current">1px border · shadow-none</td><td class="td-proposed">no border · 2-layer shadow</td><td class="td-token">—</td><td class="td-rationale">A floating popup conveys elevation via shadow, not a border. The flat border reads inline; the shadow establishes the correct z-axis against page content.</td></tr>
+      <tr><td class="td-property">month/year color</td><td class="td-current">text-primary (#1068eb)</td><td class="td-proposed">text-default (#242424)</td><td class="td-token">--token-text-default</td><td class="td-rationale">Primary blue competes with the selected day highlight. Neutral text lets the selected day remain the primary focal point.</td></tr>
+      <tr><td class="td-property">nav arrow stroke</td><td class="td-current">primary blue</td><td class="td-proposed">text-subtlest (#626262)</td><td class="td-token">--token-text-subtlest</td><td class="td-rationale">Nav arrows are utility controls — muting them reduces visual noise without hiding functionality.</td></tr>
+      <tr><td class="td-property">day cell shape</td><td class="td-current">circle (50% radius, rectangular cell)</td><td class="td-proposed">square cell · 8px squircle (hover + selected)</td><td class="td-token">--token-border-radius-200</td><td class="td-rationale">Forcing a 1:1 aspect ratio on day cells makes the hover highlight and selected state read as consistent squircles instead of the current circle-on-rectangle mismatch. Aligns with Button and Badge proposed radii.</td></tr>
+      <tr><td class="td-property">today button</td><td class="td-current">plain primary-blue link</td><td class="td-proposed">outline pill button</td><td class="td-token">--token-border-radius-full · --token-border-default</td><td class="td-rationale">A plain text link has weak affordance — users often miss it. An outline pill matches the ghost-button pattern used throughout the system and is clearly a tappable action.</td></tr>
+      <tr><td class="td-property">overall density</td><td class="td-current">320px · 37×37 day · 40px input</td><td class="td-proposed">288px · ~38×38 square day · 36px input</td><td class="td-token">—</td><td class="td-rationale">Tighter footprint: reducing calendar width and using a 1:1 aspect ratio on day cells gives perfectly square tap targets (~38px, well above the 28px minimum) while keeping the popup compact enough to float over dense forms.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+function setMode(mode, btn) {
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
+function toggleAnnotations(btn) {
+  const w = document.getElementById('previewWrapper');
+  const h = !w.classList.contains('hide-annotations');
+  w.classList.toggle('hide-annotations', h);
+  btn.textContent = h ? 'Show annotations' : 'Hide annotations';
+  btn.classList.toggle('ann-toggle--off', h);
+}
+</script>
+</body></html>

@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dropdown — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -34,6 +38,47 @@
   .preview-card__body { padding: 36px 24px; background: #fff; }
   #previewWrapper { max-width: 480px; margin: 0 auto; }
 
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* List options read left; do not use the "hero" row centering */
+  #previewWrapper .dropdown-popup-row { justify-content: flex-start; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
+  /* Dropdown component — real OSUI shape:
+       <div class="dropdown-container dropdown">
+         <div class="dropdown-display" tabindex="0">
+           <div class="dropdown-display-content">
+             <span class="OSFillParent">Label text</span>
+           </div>
+         </div>
+         <!-- .dropdown-list appears below when .dropdown-expanded is on root -->
+       </div>
+     Root carries BOTH .dropdown-container + .dropdown; trigger must be tab-
+     focusable (tabindex="0") and wraps its content in .dropdown-display-content. */
   .dropdown-container { cursor: pointer; position: relative; }
   .dropdown-container > .dropdown-display {
     background: var(--token-bg-surface-default, #ffffff);
@@ -63,17 +108,41 @@
   .dropdown-container.dropdown-expanded > .dropdown-display { border-color: var(--token-semantics-primary-base, #105cef); }
   .dropdown-container.dropdown-expanded > .dropdown-display::after { transform: translateY(-75%) rotate(180deg); }
 
-  .dropdown-list {
+  #previewWrapper .dropdown-container > div.dropdown-list,
+  #previewWrapper.new-tokens-mode .dropdown-container > div.dropdown-list,
+  #previewWrapper.current-mode .dropdown-container > div.dropdown-list,
+  #previewWrapper.proposed-mode .dropdown-container > div.dropdown-list {
     background: var(--token-bg-surface-default, #ffffff);
     border: var(--token-border-size-025, 1px) solid var(--token-border-default, #d5d5d5);
     border-radius: var(--token-border-radius-100, 4px);
     box-shadow: 0 6px 16px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.05);
     margin-top: 4px;
     /* Preview-friendly positioning: static so the popup flows naturally inside
-       the preview card (no clipping by parent overflow). Real component uses
-       `position: absolute; top: 100%; left: 0; right: 0` to overlay content. */
+       the preview card. Real component uses `position: absolute`. */
     position: static;
-    z-index: 10;
+    text-align: start;
+  }
+  /* Override fixed container height — proposed-mode pins it at 36px, which
+     clips the inline popup. Let it grow to wrap trigger + popup. */
+  #previewWrapper.new-tokens-mode .dropdown-container,
+  #previewWrapper.current-mode .dropdown-container,
+  #previewWrapper.proposed-mode .dropdown-container {
+    height: auto;
+    min-height: 36px;
+  }
+  /* Pin the chevron to the trigger row even though the container now grows
+     to wrap the inline popup. Without this, container::after sits at 50%
+     of (trigger + popup) and lands inside the popup. */
+  #previewWrapper.new-tokens-mode .dropdown-container::after,
+  #previewWrapper.current-mode .dropdown-container::after,
+  #previewWrapper.proposed-mode .dropdown-container::after {
+    top: 20px;
+    transform: translateY(-50%);
+  }
+  #previewWrapper.new-tokens-mode .dropdown-expanded.dropdown-container::after,
+  #previewWrapper.current-mode .dropdown-expanded.dropdown-container::after,
+  #previewWrapper.proposed-mode .dropdown-expanded.dropdown-container::after {
+    transform: translateY(-50%) rotate(180deg);
   }
   .dropdown-container:not(.dropdown-expanded) .dropdown-list { display: none; }
   .dropdown-popup-row {
@@ -126,46 +195,39 @@
   .td-current { color: #9ca3af; } .td-proposed { font-weight: 600; color: #111827; } .td-token { font-family: 'SF Mono','Fira Code',monospace; font-size: 11px; color: #7c3aed; } .td-rationale { color: #4b5563; max-width: 280px; }
   @media (max-width: 960px) { .token-grid { grid-template-columns: 1fr; } body { padding: 24px 20px 60px; } }
 
-#previewWrapper.current-mode .dropdown-container > .dropdown-display { height: 40px; border-color: #ced4da; border-radius: 4px; font-size: 13px; color: #212529; }
-#previewWrapper.current-mode .dropdown-container.dropdown-expanded > .dropdown-display { border-color: #1068eb; }
-#previewWrapper.current-mode .dropdown-list { border-color: #ced4da; border-radius: 4px; }
+
+
+
 /* Current selected row — primary-light tint + primary text, matching the 2.28
    blue theme. Real 2.28 uses a blue tone (not neutral grey) for the selected
    item so the chosen value visually ties to the primary-colored trigger border. */
-#previewWrapper.current-mode .dropdown-popup-row-selected { background: #dbeafe; color: #1068eb; font-weight: 400; }
 
-#previewWrapper.proposed-mode .dropdown-container > .dropdown-display { height: var(--token-scale-900, 36px); border-radius: var(--token-border-radius-200, 8px); font-size: var(--token-font-size-350, 0.8125rem); }
+
+
 /* Swap the CSS-triangle caret for a Phosphor bold caret-down — same codepoint
    trick used in Breadcrumbs. Same HTML, just font-family + content override. */
-#previewWrapper.proposed-mode .dropdown-container > .dropdown-display::after {
-  border: 0;
-  font-family: "Phosphor-Bold";
-  content: "\e136";                     /* ph-bold ph-caret-down */
-  font-size: 14px;
-  color: var(--token-text-subtle, #3b3b3b);
-  line-height: 1;
-  top: 50%;
-  right: var(--token-scale-400, 16px);
-  margin-top: -7px;
-  transform: none;
-  width: auto; height: auto;
-  transition: transform 180ms;
-}
-#previewWrapper.proposed-mode .dropdown-container.dropdown-expanded > .dropdown-display::after {
-  transform: rotate(180deg);
-  margin-top: -6px;
-}
-#previewWrapper.proposed-mode .dropdown-container.dropdown-expanded > .dropdown-display { box-shadow: 0 0 0 3px color-mix(in srgb, var(--token-semantics-primary-base) 18%, transparent); }
-#previewWrapper.proposed-mode .dropdown-list { border-radius: var(--token-border-radius-200, 8px); box-shadow: 0 12px 28px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06); }
-#previewWrapper.proposed-mode .dropdown-popup-row { padding: var(--token-scale-300, 12px) var(--token-scale-400, 16px); font-size: var(--token-font-size-350, 0.8125rem); }
+
+
+
+
+
 /* Proposed selected row — subtle primary tint (color-mix at 8% primary) with
    primary text, medium weight. Reads as "this is the chosen option" without
    a full primary-fill that'd dominate the popup. */
-#previewWrapper.proposed-mode .dropdown-popup-row-selected {
-  background: color-mix(in srgb, var(--token-semantics-primary-base) 8%, #ffffff);
-  color: var(--token-semantics-primary-base, #105cef);
-  font-weight: var(--token-font-weight-medium, 500);
-}
+
+
+/* ─── Bespoke proposed-mode overrides (restored from pre-refactor state) ─── */
+
+
+
+
+
+
+
+  
+  /* Qualified tag selector (div.x) needed to beat OSUI 229 scoped div.dropdown-display at (0,2,3) */
+  
+  
 </style></head>
 <body>
 <a href="index.html" class="back-nav"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 12l-4-4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>All components</a>
@@ -185,16 +247,16 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-    <div id="previewWrapper" class="hide-annotations">
+    <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
       <div class="dd-section">
         <div class="dd-section-label">Collapsed · default</div>
         <label class="dd-label">Assign to</label>
-        <div data-dropdown class="dropdown-container"><div class="dropdown-display annotate-display"><span>Select a user…</span></div></div>
+        <div data-dropdown class="dropdown-container dropdown"><div class="dropdown-display annotate-display" tabindex="0"><div class="dropdown-display-content"><span class="OSFillParent">Select a user…</span></div></div></div>
       </div>
       <div class="dd-section">
         <div class="dd-section-label">Expanded · list open</div>
         <label class="dd-label">Priority</label>
-        <div data-dropdown class="dropdown-container dropdown-expanded"><div class="dropdown-display"><span>High</span></div>
+        <div data-dropdown class="dropdown-container dropdown dropdown-expanded"><div class="dropdown-display" tabindex="0"><div class="dropdown-display-content"><span class="OSFillParent">High</span></div></div>
           <div class="dropdown-list annotate-list">
             <div class="dropdown-popup-row">Low</div>
             <div class="dropdown-popup-row">Medium</div>
@@ -237,14 +299,21 @@
     <tbody>
       <tr><td class="td-property">trigger height</td><td class="td-current">40px</td><td class="td-proposed">36px</td><td class="td-token">--token-scale-900</td><td class="td-rationale">Matches Input / Button so form controls align in rows.</td></tr>
       <tr><td class="td-property">border-radius</td><td class="td-current">4px</td><td class="td-proposed">8px</td><td class="td-token">--token-border-radius-200</td><td class="td-rationale">Softer corner matches Card / Button / Input proposed radius.</td></tr>
-      <tr><td class="td-property">expanded focus</td><td class="td-current">primary border only</td><td class="td-proposed">primary border + 18% halo</td><td class="td-token">--token-semantics-primary-base</td><td class="td-rationale">Same focus treatment as Input — form controls share the primary halo affordance.</td></tr>
+      <tr><td class="td-property">expanded focus</td><td class="td-current">primary border only</td><td class="td-proposed">primary border only (no focus halo — matches Input)</td><td class="td-token">--token-semantics-primary-base</td><td class="td-rationale">Trigger uses the same 1px primary border as the rest state; no secondary ring so it stays aligned with the Input proposed focus (border only).</td></tr>
       <tr><td class="td-property">popup elevation</td><td class="td-current">2-layer shadow (subtle)</td><td class="td-proposed">stronger 2-layer elevation</td><td class="td-token">—</td><td class="td-rationale">Popup needs clear separation from content — stronger shadow establishes the floating-surface z-axis.</td></tr>
       <tr><td class="td-property">selected row</td><td class="td-current">primary-light bg · primary text</td><td class="td-proposed">border-subtle bg · default text · medium weight</td><td class="td-token">--token-border-subtle<br>--token-font-weight-medium</td><td class="td-rationale">Quieter selected-row treatment — no blue fill, just a subtle surface + weight shift. Reads as "this is chosen" without flooding the popup with primary.</td></tr>
     </tbody>
   </table>
 </div>
 <script>
-function setMode(mode, btn) { const w = document.getElementById('previewWrapper'); w.classList.toggle('proposed-mode', mode === 'proposed'); w.classList.toggle('current-mode', mode === 'legacy'); document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active')); btn.classList.add('ptab--active'); }
+function setMode(mode, btn) {
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 function toggleAnnotations(btn) { const w = document.getElementById('previewWrapper'); const h = !w.classList.contains('hide-annotations'); w.classList.toggle('hide-annotations', h); btn.textContent = h ? 'Show annotations' : 'Hide annotations'; btn.classList.toggle('ann-toggle--off', h); }
 </script>
 </body></html>

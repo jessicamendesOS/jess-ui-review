@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Timeline — Design Token Annotations</title>
+<!-- Real OSUI CSS — scoped to #previewWrapper.{current-mode,proposed-mode} -->
+<link rel="stylesheet" href="assets/os-ui/os-ui-228-current-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-new-tokens-scoped.css">
+<link rel="stylesheet" href="assets/os-ui/os-ui-229-proposed-scoped.css">
 <link rel="stylesheet" href="assets/phosphor/phosphor.css">
 <style>
   :root {
@@ -125,6 +129,35 @@
   .preview-card__body { padding: 36px 24px; background: #fff; }
   #previewWrapper { max-width: 560px; margin: 0 auto; }
 
+
+  /* Center preview content within #previewWrapper */
+  #previewWrapper { text-align: center; }
+  /* Restore horizontal centering when mode classes are applied — the real OSUI CSS scoped 'body { margin:0 }' to these, which kills margin:0 auto */
+  #previewWrapper.current-mode,
+  #previewWrapper.new-tokens-mode{ margin-left: auto; margin-right: auto; overflow: visible; overflow-x: visible; }
+  #previewWrapper .btn-row,
+  #previewWrapper .badge-row,
+  #previewWrapper .circle-row,
+  #previewWrapper .checkbox-row,
+  #previewWrapper .switch-row,
+  #previewWrapper .link-row,
+  #previewWrapper .variant-row,
+  #previewWrapper .variants-row,
+  #previewWrapper .wizard-row,
+  #previewWrapper .dropdown-popup-row,
+  #previewWrapper .counter-kpi-numrow { justify-content: center; }
+  /* Preserve native text alignment inside OSUI components + flex demo components */
+  #previewWrapper [class*="osui-"],
+  #previewWrapper .alert,
+  #previewWrapper .card,
+  #previewWrapper .list,
+  #previewWrapper .dropdown,
+  #previewWrapper .tabs,
+  #previewWrapper .timeline,
+  #previewWrapper .form,
+  #previewWrapper .master-detail,
+  #previewWrapper .gallery,
+  #previewWrapper .breadcrumbs { text-align: start; }
   /* ─── Timeline component — faithful to real OS UI 2.27/2.28 CSS ───
      HTML shape inferred from OSUI rules (selectors + Navigation.TimelineItem block):
        <div class="timeline">
@@ -132,10 +165,10 @@
            <div class="timeline-item">
              <div class="timeline-left">12:30 · Mon</div>
              <div class="timeline-icon">
+               <div class="timeline-icon-line"></div>
                <div class="timeline-icon-container background-success">
                  <i class="ph-bold ph-check"></i>
                </div>
-               <div class="timeline-icon-line"></div>
              </div>
              <div class="timeline-right timeline-content">
                <div class="timeline-content-inner">
@@ -339,56 +372,32 @@
 
 /* ─── Current mode (OutSystems UI 2.28.0) — raw values from real 2.27 CSS, no tokens ─── */
 /* Line: 1px · color-neutral-5 (#ced4da) · margin space-s 0 space-s (8px) */
-#previewWrapper.current-mode .timeline-icon-line {
-  background-color: #ced4da;
-  width: 1px;
-  margin: 8px 0;
-}
+
 /* Icon container: 24x24, text white (neutral-0), bg from utility class */
-#previewWrapper.current-mode .timeline-icon-container {
-  height: 24px;
-  width: 24px;
-  color: #ffffff;
-  margin: 0 16px;        /* real 2.27: space-none space-base (16px) */
-  font-size: 10px;       /* font-size-xs */
-}
-#previewWrapper.current-mode .timeline-icon-container:empty {
-  height: 8px; width: 8px; margin-top: 4px;
-}
+
+
 /* Background utilities — raw 2.28 palette */
-#previewWrapper.current-mode .background-primary { background-color: #1068eb; }
-#previewWrapper.current-mode .background-success { background-color: #29823b; }
-#previewWrapper.current-mode .background-error   { background-color: #dc2020; }
-#previewWrapper.current-mode .background-warning { background-color: #e9a100; }
-#previewWrapper.current-mode .background-info    { background-color: #017aad; }
-#previewWrapper.current-mode .background-neutral { background-color: #adb5bd; }  /* color-neutral-6 */
-#previewWrapper.current-mode .background-orange  { background-color: #ea580c; }  /* invented — 2.28 has no bare orange; closest is --color-orange (#f76707) */
+
+
+
+
+
+  /* color-neutral-6 */
+  /* invented — 2.28 has no bare orange; closest is --color-orange (#f76707) */
 /* Content text: color-neutral-8 */
-#previewWrapper.current-mode .timeline-right,
-#previewWrapper.current-mode .timeline-content-inner {
-  color: #4f575e;   /* color-neutral-8 */
-}
-#previewWrapper.current-mode .timeline-content-inner h4 { color: #212529; }  /* color-neutral-10 */
-#previewWrapper.current-mode .timeline-content-inner p  { color: #4f575e; }
+
+  /* color-neutral-10 */
+
 /* Content margin-bottom: space-xl (32px) */
-#previewWrapper.current-mode .timeline-item .timeline-content {
-  margin-bottom: 32px;
-}
+
 /* Timestamp — 2.28 has no dedicated class, faithful preview shows it in the
    muted neutral-7 colour; layout stays as a left column (88px wide). */
-#previewWrapper.current-mode .timeline-timestamp {
-  color: #6a7178;   /* color-neutral-7 */
-  font-size: 12px;
-}
+
 /* Avatar + comment-card variants render with 2.28 baseline — the border and
    radius tokens already resolve to matching 2.28 values, so the card reads
    consistently across modes. */
-#previewWrapper.current-mode .timeline-icon-container.timeline-avatar {
-  width: 32px; height: 32px;
-}
-#previewWrapper.current-mode .timeline-content-inner.timeline-content--card {
-  border-color: #ced4da;  /* color-neutral-5 */
-}
+
+
 
 /* ─── Proposed mode — semantic tokens, bigger icon + thicker line, upcoming state ─── */
 /*
@@ -403,49 +412,14 @@
     • New `.upcoming` state — dashed line + muted icon for future events that
       haven't happened yet (maps cleanly onto project trackers / scheduled tasks).
 */
-#previewWrapper.proposed-mode .timeline-icon-container {
-  height: 28px;
-  width: 28px;
-  font-size: var(--token-font-size-300, 0.75rem);
-}
-#previewWrapper.proposed-mode .timeline-icon-container .ph-bold,
-#previewWrapper.proposed-mode .timeline-icon-container .ph,
-#previewWrapper.proposed-mode .timeline-icon-container i {
-  font-size: 0.875rem;   /* 14px glyph inside 28px bubble */
-}
-#previewWrapper.proposed-mode .timeline-icon-container:empty {
-  /* Compact bead variant keeps 8px footprint — the sizing override above
-     uses ID specificity that would otherwise squash it.
-     margin-top aligns the dot's CENTER with a 28px bubble's center so mixing
-     dots + icon bubbles in the same timeline keeps the connector line on a
-     single axis: (28 - 8) / 2 = 10px. */
-  height: var(--token-scale-200, 8px);
-  width: var(--token-scale-200, 8px);
-  margin-top: 10px;
-}
-#previewWrapper.proposed-mode .timeline-icon-line {
-  width: var(--token-border-size-050, 2px);
-  background-color: var(--token-border-default, #d5d5d5);
-}
+
+
+
+
 /* Upcoming-state — dashed line + muted icon, signals "scheduled but not yet happened" */
-#previewWrapper.proposed-mode .timeline-icon.is-upcoming .timeline-icon-container:not(:empty) {
-  background-color: var(--token-bg-surface-default, #ffffff) !important;
-  color: var(--token-text-disabled, #a2a2a2);
-  border: var(--token-border-size-050, 2px) dashed var(--token-border-default, #d5d5d5);
-}
-#previewWrapper.proposed-mode .timeline-icon.is-upcoming .timeline-icon-line {
-  background-color: transparent;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    var(--token-border-default, #d5d5d5) 0 4px,
-    transparent 4px 8px
-  );
-  width: var(--token-border-size-050, 2px);
-}
-#previewWrapper.proposed-mode .timeline-item:has(.is-upcoming) .timeline-content-inner h4,
-#previewWrapper.proposed-mode .timeline-item:has(.is-upcoming) .timeline-content-inner p {
-  color: var(--token-text-disabled, #a2a2a2);
-}
+
+
+
 
 /* Proposed-mode layout shift — timestamp jumps from LEFT column to RIGHT edge
    via flex `order`. DOM stays [timestamp, icon, content] (current-mode friendly)
@@ -458,51 +432,36 @@
    sit on different X axes — dots appear 10px left of bubbles. Locking to the
    widest natural column (60px) centers every bubble/dot on the same vertical
    axis, so dot + icon mixed timelines stay aligned. */
-#previewWrapper.proposed-mode .timeline-icon      { order: 1; flex: 0 0 60px; }
-#previewWrapper.proposed-mode .timeline-content   {
-  order: 2;
-  /* Content font-size tuned down to 14px (was inheriting 16px body). Combined
-     with line-height 1.45 → first line is ~20px tall, centre at ~10px from
-     row top. The bubble/dot centre (after my margin-top fixes) sits at 14px,
-     so a 4px padding-top on the content shifts the FIRST line down to align
-     with the bubble centre. Multi-line content is NOT centred — subsequent
-     lines flow naturally below the first, matching expected reading order. */
-  font-size: 0.875rem;  /* 14px */
-  line-height: 1.45;
-  padding-top: var(--token-scale-100, 4px);
-}
-#previewWrapper.proposed-mode .timeline-timestamp {
-  order: 3;
-  text-align: right;
-  padding-right: 0;
-  padding-left: var(--token-scale-400, 16px);
-  flex: 0 0 72px;
-  padding-top: var(--token-scale-100, 4px);
-  font-size: 0.75rem;
-  /* Regular weight — matches the reference examples where the date is a
-     low-emphasis meta-field; semi-bold was over-competing with the event
-     content on the left. */
-  font-weight: var(--token-font-weight-regular, 400);
-}
+
+
+
 
 /* Rich-event variant — bumps to 40px in proposed mode so the chat glyph
    matches the weight of the comment card beside it. Glyph scales to 18px so
    it reads as the anchor of a richer event row. */
-#previewWrapper.proposed-mode .timeline-icon-container.timeline-avatar {
-  width: 40px; height: 40px;
-}
-#previewWrapper.proposed-mode .timeline-icon-container.timeline-avatar .ph,
-#previewWrapper.proposed-mode .timeline-icon-container.timeline-avatar .ph-bold,
-#previewWrapper.proposed-mode .timeline-icon-container.timeline-avatar i {
-  font-size: 1.125rem;   /* 18px */
-}
+
+
 
 /* Comment-card variant in proposed mode — lifts the card with a subtle shadow
    so it reads as a distinct quote block instead of a flat outlined box. */
-#previewWrapper.proposed-mode .timeline-content-inner.timeline-content--card {
-  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
-  background: var(--token-bg-surface-default, #ffffff);
-}
+
+
+/* ─── Bespoke proposed-mode overrides (restored from pre-refactor state) ─── */
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
 </style>
 </head>
 <body>
@@ -537,7 +496,7 @@
     <button class="ann-toggle ann-toggle--off" onclick="toggleAnnotations(this)">Show annotations</button>
   </div>
   <div class="preview-card__body">
-  <div id="previewWrapper" class="hide-annotations">
+  <div id="previewWrapper" class="hide-annotations new-tokens-mode iconLibrary-phosphor">
 
     <!-- Hiring pipeline — inspired by real-world applicant tracking timelines
          (example: semantic bubbles with right-aligned timestamps). Content
@@ -549,8 +508,8 @@
           <div class="timeline-item">
             <div class="timeline-timestamp">Sep 20</div>
             <div class="timeline-icon">
-              <div class="timeline-icon-container background-neutral annotate-icon"><i class="ph-bold ph-user"></i></div>
               <div class="timeline-icon-line annotate-line"></div>
+              <div class="timeline-icon-container background-neutral annotate-icon"><i class="ph-bold ph-user"></i></div>
             </div>
             <div class="timeline-right timeline-content annotate-content">
               <div class="timeline-content-inner">
@@ -563,8 +522,8 @@
           <div class="timeline-item">
             <div class="timeline-timestamp">Sep 22</div>
             <div class="timeline-icon">
-              <div class="timeline-icon-container background-primary"><i class="ph-bold ph-thumbs-up"></i></div>
               <div class="timeline-icon-line"></div>
+              <div class="timeline-icon-container background-primary"><i class="ph-bold ph-thumbs-up"></i></div>
             </div>
             <div class="timeline-right timeline-content">
               <div class="timeline-content-inner">
@@ -577,8 +536,8 @@
           <div class="timeline-item">
             <div class="timeline-timestamp">Sep 28</div>
             <div class="timeline-icon">
-              <div class="timeline-icon-container background-success"><i class="ph-bold ph-check"></i></div>
               <div class="timeline-icon-line"></div>
+              <div class="timeline-icon-container background-success"><i class="ph-bold ph-check"></i></div>
             </div>
             <div class="timeline-right timeline-content">
               <div class="timeline-content-inner">
@@ -591,8 +550,8 @@
           <div class="timeline-item">
             <div class="timeline-timestamp">Sep 30</div>
             <div class="timeline-icon">
-              <div class="timeline-icon-container background-primary"><i class="ph-bold ph-thumbs-up"></i></div>
               <div class="timeline-icon-line"></div>
+              <div class="timeline-icon-container background-primary"><i class="ph-bold ph-thumbs-up"></i></div>
             </div>
             <div class="timeline-right timeline-content">
               <div class="timeline-content-inner">
@@ -605,8 +564,8 @@
           <div class="timeline-item">
             <div class="timeline-timestamp">Oct 4</div>
             <div class="timeline-icon">
-              <div class="timeline-icon-container background-success"><i class="ph-bold ph-check"></i></div>
               <div class="timeline-icon-line"></div>
+              <div class="timeline-icon-container background-success"><i class="ph-bold ph-check"></i></div>
             </div>
             <div class="timeline-right timeline-content">
               <div class="timeline-content-inner">
@@ -627,8 +586,8 @@
           <div class="timeline-item">
             <div class="timeline-timestamp">7d ago</div>
             <div class="timeline-icon">
-              <div class="timeline-icon-container background-neutral"></div>
               <div class="timeline-icon-line"></div>
+              <div class="timeline-icon-container background-neutral"></div>
             </div>
             <div class="timeline-right timeline-content">
               <div class="timeline-content-inner">
@@ -641,8 +600,8 @@
           <div class="timeline-item">
             <div class="timeline-timestamp">6d ago</div>
             <div class="timeline-icon">
-              <div class="timeline-icon-container background-neutral"></div>
               <div class="timeline-icon-line"></div>
+              <div class="timeline-icon-container background-neutral"></div>
             </div>
             <div class="timeline-right timeline-content">
               <div class="timeline-content-inner">
@@ -655,8 +614,8 @@
           <div class="timeline-item">
             <div class="timeline-timestamp">6d ago</div>
             <div class="timeline-icon">
-              <div class="timeline-icon-container background-neutral"></div>
               <div class="timeline-icon-line"></div>
+              <div class="timeline-icon-container background-neutral"></div>
             </div>
             <div class="timeline-right timeline-content">
               <div class="timeline-content-inner">
@@ -669,10 +628,10 @@
           <div class="timeline-item">
             <div class="timeline-timestamp">3d ago</div>
             <div class="timeline-icon">
+              <div class="timeline-icon-line"></div>
               <div class="timeline-icon-container background-orange">
                 <i class="ph-bold ph-chat"></i>
               </div>
-              <div class="timeline-icon-line"></div>
             </div>
             <div class="timeline-right timeline-content">
               <div class="timeline-content-inner timeline-content--card">
@@ -688,8 +647,8 @@
           <div class="timeline-item">
             <div class="timeline-timestamp">2d ago</div>
             <div class="timeline-icon">
-              <div class="timeline-icon-container background-neutral"></div>
               <div class="timeline-icon-line"></div>
+              <div class="timeline-icon-container background-neutral"></div>
             </div>
             <div class="timeline-right timeline-content">
               <div class="timeline-content-inner">
@@ -702,8 +661,8 @@
           <div class="timeline-item">
             <div class="timeline-timestamp">1d ago</div>
             <div class="timeline-icon">
-              <div class="timeline-icon-container background-primary"><i class="ph-bold ph-check"></i></div>
               <div class="timeline-icon-line"></div>
+              <div class="timeline-icon-container background-primary"><i class="ph-bold ph-check"></i></div>
             </div>
             <div class="timeline-right timeline-content">
               <div class="timeline-content-inner">
@@ -974,12 +933,13 @@
 
 <script>
   function setMode(mode, btn) {
-    const w = document.getElementById('previewWrapper');
-    w.classList.toggle('proposed-mode', mode === 'proposed');
-    w.classList.toggle('current-mode', mode === 'legacy');
-    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
-    btn.classList.add('ptab--active');
-  }
+  const w = document.getElementById('previewWrapper');
+  w.classList.toggle('current-mode', mode === 'legacy' || mode === 'current');
+  w.classList.toggle('new-tokens-mode', mode === 'new-tokens');
+  w.classList.toggle('proposed-mode', mode === 'proposed');
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('ptab--active'));
+  btn.classList.add('ptab--active');
+}
 
   function toggleAnnotations(btn) {
     const wrapper = document.getElementById('previewWrapper');
