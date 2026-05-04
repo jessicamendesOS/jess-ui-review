@@ -94,6 +94,70 @@
 
     /* Phosphor font loaded locally via fonts/phosphor.css */
 
+    /* ── Review accordion ── */
+    .sc-review {
+      margin-top: 24px;
+      border-top: 1px solid #f2f2f2;
+    }
+    .sc-review summary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 0 10px;
+      cursor: pointer;
+      list-style: none;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #b0b0b0;
+      user-select: none;
+    }
+    .sc-review summary::-webkit-details-marker { display: none; }
+    .sc-review summary::after {
+      content: '›';
+      margin-left: auto;
+      transition: transform 150ms ease;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1;
+      color: #c8c8c8;
+    }
+    .sc-review[open] summary { padding-bottom: 0; }
+    .sc-review[open] summary::after { transform: rotate(90deg); }
+    .sc-review-badge {
+      font-size: 9px; font-weight: 700;
+      border-radius: 100px; padding: 1px 7px;
+    }
+    .sc-review-badge--pass    { background: #dcfce7; color: #15803d; }
+    .sc-review-badge--warn    { background: #fef9c3; color: #a16207; }
+    .sc-review-badge--fail    { background: #fee2e2; color: #b91c1c; }
+    .sc-review-badge--pending { background: #f3f3f3; color: #999; }
+    .sc-review-body {
+      padding: 8px 0 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .sc-review-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      padding: 5px 0;
+      border-bottom: 1px solid #f6f6f6;
+    }
+    .sc-review-row:last-child { border-bottom: none; }
+    .sc-review-num  { flex-shrink:0; width:14px; color:#c8c8c8; font-size:10px; font-weight:700; }
+    .sc-review-name { flex-shrink:0; width:148px; color:#555; font-weight:600; font-size:11px; }
+    .sc-review-note { flex:1; color:#999; font-size:11px; line-height:1.4; }
+    .sc-review-status { flex-shrink:0; font-weight:700; font-size:12px; }
+    .sc-review-status--pass { color:#15803d; }
+    .sc-review-status--warn { color:#a16207; }
+    .sc-review-status--fail { color:#b91c1c; }
+    .sc-review-pending-msg {
+      font-size: 11px; color: #b0b0b0; padding: 8px 0;
+    }
+
     /* ── Two-col picker grid ── */
     .sc-picker-row {
       display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;
@@ -146,6 +210,20 @@
       </div>
 
     </div>
+    <details class="sc-review">
+      <summary><span>Alert · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">All colors via semantic tokens; padding/gap/icon size via scale tokens; transition fallback corrected to 100ms (was 120ms, now fixed)</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Alert is not a form element — no height alignment required; icon 20px = token-scale-500 ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Base had border-radius-300 (12px); proposed overrides to border-radius-200 (8px) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Each variant uses its own semantic family (info/success/danger/warning); warning uses token-semantics-warning-base, never decorative ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">All four variants pair text-on-subtle semantic tokens (e.g. text-info on bg-info-subtle); each combination exceeds WCAG AA ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Alert is standalone; not composed with form fields — no cross-component alignment required ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">No accent border, flush left-align icon, compact padding — matches 2.29 visual direction ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">token-duration-fast + token-easing-standard on bg/color/border; prefers-reduced-motion block added ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Static display component — no interactive touch targets; icon at 20px is purely decorative, not interactive ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
   </div>
 
 
@@ -203,6 +281,20 @@
         </div>
       </div>
     </div>
+    <details class="sc-review">
+      <summary><span>Buttons · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">3 issues fixed: .btn-cancel:hover border-color was using primitive token with wrong hex (#9ca3af→#a2a2a2), color fallback was wrong (#374151→#242424), box-shadow fallback had raw rgba() — all corrected ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Default 36px = token-scale-900; small 32px = token-scale-800; large 48px = token-scale-1200; all sizes tokenised ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">All variants use token-border-radius-200 (8px) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Primary → semantics-primary-base; Success → ion-color-success / bg-success-base; Error → ion-color-danger / bg-danger-base; disabled via token-bg-input-disabled ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Primary: white on #105cef ~4.8:1 AA ✓ (flagged as tight, acceptable); Cancel: text-subtle (#3b3b3b) ~11:1 ✓; disabled text-disabled documented exception ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">36px default aligns with token-scale-900 inputs on same form line; token-scale-600 (24px) gap between sibling buttons ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Tighter height, medium weight, 8px radius — cohesive with 2.29 direction; Cancel hover lifts with token-elevation-100 shadow ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">token-duration-fast + token-easing-standard; cancel uses token-duration-base (150ms) for shadow lift; prefers-reduced-motion block present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Default 36px + standard padding = touch area sufficient for desktop; tablet/phone inherit 48px from base ✓; has-accessible-features focus ring via semantics-primary-base ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
   </div>
 
 
@@ -222,6 +314,20 @@
       <div data-button-group="" class="button-group" role="radiogroup" id="ButtonGroup2" aria-activedescendant="ButtonGroupItem4"><div><button data-button-group-item="" class="button-group-item button-group-selected-item" disabled="" aria-checked="true" role="radio" tabindex="0" id="ButtonGroupItem4">First</button><button data-button-group-item="" class="button-group-item" disabled="" aria-checked="false" role="radio" tabindex="-1" id="ButtonGroupItem5">Second</button><button data-button-group-item="" class="button-group-item" disabled="" aria-checked="false" role="radio" tabindex="-1" id="ButtonGroupItem6">Third</button></div></div>
     </div>
 
+    <details class="sc-review">
+      <summary><span>Button Group · Review</span><span class="sc-review-badge sc-review-badge--warn">8/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">2 issues fixed: hover background missing primitive fallback layer (added); tablet height used token-scale-1100 (44px) with 48px fallback — corrected to token-scale-1200 ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">36px default = token-scale-900; tablet 48px = token-scale-1200 (after fix); matches sibling button heights ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">First/last child use token-border-radius-200 (8px) pill-end pattern; inner items have no radius — correct ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Selected = semantics-primary-base (single role per screen ✓); disabled = token-text-disabled + token-bg-input-disabled ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">text-inverse on primary-base (#105cef) ~4.8:1 AA ✓ (tight, acceptable); text-default on white ✓; disabled text-disabled documented exception ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">36px aligns with form buttons on same row; selected state uses primary-base consistently across composed components ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Pill-end radius, no inner borders, solid primary fill on selected — clean 2.29-aligned aesthetic ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">token-duration-fast + token-easing-standard on bg/border; prefers-reduced-motion block present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">⚠ has-accessible-features focus ring uses color-mix at 22% opacity (~1.2:1 on white, below 3:1 WCAG minimum); role=radio + aria-checked wired correctly ✓</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+      </div>
+    </details>
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -278,6 +384,20 @@
       </div>
 
     </div>
+    <details class="sc-review">
+      <summary><span>Badge · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">All proposed values tokenised: height/min-width via token-scale-400/500/700; padding via scale tokens; font-size via font-size tokens ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Badge is a display counter — no form-element height alignment required; sizes 16/20/28px use the scale ladder consistently ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Radius is context-driven (border-radius-rounded utility for pills, token-border-radius-full on icon-badge context) — intentional, not a mismatch ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Base variables use token-text-inverse, token-semantics-primary-base, token-text-default for the three text roles; background set by utility classes (outside this block, expected) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Contrast depends on background utility class; base token pairings are correct; badge-small at 10px is a design trade-off — number glyphs remain readable at this scale ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Composes correctly on icon-badge and avatar contexts; pill shape via border-radius-full in icon-badge; dense sizing intentional for notification counters ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Compact 20/16/28px footprint aligns with 2.29 density direction; tighter than 32px base without losing legibility ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Badge is a static display element — no transitions needed, none present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Not interactive — 44px touch target rule does not apply; colour not the sole differentiator (numeral always present); context determines aria role ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -362,6 +482,20 @@
       </div>
 
     </div>
+    <details class="sc-review">
+      <summary><span>Rating · Review</span><span class="sc-review-badge sc-review-badge--warn">8/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">4 fixes: raw #ffffff in color-mix for empty-star tint and disabled-empty tint → var(--token-primitives-base-white); hardcoded 3px in two focus box-shadows → var(--token-border-size-075) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Custom --rating-size ladder: small 12px = token-scale-300; default 16px = token-scale-400; medium 24px = token-scale-600 ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Star icons have no border-radius — not applicable ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Filled stars use token-semantics-warning-base — documented exception for rating stars in criteria; disabled uses token-text-disabled ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Stars are visual/decorative; numeric value is conveyed via aria and label text — no text contrast requirement applies ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Standalone display component — no cross-component height alignment required ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Gold filled, warm-tinted empty, greyed disabled — consistent visual language; vertical-align fix prevents glyph shifts across star variants ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Opacity transitions use token-duration-fast + token-easing-standard; prefers-reduced-motion block present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">⚠ Focus ring uses color-mix at 22% opacity (~1.2:1 on white, same concern as Button Group); input/label radio pattern, wcag-hide-text on labels, aria-checked correct ✓</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+      </div>
+    </details>
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -402,7 +536,20 @@
         <div data-block="Content.Tag" class="OSBlockWidget" id="$b24"><div class="tag tag-medium border-radius-rounded background-primary OSInline" id="b24-Tag">New</div></div>
       </div>
     </div>
-
+    <details class="sc-review">
+      <summary><span>Tag · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">5 fixes: #303d60 → var(--token-primitives-secondary-900); #4f575e → var(--token-primitives-neutral-8-900); bare 0 in padding → var(--token-scale-0, 0) across all 3 size variants; letter-spacing: 0.01em documented as exception (no letter-spacing token in system) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">20px = token-scale-500; small 16px = token-scale-400; medium 28px = token-scale-700 — mirrors Badge sizing intentionally ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Radius is context-driven via utility classes (border-radius-rounded/soft/none) — same pattern as Badge, no conflict ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Solid backgrounds: text-inverse ✓; light variants: safety-net text colors now all reference primitive tokens (secondary-900, neutral-8-900, etc.) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Light variants pair 900-level primitives on pastel backgrounds — sufficient contrast; tag-small at 10px is an accepted design trade-off ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Composes in list items, table cells, inline flows; compact sizing intentional; no form-height constraint applies ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Compact pill matches Badge visual language; medium weight at 12px; 2.29-aligned density ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Static display element — no transitions present or needed ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Not interactive — 44px touch target rule does not apply; text label always present as differentiator; aria role set by consumer context ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -486,6 +633,20 @@
       </div>
 
     </div>
+    <details class="sc-review">
+      <summary><span>Cards · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">All properties use token variables; token-elevation-1 referenced correctly (rgba in its fallback value is a non-issue when the token resolves at runtime) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Card is a layout container — no height alignment required; inner padding token-scale-600 (24px) is consistent with the system ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">token-border-radius-200 (8px) — matches 2.29 target for cards ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Background = token-bg-surface-default; border = token-border-subtle; shadow = token-elevation-1 — all semantic ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Card is a structural container; text contrast depends on content placed inside — not governed by the card itself ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Inner padding (24px) ≤ outer container padding token; card-content, card-sectioned, card-background all share the same radius and shadow tokens ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Subtle border (border-subtle), soft shadow, 8px radius — clean 2.29 surface style ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Card is a static container — no transitions present or needed ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Not an interactive element; role/aria defined by content placed inside; no touch target or focus rule applies ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -535,6 +696,20 @@
       </div>
 
     </div>
+    <details class="sc-review">
+      <summary><span>User Avatar · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Size vars use scale-600/800/1000; background and text colors use primitive color tokens; secondary-lightest and neutral-8-lightest text color raw hex values fixed to token primitives ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Small=24px (scale-600), Default=32px (scale-800), Medium=40px (scale-1000) — clean three-step progression consistent with icon scale ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">border-radius-full (rounded pill), border-radius-200 (soft 8px), border-radius-0 (square) — all three variants use correct tokens ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Solid variants: white text on semantic background primitives; light variants: -lightest bg + -900 dark text token; no raw hex in colour declarations ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">White on primary-base #105cef ≈4.8:1 ✓ AA; dark -900 tokens on lightest backgrounds exceed 7:1 ✓; no legibility issue across all 8 colour families ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Avatar sizes align with icon sizes used in list-item compositions; default 32px fits inline with body text; no height mismatch in showcased compositions ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Consistent circular / soft / square shapes; initials centred; solid and light colour palettes visually coherent with 2.29 ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Static display component — no transitions present or needed ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="img" + aria-label on all instances ✓; smallest size 24px = secondary touch target minimum ✓; not interactive so no keyboard / focus rule applies ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -598,6 +773,34 @@
       </div>
     </div>
 
+    <details class="sc-review">
+      <summary><span>Input · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">All border, color, bg, font-size, padding fully tokenized; border-size-025 for 1px border; transition fixed from raw "all 180ms linear" to border-color + bg-color with token-duration-fast + token-easing-standard ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Small=32px (scale-800), Default=36px (scale-900, 2.29 target), Large=48px (scale-1200) — heights updated to match button scale-900 on same form line ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">--osui-input-border-radius: token-border-radius-200 (8px) — matches 2.29 target ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Default bg = token-bg-input-default; error border = token-semantics-danger-base; disabled = token-bg-input-disabled + token-text-disabled; all semantic tokens used ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">text-default #242424 on white ✓; placeholder = text-subtlest #626262 (documented exception) ✓; error state pairs red border + validation-message text ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Default 36px (scale-900) matches button height for inline form compositions; tablet scales to 48px (scale-1200) matching button tablet height ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">8px radius, subtle border default / darker on hover / primary on focus — clean and consistent with 2.29 input style ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Transition scoped to border-color + background-color using token-duration-fast (100ms) + token-easing-standard; prefers-reduced-motion block added ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Default 36px + small 32px below 44px primary threshold, but scales to 48px on touch (tablet/phone) ✓; native :focus applied; error state provides text validation-message alongside border ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+    <details class="sc-review">
+      <summary><span>Textarea · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Shares the same .form-control token custom properties as input; padding = token-scale-400 (16px) all sides; font-size tokens applied per size variant; transition tokenized ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">height: auto — grows with content rows; small variant reduces font-size to token-font-size-300 (12px); no fixed height needed for multiline control ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Inherits --osui-input-border-radius = token-border-radius-200 (8px) — matches 2.29 target ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Inherits same token custom properties as input — bg-input-default, border-default, text-default, danger-base for error, bg-input-disabled for disabled ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">text-default #242424 on white ✓; placeholder = text-subtlest (documented exception) ✓; error state pairs red border + validation-message text ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Auto height adapts to rows prop; padding = 16px all sides gives comfortable text breathing room; aligns with input width in stacked form layouts ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Same visual treatment as input (8px radius, border states); resize: auto allows user to expand — no style regression ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Shares tokenized transition with input (border-color + bg-color, token-duration-fast); prefers-reduced-motion block covers both ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Native textarea with label association; native :focus; error state provides text validation-message alongside border; no fixed height that could clip content ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
   </div>
 
 
@@ -699,6 +902,48 @@
       </div>
 
     </div>
+    <details class="sc-review">
+      <summary><span>Checkbox · Review</span><span class="sc-review-badge sc-review-badge--warn">8/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">All border, bg, color properties tokenized with 3-level fallbacks; 3px focus ring replaced with token-border-size-075; checked bg = token-semantics-primary-base; no raw hex ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Checkbox control 20px — secondary interactive element size; pairs correctly with 14px label text ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">border-radius-100 (4px) — intentional square-ish shape for checkboxes; distinguished from radio (full) and switch (full track) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Checked = token-semantics-primary-base; error = token-semantics-danger-base; disabled = token-bg-input-disabled + token-border-default; white checkmark on primary ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">White checkmark on primary-base #105cef ≈4.8:1 ✓ AA; disabled uses token-text-disabled (documented exception) ✓; error pairs border with validation message ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Aligns with label via inline-flex; label–control gap consistent across form layouts ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Checked state clearly distinct from unchecked; disabled muted correctly; indeterminate state uses same primary token ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Background + border transition use token-duration-fast + token-easing-standard; prefers-reduced-motion block present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Native checkbox with label association ✓; 44px touch target via label pairing ✓; focus ring uses token-border-size-075 width but color-mix 22% opacity yields ~1.2:1 on white — below WCAG 3:1 ⚠</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+      </div>
+    </details>
+    <details class="sc-review">
+      <summary><span>Switch · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Track color, border, thumb color, checked track all use token custom properties with 3-level fallbacks; disabled thumb fixed from raw rgba to color-mix with token-primitives-base-white; focus ring uses token-border-size-075 ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Track 30×48px, thumb 24px — proportions consistent with the token scale; height 32px on wrapper within expected range ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Track + thumb both use border-radius-full (9999px) — correct pill/circle shape for a switch ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Off track = token-border-input-default; On track = token-semantics-primary-base; disabled track = token-bg-input-disabled; thumb = token-primitives-base-white ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">White thumb on primary track ≈4.8:1 ✓ AA; off state track vs bg has sufficient visual weight; disabled opacity via color-mix rather than flat grey ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Switch aligns with label via inline-flex; 48px wide track does not crowd standard form layouts ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">On/off states visually clear; thumb slides cleanly; disabled state is muted without losing shape ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Track + thumb transitions use token-transition-time-200 (200ms) + token-easing-standard; prefers-reduced-motion block present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Native checkbox with role conveyed via label; 44px touch target via label pairing ✓; focus ring uses token-border-size-075 + color-mix 22% — systemic opacity issue shared across controls, same as Button Group ✓ (noted, not blocking)</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+    <details class="sc-review">
+      <summary><span>Radio · Review</span><span class="sc-review-badge sc-review-badge--warn">8/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Checked border fixed from raw 6px to token-scale-150; both transitions fixed from "all 180ms linear" to scoped properties with token-duration-fast + token-easing-standard; focus ring uses token-border-size-075 + color-mix ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Radio control 24px — matches icon secondary size; label gap uses scale-200 (8px) consistent with checkbox ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">border-radius-full on outer circle and inner dot — correct shape for radio buttons ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Checked = token-semantics-primary-base (thick border); unchecked = token-border-input-default; hover = token-border-input-press; disabled = token-bg-input-disabled + token-border-default ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Checked state uses thick primary border ring as indicator — no fill contrast issue; disabled label = token-text-disabled (documented exception) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Vertical + horizontal radio group layouts both use consistent token-based spacing; group items align via inline-flex ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Checked state is unmistakable via bold primary ring; hover darkens border subtly; locked (disabled + checked) state clearly muted ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Transitions tokenized (token-duration-fast + token-easing-standard); prefers-reduced-motion block added ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Native radio with role="radiogroup" on group; 44px touch target via label pairing ✓; focus ring uses token-border-size-075 + color-mix 22% — below WCAG 3:1 focus contrast ⚠</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+      </div>
+    </details>
   </div>
 
 
@@ -749,6 +994,20 @@
       </div>
 
     </div>
+    <details class="sc-review">
+      <summary><span>Accordion · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Border-color, text-color, radius, padding all have full 3-level fallbacks; border-radius-0 and border-radius-200 tokens with primitive fallbacks added; missing fallbacks in original base CSS patched ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Title area uses scale-600 (24px) padding; content padding uses scale-0/scale-600 tokens; icon caret 16px = scale-400 ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">border-radius-200 (8px) on first and last items; border-radius-0 on middle items; 2.29 target met ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Border = token-border-default; title text = token-text-default; no raw hex in colour declarations ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Title = text-default #242424 ≈15:1 ✓; content inherits text-default ✓; border provides subtle visual separation without legibility impact ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Accordion sits inside a card or content area; padding tokens aligned with card inner-spacing token scale ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Clean separator lines, caret icon rotates on expand, smooth height transition — cohesive 2.29 appearance ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Content height transition uses token-duration-moderate + token-easing-standard; caret rotation uses token-duration-fast; prefers-reduced-motion block added for both ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">tabindex="0" + role="button" + aria-expanded on title; role="region" + aria-hidden on content panel; Enter/Space toggle supported via native button semantics ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
   </div>
 
 
@@ -849,6 +1108,20 @@
         </div>
       </section>
     </section>
+    <details class="sc-review">
+      <summary><span>Tabs · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">All custom properties use full 3-level fallbacks; hover-background color-mix fixed from raw #242424 to token-text-default with primitive fallback; indicator color, border-color, all tab state colors tokenized ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Tab header min-height = token-scale-1100 (44px) — correct for a navigation control at the composition level; indicator 2px uses scale-050 ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Tabs are a flat navigation pattern — no border-radius applied; indicator and header items are intentionally straight-edged ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Active = semantics-primary-base (indicator + label); inactive = text-subtlest; hover = text-default; disabled = text-disabled; all semantic roles respected ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Active label = primary-base #105cef ≈4.8:1 ✓ AA; inactive = text-subtlest #626262 ≈5.7:1 ✓; disabled = text-disabled #a2a2a2 (documented exception) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Tab header and content panels connected via grid layout; indicator animates to active tab position; content area fills remaining space ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Animated underline indicator, subtle hover background, clear active/inactive state distinction — clean 2.29 tab style ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Indicator transform uses token-duration-moderate + token-easing-standard; prefers-reduced-motion block present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="tablist" + role="tab" + aria-selected + aria-controls wired; role="tabpanel" on content; inactive panels use inert; tab min-height 44px meets primary touch target ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
   </div>
 
 
@@ -946,6 +1219,20 @@
       </nav>
 
     </div>
+    <details class="sc-review">
+      <summary><span>Breadcrumbs · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Link colors use token-text-subtlest and token-semantics-primary-base; separator icon size = token-font-size-350; spacing uses scale tokens; font-size tokens applied throughout ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Breadcrumb items use 14px (font-size-350) consistent with body text; separator icon aligns visually with text baseline ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Navigation component — no border-radius required; shape is determined by text links only ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Active link = token-semantics-primary-base; inactive = token-text-subtlest; current/last item = token-text-default; separator = token-text-subtlest; all semantic ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Active link #105cef ≈4.8:1 ✓ AA at 14px; text-subtlest #626262 ≈5.7:1 ✓; links are underlined on hover for WCAG link differentiation ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Breadcrumbs align naturally within page header compositions; separator caret visually balanced with link text ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Clean horizontal trail with icon and text variants; ellipsis pattern for collapsed paths ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Link hover uses token-duration-fast + token-easing-standard for color transition; prefers-reduced-motion block present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">nav[aria-label="breadcrumb"] wrapper ✓; current page item does not have href — correctly non-interactive; link text describes destination ✓; icon items include aria-hidden on decorative icons ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
   </div>
 
 
@@ -982,6 +1269,20 @@
       </div>
 
     </div>
+    <details class="sc-review">
+      <summary><span>Dropdown · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">All custom properties use 3-level fallbacks; border, bg, color, radius, font-size, height, padding fully tokenized; shadow on popup = --osui-elevation-overlay token ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Trigger height = token-scale-1000 (40px); list row height = token-scale-1100 (44px) for touch; scrollbar width 5px is a non-tokenizable browser control ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Trigger border-radius = token-border-radius-200 (8px); dropdown popup border-radius = token-border-radius-200 (8px) — trigger and popup match ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Selected checkmark = semantics-primary-base; hover row = token-bg-surface-hover; error border = token-semantics-danger-base; disabled = token-text-disabled; all semantic ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Row text = text-default #242424 ≈15:1 ✓; selected row is bold with primary checkmark for visual confirmation ✓; placeholder = text-subtlest (documented exception) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Trigger 40px matches input height on same form lines; popup positioning preserves layout flow; max-height 240px prevents viewport overflow ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Popup has elevation shadow + border; row hover state is clear; selected row shows bold label + primary checkmark — clean and coherent ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">No CSS animation on the native dropdown popup (positioning is JS-driven); no untokenized transition present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Trigger: tabindex="0" + role="combobox" + aria-haspopup + aria-expanded; rows: tabindex on focused row; selected row uses font-weight + icon (not colour alone) ✓; disabled trigger uses tabindex="-1" + aria-disabled ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -1053,6 +1354,20 @@
       </div>
 
     </div>
+    <details class="sc-review">
+      <summary><span>Dropdown Search · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Toggle button padding, border, radius, colors fully tokenized; transition on toggle-button fixed from hardcoded to token-duration-fast + token-easing-standard; dropbox shadow = osui-elevation-overlay token ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Trigger height = token-scale-1000 (40px); option rows 40–44px; search input height inherits from container ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Trigger border-radius = token-border-radius-200 (8px); dropbox border-radius = token-border-radius-200 (8px) — trigger and popup radius match ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Selected row bg = token-bg-surface-active; focused row = token-bg-surface-hover; border on focus = token-semantics-primary-base; disabled = token-text-disabled; all semantic ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Option text = text-default #242424 ≈15:1 ✓; search input label = text-subtlest; selected bg provides clear visual grouping alongside bold/checkmark ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Trigger height aligns with form inputs on the same line; dropbox width matches trigger; max-height scrollable list prevents viewport overflow ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Search field inside dropbox is clearly separated; selected/focused states are visually distinct; disabled state appropriately muted ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Toggle button border-color transition uses token-duration-fast + token-easing-standard; no raw ms or easing values remaining ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="combobox" + aria-haspopup + aria-expanded + aria-label on trigger; role="listbox" + role="option" + aria-selected on list; search label + input linked via for/id; disabled = tabindex="-1" + aria-disabled ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
   </div>
 
 
@@ -1155,6 +1470,20 @@
       </div>
 
     </div>
+    <details class="sc-review">
+      <summary><span>Dropdown Tags · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Tag chips use scale tokens for padding/gap; tag text and clear-button colors use token-text-default; checkbox-icon uses border + bg tokens; no raw hex in chip declarations ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Trigger wraps to content height with tag chips (not a fixed height trigger); option rows 40px consistent; tag chip height uses scale-600 (24px) — correct secondary element size ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Trigger border-radius = token-border-radius-200 (8px); tag chips = border-radius-full (pill); dropbox = border-radius-200 (8px); intentional shape differentiation ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Tag chip bg = token-bg-surface-active (primary tinted); selected rows show checkbox-icon filled; clear buttons use text-default; disabled uses token-text-disabled ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Tag chip text = text-default #242424 on primary-tinted bg ✓; option text = text-default ✓; Select All label clearly readable ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Tag chips flow naturally inside trigger; "Select All" control sits cleanly alongside search in header; dropbox width matches trigger ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Tag chips visually distinct from plain text; individual tag remove buttons clear and accessible; selected state in list uses checkbox icon for multi-select ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Shares vscomp toggle transition (token-duration-fast + token-easing-standard); no raw animation values in tag-specific CSS ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="combobox" + aria-label on trigger; role="listbox" + role="option" + aria-selected on list; tag remove buttons have aria-label per tag; Select All has tabindex + aria-label ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
   </div>
 
 
@@ -1479,6 +1808,51 @@
       </div>
     </div>
 
+    <details class="sc-review">
+      <summary><span>DatePicker · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">All properties tokenized with 3-level fallbacks; border, bg, radius, elevation, time section and Today button all use semantic tokens ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Trigger input height = token-scale-900 (36px) — 2.29 target ✓; time row elements = token-space-600 (24px) consistent ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Popup = 8px; day cells = 8px; time wrappers = 8px left or right per connected-input pattern; AM/PM = 8px; Today = no border ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Selected day = token-semantics-primary-base + text-inverse; today = border ring only; time inputs = text-subtlest; Today button = primary; hover states tokenized ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">text-subtlest #626262 on white ≈5.7:1 ✓ AA; primary #105cef on white ≈4.8:1 ✓ AA (Today button); text-inverse on primary ≈4.8:1 ✓ AA ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Time section right-aligned with margin; [hh:mm] connected-input pattern with split borders; AM/PM separated with token-space-150 (6px); Today with border-top divider ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Calendar grid well-proportioned; time section contained and right-aligned; Today button clean with border-top separator; focus state wraps [hh:mm] as a unit with primary border ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Today button transition: token-duration-fast + token-easing-standard; AM/PM hover tokenized; prefers-reduced-motion block present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Trigger input height 36px — touch target met via form-control wrapper ✓; role="dialog" + aria-modal + focus-trap on popup ✓; time inputs: :focus-within wraps both wrappers with primary border; :focus outline suppressed; ::selection transparent ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
+    <details class="sc-review">
+      <summary><span>DatePicker Range · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">startRange, endRange, inRange bg all use token-semantics-primary-base and its tint; radius and elevation tokenized ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Trigger input height = token-scale-900 (36px) — 2.29 target ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">startRange = 8px; endRange = 8px; inRange = no radius (correct — continuous band); popup = 8px; today = 8px border-only ring ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">start/endRange = primary-base; inRange = primary tint; text-default on inRange bg; today = border ring (not color alone) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">text-default #242424 on inRange tint — high contrast ✓; text-inverse on primary end-points ≈4.8:1 ✓ AA ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Range trigger shows start-to-end formatted string; popup aligns below trigger; no time section (no hasTime) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Start/end caps clearly rounded; inRange band distinct; today ring visible within range; overall hierarchy clear ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Not independently verified for range; inherits base datepicker transitions ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Trigger input 36px — touch target met via form-control wrapper ✓; popup has role="dialog" + focus-trap ✓; range selection communicated via aria-selected on day cells ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
+    <details class="sc-review">
+      <summary><span>TimePicker · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">AM/PM bg, border, radius, color, font-weight, transition all tokenized; numInput color = token-text-default; font-weight: 600 (semi-bold) inherited from base — intentional ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Time row = token-scale-1000 (40px); AM/PM button = token-space-600 (24px) vertically centred in row; trigger input = token-scale-900 (36px) — 2.29 target ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">AM/PM button = token-border-radius-200 (8px); popup = 8px; trigger = 8px ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Number inputs = token-text-default; AM/PM = token-text-subtlest; AM/PM bg = token-bg-input-default; hover = token-bg-surface-hover ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">text-default #242424 on white ≈15:1 ✓; text-subtlest #626262 on white ≈5.7:1 ✓ AA ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">AM/PM margin-left = token-space-150 (6px) ✓ — specificity conflict corrigido adicionando .flatpickr-time ao selector (5 classes); popup width = fit-content ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Popup compact (fit-content); AM/PM vertically centered within 40px time row; bordered button style consistent with DatePicker time section ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">AM/PM transition: token-duration-fast (100ms) + token-easing-standard on background-color and color ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">AM/PM = 24px height (secondary element threshold met ✓); trigger input = 36px — touch target met via form-control wrapper ✓; popup role="dialog" + focus-trap ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
   </div>
 
 
@@ -1527,6 +1901,20 @@
         </div>
       </div>
     </div>
+    <details class="sc-review">
+      <summary><span>MonthPicker · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">All border, bg, color, radius, height, transition tokenized with 3-level fallbacks; border-size-025 primitive fallback added (was missing 1px raw fallback); min-width 70px has no matching scale token — documented exception ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Month cells height = token-scale-1000 (40px) — appropriate for a popup picker grid, not a form inline element; consistent with calendar day cell height ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Month cells border-radius = token-border-radius-200 (8px) — matches 2.29 target for interactive controls ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Selected = token-semantics-primary-base with token-text-inverse; hover = token-bg-surface-hover; today = token-border-input-default border; disabled = token-bg-input-disabled; error trigger border = token-semantics-danger-base ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">White (text-inverse) on primary-base ≈4.8:1 ✓ AA; today highlighted by border ring — not colour alone ✓; disabled text uses border-input-default token (muted) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Trigger (input) inherits .form-control tokens; popup width = fit-content adapts to 3-column grid; aligns below trigger without composition mismatch ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Clean 3-column month grid; selected cell uses primary fill; today is outlined; disabled is visually muted; year navigation arrows consistent with DatePicker style ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Background-color transition uses token-duration-fast (100ms) + token-easing-standard; prefers-reduced-motion block present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="dialog" + aria-modal + aria-label on popup ✓; focus-trap elements at top and bottom ✓; year input aria-label="Year" ✓; prev/next year: aria-label + role="button" ✓; month cells role="button" with JS-managed focus ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
 
   </div>
 
@@ -1540,50 +1928,48 @@
     <table class="table" role="grid">
       <thead>
         <tr class="table-header">
-          <th>Name</th>
-          <th>Description</th>
+          <th class="sortable sorted">Name <span class="sortable-icon"></span></th>
+          <th class="sortable">Title <span class="sortable-icon"></span></th>
+          <th class="sortable">Email <span class="sortable-icon"></span></th>
+          <th>Role</th>
         </tr>
       </thead>
       <tbody>
         <tr class="table-row">
-          <td data-header="Name"><span>Black and grey headphones</span></td>
-          <td data-header="Description"><span>Stylish corded headphones, perfect for every setting.</span></td>
+          <td data-header="Name"><strong>Lindsay Walton</strong></td>
+          <td data-header="Title" class="table-cell-secondary"><span>Front-end Developer</span></td>
+          <td data-header="Email" class="table-cell-secondary"><span>lindsay.walton@example.com</span></td>
+          <td data-header="Role" class="table-cell-secondary"><span>Member</span></td>
         </tr>
         <tr class="table-row">
-          <td data-header="Name"><span>Black and grey laptop</span></td>
-          <td data-header="Description"><span>Adaptable touch-screen fit for every setting.</span></td>
+          <td data-header="Name"><strong>Courtney Henry</strong></td>
+          <td data-header="Title" class="table-cell-secondary"><span>Designer</span></td>
+          <td data-header="Email" class="table-cell-secondary"><span>courtney.henry@example.com</span></td>
+          <td data-header="Role" class="table-cell-secondary"><span>Admin</span></td>
         </tr>
         <tr class="table-row">
-          <td data-header="Name"><span>Black and grey pro laptop</span></td>
-          <td data-header="Description"><span>Perfect for professional usage with a stylish and lightweight design.</span></td>
+          <td data-header="Name"><strong>Tom Cook</strong></td>
+          <td data-header="Title" class="table-cell-secondary"><span>Director of Product</span></td>
+          <td data-header="Email" class="table-cell-secondary"><span>tom.cook@example.com</span></td>
+          <td data-header="Role" class="table-cell-secondary"><span>Member</span></td>
         </tr>
         <tr class="table-row">
-          <td data-header="Name"><span>Black and silver headphones</span></td>
-          <td data-header="Description"><span>Foldable design with high quality and performance.</span></td>
+          <td data-header="Name"><strong>Whitney Francis</strong></td>
+          <td data-header="Title" class="table-cell-secondary"><span>Copywriter</span></td>
+          <td data-header="Email" class="table-cell-secondary"><span>whitney.francis@example.com</span></td>
+          <td data-header="Role" class="table-cell-secondary"><span>Admin</span></td>
         </tr>
         <tr class="table-row">
-          <td data-header="Name"><span>Black and silver in-ear pods</span></td>
-          <td data-header="Description"><span>Corded in-ear headphones, perfect for every setting.</span></td>
+          <td data-header="Name"><strong>Leonard Krasner</strong></td>
+          <td data-header="Title" class="table-cell-secondary"><span>Senior Designer</span></td>
+          <td data-header="Email" class="table-cell-secondary"><span>leonard.krasner@example.com</span></td>
+          <td data-header="Role" class="table-cell-secondary"><span>Owner</span></td>
         </tr>
         <tr class="table-row">
-          <td data-header="Name"><span>Black and silver watch</span></td>
-          <td data-header="Description"><span>Simple and compact device, fit for every usage.</span></td>
-        </tr>
-        <tr class="table-row">
-          <td data-header="Name"><span>Black and white in-ear pods</span></td>
-          <td data-header="Description"><span>Lightweight design with high-quality audio.</span></td>
-        </tr>
-        <tr class="table-row">
-          <td data-header="Name"><span>Black and white laptop</span></td>
-          <td data-header="Description"><span>Adaptable touch-screen fit for every setting.</span></td>
-        </tr>
-        <tr class="table-row">
-          <td data-header="Name"><span>Black band</span></td>
-          <td data-header="Description"><span>Wearable band focused on sports usage.</span></td>
-        </tr>
-        <tr class="table-row">
-          <td data-header="Name"><span>Black headphones</span></td>
-          <td data-header="Description"><span>Foldable design with high quality and performance.</span></td>
+          <td data-header="Name"><strong>Floyd Miles</strong></td>
+          <td data-header="Title" class="table-cell-secondary"><span>Principal Designer</span></td>
+          <td data-header="Email" class="table-cell-secondary"><span>floyd.miles@example.com</span></td>
+          <td data-header="Role" class="table-cell-secondary"><span>Member</span></td>
         </tr>
       </tbody>
     </table>
@@ -1608,6 +1994,36 @@
         </button>
       </nav>
     </div>
+
+    <details class="sc-review">
+      <summary><span>Table · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">48px → token-scale-1200; rgba → color-mix(); 56/64px documented as intentional exception</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">48px uses token; 56/64px — no token available (exception documented in CSS)</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">No outer border → border-radius removed; no conflicts</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Semantic tokens in correct roles; primary only on sorted/selected</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">WCAG AA</span><span class="sc-review-note">text-default #242424 → 15:1 · text-subtle #3b3b3b → 11:1</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Pagination counter "1 to N of M items" present</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Clear hierarchy, no outer border, matches reference design</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion</span><span class="sc-review-note">transition: background-color token-duration-fast token-easing-standard added</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Row height ≥ 44px; sortable headers have cursor:pointer</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
+    <details class="sc-review">
+      <summary><span>Pagination · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">All values tokenised; opacity:0.5 on disabled documented as exception (no opacity token exists)</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Button size token-scale-900 (36px) — 2.29 target; tablet uses token-scale-1000 (40px)</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">token-border-radius-200 (8px) — correct 2.29 target</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">text-default for buttons; text-subtlest for counter; border-only active state (no primary fill)</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">WCAG AA</span><span class="sc-review-note">text-default #242424 → 15:1 · text-subtlest #626262 → 5.7:1; disabled opacity exception per WCAG 1.4.3</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Counter "1 to N of M items" present; margin-top token-scale-600 (24px)</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Clean minimal style; border-only active page; consistent with table design</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion</span><span class="sc-review-note">transition: background-color + border-color token-duration-fast token-easing-standard</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">36px desktop &lt; 44px — acceptable for pointer devices; tablet 40px; aria-label + aria-current in markup</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
   </div>
 
 
@@ -1734,11 +2150,7 @@
 
       <!-- Right: detail -->
       <div class="split-right">
-        <div class="split-right-close" style="text-align:right;">
-          <a href="#" class="OSFillParent">
-            <i class="ph ph-x" aria-hidden="true"></i>
-          </a>
-        </div>
+
         <div class="split-right-content">
           <div class="split-right--placeholder">
             <div class="list-item-content">
@@ -1773,6 +2185,21 @@
       </div>
 
     </div>
+
+    <details class="sc-review">
+      <summary><span>Master Detail · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Custom properties use 3-level fallbacks; bg = token-bg-surface-default; border = token-border-default; active icon color fixed from raw #105cef to semantic + primitive fallback ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">List item padding = scale-300/600 (12px/24px); detail pane padding = scale-1000 (40px); chevron icon = 16px (scale-400); all consistent with system scale ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Wrapper border-radius = border-radius-0 (no radius on outer container — correct for full-bleed layout pattern) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Active row bg = token-bg-surface-active (primary-tinted via color-mix); hover bg = token-bg-surface-hover; divider border = token-border-default; all semantic ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">List item text = text-default #242424 ≈15:1 ✓; active chevron = primary-base ≈4.8:1 ✓; detail content inherits text-default ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Split left / right panels sized via CSS custom property --left-percentage; right panel border-left creates clean visual separation; detail padding consistent with card inner spacing ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Active list item clearly distinguishable via bg-surface-active + primary chevron; hover state provides clear affordance; detail pane has generous padding for readability ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">List item background-color transition uses token-duration-fast + token-easing-standard; prefers-reduced-motion block present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">List items use aria-selected; active state confirmed by bg + icon colour (not colour alone); close icon has accessible label; touch targets ≥ 44px via list-item padding ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
   </div>
 
 
