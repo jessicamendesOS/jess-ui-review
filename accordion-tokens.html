@@ -971,9 +971,16 @@
         <tr>
           <td class="td-property">open/close animation</td>
           <td class="td-current">none (instant height swap)</td>
-          <td class="td-proposed">0.4s <code>grid-template-rows</code> 0fr↔1fr + opacity/slide on body · <code>--acc-proposed-ease</code></td>
-          <td class="td-token">--acc-proposed-dur, --acc-proposed-ease</td>
-          <td class="td-rationale">CSS grid row animation avoids <code>height: auto</code> interpolation; ease-out gives a light settle. <code>prefers-reduced-motion</code> shortens duration via the same custom properties.</td>
+          <td class="td-proposed">400ms <code>grid-template-rows</code> 0fr↔1fr + opacity/slide on body · expressive easing</td>
+          <td class="td-token">--token-duration-slow · --token-easing-expressive<br><small style="opacity:.6">(via --acc-proposed-dur / --acc-proposed-ease)</small></td>
+          <td class="td-rationale">CSS grid row animation avoids <code>height: auto</code> interpolation; expressive easing gives a light settle. <code>prefers-reduced-motion</code> shortens duration to 0ms via the same local custom properties.</td>
+        </tr>
+        <tr>
+          <td class="td-property">disabled state</td>
+          <td class="td-current">--osui-accordion-item-color set to neutral-500 (#a2a2a2)</td>
+          <td class="td-proposed">text + icon → token-text-disabled · no hover bg · links/buttons at token-opacity-disabled</td>
+          <td class="td-token">--token-text-disabled · --token-opacity-disabled</td>
+          <td class="td-rationale">Semantic disabled tokens replace the hardcoded neutral value; opacity on interactive children (links, buttons) ensures the disabled state is communicated consistently regardless of content.</td>
         </tr>
       </tbody>
     </table>

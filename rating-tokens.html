@@ -780,6 +780,22 @@
           <td class="td-token">—</td>
           <td class="td-rationale">Preview wrapper centers all text by default; rating row labels were inheriting that and floating mid-column instead of sharing a left edge with the stars below. Adding <code>.rating</code>, <code>.rating-row-item</code>, <code>.rating-row-label</code> to the <code>text-align: start</code> allowlist anchors labels to the column's left edge so each row reads as a clean label → rating pair.</td>
         </tr>
+        <tr>
+          <td class="td-property">item transition</td>
+          <td class="td-property">.rating-item-filled / half / empty</td>
+          <td class="td-current">none</td>
+          <td class="td-proposed">opacity 100ms standard ease</td>
+          <td class="td-token">--token-duration-fast · --token-easing-standard</td>
+          <td class="td-rationale">Smooth opacity change as the user hovers over stars; subtle enough not to distract but prevents the abrupt jump between filled/empty states. Suppressed via <code>prefers-reduced-motion</code>.</td>
+        </tr>
+        <tr>
+          <td class="td-property">focus ring</td>
+          <td class="td-property">.rating input:first-of-type + .rating-item</td>
+          <td class="td-current">0 0 0 3px var(--color-focus-outer) — undocumented primitive</td>
+          <td class="td-proposed">0 0 0 3px color-mix(primary-base 22%, transparent)</td>
+          <td class="td-token">--token-semantics-primary-base</td>
+          <td class="td-rationale">Replaces the legacy <code>--color-focus-outer</code> primitive with a documented semantic token; <code>color-mix</code> at 22% produces the same translucent ring effect tied to the primary brand color rather than a fixed hex.</td>
+        </tr>
       </tbody>
     </table>
   </div>

@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Badge color test</title>
+<link rel="stylesheet" href=".claude/worktrees/stoic-yonath-797d84/assets/os-ui/OutsystemsUI_2.29-proposed.css">
+<style>
+  body { padding: 32px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; }
+  h1 { font-size: 18px; font-weight: 700; color: #111; margin: 0 0 32px; }
+  .family { margin-bottom: 32px; }
+  .family-name { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 10px; }
+  .swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+  .swatch { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .swatch-label { font-size: 10px; color: #9ca3af; white-space: nowrap; }
+  /* Badge base styles from OSUI */
+  .badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 600; height: 32px; min-width: 32px;
+    border-radius: 16px; padding: 0 10px;
+    font-size: 14px; font-family: inherit;
+  }
+</style>
+</head>
+<body>
+
+<h1>Badge — color test</h1>
+
+<!-- YELLOW -->
+<div class="family">
+  <div class="family-name">Yellow → token-text-warning</div>
+  <div class="swatches">
+    <div class="swatch"><span class="badge background-yellow-lightest">42</span><span class="swatch-label">lightest</span></div>
+    <div class="swatch"><span class="badge background-yellow-lighter">42</span><span class="swatch-label">lighter</span></div>
+    <div class="swatch"><span class="badge background-yellow-light">42</span><span class="swatch-label">light</span></div>
+    <div class="swatch"><span class="badge background-yellow">42</span><span class="swatch-label">base</span></div>
+    <div class="swatch"><span class="badge background-yellow-dark">42</span><span class="swatch-label">dark</span></div>
+    <div class="swatch"><span class="badge background-yellow-darker">42</span><span class="swatch-label">darker</span></div>
+    <div class="swatch"><span class="badge background-yellow-darkest">42</span><span class="swatch-label">darkest ✓white</span></div>
+  </div>
+</div>
+
+<!-- RED -->
+<div class="family">
+  <div class="family-name">Red → token-text-danger</div>
+  <div class="swatches">
+    <div class="swatch"><span class="badge background-red-lightest">42</span><span class="swatch-label">lightest</span></div>
+    <div class="swatch"><span class="badge background-red-lighter">42</span><span class="swatch-label">lighter</span></div>
+    <div class="swatch"><span class="badge background-red-light">42</span><span class="swatch-label">light</span></div>
+    <div class="swatch"><span class="badge background-red">42</span><span class="swatch-label">base ✓white</span></div>
+    <div class="swatch"><span class="badge background-red-dark">42</span><span class="swatch-label">dark ✓white</span></div>
+    <div class="swatch"><span class="badge background-red-darker">42</span><span class="swatch-label">darker ✓white</span></div>
+    <div class="swatch"><span class="badge background-red-darkest">42</span><span class="swatch-label">darkest ✓white</span></div>
+  </div>
+</div>
+
+<!-- ORANGE -->
+<div class="family">
+  <div class="family-name">Orange → token-text-extended-orange</div>
+  <div class="swatches">
+    <div class="swatch"><span class="badge background-orange-lightest">42</span><span class="swatch-label">lightest</span></div>
+    <div class="swatch"><span class="badge background-orange-lighter">42</span><span class="swatch-label">lighter</span></div>
+    <div class="swatch"><span class="badge background-orange-light">42</span><span class="swatch-label">light</span></div>
+    <div class="swatch"><span class="badge background-orange">42</span><span class="swatch-label">base ✓white</span></div>
+    <div class="swatch"><span class="badge background-orange-dark">42</span><span class="swatch-label">dark ✓white</span></div>
+    <div class="swatch"><span class="badge background-orange-darker">42</span><span class="swatch-label">darker ✓white</span></div>
+    <div class="swatch"><span class="badge background-orange-darkest">42</span><span class="swatch-label">darkest ✓white</span></div>
+  </div>
+</div>
+
+<!-- LIME -->
+<div class="family">
+  <div class="family-name">Lime → token-text-extended-lime</div>
+  <div class="swatches">
+    <div class="swatch"><span class="badge background-lime-lightest">42</span><span class="swatch-label">lightest</span></div>
+    <div class="swatch"><span class="badge background-lime-lighter">42</span><span class="swatch-label">lighter</span></div>
+    <div class="swatch"><span class="badge background-lime-light">42</span><span class="swatch-label">light</span></div>
+    <div class="swatch"><span class="badge background-lime">42</span><span class="swatch-label">base</span></div>
+    <div class="swatch"><span class="badge background-lime-dark">42</span><span class="swatch-label">dark</span></div>
+    <div class="swatch"><span class="badge background-lime-darker">42</span><span class="swatch-label">darker ✓white</span></div>
+    <div class="swatch"><span class="badge background-lime-darkest">42</span><span class="swatch-label">darkest ✓white</span></div>
+  </div>
+</div>
+
+<!-- GREEN -->
+<div class="family">
+  <div class="family-name">Green → token-text-success</div>
+  <div class="swatches">
+    <div class="swatch"><span class="badge background-green-lightest">42</span><span class="swatch-label">lightest</span></div>
+    <div class="swatch"><span class="badge background-green-lighter">42</span><span class="swatch-label">lighter</span></div>
+    <div class="swatch"><span class="badge background-green-light">42</span><span class="swatch-label">light</span></div>
+    <div class="swatch"><span class="badge background-green">42</span><span class="swatch-label">base ✓white</span></div>
+    <div class="swatch"><span class="badge background-green-dark">42</span><span class="swatch-label">dark ✓white</span></div>
+    <div class="swatch"><span class="badge background-green-darker">42</span><span class="swatch-label">darker ✓white</span></div>
+    <div class="swatch"><span class="badge background-green-darkest">42</span><span class="swatch-label">darkest ✓white</span></div>
+  </div>
+</div>
+
+<!-- TEAL -->
+<div class="family">
+  <div class="family-name">Teal → token-text-extended-teal</div>
+  <div class="swatches">
+    <div class="swatch"><span class="badge background-teal-lightest">42</span><span class="swatch-label">lightest</span></div>
+    <div class="swatch"><span class="badge background-teal-lighter">42</span><span class="swatch-label">lighter</span></div>
+    <div class="swatch"><span class="badge background-teal-light">42</span><span class="swatch-label">light</span></div>
+    <div class="swatch"><span class="badge background-teal">42</span><span class="swatch-label">base ✓white</span></div>
+    <div class="swatch"><span class="badge background-teal-dark">42</span><span class="swatch-label">dark ✓white</span></div>
+    <div class="swatch"><span class="badge background-teal-darker">42</span><span class="swatch-label">darker ✓white</span></div>
+    <div class="swatch"><span class="badge background-teal-darkest">42</span><span class="swatch-label">darkest ✓white</span></div>
+  </div>
+</div>
+
+<!-- CYAN -->
+<div class="family">
+  <div class="family-name">Cyan → token-text-extended-aqua</div>
+  <div class="swatches">
+    <div class="swatch"><span class="badge background-cyan-lightest">42</span><span class="swatch-label">lightest</span></div>
+    <div class="swatch"><span class="badge background-cyan-lighter">42</span><span class="swatch-label">lighter</span></div>
+    <div class="swatch"><span class="badge background-cyan-light">42</span><span class="swatch-label">light</span></div>
+    <div class="swatch"><span class="badge background-cyan">42</span><span class="swatch-label">base ✓white</span></div>
+    <div class="swatch"><span class="badge background-cyan-dark">42</span><span class="swatch-label">dark ✓white</span></div>
+    <div class="swatch"><span class="badge background-cyan-darker">42</span><span class="swatch-label">darker ✓white</span></div>
+    <div class="swatch"><span class="badge background-cyan-darkest">42</span><span class="swatch-label">darkest ✓white</span></div>
+  </div>
+</div>
+
+<!-- BLUE -->
+<div class="family">
+  <div class="family-name">Blue → token-text-info</div>
+  <div class="swatches">
+    <div class="swatch"><span class="badge background-blue-lightest">42</span><span class="swatch-label">lightest</span></div>
+    <div class="swatch"><span class="badge background-blue-lighter">42</span><span class="swatch-label">lighter</span></div>
+    <div class="swatch"><span class="badge background-blue-light">42</span><span class="swatch-label">light</span></div>
+    <div class="swatch"><span class="badge background-blue">42</span><span class="swatch-label">base ✓white</span></div>
+    <div class="swatch"><span class="badge background-blue-dark">42</span><span class="swatch-label">dark ✓white</span></div>
+    <div class="swatch"><span class="badge background-blue-darker">42</span><span class="swatch-label">darker ✓white</span></div>
+    <div class="swatch"><span class="badge background-blue-darkest">42</span><span class="swatch-label">darkest ✓white</span></div>
+  </div>
+</div>
+
+<!-- INDIGO -->
+<div class="family">
+  <div class="family-name">Indigo → token-text-extended-indigo</div>
+  <div class="swatches">
+    <div class="swatch"><span class="badge background-indigo-lightest">42</span><span class="swatch-label">lightest</span></div>
+    <div class="swatch"><span class="badge background-indigo-lighter">42</span><span class="swatch-label">lighter</span></div>
+    <div class="swatch"><span class="badge background-indigo-light">42</span><span class="swatch-label">light</span></div>
+    <div class="swatch"><span class="badge background-indigo">42</span><span class="swatch-label">base ✓white</span></div>
+    <div class="swatch"><span class="badge background-indigo-dark">42</span><span class="swatch-label">dark ✓white</span></div>
+    <div class="swatch"><span class="badge background-indigo-darker">42</span><span class="swatch-label">darker ✓white</span></div>
+    <div class="swatch"><span class="badge background-indigo-darkest">42</span><span class="swatch-label">darkest ✓white</span></div>
+  </div>
+</div>
+
+<!-- VIOLET -->
+<div class="family">
+  <div class="family-name">Violet → token-text-extended-violet</div>
+  <div class="swatches">
+    <div class="swatch"><span class="badge background-violet-lightest">42</span><span class="swatch-label">lightest</span></div>
+    <div class="swatch"><span class="badge background-violet-lighter">42</span><span class="swatch-label">lighter</span></div>
+    <div class="swatch"><span class="badge background-violet-light">42</span><span class="swatch-label">light</span></div>
+    <div class="swatch"><span class="badge background-violet">42</span><span class="swatch-label">base ✓white</span></div>
+    <div class="swatch"><span class="badge background-violet-dark">42</span><span class="swatch-label">dark ✓white</span></div>
+    <div class="swatch"><span class="badge background-violet-darker">42</span><span class="swatch-label">darker ✓white</span></div>
+    <div class="swatch"><span class="badge background-violet-darkest">42</span><span class="swatch-label">darkest ✓white</span></div>
+  </div>
+</div>
+
+<!-- GRAPE -->
+<div class="family">
+  <div class="family-name">Grape → token-text-extended-purple</div>
+  <div class="swatches">
+    <div class="swatch"><span class="badge background-grape-lightest">42</span><span class="swatch-label">lightest</span></div>
+    <div class="swatch"><span class="badge background-grape-lighter">42</span><span class="swatch-label">lighter</span></div>
+    <div class="swatch"><span class="badge background-grape-light">42</span><span class="swatch-label">light</span></div>
+    <div class="swatch"><span class="badge background-grape">42</span><span class="swatch-label">base ✓white</span></div>
+    <div class="swatch"><span class="badge background-grape-dark">42</span><span class="swatch-label">dark ✓white</span></div>
+    <div class="swatch"><span class="badge background-grape-darker">42</span><span class="swatch-label">darker ✓white</span></div>
+    <div class="swatch"><span class="badge background-grape-darkest">42</span><span class="swatch-label">darkest ✓white</span></div>
+  </div>
+</div>
+
+<!-- PINK -->
+<div class="family">
+  <div class="family-name">Pink → token-text-extended-pink</div>
+  <div class="swatches">
+    <div class="swatch"><span class="badge background-pink-lightest">42</span><span class="swatch-label">lightest</span></div>
+    <div class="swatch"><span class="badge background-pink-lighter">42</span><span class="swatch-label">lighter</span></div>
+    <div class="swatch"><span class="badge background-pink-light">42</span><span class="swatch-label">light</span></div>
+    <div class="swatch"><span class="badge background-pink">42</span><span class="swatch-label">base ✓white</span></div>
+    <div class="swatch"><span class="badge background-pink-dark">42</span><span class="swatch-label">dark ✓white</span></div>
+    <div class="swatch"><span class="badge background-pink-darker">42</span><span class="swatch-label">darker ✓white</span></div>
+    <div class="swatch"><span class="badge background-pink-darkest">42</span><span class="swatch-label">darkest ✓white</span></div>
+  </div>
+</div>
+
+</body>
+</html>

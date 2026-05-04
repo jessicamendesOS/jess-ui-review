@@ -731,25 +731,39 @@
         <td class="td-rationale">Smaller icon matches the reduced text size and balances optical weight</td>
       </tr>
       <tr>
+        <td class="td-property">padding</td>
+        <td class="td-current">16px all sides</td>
+        <td class="td-proposed">12px 16px (tighter vertical)</td>
+        <td class="td-token">--token-scale-300 · --token-scale-400</td>
+        <td class="td-rationale">Reduced vertical padding makes alerts more compact and less heavy on the page</td>
+      </tr>
+      <tr>
         <td class="td-property">icon align-self</td>
         <td class="td-current">flex-start</td>
-        <td class="td-proposed">center</td>
+        <td class="td-proposed">flex-start (unchanged)</td>
         <td class="td-token">—</td>
-        <td class="td-rationale">For single-line messages the icon now centers vertically with the text</td>
+        <td class="td-rationale">Icon stays top-aligned to anchor to the first line of text in multi-line messages</td>
       </tr>
       <tr>
         <td class="td-property">message font-size</td>
         <td class="td-current">16px</td>
-        <td class="td-proposed">14px</td>
-        <td class="td-token">—</td>
+        <td class="td-proposed">14px (0.875rem)</td>
+        <td class="td-token">--token-font-size-350</td>
         <td class="td-rationale">Smaller text gives alerts a compact, informational feel consistent with common web patterns</td>
       </tr>
       <tr>
         <td class="td-property">message font-weight</td>
         <td class="td-current">400</td>
         <td class="td-proposed">500</td>
-        <td class="td-token">token-font-weight-medium</td>
+        <td class="td-token">--token-font-weight-medium</td>
         <td class="td-rationale">Medium adds emphasis without the heaviness of semi-bold; pairs better with 14px size</td>
+      </tr>
+      <tr>
+        <td class="td-property">transition</td>
+        <td class="td-current">none</td>
+        <td class="td-proposed">background-color · color · border-color — 120ms standard ease</td>
+        <td class="td-token">--token-duration-fast · --token-easing-standard</td>
+        <td class="td-rationale">Smooth colour change when the variant type or theme changes at runtime, avoiding a jarring instant swap</td>
       </tr>
     </tbody>
   </table>

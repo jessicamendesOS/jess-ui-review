@@ -620,11 +620,11 @@
         </tr>
         <tr>
           <td class="td-property">current-page colour</td>
-          <td class="td-property">.breadcrumbs-item:last-child</td>
+          <td class="td-property">.breadcrumbs-content &gt; .breadcrumbs-item:last-child,<br>.breadcrumbs-content &gt; *:last-child &gt; .breadcrumbs-item</td>
           <td class="td-current">color-neutral-8 (#4f575e) — <em>same grey as a span</em></td>
           <td class="td-proposed">token-text-default (#242424) + semi-bold</td>
           <td class="td-token">--token-text-default<br>--token-font-weight-semi-bold</td>
-          <td class="td-rationale"><strong>"You are here."</strong> 2.28 renders the current page in muted neutral-8 — so in a chain of blue links + grey span, the grey span reads as the <em>weakest</em> item despite being where the user actually is. Proposal lifts the current item to <code>text-default</code> + semi-bold so the active page becomes the strongest thing in the chain, and the ancestors (quieted to <code>text-subtle</code>) recede.</td>
+          <td class="td-rationale"><strong>"You are here."</strong> 2.28 renders the current page in muted neutral-8 — so in a chain of blue links + grey span, the grey span reads as the <em>weakest</em> item despite being where the user actually is. Proposal lifts the current item to <code>text-default</code> + semi-bold so the active page becomes the strongest thing in the chain, and the ancestors (quieted to <code>text-subtle</code>) recede. The double selector handles both plain <code>.breadcrumbs-item</code> last children and wrapped structures (e.g. <code>&lt;li&gt;</code> wrappers) to avoid specificity conflicts with the font-weight regular on all items.</td>
         </tr>
         <tr>
           <td class="td-property">separator colour</td>
@@ -643,6 +643,14 @@
           <td class="td-rationale">Swap from filled triangle (▶) to thin outline chevron (›) — reads as <em>punctuation</em> between interactive items rather than a directional arrow. Same Phosphor codepoint <code>\e13a</code>; the override is purely a <code>font-family</code> swap from <code>Phosphor-Fill</code> to <code>Phosphor</code>, keeping the HTML shared with current-mode.</td>
         </tr>
         <tr>
+          <td class="td-property">item font-weight</td>
+          <td class="td-property">.breadcrumbs-item</td>
+          <td class="td-current">inherits body (400)</td>
+          <td class="td-proposed">400 regular — explicit</td>
+          <td class="td-token">--token-font-weight-regular</td>
+          <td class="td-rationale">Explicitly sets regular weight on all items so the semi-bold override on the last item creates a clear contrast without relying on inherited defaults that might vary by context.</td>
+        </tr>
+        <tr>
           <td class="td-property">hover state</td>
           <td class="td-property">.breadcrumbs-item a:hover</td>
           <td class="td-current">underline only (inherits link colour)</td>
@@ -657,6 +665,22 @@
           <td class="td-proposed">formalised as <code>.breadcrumbs-home</code> + <code>ph-house</code></td>
           <td class="td-token">—</td>
           <td class="td-rationale">Home-icon breadcrumb starts are a universal pattern (GitHub, GitLab, Linear, every admin console). 2.28 has no formal slot, so teams reach for inline markup that renders inconsistently. Proposal introduces <code>.breadcrumbs-home</code> as the recognised first-item prefix so the icon stays aligned, weighted, and themable.</td>
+        </tr>
+        <tr>
+          <td class="td-property">link transition</td>
+          <td class="td-property">.breadcrumbs-item a</td>
+          <td class="td-current">none</td>
+          <td class="td-proposed">color 100ms standard ease</td>
+          <td class="td-token">--token-duration-fast · --token-easing-standard</td>
+          <td class="td-rationale">Smooth colour fade on hover — prevents the abrupt jump from text-subtlest to text-default. Suppressed via <code>prefers-reduced-motion</code>.</td>
+        </tr>
+        <tr>
+          <td class="td-property">link icon size</td>
+          <td class="td-property">.breadcrumbs-item a .icon</td>
+          <td class="td-current">inherits (variable)</td>
+          <td class="td-proposed">1rem (16px) — explicit</td>
+          <td class="td-token">--token-font-size-400</td>
+          <td class="td-rationale">Icons inside breadcrumb anchors (home icon, external-link indicator) are set to a consistent 16px so they sit optically aligned with the 14px text without growing too dominant.</td>
         </tr>
         <tr>
           <td class="td-property">collapsed overflow</td>
