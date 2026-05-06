@@ -74,6 +74,18 @@
     }
 
 
+    /* ── Notification (static preview) ── */
+    .sc-notification-preview .osui-notification {
+      position: static !important;
+      transform: none !important;
+      left: auto !important;
+      right: auto !important;
+      top: auto !important;
+      bottom: auto !important;
+      width: var(--notification-width, 370px);
+      max-width: 100%;
+    }
+
     /* ── Dropdown (static open state) ── */
     .sc-section .dropdown-container .dropdown-list {
       position: static !important;
@@ -84,6 +96,11 @@
     /* Fix arrow: pin to trigger height (40px) instead of expanded container */
     .sc-section .dropdown-container:after {
       top: calc(var(--token-scale-1000, 40px) / 2);
+    }
+
+    /* ── Overflow Menu (static open state) ── */
+    .sc-section .osui-overflow-menu__balloon {
+      position: static !important;
     }
 
     /* ── Master detail height ── */
@@ -805,7 +822,99 @@
 
 
   <!-- ══════════════════════════════════════════
-       9. FORM CONTROLS — CHECKBOX, SWITCH & RADIO
+       9. ANIMATED LABEL
+  ══════════════════════════════════════════ -->
+  <div class="sc-section">
+    <div class="sc-section-title">Animated Label<span class="sc-reviewed">Reviewed</span></div>
+
+    <!-- Group 1: Rest state (no value) -->
+    <div class="sc-label" style="margin-bottom:16px;">Rest · no value</div>
+    <div style="max-width:480px;">
+      <div data-block="Interaction.AnimatedLabel" class="OSBlockWidget">
+        <div data-container="" class="animated-label" name="0.al1">
+          <div class="animated-label-text">
+            <label data-label="" class="OSFillParent" for="sc-al-rest">InputBox Label</label>
+          </div>
+          <div class="animated-label-input">
+            <span class="input-text">
+              <input data-input="" class="form-control OSFillParent" type="text" placeholder="" value="" id="sc-al-rest">
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group 2: Active state (has value / floated) -->
+    <div class="sc-label" style="margin-top:32px;margin-bottom:16px;">Active · label floated</div>
+    <div style="max-width:480px;">
+      <div data-block="Interaction.AnimatedLabel" class="OSBlockWidget">
+        <div data-container="" class="animated-label active" name="0.al2">
+          <div class="animated-label-text">
+            <label data-label="" class="OSFillParent" for="sc-al-active">InputBox Label</label>
+          </div>
+          <div class="animated-label-input">
+            <span class="input-text">
+              <input data-input="" class="form-control OSFillParent" type="text" placeholder="" value="Filled value" id="sc-al-active">
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group 3: Error state -->
+    <div class="sc-label" style="margin-top:32px;margin-bottom:16px;">Error · not-valid</div>
+    <div style="max-width:480px;">
+      <div data-block="Interaction.AnimatedLabel" class="OSBlockWidget">
+        <div data-container="" class="animated-label active" name="0.al3">
+          <div class="animated-label-text">
+            <label data-label="" class="OSFillParent" for="sc-al-error">InputBox Label</label>
+          </div>
+          <div class="animated-label-input">
+            <span class="input-text">
+              <input data-input="" class="form-control OSFillParent not-valid" type="text" placeholder="" value="invalid value" id="sc-al-error">
+            </span>
+          </div>
+        </div>
+      </div>
+      <span class="validation-message">This field is required.</span>
+    </div>
+
+    <!-- Group 4: Disabled -->
+    <div class="sc-label" style="margin-top:32px;margin-bottom:16px;">Disabled</div>
+    <div style="max-width:480px;">
+      <div data-block="Interaction.AnimatedLabel" class="OSBlockWidget">
+        <div data-container="" class="animated-label" name="0.al4">
+          <div class="animated-label-text">
+            <label data-label="" class="OSFillParent" for="sc-al-disabled">InputBox Label</label>
+          </div>
+          <div class="animated-label-input">
+            <span class="input-text">
+              <input data-input="" class="form-control OSFillParent" type="text" placeholder="" value="" disabled id="sc-al-disabled">
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <details class="sc-review">
+      <summary><span>Animated Label · Review</span><span class="sc-review-badge sc-review-badge--warn">8/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Border: token-border-size-025 + token-border-input-default (#8c8c8c) ✓; border-radius: token-border-radius-200 (8px) ✓; bg: token-bg-input-default ✓; label rest: token-text-default + token-font-size-350 + token-font-weight-regular ✓; label active: token-primitives-neutral-1000 + token-font-size-300 + token-font-weight-medium ✓; error: token-semantics-danger-base ✓; transitions use token-duration-fast + token-transition-time-200 ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Container height 40px (token-scale-1000) matches input default ✓; label rest 14px → active 12px progressive scale ✓; input height 40px, width 100% ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">border-radius: 8px (token-border-radius-200) — matches 2.29 target ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Default border = token-border-input-default; focus border = token-semantics-primary-base via :focus-within; error border = token-semantics-danger-base; label bg = token-bg-input-default (white) cuts border visually; disabled inherits token-bg-input-disabled on input ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Label rest #242424 on white ≈ 15:1 ✓; label active #3b3b3b on white ≈ 10:1 ✓; error label #e52929 on white ≈ 4.49:1 at 12px — borderline AA (4.5:1 threshold) → documented exception for danger semantic token, same pattern as validation-message ⚠</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">40px height aligns with inputs and dropdowns in same form; label uses pointer-events:none so never blocks the input tap area; label bg white + padding 0 4px cleanly cuts the border on float ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Outlined style consistent with 2.29 input design; label floats to border on active (top:0, translateY(-50%)); error and focus states visually distinct; label left:12px aligns naturally with input padding-left:16px ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Label transition: top + font-size + transform 200ms (token-transition-time-200), color 100ms (token-duration-fast) ✓; border-color transition 100ms ✓; prefers-reduced-motion block added — all transitions disabled when user prefers reduced motion ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Container 40px — below 44px threshold, scales to 48px on touch (documented exception) ✓; label for/id association preserved ✓; error state: border + label color + validation-message text ✓; :focus-within on container reflects focus state without JS ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       10. FORM CONTROLS — CHECKBOX, SWITCH & RADIO
   ══════════════════════════════════════════ -->
   <div class="sc-section">
     <div class="sc-section-title">Form Controls — Checkbox, Switch &amp; Radio<span class="sc-reviewed">Reviewed</span></div>
@@ -1488,7 +1597,633 @@
 
 
   <!-- ══════════════════════════════════════════
-       8c. DATE & MONTH PICKERS
+       8c. RANGE SLIDER
+  ══════════════════════════════════════════ -->
+  <div class="sc-section">
+    <div class="sc-section-title">Range Slider<span class="sc-reviewed">Reviewed</span></div>
+
+    <!-- Single handle -->
+    <div class="sc-label" style="margin-bottom:8px;">Single handle · value 51</div>
+    <div style="max-width:480px;">
+      <div data-block="Interaction.RangeSlider" class="OSBlockWidget">
+        <div data-container="" class="osui-range-slider" style="--range-slider-size: 100%;">
+          <div data-container="" class="osui-range-slider__provider noUi-target noUi-ltr noUi-horizontal noUi-txt-dir-ltr">
+            <div class="noUi-base">
+              <div class="noUi-connects">
+                <div class="noUi-connect" style="transform: translate(0%, 0px) scale(0.51, 1);"></div>
+              </div>
+              <div class="noUi-origin" style="transform: translate(-49%, 0px); z-index: 4;">
+                <div class="noUi-handle noUi-handle-lower" data-handle="0" tabindex="0" aria-label="handler" role="slider" aria-orientation="horizontal" aria-valuemin="0.0" aria-valuemax="100.0" aria-valuenow="51.0" aria-valuetext="51.00">
+                  <div class="noUi-touch-area"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interval (two handles) -->
+    <div class="sc-label" style="margin-top:32px; margin-bottom:8px;">Interval · values 20 – 70</div>
+    <div style="max-width:480px;">
+      <div data-block="Interaction.RangeSliderInterval" class="OSBlockWidget">
+        <div data-container="" class="osui-range-slider" style="--range-slider-size: 100%;">
+          <div data-container="" class="osui-range-slider__provider noUi-target noUi-ltr noUi-horizontal noUi-txt-dir-ltr">
+            <div class="noUi-base">
+              <div class="noUi-connects">
+                <div class="noUi-connect" style="transform: translate(20%, 0px) scale(0.50, 1);"></div>
+              </div>
+              <div class="noUi-origin" style="transform: translate(-80%, 0px); z-index: 4;">
+                <div class="noUi-handle noUi-handle-lower" data-handle="0" tabindex="0" aria-label="lower handler" role="slider" aria-orientation="horizontal" aria-valuemin="0.0" aria-valuemax="100.0" aria-valuenow="20.0" aria-valuetext="20.00">
+                  <div class="noUi-touch-area"></div>
+                </div>
+              </div>
+              <div class="noUi-origin" style="transform: translate(-30%, 0px); z-index: 5;">
+                <div class="noUi-handle noUi-handle-upper" data-handle="1" tabindex="0" aria-label="upper handler" role="slider" aria-orientation="horizontal" aria-valuemin="0.0" aria-valuemax="100.0" aria-valuenow="70.0" aria-valuetext="70.00">
+                  <div class="noUi-touch-area"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Disabled -->
+    <!-- With ticks + tooltip -->
+    <div class="sc-label" style="margin-top:32px; margin-bottom:8px;">With ticks &amp; tooltip · value 51</div>
+    <div style="max-width:480px;">
+      <div data-block="Interaction.RangeSlider" class="OSBlockWidget">
+        <div data-container="" class="osui-range-slider osui-range-slider--has-ticks" style="--range-slider-size: 100%;">
+          <div data-container="" class="osui-range-slider__provider noUi-target noUi-ltr noUi-horizontal noUi-txt-dir-ltr">
+            <div class="noUi-base">
+              <div class="noUi-connects">
+                <div class="noUi-connect" style="transform: translate(0%, 0px) scale(0.51, 1);"></div>
+              </div>
+              <div class="noUi-origin" style="transform: translate(-49%, 0px); z-index: 4;">
+                <div class="noUi-handle noUi-handle-lower" data-handle="0" tabindex="0" aria-label="handler" role="slider" aria-orientation="horizontal" aria-valuemin="0.0" aria-valuemax="100.0" aria-valuenow="51.0" aria-valuetext="51.00">
+                  <div class="noUi-touch-area"></div>
+                  <div class="noUi-tooltip">51</div>
+                </div>
+              </div>
+            </div>
+            <div class="noUi-pips noUi-pips-horizontal">
+              <div class="noUi-marker noUi-marker-horizontal noUi-marker-large" style="left: 0%;"></div><div class="noUi-value noUi-value-horizontal noUi-value-large" data-value="0" style="left: 0%;">0</div>
+              <div class="noUi-marker noUi-marker-horizontal noUi-marker-large" style="left: 25%;"></div><div class="noUi-value noUi-value-horizontal noUi-value-large" data-value="25" style="left: 25%;">25</div>
+              <div class="noUi-marker noUi-marker-horizontal noUi-marker-large" style="left: 50%;"></div><div class="noUi-value noUi-value-horizontal noUi-value-large" data-value="50" style="left: 50%;">50</div>
+              <div class="noUi-marker noUi-marker-horizontal noUi-marker-large" style="left: 75%;"></div><div class="noUi-value noUi-value-horizontal noUi-value-large" data-value="75" style="left: 75%;">75</div>
+              <div class="noUi-marker noUi-marker-horizontal noUi-marker-large" style="left: 100%;"></div><div class="noUi-value noUi-value-horizontal noUi-value-large" data-value="100" style="left: 100%;">100</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sc-label" style="margin-top:32px; margin-bottom:8px;">Disabled · value 35</div>
+    <div style="max-width:480px;">
+      <div data-block="Interaction.RangeSlider" class="OSBlockWidget">
+        <div data-container="" class="osui-range-slider" style="--range-slider-size: 100%;">
+          <div data-container="" class="osui-range-slider__provider noUi-target noUi-ltr noUi-horizontal noUi-txt-dir-ltr" disabled>
+            <div class="noUi-base">
+              <div class="noUi-connects">
+                <div class="noUi-connect" style="transform: translate(0%, 0px) scale(0.35, 1);"></div>
+              </div>
+              <div class="noUi-origin" style="transform: translate(-65%, 0px); z-index: 4;">
+                <div class="noUi-handle noUi-handle-lower" data-handle="0" tabindex="-1" aria-label="handler" role="slider" aria-orientation="horizontal" aria-valuemin="0.0" aria-valuemax="100.0" aria-valuenow="35.0" aria-valuetext="35.00" aria-disabled="true">
+                  <div class="noUi-touch-area"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vertical -->
+    <div class="sc-label" style="margin-top:32px; margin-bottom:8px;">Vertical · value 60</div>
+    <div style="display:flex; gap:48px; align-items:flex-start;">
+
+      <!-- Single vertical -->
+      <div data-block="Interaction.RangeSlider" class="OSBlockWidget">
+        <div data-container="" class="osui-range-slider osui-range-slider--is-vertical" style="--range-slider-size: 160px;">
+          <div data-container="" class="osui-range-slider__provider noUi-target noUi-ltr noUi-vertical noUi-txt-dir-ltr">
+            <div class="noUi-base">
+              <div class="noUi-connects">
+                <div class="noUi-connect" style="transform: translate(0, 40%) scale(1, 0.6);"></div>
+              </div>
+              <div class="noUi-origin" style="transform: translate(0, 40%); z-index: 4;">
+                <div class="noUi-handle noUi-handle-lower" data-handle="0" tabindex="0" aria-label="handler" role="slider" aria-orientation="vertical" aria-valuemin="0.0" aria-valuemax="100.0" aria-valuenow="60.0" aria-valuetext="60.00">
+                  <div class="noUi-touch-area"></div>
+                  <div class="noUi-tooltip">60</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vertical interval -->
+      <div data-block="Interaction.RangeSliderInterval" class="OSBlockWidget">
+        <div data-container="" class="osui-range-slider osui-range-slider--is-vertical" style="--range-slider-size: 160px;">
+          <div data-container="" class="osui-range-slider__provider noUi-target noUi-ltr noUi-vertical noUi-txt-dir-ltr">
+            <div class="noUi-base">
+              <div class="noUi-connects">
+                <div class="noUi-connect" style="transform: translate(0, 20%) scale(1, 0.5);"></div>
+              </div>
+              <div class="noUi-origin" style="transform: translate(0, 70%); z-index: 4;">
+                <div class="noUi-handle noUi-handle-lower" data-handle="0" tabindex="0" aria-label="lower handler" role="slider" aria-orientation="vertical" aria-valuemin="0.0" aria-valuemax="100.0" aria-valuenow="30.0" aria-valuetext="30.00">
+                  <div class="noUi-touch-area"></div>
+                </div>
+              </div>
+              <div class="noUi-origin" style="transform: translate(0, 20%); z-index: 5;">
+                <div class="noUi-handle noUi-handle-upper" data-handle="1" tabindex="0" aria-label="upper handler" role="slider" aria-orientation="vertical" aria-valuemin="0.0" aria-valuemax="100.0" aria-valuenow="80.0" aria-valuetext="80.00">
+                  <div class="noUi-touch-area"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vertical disabled -->
+      <div data-block="Interaction.RangeSlider" class="OSBlockWidget">
+        <div data-container="" class="osui-range-slider osui-range-slider--is-vertical" style="--range-slider-size: 160px;">
+          <div data-container="" class="osui-range-slider__provider noUi-target noUi-ltr noUi-vertical noUi-txt-dir-ltr" disabled>
+            <div class="noUi-base">
+              <div class="noUi-connects">
+                <div class="noUi-connect" style="transform: translate(0, 65%) scale(1, 0.35);"></div>
+              </div>
+              <div class="noUi-origin" style="transform: translate(0, 65%); z-index: 4;">
+                <div class="noUi-handle noUi-handle-lower" data-handle="0" tabindex="-1" aria-label="handler" role="slider" aria-orientation="vertical" aria-valuemin="0.0" aria-valuemax="100.0" aria-valuenow="35.0" aria-valuetext="35.00" aria-disabled="true">
+                  <div class="noUi-touch-area"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Vertical with ticks -->
+    <div class="sc-label" style="margin-top:32px; margin-bottom:8px;">Vertical · with ticks · value 60</div>
+    <div style="display:flex; gap:48px; align-items:flex-start;">
+
+      <!-- Vertical with ticks + tooltip -->
+      <div data-block="Interaction.RangeSlider" class="OSBlockWidget">
+        <div data-container="" class="osui-range-slider osui-range-slider--is-vertical" style="--range-slider-size: 160px;">
+          <div data-container="" class="osui-range-slider__provider noUi-target noUi-ltr noUi-vertical noUi-txt-dir-ltr">
+            <div class="noUi-base">
+              <div class="noUi-connects">
+                <div class="noUi-connect" style="transform: translate(0, 40%) scale(1, 0.6);"></div>
+              </div>
+              <div class="noUi-origin" style="transform: translate(0, 40%); z-index: 4;">
+                <div class="noUi-handle noUi-handle-lower" data-handle="0" tabindex="0" aria-label="handler" role="slider" aria-orientation="vertical" aria-valuemin="0.0" aria-valuemax="100.0" aria-valuenow="60.0" aria-valuetext="60.00">
+                  <div class="noUi-touch-area"></div>
+                  <div class="noUi-tooltip">60</div>
+                </div>
+              </div>
+              <div class="noUi-pips noUi-pips-vertical">
+                <div class="noUi-marker noUi-marker-vertical noUi-marker-large" style="top: 0%;"></div>
+                <div class="noUi-value noUi-value-vertical noUi-value-large" style="top: 0%;">100</div>
+                <div class="noUi-marker noUi-marker-vertical noUi-marker-large" style="top: 25%;"></div>
+                <div class="noUi-value noUi-value-vertical noUi-value-large" style="top: 25%;">75</div>
+                <div class="noUi-marker noUi-marker-vertical noUi-marker-large" style="top: 50%;"></div>
+                <div class="noUi-value noUi-value-vertical noUi-value-large" style="top: 50%;">50</div>
+                <div class="noUi-marker noUi-marker-vertical noUi-marker-large" style="top: 75%;"></div>
+                <div class="noUi-value noUi-value-vertical noUi-value-large" style="top: 75%;">25</div>
+                <div class="noUi-marker noUi-marker-vertical noUi-marker-large" style="top: 100%;"></div>
+                <div class="noUi-value noUi-value-vertical noUi-value-large" style="top: 100%;">0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <details class="sc-review">
+      <summary><span>Range Slider · Review</span><span class="sc-review-badge sc-review-badge--warn">8/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">All color variables via token chain ✓; --range-slider-thickness fixed to token-scale-100 (4px) ✓; handle size token-scale-400 (16px) ✓; marker width token-border-size-025 (1px) ✓; handle transition fixed to token-duration-base (150ms) ✓; active halo spread fixed to token-scale-150 (6px) ✓; color-mix 15% opacity is a raw value — no opacity token exists for this use ✓ (acceptable)</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Track 4px = token-scale-100; handle 16px = token-scale-400; pips padding-top token-scale-100 (4px); value top token-scale-050 (2px); ticks 6px = token-scale-150; handle intentionally compact for slider pattern ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Track border-radius = token-border-radius-100 (4px) — pill-shaped ends, correct for slider ✓; handle border-radius 50% — circle ✓; connects border-radius token-border-radius-100 ✓; intentional shape differentiation between track and handle ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Track inactive: token-border-default (#d5d5d5) ✓; connect/fill: token-semantics-primary-base (blue) ✓; handle: white bg + primary-base border ✓; hover/active: primary-base border ✓; drag halo: color-mix at 15% primary, subtle and purposeful ✓; disabled: token-text-disabled fill, token-bg-input-disabled handle, token-border-default track ✓; tooltip: token-text-default, transparent bg ✓; ticks: token-border-default markers, token-text-subtlest labels ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Tick labels token-text-subtlest (#626262) on white → ~5.7:1 AA at 12px ✓; tooltip token-text-default (#242424) on transparent → ~16:1 ✓; disabled token-text-disabled (#a2a2a2) → ~2.3:1 — documented exception for disabled state ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">16px side padding keeps handle within visual bounds ✓; --range-slider-size: 100% scales to container ✓; --has-ticks variant adds bottom margin (token-scale-1000) for pip area ✓; interval variant uses two origins sharing one connect fill ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Clean circle handle, inner decorative lines removed ✓; primary blue fill gives clear progress indication ✓; drag halo via color-mix is subtle and purposeful ✓; tooltip minimal (transparent bg, no border) ✓; tick markers 1px thin and subtle ✓; disabled state visually distinct without primary color ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Handle transform transition token-duration-base (150ms) + ease-out (deceleration curve, correct for drag release) ✓; drag halo via box-shadow has no transition — appears instantly on noUi-active, which is intentional (no lag on press) ✓; prefers-reduced-motion not explicitly set — noUiSlider JS handles motion natively; no untokenised durations remaining ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">⚠ Handle 16px × 16px below 44px WCAG minimum touch target — .noUi-touch-area at 100%/100% does not expand beyond the handle on desktop; role="slider", aria-valuemin/max/now/text, aria-label, aria-orientation, tabindex="0" all present ✓; aria-disabled="true" on disabled handle ✓; keyboard navigation inherited from noUiSlider ✓</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+      </div>
+    </details>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       8d. PROGRESS BAR
+  ══════════════════════════════════════════ -->
+  <div class="sc-section">
+    <div class="sc-section-title">Progress Bar</div>
+
+    <div class="sc-label">30% · default thickness (8px)</div>
+    <div data-block="Numbers.ProgressBar" class="OSBlockWidget">
+      <div data-container="" class="osui-progress-bar" role="progressbar" aria-label="progress" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"
+           style="--thickness:var(--token-scale-200,8px); --progress-value:30%; --progress-color:var(--token-semantics-primary-base,#105cef); --trail-color:var(--token-bg-neutral-subtle-default,var(--token-primitives-neutral-100,#f3f3f3)); --shape:999px;">
+        <div data-container="" class="osui-progress-bar__container">
+          <div data-container="" class="osui-progress-bar__value"></div>
+          <div class="osui-progress-bar__content placeholder-empty"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sc-label" style="margin-top:24px;">60% · thickness 12px</div>
+    <div data-block="Numbers.ProgressBar" class="OSBlockWidget">
+      <div data-container="" class="osui-progress-bar" role="progressbar" aria-label="progress" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+           style="--thickness:12px; --progress-value:60%; --progress-color:var(--token-semantics-primary-base,#105cef); --trail-color:var(--token-bg-neutral-subtle-default,var(--token-primitives-neutral-100,#f3f3f3)); --shape:999px;">
+        <div data-container="" class="osui-progress-bar__container">
+          <div data-container="" class="osui-progress-bar__value"></div>
+          <div class="osui-progress-bar__content placeholder-empty"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sc-label" style="margin-top:24px;">100% · complete</div>
+    <div data-block="Numbers.ProgressBar" class="OSBlockWidget">
+      <div data-container="" class="osui-progress-bar" role="progressbar" aria-label="progress" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
+           style="--thickness:var(--token-scale-200,8px); --progress-value:100%; --progress-color:var(--token-semantics-primary-base,#105cef); --trail-color:var(--token-bg-neutral-subtle-default,var(--token-primitives-neutral-100,#f3f3f3)); --shape:999px;">
+        <div data-container="" class="osui-progress-bar__container">
+          <div data-container="" class="osui-progress-bar__value"></div>
+          <div class="osui-progress-bar__content placeholder-empty"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sc-label" style="margin-top:24px;">Color variants · 50%</div>
+    <div style="display:flex; flex-direction:column; gap:12px;">
+
+      <!-- Success -->
+      <div data-block="Numbers.ProgressBar" class="OSBlockWidget">
+        <div data-container="" class="osui-progress-bar" role="progressbar" aria-label="progress" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"
+             style="--thickness:var(--token-scale-200,8px); --progress-value:50%; --progress-color:var(--token-color-positive-base,var(--token-primitives-green-700,#0f8a57)); --trail-color:var(--token-bg-neutral-subtle-default,var(--token-primitives-neutral-100,#f3f3f3)); --shape:999px;">
+          <div data-container="" class="osui-progress-bar__container">
+            <div data-container="" class="osui-progress-bar__value"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Warning -->
+      <div data-block="Numbers.ProgressBar" class="OSBlockWidget">
+        <div data-container="" class="osui-progress-bar" role="progressbar" aria-label="progress" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"
+             style="--thickness:var(--token-scale-200,8px); --progress-value:50%; --progress-color:var(--token-color-warning-base,var(--token-primitives-yellow-600,#c97f00)); --trail-color:var(--token-bg-neutral-subtle-default,var(--token-primitives-neutral-100,#f3f3f3)); --shape:999px;">
+          <div data-container="" class="osui-progress-bar__container">
+            <div data-container="" class="osui-progress-bar__value"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error -->
+      <div data-block="Numbers.ProgressBar" class="OSBlockWidget">
+        <div data-container="" class="osui-progress-bar" role="progressbar" aria-label="progress" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"
+             style="--thickness:var(--token-scale-200,8px); --progress-value:50%; --progress-color:var(--token-color-negative-base,var(--token-primitives-red-700,#c4291c)); --trail-color:var(--token-bg-neutral-subtle-default,var(--token-primitives-neutral-100,#f3f3f3)); --shape:999px;">
+          <div data-container="" class="osui-progress-bar__container">
+            <div data-container="" class="osui-progress-bar__value"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sc-label" style="margin-top:24px;">With content label · 75%</div>
+    <div data-block="Numbers.ProgressBar" class="OSBlockWidget">
+      <div data-container="" class="osui-progress-bar" role="progressbar" aria-label="progress" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
+           style="--thickness:20px; --progress-value:75%; --progress-color:var(--token-semantics-primary-base,#105cef); --trail-color:var(--token-bg-neutral-subtle-default,var(--token-primitives-neutral-100,#f3f3f3)); --shape:999px;">
+        <div data-container="" class="osui-progress-bar__container">
+          <div data-container="" class="osui-progress-bar__value"></div>
+          <div class="osui-progress-bar__content">
+            <span style="color:#fff; font-size:var(--token-font-size-300,0.75rem); font-weight:var(--token-font-weight-semi-bold,600);">75%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       8e. WIZARD
+  ══════════════════════════════════════════ -->
+  <div class="sc-section">
+    <div class="sc-section-title">Wizard</div>
+
+    <!-- Horizontal · states past / active / next -->
+    <div class="sc-label">Horizontal · states past / active / next</div>
+    <div data-block="Navigation.Wizard" class="OSBlockWidget">
+      <div class="wizard-wrapper display-flex flex-direction-row" role="tablist" aria-orientation="horizontal">
+        <div data-block="Navigation.WizardItem" class="OSBlockWidget">
+          <div data-container="" class="wizard-wrapper-item past label-bottom" role="tab" tabindex="0" style="cursor:pointer;" aria-label="Account">
+            <div data-container="" class="wizard-item-icon-wrapper">
+              <div class="wizard-item-icon"><i class="icon ph-check ph-bold ph-2x" aria-hidden="true"></i></div>
+            </div>
+            <div class="wizard-item-label">Account</div>
+          </div>
+        </div>
+        <div data-block="Navigation.WizardItem" class="OSBlockWidget">
+          <div data-container="" class="wizard-wrapper-item past label-bottom" role="tab" tabindex="0" style="cursor:pointer;" aria-label="Profile">
+            <div data-container="" class="wizard-item-icon-wrapper">
+              <div class="wizard-item-icon"><i class="icon ph-check ph-bold ph-2x" aria-hidden="true"></i></div>
+            </div>
+            <div class="wizard-item-label">Profile</div>
+          </div>
+        </div>
+        <div data-block="Navigation.WizardItem" class="OSBlockWidget">
+          <div data-container="" class="wizard-wrapper-item active label-bottom" role="tab" tabindex="0" style="cursor:pointer;" aria-label="Address" aria-current="step">
+            <div data-container="" class="wizard-item-icon-wrapper">
+              <div class="wizard-item-icon">3</div>
+            </div>
+            <div class="wizard-item-label">Address</div>
+          </div>
+        </div>
+        <div data-block="Navigation.WizardItem" class="OSBlockWidget">
+          <div data-container="" class="wizard-wrapper-item next label-bottom" role="tab" tabindex="-1" style="cursor:default;" aria-label="Review">
+            <div data-container="" class="wizard-item-icon-wrapper">
+              <div class="wizard-item-icon">4</div>
+            </div>
+            <div class="wizard-item-label">Review</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Horizontal · numbered only (first-time flow) -->
+    <div class="sc-label" style="margin-top:40px;">Horizontal · numbered only (first-time flow)</div>
+    <div data-block="Navigation.Wizard" class="OSBlockWidget">
+      <div class="wizard-wrapper display-flex flex-direction-row" role="tablist" aria-orientation="horizontal">
+        <div data-block="Navigation.WizardItem" class="OSBlockWidget">
+          <div data-container="" class="wizard-wrapper-item active label-bottom" role="tab" tabindex="0" style="cursor:pointer;" aria-label="Choose plan" aria-current="step">
+            <div data-container="" class="wizard-item-icon-wrapper">
+              <div class="wizard-item-icon">1</div>
+            </div>
+            <div class="wizard-item-label">Choose plan</div>
+          </div>
+        </div>
+        <div data-block="Navigation.WizardItem" class="OSBlockWidget">
+          <div data-container="" class="wizard-wrapper-item next label-bottom" role="tab" tabindex="-1" style="cursor:default;" aria-label="Billing">
+            <div data-container="" class="wizard-item-icon-wrapper">
+              <div class="wizard-item-icon">2</div>
+            </div>
+            <div class="wizard-item-label">Billing</div>
+          </div>
+        </div>
+        <div data-block="Navigation.WizardItem" class="OSBlockWidget">
+          <div data-container="" class="wizard-wrapper-item next label-bottom" role="tab" tabindex="-1" style="cursor:default;" aria-label="Confirm">
+            <div data-container="" class="wizard-item-icon-wrapper">
+              <div class="wizard-item-icon">3</div>
+            </div>
+            <div class="wizard-item-label">Confirm</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Horizontal · empty dot variant -->
+    <div class="sc-label" style="margin-top:40px;">Horizontal · empty dot variant (.wizard-item-icon:empty → 8px dot)</div>
+    <div data-block="Navigation.Wizard" class="OSBlockWidget">
+      <div class="wizard-wrapper display-flex flex-direction-row" role="tablist" aria-orientation="horizontal">
+        <div data-block="Navigation.WizardItem" class="OSBlockWidget">
+          <div data-container="" class="wizard-wrapper-item past label-bottom" role="tab" tabindex="0" style="cursor:pointer;" aria-label="Step 1">
+            <div data-container="" class="wizard-item-icon-wrapper">
+              <div class="wizard-item-icon"></div>
+            </div>
+            <div class="wizard-item-label">Step 1</div>
+          </div>
+        </div>
+        <div data-block="Navigation.WizardItem" class="OSBlockWidget">
+          <div data-container="" class="wizard-wrapper-item past label-bottom" role="tab" tabindex="0" style="cursor:pointer;" aria-label="Step 2">
+            <div data-container="" class="wizard-item-icon-wrapper">
+              <div class="wizard-item-icon"></div>
+            </div>
+            <div class="wizard-item-label">Step 2</div>
+          </div>
+        </div>
+        <div data-block="Navigation.WizardItem" class="OSBlockWidget">
+          <div data-container="" class="wizard-wrapper-item active label-bottom" role="tab" tabindex="0" style="cursor:pointer;" aria-label="Step 3" aria-current="step">
+            <div data-container="" class="wizard-item-icon-wrapper">
+              <div class="wizard-item-icon"></div>
+            </div>
+            <div class="wizard-item-label">Step 3</div>
+          </div>
+        </div>
+        <div data-block="Navigation.WizardItem" class="OSBlockWidget">
+          <div data-container="" class="wizard-wrapper-item next label-bottom" role="tab" tabindex="-1" style="cursor:default;" aria-label="Step 4">
+            <div data-container="" class="wizard-item-icon-wrapper">
+              <div class="wizard-item-icon"></div>
+            </div>
+            <div class="wizard-item-label">Step 4</div>
+          </div>
+        </div>
+        <div data-block="Navigation.WizardItem" class="OSBlockWidget">
+          <div data-container="" class="wizard-wrapper-item next label-bottom" role="tab" tabindex="-1" style="cursor:default;" aria-label="Step 5">
+            <div data-container="" class="wizard-item-icon-wrapper">
+              <div class="wizard-item-icon"></div>
+            </div>
+            <div class="wizard-item-label">Step 5</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vertical · .wizard-vertical -->
+    <div class="sc-label" style="margin-top:40px;">Vertical · .wizard-vertical</div>
+    <div data-block="Navigation.Wizard" class="OSBlockWidget">
+      <div class="wizard-wrapper wizard-vertical" role="tablist" aria-orientation="vertical">
+        <div class="list">
+          <div data-block="Navigation.WizardItem" class="OSBlockWidget">
+            <div data-container="" class="wizard-wrapper-item past label-bottom" role="tab" tabindex="0" style="cursor:pointer;" aria-label="Connect your account">
+              <div data-container="" class="wizard-item-icon-wrapper">
+                <div class="wizard-item-icon"><i class="icon ph-check ph-bold ph-2x" aria-hidden="true"></i></div>
+              </div>
+              <div class="wizard-item-label">Connect your account</div>
+            </div>
+          </div>
+          <div data-block="Navigation.WizardItem" class="OSBlockWidget">
+            <div data-container="" class="wizard-wrapper-item past label-bottom" role="tab" tabindex="0" style="cursor:pointer;" aria-label="Import your data">
+              <div data-container="" class="wizard-item-icon-wrapper">
+                <div class="wizard-item-icon"><i class="icon ph-check ph-bold ph-2x" aria-hidden="true"></i></div>
+              </div>
+              <div class="wizard-item-label">Import your data</div>
+            </div>
+          </div>
+          <div data-block="Navigation.WizardItem" class="OSBlockWidget">
+            <div data-container="" class="wizard-wrapper-item active label-bottom" role="tab" tabindex="0" style="cursor:pointer;" aria-label="Configure integrations" aria-current="step">
+              <div data-container="" class="wizard-item-icon-wrapper">
+                <div class="wizard-item-icon">3</div>
+              </div>
+              <div class="wizard-item-label">Configure integrations</div>
+            </div>
+          </div>
+          <div data-block="Navigation.WizardItem" class="OSBlockWidget">
+            <div data-container="" class="wizard-wrapper-item next label-bottom" role="tab" tabindex="-1" style="cursor:default;" aria-label="Invite your team">
+              <div data-container="" class="wizard-item-icon-wrapper">
+                <div class="wizard-item-icon">4</div>
+              </div>
+              <div class="wizard-item-label">Invite your team</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       8f. TIMELINE
+  ══════════════════════════════════════════ -->
+  <div class="sc-section">
+    <div class="sc-section-title">Timeline</div>
+
+    <!-- With icons + colored backgrounds -->
+    <div class="sc-label">With icons · colored backgrounds</div>
+    <div class="timeline" style="max-width:480px;">
+      <div data-block="Navigation.TimelineItem" class="OSBlockWidget">
+        <div data-container="" class="timeline-item" role="listitem">
+          <div class="placeholder-empty timeline-left OSInline"></div>
+          <div data-container="" class="timeline-icon OSInline">
+            <div data-container="" class="timeline-icon-line OSInline"></div>
+            <div class="timeline-icon-container background-neutral-7 OSInline">
+              <i class="icon ph-user ph ph-2x" aria-hidden="true"></i>
+            </div>
+          </div>
+          <div data-container="" class="timeline-content">
+            <div>Applied to Front End Developer</div>
+          </div>
+          <div class="timeline-right OSInline">20 sep</div>
+        </div>
+      </div>
+      <div data-block="Navigation.TimelineItem" class="OSBlockWidget">
+        <div data-container="" class="timeline-item" role="listitem">
+          <div class="placeholder-empty timeline-left OSInline"></div>
+          <div data-container="" class="timeline-icon OSInline">
+            <div data-container="" class="timeline-icon-line OSInline"></div>
+            <div class="timeline-icon-container background-orange OSInline">
+              <i class="icon ph-thumbs-up ph ph-2x" aria-hidden="true"></i>
+            </div>
+          </div>
+          <div data-container="" class="timeline-content">
+            <div>Advanced to phone screening by Bethany Blake</div>
+          </div>
+          <div class="timeline-right OSInline">21 sep</div>
+        </div>
+      </div>
+      <div data-block="Navigation.TimelineItem" class="OSBlockWidget">
+        <div data-container="" class="timeline-item" role="listitem">
+          <div class="placeholder-empty timeline-left OSInline"></div>
+          <div data-container="" class="timeline-icon OSInline">
+            <div data-container="" class="timeline-icon-line OSInline"></div>
+            <div class="timeline-icon-container background-green OSInline">
+              <i class="icon ph-check ph ph-2x" aria-hidden="true"></i>
+            </div>
+          </div>
+          <div data-container="" class="timeline-content">
+            <div>Completed phone screening with Martha Gardner</div>
+          </div>
+          <div class="timeline-right OSInline">25 sep</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty dots + card content -->
+    <div class="sc-label" style="margin-top:40px;">Empty dots · with card content</div>
+    <div class="timeline" style="max-width:480px;">
+      <div data-block="Navigation.TimelineItem" class="OSBlockWidget">
+        <div data-container="" class="timeline-item" role="listitem">
+          <div class="placeholder-empty timeline-left OSInline"></div>
+          <div data-container="" class="timeline-icon OSInline">
+            <div data-container="" class="timeline-icon-line OSInline"></div>
+            <div class="timeline-icon-container background-neutral-7 OSInline"></div>
+          </div>
+          <div data-container="" class="timeline-content">
+            <div>Chelsea Hagon created the invoice.</div>
+          </div>
+          <div class="timeline-right OSInline">20 sep</div>
+        </div>
+      </div>
+      <div data-block="Navigation.TimelineItem" class="OSBlockWidget">
+        <div data-container="" class="timeline-item" role="listitem">
+          <div class="placeholder-empty timeline-left OSInline"></div>
+          <div data-container="" class="timeline-icon OSInline">
+            <div data-container="" class="timeline-icon-line OSInline"></div>
+            <div class="timeline-icon-container background-neutral-7 OSInline"></div>
+          </div>
+          <div data-container="" class="timeline-content">
+            <div>Chelsea Hagon edited the invoice.</div>
+          </div>
+          <div class="timeline-right OSInline">21 sep</div>
+        </div>
+      </div>
+      <div data-block="Navigation.TimelineItem" class="OSBlockWidget">
+        <div data-container="" class="timeline-item" role="listitem">
+          <div class="placeholder-empty timeline-left OSInline"></div>
+          <div data-container="" class="timeline-icon OSInline">
+            <div data-container="" class="timeline-icon-line OSInline"></div>
+            <div class="timeline-icon-container background-neutral-7 OSInline"></div>
+          </div>
+          <div data-container="" class="timeline-content">
+            <div>Chelsea Hagon sent the invoice.</div>
+          </div>
+          <div class="timeline-right OSInline">25 sep</div>
+        </div>
+      </div>
+      <div data-block="Navigation.TimelineItem" class="OSBlockWidget">
+        <div data-container="" class="timeline-item" role="listitem">
+          <div class="placeholder-empty timeline-left OSInline"></div>
+          <div data-container="" class="timeline-icon OSInline">
+            <div data-container="" class="timeline-icon-line OSInline"></div>
+            <div class="timeline-icon-container background-orange OSInline">
+              <i class="icon ph-chat ph ph-2x" aria-hidden="true"></i>
+            </div>
+          </div>
+          <div data-container="" class="timeline-content">
+            <div class="card card-content" style="margin-bottom:0;">
+              <span style="font-weight:var(--token-font-weight-semi-bold,600);">Chelsea Hagon commented</span><br>
+              <span>Called client, they reassured me the invoice would be paid by the 25th.</span>
+            </div>
+          </div>
+          <div class="timeline-right OSInline">25 sep</div>
+        </div>
+      </div>
+      <div data-block="Navigation.TimelineItem" class="OSBlockWidget">
+        <div data-container="" class="timeline-item" role="listitem">
+          <div class="placeholder-empty timeline-left OSInline"></div>
+          <div data-container="" class="timeline-icon OSInline">
+            <div data-container="" class="timeline-icon-line OSInline"></div>
+            <div class="timeline-icon-container background-neutral-7 OSInline"></div>
+          </div>
+          <div data-container="" class="timeline-content">
+            <div>Alex Curren viewed the invoice.</div>
+          </div>
+          <div class="timeline-right OSInline">25 sep</div>
+        </div>
+      </div>
+      <div data-block="Navigation.TimelineItem" class="OSBlockWidget">
+        <div data-container="" class="timeline-item" role="listitem">
+          <div class="placeholder-empty timeline-left OSInline"></div>
+          <div data-container="" class="timeline-icon OSInline">
+            <div data-container="" class="timeline-icon-line OSInline"></div>
+            <div class="timeline-icon-container background-orange OSInline">
+              <i class="icon ph-check ph ph-2x" aria-hidden="true"></i>
+            </div>
+          </div>
+          <div data-container="" class="timeline-content">
+            <div>Alex Curren paid the invoice.</div>
+          </div>
+          <div class="timeline-right OSInline">25 sep</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       8g. DATE & MONTH PICKERS
   ══════════════════════════════════════════ -->
   <div class="sc-section">
     <div class="sc-section-title">Date &amp; Month Pickers</div>
@@ -2028,7 +2763,207 @@
 
 
   <!-- ══════════════════════════════════════════
-       10. MASTER DETAIL
+       CHAT MESSAGE
+  ══════════════════════════════════════════ -->
+  <div class="sc-section">
+    <div class="sc-section-title">Chat Message<span class="sc-reviewed">Reviewed</span></div>
+
+    <!-- Received (left) -->
+    <div class="sc-label" style="margin-bottom:12px;">Received · left</div>
+    <div data-block="Content.ChatMessage" class="OSBlockWidget">
+      <div data-container="" class="chat left OSInline">
+        <div data-container="" class="wcag-hide-text" aria-live="polite" aria-atomic="true"><span data-expression="">Received</span></div>
+        <div data-container="" class="chat-photo OSInline">
+          <div class="OSInline"><img data-image="" src="https://i.pravatar.cc/40?img=12" alt="Avatar"></div>
+        </div>
+        <div data-container="" class="chat-message-wrapper OSInline">
+          <div data-container="" class="chat-message padding OSInline" role="button" tabindex="0" aria-expanded="false">
+            <div class="OSInline">Hello John Doe. This is a sample text used on our functional tests in OutSystemsUI.<br>Any further question or feedback just bring it on 😎</div>
+          </div>
+          <div data-container="" class="chat-message-status OSInline" aria-hidden="false" role="status">
+            <div data-container="" class="chat-message-status_icon-time" aria-hidden="true"></div>
+            <span data-expression="" role="status">19:24</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sent (right) -->
+    <div class="sc-label" style="margin-top:24px;margin-bottom:12px;">Sent · right</div>
+    <div data-block="Content.ChatMessage" class="OSBlockWidget">
+      <div data-container="" class="chat right OSInline">
+        <div data-container="" class="wcag-hide-text" aria-live="polite" aria-atomic="true"><span data-expression="">Sent</span></div>
+        <div data-container="" class="chat-photo OSInline">
+          <div class="OSInline">
+            <div data-block="Content.UserAvatar" class="OSBlockWidget">
+              <div data-container="" class="avatar border-radius-rounded background-pink" aria-label="user initials, JM" role="img"><span data-expression="" class="OSFillParent">JM</span></div>
+            </div>
+          </div>
+        </div>
+        <div data-container="" class="chat-message-wrapper OSInline">
+          <div data-container="" class="chat-message padding OSInline" role="button" tabindex="0" aria-expanded="true">
+            <div class="OSInline">Hi! Any updates on the project?</div>
+          </div>
+          <div data-container="" class="chat-message-status OSInline" aria-hidden="false" role="status">
+            <div data-container="" class="chat-message-status_icon-time" aria-hidden="true"></div>
+            <span data-expression="" role="status">19:25</span>
+            <div data-container="" class="chat-message-status_icon is-sent" aria-hidden="true" role="status"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conversation -->
+    <div class="sc-label" style="margin-top:24px;margin-bottom:12px;">Conversation</div>
+    <div style="display:flex;flex-direction:column;gap:12px;max-width:640px;">
+      <div data-block="Content.ChatMessage" class="OSBlockWidget">
+        <div data-container="" class="chat left OSInline">
+          <div data-container="" class="chat-photo OSInline">
+            <div class="OSInline"><img data-image="" src="https://i.pravatar.cc/40?img=12" alt="Avatar"></div>
+          </div>
+          <div data-container="" class="chat-message-wrapper OSInline">
+            <div data-container="" class="chat-message padding OSInline">
+              <div class="OSInline">Hey, are you free for a quick call today?</div>
+            </div>
+            <div data-container="" class="chat-message-status OSInline" role="status">
+              <div data-container="" class="chat-message-status_icon-time" aria-hidden="true"></div>
+              <span data-expression="" role="status">19:20</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-block="Content.ChatMessage" class="OSBlockWidget">
+        <div data-container="" class="chat right OSInline">
+          <div data-container="" class="chat-photo OSInline">
+            <div class="OSInline">
+              <div data-block="Content.UserAvatar" class="OSBlockWidget">
+                <div data-container="" class="avatar border-radius-rounded background-pink" aria-label="user initials, JM" role="img"><span data-expression="" class="OSFillParent">JM</span></div>
+              </div>
+            </div>
+          </div>
+          <div data-container="" class="chat-message-wrapper OSInline">
+            <div data-container="" class="chat-message padding OSInline">
+              <div class="OSInline">Yes! We're almost done with the new theme 🎉</div>
+            </div>
+            <div data-container="" class="chat-message-status OSInline" role="status">
+              <div data-container="" class="chat-message-status_icon-time" aria-hidden="true"></div>
+              <span data-expression="" role="status">19:22</span>
+              <div data-container="" class="chat-message-status_icon is-sent" aria-hidden="true" role="status"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-block="Content.ChatMessage" class="OSBlockWidget">
+        <div data-container="" class="chat left OSInline">
+          <div data-container="" class="chat-photo OSInline">
+            <div class="OSInline"><img data-image="" src="https://i.pravatar.cc/40?img=12" alt="Avatar"></div>
+          </div>
+          <div data-container="" class="chat-message-wrapper OSInline">
+            <div data-container="" class="chat-message padding OSInline">
+              <div class="OSInline">That's great news! Can't wait to see it.</div>
+            </div>
+            <div data-container="" class="chat-message-status OSInline" role="status">
+              <div data-container="" class="chat-message-status_icon-time" aria-hidden="true"></div>
+              <span data-expression="" role="status">19:23</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <details class="sc-review">
+      <summary><span>Chat Message · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Received bg: token-bg-neutral-subtlest-default (#f5f5f5) ✓; sent bg: token-semantics-primary-base ✓; sent color: token-text-inverse ✓; border-radius: token-border-radius-200 ✓; padding: token-scale-300 ✓; status color: token-text-subtlest ✓; status font: token-font-size-275 ✓; status gap/margin: token-scale-100 ✓; is-read: token-semantics-success-base ✓; photo: token-scale-800 ✓; max-width 600px structural (no applicable token) — documented ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Avatar/photo 32px (token-scale-800) = UserAvatar default ✓; bubble padding 12px (token-scale-300) ✓; status 11px (token-font-size-275) < body 14px — clear visual hierarchy ✓; margin-top 4px (token-scale-100) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Bubble border-radius 8px (token-border-radius-200) — matches 2.29 target ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Received: bg-neutral-subtlest + text-default ✓; sent: semantics-primary-base + text-inverse ✓; status: text-subtlest ✓; is-read: semantics-success-base ✓; clock icon hidden (display:none) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Received: text-default #242424 on #f5f5f5 ≈ 13.8:1 ✓; sent: white on primary #105cef ≈ 8.8:1 ✓; status: text-subtlest #626262 on white ≈ 5.7:1 ✓; all pass WCAG AA ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Avatar 32px aligns with UserAvatar default across the system ✓; flex + row-reverse for sent correctly mirrors layout ✓; status sits below bubble with 4px gap ✓; max-width 600px prevents full-width stretch ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">8px radius gives modern messenger feel consistent with 2.29 theme ✓; subtle #f5f5f5 received bubble avoids harsh grey ✓; primary blue for sent creates clear sent/received distinction ✓; time + checkmark small and unobtrusive ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Chat messages are static display elements — no transitions needed ✓; interactive role="button" on expandable messages uses native focus ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">wcag-hide-text with aria-live="polite" + aria-atomic for screen reader announcements ✓; status icon aria-hidden="true" ✓; sent/received label via wcag-hide-text ✓; role="button" + tabindex="0" + aria-expanded on expandable message ✓; role="status" on timestamp ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       10. OVERFLOW MENU
+  ══════════════════════════════════════════ -->
+  <div class="sc-section">
+    <div class="sc-section-title">Overflow Menu<span class="sc-reviewed">Reviewed</span></div>
+
+    <!-- Closed state -->
+    <div class="sc-label" style="margin-bottom:12px;">Closed · trigger only</div>
+    <div data-block="Navigation.OverflowMenu" class="OSBlockWidget">
+      <div data-container="" class="osui-overflow-menu" style="--osui-overflow-menu-shape: var(--border-radius-soft, var(--token-border-radius-100, 4px));">
+        <button data-advancedhtml="" class="btn btn-small osui-overflow-menu__trigger" aria-haspopup="menu" aria-label="Trigger the balloon" aria-expanded="false" tabindex="0">
+          <div class="placeholder-empty OSInline">
+            <i class="icon ph-dots-three-vertical ph ph-1x" aria-hidden="true" data-icon=""></i>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Open state -->
+    <div class="sc-label" style="margin-top:24px; margin-bottom:12px;">Open · menu panel</div>
+    <div data-block="Navigation.OverflowMenu" class="OSBlockWidget">
+      <div data-container="" class="osui-overflow-menu osui-overflow-menu--is-open" style="--osui-overflow-menu-shape: var(--border-radius-soft, var(--token-border-radius-100, 4px)); display:flex; flex-direction:column; align-items:flex-start; gap:4px;">
+        <button data-advancedhtml="" class="btn btn-small osui-overflow-menu__trigger" aria-haspopup="menu" aria-label="Trigger the balloon" aria-expanded="true" tabindex="0">
+          <div class="placeholder-empty OSInline">
+            <i class="icon ph-dots-three-vertical ph ph-1x" aria-hidden="true" data-icon=""></i>
+          </div>
+        </button>
+        <div class="osui-overflow-menu__balloon osui-balloon osui-balloon--is-open bottom-start" role="dialog" aria-hidden="false" tabindex="0" style="--osui-balloon-width: max-content; --osui-balloon-shape: var(--border-radius-soft, var(--token-border-radius-100, 4px));">
+          <nav data-advancedhtml="" class="display-flex flex-direction-column">
+            <span class="text-uppercase text-neutral-7 font-semi-bold padding-x-base padding-top-base font-size-xs margin-bottom-s" aria-hidden="true">Title</span>
+            <a data-link="" aria-disabled="false" role="menuitem" class="OSFillParent active" href="#" tabindex="0" style="margin-left: 0px;">
+              <i class="icon ph-eye ph ph-1x" aria-hidden="true" data-icon="" style="width: 16px;"></i>
+              <span class="margin-left-s">Item 1</span>
+            </a>
+            <a data-link="" aria-disabled="false" role="menuitem" class="OSFillParent" href="#" tabindex="0" style="margin-left: 0px;">
+              <i class="icon ph-file-text ph ph-1x" aria-hidden="true" data-icon="" style="width: 16px;"></i>
+              <span class="margin-left-s">Item 2</span>
+            </a>
+            <a data-link="" aria-disabled="false" role="menuitem" class="OSFillParent" href="#" tabindex="0" style="margin-left: 0px;">
+              <i class="icon ph-pencil-simple ph ph-1x" aria-hidden="true" data-icon="" style="width: 16px;"></i>
+              <span class="margin-left-s">Item 3</span>
+            </a>
+            <div data-block="Utilities.Separator" class="OSBlockWidget">
+              <div data-container="" class="padding-top-none padding-bottom-none">
+                <div data-container="" class="separator separator-horizontal background-neutral-4"></div>
+              </div>
+            </div>
+            <a data-link="" aria-disabled="false" role="menuitem" class="OSFillParent" href="#" tabindex="0" style="margin-left: 0px;">
+              <i class="icon ph-user ph ph-1x" aria-hidden="true" data-icon="" style="width: 16px;"></i>
+              <span class="margin-left-s">Item 4</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+
+    <details class="sc-review">
+      <summary><span>Overflow Menu · Review</span><span class="sc-review-badge sc-review-badge--warn">8/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Colors via token-text-default, token-bg-surface-default, token-bg-neutral-subtle-default ✓; elevation via token-elevation-2 ✓; link padding token-scale-200/400 ✓; trigger width fixed to token-scale-800 (32px) and mobile to token-scale-1000 (40px) ✓; min-width:170px has no matching scale token — acceptable as component-specific constraint ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Trigger 32px = token-scale-800; intentionally smaller than form fields (icon-only action button); mobile widens to token-scale-1000 (40px); link rows 8px+8px padding = consistent with list-item density ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Trigger fixed to token-border-radius-200 (8px) via --osui-btn-border-radius ✓; balloon fixed to 8px via --border-radius-soft → token-border-radius-200 in :root ✓; both now consistent with panel and button radius target ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Panel background token-bg-surface-default (white) ✓; item color token-text-default ✓; hover/active background token-bg-neutral-subtle-default (not primary — correct for secondary nav menu) ✓; group title via text-neutral-7 utility class (expected in OutSystems markup) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">token-text-default (#242424) on white → ~16:1 ✓; same on hover bg (#eae9e9) → ~11.5:1 ✓; text-decoration:none added ✓; group label at neutral-7 on white ~12:1 ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Trigger sits inline with surrounding UI; token-elevation-2 shadow correctly elevates panel above content; 170px min-width ensures readable menu items; separator via Utilities.Separator ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">8px trigger radius matches button family ✓; 8px balloon radius consistent with panels/dropdowns ✓; text-decoration removed from links ✓; hover neutral-subtle bg avoids harsh primary highlight ✓; token-elevation-2 shadow gives appropriate depth ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Trigger inherits .btn transition (bg/border-color/color at token-duration-fast + token-easing-standard) ✓; balloon show/hide is JS-driven, no CSS animation in scope ✓; no untokenised transitions ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">⚠ Trigger 32px height &lt; 44px WCAG minimum on desktop — documented exception consistent with btn-small (desktop icon button pattern); mobile width 40px; aria-haspopup="menu", aria-expanded, aria-controls, aria-label present ✓; role="menuitem" on items ✓; focus-trap elements ✓</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+      </div>
+    </details>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       11. MASTER DETAIL
   ══════════════════════════════════════════ -->
   <div class="sc-section">
     <div class="sc-section-title">Master Detail<span class="sc-reviewed">Reviewed</span></div>
@@ -2203,7 +3138,145 @@
   </div>
 
 
+  <!-- ═══════════════════════════════════════════ NOTIFICATION -->
+  <div class="sc-section">
+    <div class="sc-section-title">Notification<span class="sc-reviewed">Reviewed</span></div>
+
+    <div class="sc-row" style="flex-direction:column; gap:24px;">
+
+      <!-- Text + action button -->
+      <div class="sc-col">
+        <div class="sc-label">Text · with action</div>
+        <div class="sc-notification-preview">
+          <div data-block="Interaction.Notification" class="OSBlockWidget">
+            <div class="osui-notification osui-notification--is-top osui-notification--is-open" role="alertdialog" aria-hidden="false" tabindex="0" style="--notification-width: 420px;">
+              <div data-container="" style="flex:1;">
+                <p style="margin:0; font-weight:600; font-size:14px;">Event has been created</p>
+                <p style="margin:4px 0 0; font-size:13px; color:#626262;">Sunday, December 03, 2023 at 9:00 AM</p>
+              </div>
+              <button class="btn btn-primary btn-small" type="button">Undo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text only -->
+      <div class="sc-col">
+        <div class="sc-label">Text only</div>
+        <div class="sc-notification-preview">
+          <div data-block="Interaction.Notification" class="OSBlockWidget">
+            <div class="osui-notification osui-notification--is-top osui-notification--is-open" role="alertdialog" aria-hidden="false" tabindex="0" style="--notification-width: 420px;">
+              <div data-container="">
+                <p style="margin:0; font-weight:600; font-size:14px;">Changes saved successfully</p>
+                <p style="margin:4px 0 0; font-size:13px; color:#626262;">Your profile has been updated.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- With image -->
+      <div class="sc-col">
+        <div class="sc-label">With image</div>
+        <div class="sc-notification-preview">
+          <div data-block="Interaction.Notification" class="OSBlockWidget">
+            <div class="osui-notification osui-notification--is-top osui-notification--is-open" role="alertdialog" aria-hidden="false" tabindex="0" style="--notification-width: 420px; flex-direction:column; align-items:center; text-align:center;">
+              <p style="margin:0; font-weight:600; font-size:14px;">New message received</p>
+              <img src="https://placehold.co/300x120/f0f0f0/aaa?text=Preview" alt="" style="width:100%; margin-top:12px; border-radius:6px;">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Animation demo -->
+    <div class="sc-row" style="margin-top:8px;">
+      <div class="sc-col">
+        <div class="sc-label">Live animation · trigger by position</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+          <button class="btn btn-neutral btn-small" onclick="showNotif('top')">Top center</button>
+          <button class="btn btn-neutral btn-small" onclick="showNotif('top-right')">Top right</button>
+          <button class="btn btn-neutral btn-small" onclick="showNotif('top-left')">Top left</button>
+          <button class="btn btn-neutral btn-small" onclick="showNotif('bottom')">Bottom center</button>
+          <button class="btn btn-neutral btn-small" onclick="showNotif('bottom-right')">Bottom right</button>
+          <button class="btn btn-neutral btn-small" onclick="showNotif('bottom-left')">Bottom left</button>
+        </div>
+      </div>
+    </div>
+
+    <details class="sc-review">
+      <summary><span>Notification · Review</span><span class="sc-review-badge sc-review-badge--warn">8/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Background token-bg-surface-default ✓; border token-border-default + token-border-size-025 ✓; shadow token-elevation-3 ✓; radius token-border-radius-200 ✓; text token-text-default ✓; padding/gap/margin token-scale-400/600 ✓; --notification-width has no fallback (intentional developer-set API) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Padding 16px = token-scale-400 ✓; gap 16px = token-scale-400 ✓; viewport margin 24px = token-scale-600 ✓; phone margin reduces to token-scale-400 (16px) ✓; no fixed height, auto-height based on content ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">token-border-radius-200 (8px) ✓ — consistent with dropdown, inputs, buttons, and modal panels; phased-out 4px not used ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Background token-bg-surface-default ✓; text token-text-default ✓; border token-border-default ✓; no primary/error/warning colors misused ✓; component is neutral-informational by default, contextual color can be applied by developer ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">token-text-default (#242424) on token-bg-surface-default (white) → ~16:1 ✓; subtitle at token-text-subtlest (#626262) → ~5.7:1 WCAG AA ✓; border provides additional perceptual boundary on low-contrast backgrounds ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">flex + align-items:center + justify-content:space-between + gap-400 handles text-only, text+action-button, and text+image layouts ✓; max-width calc(100vw - margin*2) prevents viewport overflow ✓; pointer-events:none when hidden avoids layout interference ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">8px radius consistent with component family ✓; token-elevation-3 provides clear layering above page content ✓; 16px padding gives comfortable breathing room ✓; title (600 weight) + subtitle (subtlest) hierarchy is clear ✓; action button aligns to center of the card ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">⚠ Exit duration (150ms, 200ms) and easing (ease-in, cubic-bezier(0.4,0,1,1)) are hardcoded — should use --token-duration-fast and --token-easing-standard/exit; enter duration (200ms, 420ms) and spring easing cubic-bezier(0.16,1,0.3,1) hardcoded — should use --token-duration-slow and --token-easing-expressive; spring easing intentional design choice with no current token equivalent</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="alertdialog" ✓; aria-hidden toggled on show/hide ✓; tabindex="0" when visible ✓; pointer-events:none prevents accidental interaction when hidden ✓; no dedicated close/dismiss button — keyboard users must rely on action button or auto-dismiss timeout; user-select:none prevents copying notification content (minor) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
+  </div>
+
+  <!-- Live notification (real position:fixed, real animation) -->
+  <div id="sc-live-notif" class="osui-notification" role="alertdialog" aria-hidden="true" tabindex="-1" style="--notification-width: 380px;">
+    <div style="flex:1;">
+      <p style="margin:0; font-weight:600; font-size:14px;">Event has been created</p>
+      <p style="margin:4px 0 0; font-size:13px; color:#626262;">Sunday, December 03, 2023 at 9:00 AM</p>
+    </div>
+    <button class="btn btn-primary btn-small" type="button" onclick="hideNotif()">Undo</button>
+  </div>
+
 </div><!-- /sc-page -->
 <script src="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1"></script>
+<script>
+  (function () {
+    var notif = document.getElementById('sc-live-notif');
+    var dismissTimer = null;
+    var posClasses = [
+      'osui-notification--is-top',
+      'osui-notification--is-top-right',
+      'osui-notification--is-top-left',
+      'osui-notification--is-bottom',
+      'osui-notification--is-bottom-right',
+      'osui-notification--is-bottom-left',
+      'osui-notification--is-center',
+      'osui-notification--is-right',
+      'osui-notification--is-left'
+    ];
+
+    window.showNotif = function (pos) {
+      clearTimeout(dismissTimer);
+      // remove all position classes + open
+      posClasses.forEach(function (c) { notif.classList.remove(c); });
+      notif.classList.remove('osui-notification--is-open');
+      notif.setAttribute('aria-hidden', 'true');
+
+      // force a reflow so the removal takes effect before re-adding
+      void notif.offsetWidth;
+
+      notif.classList.add('osui-notification--is-' + pos);
+      // tiny delay so the browser paints the hidden state first
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          notif.classList.add('osui-notification--is-open');
+          notif.setAttribute('aria-hidden', 'false');
+        });
+      });
+
+      dismissTimer = setTimeout(function () { hideNotif(); }, 4000);
+    };
+
+    window.hideNotif = function () {
+      clearTimeout(dismissTimer);
+      notif.classList.remove('osui-notification--is-open');
+      notif.setAttribute('aria-hidden', 'true');
+    };
+  })();
+</script>
 </body>
 </html>

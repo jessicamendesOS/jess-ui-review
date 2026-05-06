@@ -191,8 +191,23 @@
   .flatpickr-prev-month svg path, .flatpickr-next-month svg path { stroke: #1068eb; fill: none; stroke-width: 1.5px; }
 
   /* ── DAY GRID CONTAINER ── */
-  .flatpickr-innerContainer { padding: 0 12px 12px; }
+  .flatpickr-innerContainer { padding: 0 12px 12px; display: flex; align-items: flex-start; }
   .flatpickr-rContainer, .flatpickr-days { width: 100%; }
+
+  /* ── WEEK NUMBERS ── */
+  .flatpickr-weekwrapper { display: flex; flex-direction: column; padding-right: 4px; flex-shrink: 0; }
+  .flatpickr-weekwrapper .flatpickr-weekdays { padding-bottom: 6px; }
+  .flatpickr-weekwrapper .flatpickr-weekday {
+    display: block; width: 28px; text-align: center;
+    font-size: 12px; font-weight: 400; color: #6a7178; user-select: none;
+  }
+  .flatpickr-weeks { display: flex; flex-direction: column; gap: 0; }
+  .flatpickr-week {
+    height: 37px; line-height: 37px; text-align: center;
+    font-size: 12px; font-weight: 500; color: #6a7178;
+    width: 28px; border-radius: 8px; opacity: 0.7;
+    background: #f0f0f0; cursor: default; user-select: none;
+  }
   .dayContainer { display: flex; flex-wrap: wrap; width: 100%; }
 
   /* ── WEEKDAY HEADERS ── */
