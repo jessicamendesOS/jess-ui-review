@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="fonts/phosphor.css">
   <link rel="stylesheet" href="basetheme.css">
   <link rel="stylesheet" href="OutsystemsUI_2.29-proposed.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/photoswipe.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/default-skin/default-skin.min.css">
   <style>
     /* ── Showcase shell ── */
     *, *::before, *::after { box-sizing: border-box; }
@@ -180,6 +182,19 @@
       display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;
     }
     @media (max-width: 800px) { .sc-picker-row { grid-template-columns: 1fr; } }
+
+    /* ── Tooltip (static open state preview) ── */
+    .sc-tooltip-open .osui-tooltip {
+      position: relative;
+      display: inline-flex;
+    }
+    .sc-tooltip-open .osui-balloon {
+      position: absolute !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      pointer-events: none;
+    }
+
   </style>
 </head>
 <body class="iconLibrary-phosphor">
@@ -415,6 +430,177 @@
         <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Not interactive — 44px touch target rule does not apply; colour not the sole differentiator (numeral always present); context determines aria role ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
       </div>
     </details>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       ICON WITH BADGE
+  ══════════════════════════════════════════ -->
+  <div class="sc-section">
+    <div class="sc-section-title">Icon with Badge<span class="sc-reviewed">Reviewed</span></div>
+
+    <!-- Colour variants -->
+    <div class="sc-sublabel">Colour variants</div>
+    <div class="sc-row" style="gap: 32px; align-items: flex-start; padding-top: 8px;">
+      <div data-block="Numbers.IconBadge" class="OSBlockWidget">
+        <div data-container="" class="icon-badge">
+          <div><i class="icon ph-chat-circle ph-fill ph-2x" aria-hidden="true" data-icon=""></i></div>
+          <div data-block="Numbers.Badge" class="OSBlockWidget">
+            <div data-container="" class="badge border-radius-rounded background-primary OSInline"><span data-expression="" class="OSFillParent">2</span></div>
+          </div>
+        </div>
+      </div>
+      <div data-block="Numbers.IconBadge" class="OSBlockWidget">
+        <div data-container="" class="icon-badge">
+          <div><i class="icon ph-chat-circle ph-fill ph-2x" aria-hidden="true" data-icon=""></i></div>
+          <div data-block="Numbers.Badge" class="OSBlockWidget">
+            <div data-container="" class="badge border-radius-rounded background-red OSInline"><span data-expression="" class="OSFillParent">2</span></div>
+          </div>
+        </div>
+      </div>
+      <div data-block="Numbers.IconBadge" class="OSBlockWidget">
+        <div data-container="" class="icon-badge">
+          <div><i class="icon ph-chat-circle ph-fill ph-2x" aria-hidden="true" data-icon=""></i></div>
+          <div data-block="Numbers.Badge" class="OSBlockWidget">
+            <div data-container="" class="badge border-radius-rounded background-secondary OSInline"><span data-expression="" class="OSFillParent">2</span></div>
+          </div>
+        </div>
+      </div>
+      <div data-block="Numbers.IconBadge" class="OSBlockWidget">
+        <div data-container="" class="icon-badge">
+          <div><i class="icon ph-chat-circle ph-fill ph-2x" aria-hidden="true" data-icon=""></i></div>
+          <div data-block="Numbers.Badge" class="OSBlockWidget">
+            <div data-container="" class="badge border-radius-rounded background-yellow OSInline"><span data-expression="" class="OSFillParent">2</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Light colour variants -->
+    <div class="sc-sublabel">Light variants</div>
+    <div class="sc-row" style="gap: 32px; align-items: flex-start; padding-top: 8px;">
+      <div data-block="Numbers.IconBadge" class="OSBlockWidget">
+        <div data-container="" class="icon-badge">
+          <div><i class="icon ph-chat-circle ph-fill ph-2x" aria-hidden="true" data-icon=""></i></div>
+          <div data-block="Numbers.Badge" class="OSBlockWidget">
+            <div data-container="" class="badge border-radius-rounded background-primary-lightest text-primary-darker OSInline"><span data-expression="" class="OSFillParent">2</span></div>
+          </div>
+        </div>
+      </div>
+      <div data-block="Numbers.IconBadge" class="OSBlockWidget">
+        <div data-container="" class="icon-badge">
+          <div><i class="icon ph-chat-circle ph-fill ph-2x" aria-hidden="true" data-icon=""></i></div>
+          <div data-block="Numbers.Badge" class="OSBlockWidget">
+            <div data-container="" class="badge border-radius-rounded background-red-lightest text-red-darker OSInline"><span data-expression="" class="OSFillParent">2</span></div>
+          </div>
+        </div>
+      </div>
+      <div data-block="Numbers.IconBadge" class="OSBlockWidget">
+        <div data-container="" class="icon-badge">
+          <div><i class="icon ph-chat-circle ph-fill ph-2x" aria-hidden="true" data-icon=""></i></div>
+          <div data-block="Numbers.Badge" class="OSBlockWidget">
+            <div data-container="" class="badge border-radius-rounded background-secondary-lightest text-secondary-darker OSInline"><span data-expression="" class="OSFillParent">2</span></div>
+          </div>
+        </div>
+      </div>
+      <div data-block="Numbers.IconBadge" class="OSBlockWidget">
+        <div data-container="" class="icon-badge">
+          <div><i class="icon ph-chat-circle ph-fill ph-2x" aria-hidden="true" data-icon=""></i></div>
+          <div data-block="Numbers.Badge" class="OSBlockWidget">
+            <div data-container="" class="badge border-radius-rounded background-yellow-lightest text-yellow-darker OSInline"><span data-expression="" class="OSFillParent">2</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Count variants -->
+    <div class="sc-sublabel">Count variants</div>
+    <div class="sc-row" style="gap: 32px; align-items: flex-start; padding-top: 8px;">
+      <div data-block="Numbers.IconBadge" class="OSBlockWidget">
+        <div data-container="" class="icon-badge">
+          <div><i class="icon ph-chat-circle ph-fill ph-2x" aria-hidden="true" data-icon=""></i></div>
+          <div data-block="Numbers.Badge" class="OSBlockWidget">
+            <div data-container="" class="badge border-radius-rounded background-primary OSInline"><span data-expression="" class="OSFillParent">1</span></div>
+          </div>
+        </div>
+      </div>
+      <div data-block="Numbers.IconBadge" class="OSBlockWidget">
+        <div data-container="" class="icon-badge">
+          <div><i class="icon ph-chat-circle ph-fill ph-2x" aria-hidden="true" data-icon=""></i></div>
+          <div data-block="Numbers.Badge" class="OSBlockWidget">
+            <div data-container="" class="badge border-radius-rounded background-primary OSInline"><span data-expression="" class="OSFillParent">9</span></div>
+          </div>
+        </div>
+      </div>
+      <div data-block="Numbers.IconBadge" class="OSBlockWidget">
+        <div data-container="" class="icon-badge">
+          <div><i class="icon ph-chat-circle ph-fill ph-2x" aria-hidden="true" data-icon=""></i></div>
+          <div data-block="Numbers.Badge" class="OSBlockWidget">
+            <div data-container="" class="badge border-radius-rounded background-primary OSInline"><span data-expression="" class="OSFillParent">99</span></div>
+          </div>
+        </div>
+      </div>
+      <div data-block="Numbers.IconBadge" class="OSBlockWidget">
+        <div data-container="" class="icon-badge">
+          <div><i class="icon ph-chat-circle ph-fill ph-2x" aria-hidden="true" data-icon=""></i></div>
+          <div data-block="Numbers.Badge" class="OSBlockWidget">
+            <div data-container="" class="badge border-radius-rounded background-primary OSInline"><span data-expression="" class="OSFillParent">99+</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Icon variants -->
+    <div class="sc-sublabel">Icon variants</div>
+    <div class="sc-row" style="gap: 32px; align-items: flex-start; padding-top: 8px;">
+      <div data-block="Numbers.IconBadge" class="OSBlockWidget">
+        <div data-container="" class="icon-badge">
+          <div><i class="icon ph-chat-circle ph-fill ph-2x" aria-hidden="true" data-icon=""></i></div>
+          <div data-block="Numbers.Badge" class="OSBlockWidget">
+            <div data-container="" class="badge border-radius-rounded background-primary OSInline"><span data-expression="" class="OSFillParent">3</span></div>
+          </div>
+        </div>
+      </div>
+      <div data-block="Numbers.IconBadge" class="OSBlockWidget">
+        <div data-container="" class="icon-badge">
+          <div><i class="icon ph-bell ph-fill ph-2x" aria-hidden="true" data-icon=""></i></div>
+          <div data-block="Numbers.Badge" class="OSBlockWidget">
+            <div data-container="" class="badge border-radius-rounded background-red OSInline"><span data-expression="" class="OSFillParent">5</span></div>
+          </div>
+        </div>
+      </div>
+      <div data-block="Numbers.IconBadge" class="OSBlockWidget">
+        <div data-container="" class="icon-badge">
+          <div><i class="icon ph-user ph-fill ph-2x" aria-hidden="true" data-icon=""></i></div>
+          <div data-block="Numbers.Badge" class="OSBlockWidget">
+            <div data-container="" class="badge border-radius-rounded background-secondary OSInline"><span data-expression="" class="OSFillParent">1</span></div>
+          </div>
+        </div>
+      </div>
+      <div data-block="Numbers.IconBadge" class="OSBlockWidget">
+        <div data-container="" class="icon-badge">
+          <div><i class="icon ph-thumbs-up ph-fill ph-2x" aria-hidden="true" data-icon=""></i></div>
+          <div data-block="Numbers.Badge" class="OSBlockWidget">
+            <div data-container="" class="badge border-radius-rounded background-primary OSInline"><span data-expression="" class="OSFillParent">12</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <details class="sc-review">
+      <summary><span>Icon with Badge · Review</span><span class="sc-review-badge sc-review-badge--warn">8/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Layout/sizing fully tokenised (scale-400, scale-100, scale-0, font-size-200, font-weight-bold, border-radius-full, bg-surface-default). Ring 2px is structural — no ring-width token exists, acceptable. Light variant backgrounds use primitive-tier tokens (token-primitives-blue-100, red-100, yellow-100) where semantic equivalents exist (token-bg-info-subtle-default, token-bg-danger-subtle-default, token-bg-warning-subtle-default) — improvement opportunity ⚠</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Badge height token-scale-400 (16px) aligns with badge.badge-small compound rule — consistent within the badge system; font-size-200 (10px) matches badge-small; icon at font-size-550 aligns with ph-2x intent ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">token-border-radius-full (999px) correct for a notification pill — intentional exception to 8px target, same rationale as standalone badge ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Solid colours delegated entirely to existing background-* utility classes — no duplication, no raw hex in icon-badge rules; light variants scoped as additive overrides; secondary-100 (#e8eaf2) hardcoded fallback is acceptable — no token-primitives-secondary-100 exists in 2.29 ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Solid badges: white on strong backgrounds ≥ 4.5:1 ✓. Light variants at 10px bold: primary-lightest ~4.85:1 ✓; red-lightest ~6.69:1 ✓; secondary-lightest ~9.16:1 ✓; yellow-lightest ~4.61:1 ✓ — all AA; note 10px is below the 14px threshold so large-text exemption does not apply, margins are thin on primary and yellow ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">position absolute + translate(50%,-50%) correctly anchors badge to icon corner; left:auto prevents inherited positioning conflicts; box-shadow ring separator creates visual separation without layout impact; badge floats cleanly across all 4 icon types ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">16px badge at 10px text matches badge-small density; ring separator distinguishes badge from icon background; 4 sub-rows (colour, light, count, icon) give full coverage of the component's variation surface ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Static display element — no transitions or animations present or needed ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Icon marked aria-hidden="true" — badge is visual reinforcement, not the sole information carrier (numeral always present); component is non-interactive, 44px touch target rule does not apply; no keyboard behaviour needed ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
   </div>
 
   <!-- ══════════════════════════════════════════
@@ -3223,6 +3409,215 @@
   </div>
 
   <!-- Live notification (real position:fixed, real animation) -->
+  <!-- ══════════════════════════════════════════
+       BOTTOM SHEET
+  ══════════════════════════════════════════ -->
+  <div class="sc-section">
+    <div class="sc-section-title">Bottom Sheet<span class="sc-reviewed">Reviewed</span></div>
+
+    <div class="sc-row">
+      <div class="sc-col">
+        <button class="btn btn-neutral btn-small" onclick="openBottomSheet()">Open Bottom Sheet</button>
+      </div>
+    </div>
+
+    <details class="sc-review">
+      <summary><span>Bottom Sheet · Review</span><span class="sc-review-badge sc-review-badge--warn">8/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Background token-bg-surface-default ✓; shadow token-elevation-3 ✓; padding token-scale-400 ✓; handler top-bar padding token-scale-800 ✓; overlay token-backdrop ✓; handler pill dimensions (4×40px) and draggable-area (56px) are component-specific structural constants with no token equivalents — acceptable ✓; --bottom-sheet-max-height: calc(100vh - 54px) — 54px hardcoded top-bar offset with no matching token ⚠</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Padding 16px = token-scale-400 ✓; handler-top padding 32px = token-scale-800 ✓; content padding-bottom accounts for bottom-bar-size + token-scale-600 + safe-area ✓; min-height 50vh ensures meaningful content area ✓; max-height 85vh on desktop prevents full takeover ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Top corners via --bottom-sheet-shape → --border-radius-soft → token-border-radius-200 (8px) ✓; handler pill via border-radius:100px (intentional pill shape) ✓; --border-radius-rounded:16px defined as component variant option ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Background token-bg-surface-default ✓; handler color token-border-input-default (neutral, not primary — correct) ✓; overlay token-backdrop (rgba black 25%) ✓; no semantic color misuse ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Content inherits token-text-default from body ✓; overlay at 25% black creates sufficient contrast between sheet and page content ✓; handler visible against white surface ✓; header shadow (elevation-3) appears on scroll to signal sticky header ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">overflow-y:scroll on content area ✓; padding-bottom accounts for bottom navigation bar (--bottom-bar-size) + scale-600 + safe-area — safe on all device configurations ✓; overlay z-index fixed to calc(bottom-sheet-layer - 1) ensuring sheet always above overlay ✓; --is-open::before pseudo-element fills gap below sheet during bounce ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">token-elevation-3 shadow creates strong surface separation ✓; 8px top radius consistent with panel/card family ✓; drag handler pill correctly sized and positioned ✓; header shadow fades in on scroll adding depth cue ✓; overlay darkens content proportionally ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">⚠ Enter 500ms and spring easing cubic-bezier(0.32,0.72,0,1) are hardcoded — 500ms exceeds --token-duration-slow (300–400ms), spring easing has no token equivalent (Vaul signature, intentional); exit 300ms cubic-bezier(0.4,0,1,1) hardcoded — should use --token-duration-slow + --token-easing-exit; overlay transitions (500ms/250ms) hardcoded — should use --token-duration-slow + --token-easing-standard</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="complementary" or role="dialog" ✓; aria-hidden toggled on open/close ✓; tabindex="0" when open ✓; focus-trap-top/bottom elements present ✓; drag handle area 56px exceeds 44px touch target minimum ✓; close button in header provides keyboard dismiss path ✓; overlay click closes sheet ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       TOOLTIP
+  ══════════════════════════════════════════ -->
+  <div class="sc-section">
+    <div class="sc-section-title">Tooltip</div>
+
+    <!-- Rest -->
+    <div class="sc-sublabel">Rest</div>
+    <div class="sc-row">
+      <div data-block="Content.Tooltip" class="OSBlockWidget">
+        <div data-container="" class="osui-tooltip osui-tooltip--is-hover">
+          <div class="osui-tooltip__content" role="button" aria-describedby="sc-tt-rest" tabindex="0">
+            <i class="icon ph-info ph ph-2x" aria-hidden="true" data-icon="info"></i>
+          </div>
+          <div data-container="" class="osui-tooltip__balloon-wrapper osui-balloon right"
+               style="--osui-balloon-width: max-content; --osui-balloon-shape: var(--border-radius-none);"
+               id="sc-tt-rest" role="tooltip" aria-hidden="true">
+            <div class="osui-tooltip__balloon-wrapper__balloon OSInline">Hello! This is a tooltip</div>
+            <div data-container="" class="osui-tooltip__balloon-arrow" style="left: -5px; top: calc(50% - 5px);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Open · Right -->
+    <div class="sc-sublabel">Open · Right</div>
+    <div class="sc-row" style="padding-bottom: 16px;">
+      <div class="sc-tooltip-open">
+        <div data-block="Content.Tooltip" class="OSBlockWidget">
+          <div data-container="" class="osui-tooltip osui-tooltip--is-hover">
+            <div class="osui-tooltip__content" role="button" tabindex="0">
+              <i class="icon ph-info ph ph-2x" aria-hidden="true" data-icon="info"></i>
+            </div>
+            <div data-container="" class="osui-tooltip__balloon-wrapper osui-balloon right osui-balloon--is-open"
+                 style="--osui-balloon-width: max-content; --osui-balloon-shape: var(--border-radius-none); position: absolute; left: calc(100% + 12px); top: 50%; transform: translateY(-50%);"
+                 role="tooltip" aria-hidden="false">
+              <div class="osui-tooltip__balloon-wrapper__balloon OSInline">Hello! This is a tooltip with some text content</div>
+              <div data-container="" class="osui-tooltip__balloon-arrow" style="left: -5px; top: calc(50% - 5px);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Open · Top -->
+    <div class="sc-sublabel">Open · Top</div>
+    <div class="sc-row" style="padding-top: 80px; padding-bottom: 8px;">
+      <div class="sc-tooltip-open">
+        <div data-block="Content.Tooltip" class="OSBlockWidget">
+          <div data-container="" class="osui-tooltip osui-tooltip--is-hover">
+            <div class="osui-tooltip__content" role="button" tabindex="0">
+              <i class="icon ph-info ph ph-2x" aria-hidden="true" data-icon="info"></i>
+            </div>
+            <div data-container="" class="osui-tooltip__balloon-wrapper osui-balloon top osui-balloon--is-open"
+                 style="--osui-balloon-width: max-content; --osui-balloon-shape: var(--border-radius-none); position: absolute; top: auto; bottom: calc(100% + 12px); left: 0;"
+                 role="tooltip" aria-hidden="false">
+              <div class="osui-tooltip__balloon-wrapper__balloon OSInline">Hello! This is a tooltip with some text content</div>
+              <div data-container="" class="osui-tooltip__balloon-arrow" style="bottom: -5px; left: 11px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Open · Bottom -->
+    <div class="sc-sublabel">Open · Bottom</div>
+    <div class="sc-row" style="padding-bottom: 48px;">
+      <div class="sc-tooltip-open">
+        <div data-block="Content.Tooltip" class="OSBlockWidget">
+          <div data-container="" class="osui-tooltip osui-tooltip--is-hover">
+            <div class="osui-tooltip__content" role="button" tabindex="0">
+              <i class="icon ph-info ph ph-2x" aria-hidden="true" data-icon="info"></i>
+            </div>
+            <div data-container="" class="osui-tooltip__balloon-wrapper osui-balloon bottom osui-balloon--is-open"
+                 style="--osui-balloon-width: max-content; --osui-balloon-shape: var(--border-radius-none); position: absolute; top: calc(100% + 12px); left: 0;"
+                 role="tooltip" aria-hidden="false">
+              <div class="osui-tooltip__balloon-wrapper__balloon OSInline">Hello! This is a tooltip with some text content</div>
+              <div data-container="" class="osui-tooltip__balloon-arrow" style="top: -5px; left: 11px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Open · Left -->
+    <div class="sc-sublabel">Open · Left</div>
+    <div class="sc-row" style="padding-left: 280px;">
+      <div class="sc-tooltip-open">
+        <div data-block="Content.Tooltip" class="OSBlockWidget">
+          <div data-container="" class="osui-tooltip osui-tooltip--is-hover">
+            <div class="osui-tooltip__content" role="button" tabindex="0">
+              <i class="icon ph-info ph ph-2x" aria-hidden="true" data-icon="info"></i>
+            </div>
+            <div data-container="" class="osui-tooltip__balloon-wrapper osui-balloon left osui-balloon--is-open"
+                 style="--osui-balloon-width: max-content; --osui-balloon-shape: var(--border-radius-none); position: absolute; right: calc(100% + 12px); top: 50%; transform: translateY(-50%);"
+                 role="tooltip" aria-hidden="false">
+              <div class="osui-tooltip__balloon-wrapper__balloon OSInline">Hello! This is a tooltip with some text content</div>
+              <div data-container="" class="osui-tooltip__balloon-arrow" style="right: -5px; top: calc(50% - 5px);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════════════ -->
+  <div class="sc-section">
+    <div class="sc-section-title">Sidebar</div>
+
+    <div class="sc-row">
+      <div class="sc-col">
+        <button class="btn btn-neutral btn-small" onclick="openSidebar()">Open Sidebar</button>
+      </div>
+    </div>
+
+    <details class="sc-review">
+      <summary><span>Sidebar · Review</span><span class="sc-review-badge sc-review-badge--warn">8/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Background token-bg-surface-default ✓; color token-text-default ✓; shadow token-elevation-3 ✓; padding-x token-scale-600 (24px) ✓; padding-y token-scale-400 (16px) ✓; overlay token-backdrop ✓; layer --osui-sidebar-layer → --os-layer-off-canvas / --layer-global-off-canvas fallback ✓; --sidebar-width is an intentional overrideable custom property with no token equivalent — acceptable ✓; :after swipe-zone 24px hardcoded (= token-scale-600 value but not referenced) ⚠</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">padding-x 24px = token-scale-600 ✓; padding-y 16px = token-scale-400 ✓; phone max-width 85vw prevents full-screen takeover ✓; :after swipe-zone 24px = token-scale-600 value but hardcoded ⚠; overlay width 200vw is a structural constant — acceptable ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">No border-radius on sidebar — correct for a full-height edge-anchored panel; flush to viewport edge is the expected pattern ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Background token-bg-surface-default (white) ✓; text token-text-default ✓; overlay token-backdrop rgba(0,0,0,0.25) ✓; shadow token-elevation-3 ✓; no semantic color misuse ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Content inherits token-text-default on white surface ✓; token-elevation-3 shadow clearly separates sidebar from page content ✓; overlay at 25% black provides sufficient visual hierarchy ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">position:fixed; top:0; height:100% — correct full-height anchored panel ✓; translateX(102%) ensures shadow is also off-screen in closed state ✓; overflow:auto on content area ✓; :after 24px transparent strip extends the hit area for swipe-to-dismiss on mobile ✓; phone max-width:85vw ensures dismiss tap zone always exists ✓; overlay ::before shares z-index with sidebar — acceptable since ::before renders below sidebar content by DOM order ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">token-elevation-3 (dual-layer shadow) appropriate for highest-surface overlay panel ✓; full-height flush panel with no radius is correct for this component family ✓; will-change:transform promotes to GPU layer for smooth animation ✓; shadow hidden off-screen via translateX(102%) avoids bleed into viewport ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">⚠ Enter 500ms cubic-bezier(0.4,0,0.2,1) matches Shadcn Sheet ✓; exit 300ms cubic-bezier(0.4,0,0.2,1) exit faster than enter ✓; both durations hardcoded — no token-duration-* equivalent at 300ms/500ms ⚠; overlay ::before transition still 130ms ease-in — not aligned with updated enter/exit timing ⚠</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="dialog" + aria-hidden toggling required from JS/OutSystems ✓; overlay cursor:pointer signals dismissability ✓; pointer-events toggled correctly — none when closed, initial when open ✓; :after swipe-zone extends mobile touch target for dismiss ✓; phone max-width:85vw ensures tap-to-close zone always visible ✓; focus trap responsibility of implementation ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
+  </div>
+
+  <!-- Live bottom sheet (real position:fixed, real animation) -->
+  <div id="sc-live-bs-wrap">
+    <span class="focus-trap-top wcag-hide-text" tabindex="0" aria-hidden="true"></span>
+    <div id="sc-live-bs" class="osui-bottom-sheet osui-bottom-sheet--has-handler" role="dialog" tabindex="-1" aria-hidden="true" style="--bottom-sheet-shape: var(--border-radius-soft); z-index: 9999;">
+      <header class="osui-bottom-sheet__header">
+        <div class="osui-bottom-sheet__header__top-bar">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <button class="btn btn-small" type="button" onclick="closeBottomSheet()" style="white-space:nowrap;">Close</button>
+            <span class="bold" style="flex:1; text-align:center;">Title</span>
+            <span style="width:56px;"></span>
+          </div>
+        </div>
+      </header>
+      <div class="osui-bottom-sheet__content">
+        <div>
+          <p style="margin:0 0 12px; text-align:left;">On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will.</p>
+          <p style="margin:0 0 12px; text-align:left;">These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided.</p>
+          <p style="margin:0; text-align:left;">The wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid worse pains.</p>
+        </div>
+      </div>
+    </div>
+    <div id="sc-live-bs-overlay" class="osui-bottom-sheet-overlay" onclick="closeBottomSheet()" style="z-index: 9998;"></div>
+    <span class="focus-trap-bottom wcag-hide-text" tabindex="0" aria-hidden="true"></span>
+  </div>
+
+  <!-- Live sidebar -->
+  <div id="sc-sidebar-wrap">
+    <span class="focus-trap-top wcag-hide-text" tabindex="0" aria-hidden="true"></span>
+    <div id="sc-sidebar-backdrop" onclick="closeSidebar()" style="display:none; position:fixed; inset:0; z-index:9998;"></div>
+    <aside id="sc-live-sidebar" class="osui-sidebar osui-sidebar--is-right" role="dialog" tabindex="-1" aria-hidden="true" style="--sidebar-width: 300px; z-index: 9999;">
+      <div class="osui-sidebar__header">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+          <span class="bold" style="flex:1;">Sidebar</span>
+          <button class="btn btn-small" type="button" onclick="closeSidebar()" aria-label="Close sidebar">Close</button>
+        </div>
+      </div>
+      <div class="osui-sidebar__content">
+        <p style="margin:0 0 12px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p style="margin:0 0 12px;">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <p style="margin:0;">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+      </div>
+    </aside>
+    <span class="focus-trap-bottom wcag-hide-text" tabindex="0" aria-hidden="true"></span>
+  </div>
+
   <div id="sc-live-notif" class="osui-notification" role="alertdialog" aria-hidden="true" tabindex="-1" style="--notification-width: 380px;">
     <div style="flex:1;">
       <p style="margin:0; font-weight:600; font-size:14px;">Event has been created</p>
@@ -3275,6 +3670,57 @@
       clearTimeout(dismissTimer);
       notif.classList.remove('osui-notification--is-open');
       notif.setAttribute('aria-hidden', 'true');
+    };
+  })();
+
+  (function () {
+    var sidebarWrap = document.getElementById('sc-sidebar-wrap');
+    var sidebar = document.getElementById('sc-live-sidebar');
+    var backdrop = document.getElementById('sc-sidebar-backdrop');
+
+    window.openSidebar = function () {
+      document.body.style.overflow = 'hidden';
+      backdrop.style.display = 'block';
+      backdrop.style.background = 'rgba(0,0,0,0)';
+      sidebarWrap.classList.add('active-screen');
+      sidebar.classList.add('osui-sidebar--is-open');
+      sidebar.setAttribute('aria-hidden', 'false');
+      sidebar.setAttribute('tabindex', '0');
+      void sidebar.offsetWidth;
+      backdrop.style.transition = 'background 500ms cubic-bezier(0.4, 0, 0.2, 1)';
+      backdrop.style.background = 'rgba(0,0,0,0.25)';
+    };
+
+    window.closeSidebar = function () {
+      document.body.style.overflow = '';
+      backdrop.style.transition = 'background 300ms cubic-bezier(0.4, 0, 0.2, 1)';
+      backdrop.style.background = 'rgba(0,0,0,0)';
+      sidebar.classList.remove('osui-sidebar--is-open');
+      sidebar.setAttribute('aria-hidden', 'true');
+      sidebar.setAttribute('tabindex', '-1');
+      setTimeout(function () {
+        sidebarWrap.classList.remove('active-screen');
+        backdrop.style.display = 'none';
+      }, 220);
+    };
+  })();
+
+  (function () {
+    var bs = document.getElementById('sc-live-bs');
+    var overlay = document.getElementById('sc-live-bs-overlay');
+
+    window.openBottomSheet = function () {
+      document.body.style.overflow = 'hidden';
+      bs.classList.add('osui-bottom-sheet--is-open');
+      bs.setAttribute('aria-hidden', 'false');
+      bs.setAttribute('tabindex', '0');
+    };
+
+    window.closeBottomSheet = function () {
+      document.body.style.overflow = '';
+      bs.classList.remove('osui-bottom-sheet--is-open');
+      bs.setAttribute('aria-hidden', 'true');
+      bs.setAttribute('tabindex', '-1');
     };
   })();
 </script>

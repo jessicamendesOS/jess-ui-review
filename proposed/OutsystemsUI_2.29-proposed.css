@@ -8270,6 +8270,23 @@ a[href] .card.card-sectioned:hover .card-image img{
   border-right-width:var(--token-border-size-025, var(--token-scale-025, 1px));
   border-bottom-width:var(--token-border-size-025, var(--token-scale-025, 1px));
 }
+/* ── Tooltip: Shadcn-inspired UI & animation ── */
+.osui-tooltip{
+  --osui-tooltip-border-radius:var(--token-border-radius-200, var(--token-scale-200, 8px));
+  --osui-tooltip-padding:6px 12px;
+}
+@-webkit-keyframes osui-tooltip-in{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+@keyframes osui-tooltip-in{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+.osui-tooltip .osui-balloon--is-open{
+  -webkit-animation:osui-tooltip-in 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          animation:osui-tooltip-in 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
 /*! 6.2.16. User Avatar */
 .avatar{
   --osui-avatar-color:var(--token-text-inverse, var(--token-primitives-base-white, #ffffff));
@@ -8891,7 +8908,7 @@ a[href] .card.card-sectioned:hover .card-image img{
   --border-radius-sharp:none;
   --border-radius-rounded:16px;
   --osui-bottom-sheet-draggable-area:56px;
-  --osui-bottom-sheet-transition-function:cubic-bezier(0.19, 0.35, 0.56, 0.96);
+  --osui-bottom-sheet-transition-function:cubic-bezier(0.32, 0.72, 0, 1);
   background-color:var(--osui-bottom-sheet-background);
   border-top-left-radius:var(--bottom-sheet-shape);
   border-top-right-radius:var(--bottom-sheet-shape);
@@ -8903,10 +8920,10 @@ a[href] .card.card-sectioned:hover .card-image img{
   min-height:50vh;
   position:fixed;
   text-align:center;
-  -webkit-transition:-webkit-transform 350ms var(--osui-bottom-sheet-transition-function);
-  transition:-webkit-transform 350ms var(--osui-bottom-sheet-transition-function);
-  transition:transform 350ms var(--osui-bottom-sheet-transition-function);
-  transition:transform 350ms var(--osui-bottom-sheet-transition-function), -webkit-transform 350ms var(--osui-bottom-sheet-transition-function);
+  -webkit-transition:-webkit-transform 500ms var(--osui-bottom-sheet-transition-function);
+  transition:-webkit-transform 500ms var(--osui-bottom-sheet-transition-function);
+  transition:transform 500ms var(--osui-bottom-sheet-transition-function);
+  transition:transform 500ms var(--osui-bottom-sheet-transition-function), -webkit-transform 500ms var(--osui-bottom-sheet-transition-function);
   -webkit-transform:translateY(100%);
       -ms-transform:translateY(100%);
           transform:translateY(100%);
@@ -8965,14 +8982,14 @@ a[href] .card.card-sectioned:hover .card-image img{
   pointer-events:all;
 }
 .osui-bottom-sheet:not(.osui-bottom-sheet--is-open){
-  -webkit-transition:-webkit-transform 200ms ease-out;
-  transition:-webkit-transform 200ms ease-out;
-  transition:transform 200ms ease-out;
-  transition:transform 200ms ease-out, -webkit-transform 200ms ease-out;
+  -webkit-transition:-webkit-transform 300ms cubic-bezier(0.4, 0, 1, 1);
+  transition:-webkit-transform 300ms cubic-bezier(0.4, 0, 1, 1);
+  transition:transform 300ms cubic-bezier(0.4, 0, 1, 1);
+  transition:transform 300ms cubic-bezier(0.4, 0, 1, 1), -webkit-transform 300ms cubic-bezier(0.4, 0, 1, 1);
 }
 .osui-bottom-sheet:not(.osui-bottom-sheet--is-open) + .osui-bottom-sheet-overlay{
-  -webkit-transition:opacity 200ms ease-out;
-  transition:opacity 200ms ease-out;
+  -webkit-transition:opacity 250ms ease-in;
+  transition:opacity 250ms ease-in;
 }
 .osui-bottom-sheet-overlay{
   background-color:var(--token-backdrop, rgba(0, 0, 0, 0.25));
@@ -8982,10 +8999,10 @@ a[href] .card.card-sectioned:hover .card-image img{
   pointer-events:none;
   position:fixed;
   top:0;
-  -webkit-transition:opacity 350ms ease-in;
-  transition:opacity 350ms ease-in;
+  -webkit-transition:opacity 500ms ease;
+  transition:opacity 500ms ease;
   width:100vw;
-  z-index:calc(var(--layer-below) + var(--osui-bottom-sheet-layer));
+  z-index:calc(var(--osui-bottom-sheet-layer) - 1);
 }
 .osui-bottom-sheet-overlay{
   -servicestudio-opacity:1;
@@ -11874,8 +11891,10 @@ body.vscomp-popup-active:has(.osui-notification--is-open) .vscomp-wrapper{
   margin:var(--token-scale-0, 0);
   position:fixed;
   top:0;
-  -webkit-transition:all 130ms ease-in;
-  transition:all 130ms ease-in;
+  -webkit-transition:opacity 300ms cubic-bezier(0.4, 0, 0.2, 1), -webkit-transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:opacity 300ms cubic-bezier(0.4, 0, 0.2, 1), -webkit-transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:opacity 300ms cubic-bezier(0.4, 0, 0.2, 1), transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:opacity 300ms cubic-bezier(0.4, 0, 0.2, 1), transform 300ms cubic-bezier(0.4, 0, 0.2, 1), -webkit-transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
   width:var(--sidebar-width);
   will-change:transform;
   z-index:var(--osui-sidebar-layer);
@@ -11972,10 +11991,10 @@ body.vscomp-popup-active:has(.osui-notification--is-open) .vscomp-wrapper{
   -webkit-transform:none;
       -ms-transform:none;
           transform:none;
-  -webkit-transition:-webkit-transform 330ms ease-out;
-  transition:-webkit-transform 330ms ease-out;
-  transition:transform 330ms ease-out;
-  transition:transform 330ms ease-out, -webkit-transform 330ms ease-out;
+  -webkit-transition:-webkit-transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:-webkit-transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:transform 500ms cubic-bezier(0.4, 0, 0.2, 1), -webkit-transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
   will-change:transform;
 }
 .active-screen .osui-sidebar--is-open.osui-sidebar--has-overlay::before{
@@ -13974,6 +13993,22 @@ html[data-uieditorversion^="1"] .wizard-wrapper-item{
 .badge.background-yellow{
   color:var(--osui-badge-on-light-color);
 }
+.badge.background-primary-lightest{
+  background-color:var(--token-primitives-blue-100, #e9ecfc);
+  color:var(--token-primitives-blue-700, #105cef);
+}
+.badge.background-red-lightest{
+  background-color:var(--token-primitives-red-100, #fde1e1);
+  color:var(--token-primitives-red-900, #991b1b);
+}
+.badge.background-secondary-lightest{
+  background-color:var(--token-primitives-secondary-100, #e8eaf2);
+  color:var(--token-primitives-secondary-900, #303d60);
+}
+.badge.background-yellow-lightest{
+  background-color:var(--token-primitives-yellow-100, #fff3d5);
+  color:var(--token-primitives-yellow-900, #966503);
+}
 .badge.background-transparent{
   color:var(--osui-badge-primary-color);
 }
@@ -14057,17 +14092,30 @@ html[data-uieditorversion^="1"] .wizard-wrapper-item{
   position:relative;
 }
 .icon-badge .badge{
-  left:45%;
   position:absolute;
   top:0;
+  right:0;
+  left:auto;
   border-radius:var(--token-border-radius-full, 999px);
-  font-size:var(--token-font-size-300, 0.75rem);
-  height:18px;
-  min-width:18px;
+  -webkit-box-shadow:0 0 0 2px var(--token-bg-surface-default, var(--token-primitives-base-white, #ffffff));
+          box-shadow:0 0 0 2px var(--token-bg-surface-default, var(--token-primitives-base-white, #ffffff));
+  display:-webkit-inline-box;
+  display:-ms-inline-flexbox;
+  display:inline-flex;
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  -webkit-box-pack:center;
+      -ms-flex-pack:center;
+          justify-content:center;
+  font-size:var(--token-font-size-200, 0.625rem);
+  font-weight:var(--token-font-weight-bold, 700);
+  height:var(--token-scale-400, 16px);
+  min-width:var(--token-scale-400, 16px);
   padding:var(--token-scale-0, 0) var(--token-scale-100, 4px);
-  -webkit-transform:translateY(-40%);
-      -ms-transform:translateY(-40%);
-          transform:translateY(-40%);
+  -webkit-transform:translate(50%, -50%);
+      -ms-transform:translate(50%, -50%);
+          transform:translate(50%, -50%);
   white-space:nowrap;
 }
 .icon-badge .badge [data-expression]{
@@ -55147,6 +55195,23 @@ a[href] .card.card-sectioned:hover .card-image img{
   border-right-width:var(--token-border-size-025, var(--token-scale-025, 1px));
   border-bottom-width:var(--token-border-size-025, var(--token-scale-025, 1px));
 }
+/* ── Tooltip: Shadcn-inspired UI & animation ── */
+.osui-tooltip{
+  --osui-tooltip-border-radius:var(--token-border-radius-200, var(--token-scale-200, 8px));
+  --osui-tooltip-padding:6px 12px;
+}
+@-webkit-keyframes osui-tooltip-in{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+@keyframes osui-tooltip-in{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+.osui-tooltip .osui-balloon--is-open{
+  -webkit-animation:osui-tooltip-in 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+          animation:osui-tooltip-in 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
 /*! 6.2.16. User Avatar */
 .avatar{
   --osui-avatar-color:var(--token-text-inverse, var(--token-primitives-base-white, #ffffff));
@@ -55768,7 +55833,7 @@ a[href] .card.card-sectioned:hover .card-image img{
   --border-radius-sharp:none;
   --border-radius-rounded:16px;
   --osui-bottom-sheet-draggable-area:56px;
-  --osui-bottom-sheet-transition-function:cubic-bezier(0.19, 0.35, 0.56, 0.96);
+  --osui-bottom-sheet-transition-function:cubic-bezier(0.32, 0.72, 0, 1);
   background-color:var(--osui-bottom-sheet-background);
   border-top-left-radius:var(--bottom-sheet-shape);
   border-top-right-radius:var(--bottom-sheet-shape);
@@ -55780,10 +55845,10 @@ a[href] .card.card-sectioned:hover .card-image img{
   min-height:50vh;
   position:fixed;
   text-align:center;
-  -webkit-transition:-webkit-transform 350ms var(--osui-bottom-sheet-transition-function);
-  transition:-webkit-transform 350ms var(--osui-bottom-sheet-transition-function);
-  transition:transform 350ms var(--osui-bottom-sheet-transition-function);
-  transition:transform 350ms var(--osui-bottom-sheet-transition-function), -webkit-transform 350ms var(--osui-bottom-sheet-transition-function);
+  -webkit-transition:-webkit-transform 500ms var(--osui-bottom-sheet-transition-function);
+  transition:-webkit-transform 500ms var(--osui-bottom-sheet-transition-function);
+  transition:transform 500ms var(--osui-bottom-sheet-transition-function);
+  transition:transform 500ms var(--osui-bottom-sheet-transition-function), -webkit-transform 500ms var(--osui-bottom-sheet-transition-function);
   -webkit-transform:translateY(100%);
       -ms-transform:translateY(100%);
           transform:translateY(100%);
@@ -55842,14 +55907,14 @@ a[href] .card.card-sectioned:hover .card-image img{
   pointer-events:all;
 }
 .osui-bottom-sheet:not(.osui-bottom-sheet--is-open){
-  -webkit-transition:-webkit-transform 200ms ease-out;
-  transition:-webkit-transform 200ms ease-out;
-  transition:transform 200ms ease-out;
-  transition:transform 200ms ease-out, -webkit-transform 200ms ease-out;
+  -webkit-transition:-webkit-transform 300ms cubic-bezier(0.4, 0, 1, 1);
+  transition:-webkit-transform 300ms cubic-bezier(0.4, 0, 1, 1);
+  transition:transform 300ms cubic-bezier(0.4, 0, 1, 1);
+  transition:transform 300ms cubic-bezier(0.4, 0, 1, 1), -webkit-transform 300ms cubic-bezier(0.4, 0, 1, 1);
 }
 .osui-bottom-sheet:not(.osui-bottom-sheet--is-open) + .osui-bottom-sheet-overlay{
-  -webkit-transition:opacity 200ms ease-out;
-  transition:opacity 200ms ease-out;
+  -webkit-transition:opacity 250ms ease-in;
+  transition:opacity 250ms ease-in;
 }
 .osui-bottom-sheet-overlay{
   background-color:var(--token-backdrop, rgba(0, 0, 0, 0.25));
@@ -55859,10 +55924,10 @@ a[href] .card.card-sectioned:hover .card-image img{
   pointer-events:none;
   position:fixed;
   top:0;
-  -webkit-transition:opacity 350ms ease-in;
-  transition:opacity 350ms ease-in;
+  -webkit-transition:opacity 500ms ease;
+  transition:opacity 500ms ease;
   width:100vw;
-  z-index:calc(var(--layer-below) + var(--osui-bottom-sheet-layer));
+  z-index:calc(var(--osui-bottom-sheet-layer) - 1);
 }
 .osui-bottom-sheet-overlay{
   -servicestudio-opacity:1;
@@ -58893,8 +58958,10 @@ body.vscomp-popup-active:has(.osui-notification--is-open) .vscomp-wrapper{
   margin:var(--token-scale-0, 0);
   position:fixed;
   top:0;
-  -webkit-transition:all 130ms ease-in;
-  transition:all 130ms ease-in;
+  -webkit-transition:opacity 300ms cubic-bezier(0.4, 0, 0.2, 1), -webkit-transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:opacity 300ms cubic-bezier(0.4, 0, 0.2, 1), -webkit-transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:opacity 300ms cubic-bezier(0.4, 0, 0.2, 1), transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:opacity 300ms cubic-bezier(0.4, 0, 0.2, 1), transform 300ms cubic-bezier(0.4, 0, 0.2, 1), -webkit-transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
   width:var(--sidebar-width);
   will-change:transform;
   z-index:var(--osui-sidebar-layer);
@@ -58991,10 +59058,10 @@ body.vscomp-popup-active:has(.osui-notification--is-open) .vscomp-wrapper{
   -webkit-transform:none;
       -ms-transform:none;
           transform:none;
-  -webkit-transition:-webkit-transform 330ms ease-out;
-  transition:-webkit-transform 330ms ease-out;
-  transition:transform 330ms ease-out;
-  transition:transform 330ms ease-out, -webkit-transform 330ms ease-out;
+  -webkit-transition:-webkit-transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:-webkit-transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition:transform 500ms cubic-bezier(0.4, 0, 0.2, 1), -webkit-transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
   will-change:transform;
 }
 .active-screen .osui-sidebar--is-open.osui-sidebar--has-overlay::before{
@@ -60996,6 +61063,22 @@ html[data-uieditorversion^="1"] .wizard-wrapper-item{
 .badge.background-yellow{
   color:var(--osui-badge-on-light-color);
 }
+.badge.background-primary-lightest{
+  background-color:var(--token-primitives-blue-100, #e9ecfc);
+  color:var(--token-primitives-blue-700, #105cef);
+}
+.badge.background-red-lightest{
+  background-color:var(--token-primitives-red-100, #fde1e1);
+  color:var(--token-primitives-red-900, #991b1b);
+}
+.badge.background-secondary-lightest{
+  background-color:var(--token-primitives-secondary-100, #e8eaf2);
+  color:var(--token-primitives-secondary-900, #303d60);
+}
+.badge.background-yellow-lightest{
+  background-color:var(--token-primitives-yellow-100, #fff3d5);
+  color:var(--token-primitives-yellow-900, #966503);
+}
 .badge.background-transparent{
   color:var(--osui-badge-primary-color);
 }
@@ -61079,17 +61162,30 @@ html[data-uieditorversion^="1"] .wizard-wrapper-item{
   position:relative;
 }
 .icon-badge .badge{
-  left:45%;
   position:absolute;
   top:0;
+  right:0;
+  left:auto;
   border-radius:var(--token-border-radius-full, 999px);
-  font-size:var(--token-font-size-300, 0.75rem);
-  height:18px;
-  min-width:18px;
+  -webkit-box-shadow:0 0 0 2px var(--token-bg-surface-default, var(--token-primitives-base-white, #ffffff));
+          box-shadow:0 0 0 2px var(--token-bg-surface-default, var(--token-primitives-base-white, #ffffff));
+  display:-webkit-inline-box;
+  display:-ms-inline-flexbox;
+  display:inline-flex;
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  -webkit-box-pack:center;
+      -ms-flex-pack:center;
+          justify-content:center;
+  font-size:var(--token-font-size-200, 0.625rem);
+  font-weight:var(--token-font-weight-bold, 700);
+  height:var(--token-scale-400, 16px);
+  min-width:var(--token-scale-400, 16px);
   padding:var(--token-scale-0, 0) var(--token-scale-100, 4px);
-  -webkit-transform:translateY(-40%);
-      -ms-transform:translateY(-40%);
-          transform:translateY(-40%);
+  -webkit-transform:translate(50%, -50%);
+      -ms-transform:translate(50%, -50%);
+          transform:translate(50%, -50%);
   white-space:nowrap;
 }
 .icon-badge .badge [data-expression]{
