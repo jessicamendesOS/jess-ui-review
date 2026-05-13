@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>OutSystems UI Tokens</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#105cef;--primary-subtle:#e9ecfc;
+  --surface:#ffffff;--surface-hover:#f3f3f3;
+  --border:#ebebeb;--border-input:#d5d5d5;
+  --text:#242424;--text-subtle:#626262;--text-subtlest:#a2a2a2;
+  --danger:#e52929;
+  --radius:8px;--radius-sm:4px;
+  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+body{font-family:var(--font);background:#fafafa;color:var(--text);font-size:13px;line-height:1.5}
+
+/* Header */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.header-title{font-size:13px;font-weight:600;white-space:nowrap;color:var(--text)}
+.header-controls{display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap}
+
+/* Search */
+.search-wrap{position:relative;flex:1;min-width:160px;max-width:320px}
+.search-wrap svg{position:absolute;left:8px;top:50%;transform:translateY(-50%);color:var(--text-subtlest);pointer-events:none}
+#search{
+  width:100%;padding:5px 8px 5px 28px;
+  border:1px solid var(--border-input);border-radius:var(--radius-sm);
+  font:inherit;font-size:12px;background:var(--surface);color:var(--text);
+  outline:none;transition:border-color .1s;
+}
+#search:focus{border-color:var(--primary)}
+#search-count{font-size:11px;color:var(--text-subtlest);white-space:nowrap;display:none}
+
+/* Buttons */
+.btn{
+  padding:5px 12px;border-radius:var(--radius-sm);font:inherit;font-size:12px;
+  cursor:pointer;border:1px solid var(--border-input);background:var(--surface);
+  color:var(--text-subtle);transition:.1s;white-space:nowrap;
+}
+.btn:hover{border-color:var(--primary);color:var(--primary)}
+
+/* View Toggle */
+.view-toggle{display:flex;border:1px solid var(--border-input);border-radius:var(--radius-sm);overflow:hidden}
+.view-btn{
+  padding:5px 12px;font:inherit;font-size:12px;cursor:pointer;
+  border:none;background:var(--surface);color:var(--text-subtle);transition:.1s;white-space:nowrap;
+}
+.view-btn+.view-btn{border-left:1px solid var(--border-input)}
+.view-btn.active{background:var(--primary-subtle);color:var(--primary);font-weight:600}
+
+/* Tree */
+main{margin-top:53px;padding:16px 20px;max-width:1100px}
+
+.tree{list-style:none;padding:0}
+.tree-root{padding-top:4px}
+
+.tree-node{margin:1px 0}
+.tree-children{
+  list-style:none;padding-left:18px;
+  border-left:1px solid var(--border);margin-left:6px;
+  display:none;
+}
+.tree-children.open{display:block}
+
+.node-row{
+  display:flex;align-items:flex-start;gap:6px;padding:3px 6px;
+  border-radius:var(--radius-sm);cursor:default;
+  transition:background .1s;
+}
+.node-row.clickable{cursor:pointer}
+.node-row.clickable:hover{background:var(--surface-hover)}
+.node-row.hidden{display:none}
+.node-row.match{background:var(--primary-subtle)!important}
+
+/* Toggle arrow */
+.toggle{
+  flex-shrink:0;width:14px;height:18px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-subtlest);font-size:9px;margin-top:1px;
+  transition:transform .15s;
+}
+.toggle.open{transform:rotate(90deg)}
+.toggle-spacer{width:14px;flex-shrink:0}
+
+/* Node icons */
+.node-icon{font-size:11px;flex-shrink:0;margin-top:1px;line-height:18px}
+
+/* Node label */
+.node-label{flex:1;min-width:0}
+.node-label .name{font-weight:500;color:var(--text)}
+.node-label .detail{color:var(--text-subtle);font-size:12px}
+.node-label .token-name{
+  font-family:'SF Mono',Monaco,'Cascadia Code',monospace;
+  font-size:11px;color:#7c3aed;background:#f5f0ff;
+  padding:1px 4px;border-radius:3px;display:inline-block;
+}
+.node-label .value-badge{
+  font-size:11px;font-weight:600;color:var(--text);
+  background:var(--surface-hover);padding:1px 6px;
+  border-radius:3px;display:inline-block;margin-right:4px;
+}
+.node-label .color-dot{
+  display:inline-block;width:10px;height:10px;
+  border-radius:50%;border:1px solid rgba(0,0,0,.1);
+  margin-right:4px;vertical-align:middle;flex-shrink:0;
+}
+
+/* Level styles */
+.level-0 .name{font-size:15px;font-weight:700;color:var(--primary)}
+.level-1 .name{font-size:13px;font-weight:600;color:var(--text)}
+.level-2 .name{font-size:13px;font-weight:600}
+.level-3 .name{font-size:12px;font-weight:500;color:var(--text-subtle)}
+.level-4 .name{font-size:12px;font-weight:400}
+.level-5 .name{font-size:12px;color:var(--text-subtle)}
+
+/* Component Vars Table */
+.vars-table-wrap{padding:4px 0 4px 20px}
+table.vars-table{
+  width:100%;border-collapse:collapse;
+  font-size:11px;margin:4px 0;
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  overflow:hidden;
+}
+.vars-table th{
+  text-align:left;padding:5px 10px;
+  background:var(--surface-hover);color:var(--text-subtle);
+  font-weight:600;border-bottom:1px solid var(--border);
+}
+.vars-table td{padding:4px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+.vars-table tr:last-child td{border-bottom:none}
+.vars-table tr:hover td{background:var(--primary-subtle)}
+.vars-table .var-name{
+  font-family:'SF Mono',Monaco,'Cascadia Code',monospace;
+  color:var(--primary);font-size:11px;
+}
+.vars-table .var-maps{
+  font-family:'SF Mono',Monaco,'Cascadia Code',monospace;
+  color:#7c3aed;font-size:11px;
+}
+.vars-table .var-val{color:var(--text-subtle)}
+
+/* Highlight */
+mark{background:#fef08a;color:inherit;padding:0 1px;border-radius:2px}
+
+/* Empty state */
+.empty{padding:40px;text-align:center;color:var(--text-subtlest)}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="header-title">OutSystems UI Tokens</span>
+  <div class="header-controls">
+    <div class="search-wrap">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.415l-3.868-3.833zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+      </svg>
+      <input id="search" type="text" placeholder="Search component or token…" autocomplete="off"/>
+    </div>
+    <span id="search-count"></span>
+    <button class="btn" id="btn-collapse">Collapse all</button>
+    <button class="btn" id="btn-expand">Expand all</button>
+    <div class="view-toggle">
+      <button class="view-btn active" data-view="component">By Component</button>
+      <button class="view-btn" data-view="token">By Token</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <ul class="tree tree-root" id="tree"></ul>
+</main>
+
+<script>
+// ─── DATA ──────────────────────────────────────────────────────────────────────
+
+const GROUPS = ['Form Controls','Actions','Navigation','Feedback','Overlays','Content'];
+
+const COMPONENTS = [
+  {id:'input', name:'Input / Textarea', group:'Form Controls', props:{
+    Dimensions:[
+      {label:'height',value:'40px',token:'--token-scale-1000'},
+      {label:'height large',value:'48px',token:'--token-scale-1200'},
+      {label:'padding-x',value:'16px',token:'--token-scale-400'},
+    ],
+    Text:[
+      {label:'font-size (text)',value:'14px / 0.875rem',token:'--token-font-size-350'},
+      {label:'font-size (small)',value:'12px / 0.75rem',token:'--token-font-size-300'},
+      {label:'font-size (large)',value:'16px / 1rem',token:'--token-font-size-400'},
+      {label:'label font-size',value:'14px / 0.875rem',token:'--token-font-size-350'},
+      {label:'label font-weight',value:'600',token:'--token-font-weight-semi-bold'},
+      {label:'helper font-size',value:'12px / 0.75rem',token:'--token-font-size-300'},
+    ],
+    Colors:[
+      {label:'background',value:'#ffffff',token:'--token-bg-input-default'},
+      {label:'background (disabled)',value:'#f3f3f3',token:'--token-bg-input-disabled'},
+      {label:'text',value:'#242424',token:'--token-text-default'},
+      {label:'placeholder',value:'#626262',token:'--token-text-subtlest'},
+      {label:'border (focus)',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'border (error)',value:'#e52929',token:'--token-semantics-danger-base'},
+    ],
+    Border:[
+      {label:'border-radius',value:'8px',token:'--token-border-radius-200'},
+      {label:'border-width',value:'1px',token:'--token-border-size-025'},
+      {label:'border (default)',value:'#d5d5d5',token:'--token-border-default'},
+      {label:'border (hover)',value:'#8c8c8c',token:'--token-border-input-default'},
+      {label:'border (focus)',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'border (error)',value:'#e52929',token:'--token-semantics-danger-base'},
+    ],
+    Motion:[
+      {label:'duration',value:'100ms',token:'--token-duration-fast'},
+      {label:'easing',value:'ease',token:'--token-easing-standard'},
+    ],
+  }, vars:[
+    {name:'--osui-input-background',mapsTo:'--token-bg-input-default',resolved:'#ffffff'},
+    {name:'--osui-input-border-color',mapsTo:'--token-border-default',resolved:'#d5d5d5'},
+    {name:'--osui-input-border-radius',mapsTo:'--token-border-radius-200',resolved:'8px'},
+    {name:'--osui-input-color',mapsTo:'--token-text-default',resolved:'#242424'},
+    {name:'--osui-input-focus-border-color',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+    {name:'--osui-input-error-border-color',mapsTo:'--token-semantics-danger-base',resolved:'#e52929'},
+  ]},
+
+  {id:'checkbox', name:'Checkbox', group:'Form Controls', props:{
+    Dimensions:[
+      {label:'size',value:'16px',token:'--token-scale-400'},
+      {label:'gap (label)',value:'8px',token:'--token-scale-200'},
+      {label:'touch target',value:'40px',token:'--token-scale-1000'},
+    ],
+    Colors:[
+      {label:'background (unchecked)',value:'#ffffff',token:'--token-bg-input-default'},
+      {label:'background (checked)',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'background (disabled)',value:'#f3f3f3',token:'--token-bg-input-disabled'},
+      {label:'checkmark',value:'#ffffff',token:'--token-text-inverse'},
+      {label:'border (error)',value:'#e52929',token:'--token-semantics-danger-base'},
+    ],
+    Border:[
+      {label:'border-radius',value:'8px',token:'--token-border-radius-200'},
+      {label:'border-width',value:'1px',token:'--token-border-size-025'},
+      {label:'border-width (focus)',value:'2px',token:'--token-border-size-050'},
+      {label:'border (default)',value:'#d5d5d5',token:'--token-border-default'},
+      {label:'border (focus)',value:'#105cef',token:'--token-semantics-primary-base'},
+    ],
+    Motion:[
+      {label:'duration',value:'100ms',token:'--token-duration-fast'},
+      {label:'easing',value:'ease',token:'--token-easing-standard'},
+    ],
+  }, vars:[
+    {name:'--osui-checkbox-background',mapsTo:'--token-bg-input-default',resolved:'#ffffff'},
+    {name:'--osui-checkbox-border-color',mapsTo:'--token-border-default',resolved:'#d5d5d5'},
+    {name:'--osui-checkbox-border-radius',mapsTo:'--token-border-radius-200',resolved:'8px'},
+    {name:'--osui-checkbox-checked-color',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+  ]},
+
+  {id:'radio', name:'Radio Button', group:'Form Controls', props:{
+    Dimensions:[
+      {label:'size',value:'20px',token:'--token-scale-500'},
+      {label:'inner dot',value:'12px',token:'--token-scale-300'},
+      {label:'gap (label)',value:'8px',token:'--token-scale-200'},
+    ],
+    Colors:[
+      {label:'background (unchecked)',value:'#ffffff',token:'--token-bg-input-default'},
+      {label:'background (checked)',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'background (disabled)',value:'#f3f3f3',token:'--token-bg-input-disabled'},
+      {label:'border (error)',value:'#e52929',token:'--token-semantics-danger-base'},
+    ],
+    Border:[
+      {label:'border-radius',value:'full',token:'--token-border-radius-full'},
+      {label:'border-width',value:'1px',token:'--token-border-size-025'},
+      {label:'border-width (focus)',value:'3px',token:'--token-border-size-075'},
+      {label:'border (default)',value:'#d5d5d5',token:'--token-border-input-default'},
+      {label:'border (focus)',value:'#105cef',token:'--token-semantics-primary-base'},
+    ],
+    Motion:[
+      {label:'duration',value:'100ms',token:'--token-duration-fast'},
+      {label:'easing',value:'ease',token:'--token-easing-standard'},
+    ],
+  }, vars:[
+    {name:'--osui-radio-background',mapsTo:'--token-bg-input-default',resolved:'#ffffff'},
+    {name:'--osui-radio-border-color',mapsTo:'--token-border-input-default',resolved:'#d5d5d5'},
+    {name:'--osui-radio-checked-color',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+  ]},
+
+  {id:'switch', name:'Switch', group:'Form Controls', props:{
+    Dimensions:[
+      {label:'track width',value:'24px',token:'--token-scale-600'},
+      {label:'track height',value:'20px',token:'--token-scale-500'},
+      {label:'thumb offset',value:'1px',token:'--token-scale-025'},
+      {label:'touch target',value:'40px',token:'--token-scale-1000'},
+    ],
+    Colors:[
+      {label:'track (default)',value:'#a2a2a2',token:'--token-primitives-neutral-600'},
+      {label:'track (checked)',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'track (disabled)',value:'#f3f3f3',token:'--token-bg-input-disabled'},
+      {label:'thumb',value:'#ffffff',token:'--token-primitives-base-white'},
+    ],
+    Border:[
+      {label:'border-radius',value:'full',token:'--token-border-radius-full'},
+      {label:'border-width',value:'1px',token:'--token-border-size-025'},
+      {label:'border-width (focus)',value:'3px',token:'--token-border-size-075'},
+    ],
+    Elevation:[
+      {label:'thumb shadow (rest)',value:'elevation-25',token:'--token-elevation-25'},
+      {label:'thumb shadow (active)',value:'elevation-50',token:'--token-elevation-50'},
+    ],
+    Motion:[
+      {label:'easing',value:'ease',token:'--token-easing-standard'},
+      {label:'duration',value:'200ms',token:'--token-transition-time-200'},
+    ],
+  }, vars:[
+    {name:'--osui-switch-track-color',mapsTo:'--token-primitives-neutral-600',resolved:'#a2a2a2'},
+    {name:'--osui-switch-checked-track-color',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+    {name:'--osui-switch-thumb-color',mapsTo:'--token-primitives-base-white',resolved:'#ffffff'},
+    {name:'--osui-switch-track-border-color',mapsTo:'--token-border-input-default',resolved:'#d5d5d5'},
+    {name:'--osui-switch-disabled-track-color',mapsTo:'--token-bg-input-disabled',resolved:'#f3f3f3'},
+  ]},
+
+  {id:'dropdown-widget', name:'Dropdown (Widget)', group:'Form Controls', props:{
+    Dimensions:[
+      {label:'height (trigger)',value:'40px',token:'--token-scale-1000'},
+      {label:'padding-x',value:'16px',token:'--token-scale-400'},
+      {label:'padding-right (icon)',value:'44px',token:'--token-scale-1100'},
+      {label:'row height (popup)',value:'44px',token:'--token-scale-1100'},
+      {label:'value-tag height',value:'24px',token:'--token-scale-600'},
+    ],
+    Text:[
+      {label:'font-size (trigger)',value:'14px / 0.875rem',token:'--token-font-size-350'},
+      {label:'value-tag font-size',value:'12px / 0.75rem',token:'--token-font-size-300'},
+      {label:'value-tag font-weight',value:'500',token:'--token-font-weight-medium'},
+    ],
+    Colors:[
+      {label:'background',value:'#ffffff',token:'--token-bg-input-default'},
+      {label:'background (disabled)',value:'#f3f3f3',token:'--token-bg-input-disabled'},
+      {label:'text',value:'#242424',token:'--token-text-default'},
+      {label:'row hover',value:'#f3f3f3',token:'--token-bg-surface-hover'},
+      {label:'border (error)',value:'#e52929',token:'--token-semantics-danger-base'},
+    ],
+    Border:[
+      {label:'border-radius',value:'8px',token:'--token-border-radius-200'},
+      {label:'border-width',value:'1px',token:'--token-border-size-025'},
+      {label:'border (default)',value:'#d5d5d5',token:'--token-border-default'},
+      {label:'border (hover/focus)',value:'#105cef',token:'--token-semantics-primary-base'},
+    ],
+    Motion:[
+      {label:'duration',value:'100ms',token:'--token-duration-fast'},
+      {label:'easing',value:'ease',token:'--token-easing-standard'},
+    ],
+  }, vars:[
+    {name:'--osui-input-border-color',mapsTo:'--token-border-default',resolved:'#d5d5d5'},
+    {name:'--osui-input-focus-border-color',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+  ]},
+
+  {id:'datepicker', name:'DatePicker', group:'Form Controls', props:{
+    Dimensions:[
+      {label:'height (input)',value:'40px',token:'--token-scale-1000'},
+      {label:'padding-x',value:'16px',token:'--token-scale-400'},
+      {label:'day cell size',value:'32px',token:'--token-scale-800'},
+    ],
+    Text:[
+      {label:'font-size (input)',value:'14px / 0.875rem',token:'--token-font-size-350'},
+      {label:'font-size (day)',value:'14px / 0.875rem',token:'--token-font-size-350'},
+      {label:'font-weight (nav)',value:'500',token:'--token-font-weight-medium'},
+    ],
+    Colors:[
+      {label:'background (input)',value:'#ffffff',token:'--token-bg-input-default'},
+      {label:'background (calendar)',value:'#ffffff',token:'--token-bg-surface-default'},
+      {label:'day (selected)',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'day (hover)',value:'#f3f3f3',token:'--token-bg-surface-hover'},
+      {label:'day (disabled)',value:'#626262',token:'--token-text-subtlest'},
+      {label:'border (error)',value:'#e52929',token:'--token-semantics-danger-base'},
+    ],
+    Border:[
+      {label:'border-radius (input)',value:'8px',token:'--token-border-radius-200'},
+      {label:'border-radius (day)',value:'full',token:'--token-border-radius-full'},
+      {label:'border-width',value:'1px',token:'--token-border-size-025'},
+      {label:'border (default)',value:'#d5d5d5',token:'--token-border-input-default'},
+      {label:'border (focus)',value:'#105cef',token:'--token-semantics-primary-base'},
+    ],
+    Motion:[
+      {label:'duration',value:'100ms',token:'--token-duration-fast'},
+      {label:'easing',value:'ease',token:'--token-easing-standard'},
+    ],
+  }, vars:[
+    {name:'--osui-input-background',mapsTo:'--token-bg-input-default',resolved:'#ffffff'},
+    {name:'--osui-input-border-color',mapsTo:'--token-border-input-default',resolved:'#d5d5d5'},
+    {name:'--osui-input-border-radius',mapsTo:'--token-border-radius-200',resolved:'8px'},
+    {name:'--osui-datepicker-disabled-background',mapsTo:'--token-bg-input-disabled',resolved:'#f3f3f3'},
+  ]},
+
+  {id:'button', name:'Button', group:'Actions', props:{
+    Dimensions:[
+      {label:'height (default)',value:'40px',token:'--token-scale-1000'},
+      {label:'height (small)',value:'32px',token:'--token-scale-800'},
+      {label:'height (large)',value:'48px',token:'--token-scale-1200'},
+      {label:'padding-x',value:'16px',token:'--token-scale-400'},
+      {label:'padding-x (small)',value:'8px',token:'--token-scale-200'},
+      {label:'gap (icon + label)',value:'8px',token:'--token-scale-200'},
+    ],
+    Text:[
+      {label:'font-size (small)',value:'12px / 0.75rem',token:'--token-font-size-300'},
+      {label:'font-size (large)',value:'16px / 1rem',token:'--token-font-size-400'},
+      {label:'font-weight',value:'600',token:'--token-font-weight-semi-bold'},
+    ],
+    Colors:[
+      {label:'bg (primary)',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'bg (default)',value:'#ffffff',token:'--token-bg-surface-default'},
+      {label:'bg (disabled)',value:'#f3f3f3',token:'--token-bg-input-disabled'},
+      {label:'text (primary)',value:'#ffffff',token:'--token-text-inverse'},
+      {label:'text (default)',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'opacity (disabled)',value:'0.45',token:'--token-opacity-disabled'},
+    ],
+    Border:[
+      {label:'border-radius',value:'8px',token:'--token-border-radius-200'},
+      {label:'border-radius (circle)',value:'full',token:'--token-border-radius-full'},
+      {label:'border-width',value:'1px',token:'--token-border-size-025'},
+      {label:'border (cancel)',value:'#d5d5d5',token:'--token-border-default'},
+    ],
+    Motion:[
+      {label:'duration',value:'100ms',token:'--token-duration-fast'},
+      {label:'duration (cancel)',value:'150ms',token:'--token-duration-base'},
+      {label:'easing',value:'ease',token:'--token-easing-standard'},
+    ],
+  }, vars:[
+    {name:'--osui-btn-background',mapsTo:'--token-bg-surface-default',resolved:'#ffffff'},
+    {name:'--osui-btn-border-color',mapsTo:'--token-border-default',resolved:'#d5d5d5'},
+    {name:'--osui-btn-border-radius',mapsTo:'--token-border-radius-200',resolved:'8px'},
+    {name:'--osui-btn-color',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+    {name:'--osui-btn-primary-background',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+    {name:'--osui-btn-primary-color',mapsTo:'--token-text-inverse',resolved:'#ffffff'},
+    {name:'--osui-btn-error-background',mapsTo:'--token-semantics-danger-base',resolved:'#e52929'},
+    {name:'--osui-btn-success-background',mapsTo:'--token-semantics-success-base',resolved:'#2e7d32'},
+  ]},
+
+  {id:'rating', name:'Rating', group:'Actions', props:{
+    Dimensions:[
+      {label:'gap',value:'4px',token:'--token-scale-100'},
+      {label:'touch target',value:'24px',token:'--token-scale-600'},
+    ],
+    Colors:[
+      {label:'filled',value:'warning base',token:'--token-semantics-warning-base'},
+      {label:'empty',value:'neutral',token:'--token-rating-empty-color'},
+    ],
+    Border:[
+      {label:'border-width (focus)',value:'3px',token:'--token-border-size-075'},
+    ],
+    Motion:[
+      {label:'duration',value:'100ms',token:'--token-duration-fast'},
+      {label:'easing',value:'ease',token:'--token-easing-standard'},
+    ],
+  }, vars:[
+    {name:'--osui-rating-disabled-color',mapsTo:'--token-text-disabled',resolved:'#a2a2a2'},
+    {name:'--osui-rating-disabled-empty-color',mapsTo:'--token-primitives-neutral-400',resolved:'#d5d5d5'},
+    {name:'--rating-size',mapsTo:'(custom)',resolved:'varies'},
+  ]},
+
+  {id:'tabs', name:'Tabs', group:'Navigation', props:{
+    Dimensions:[
+      {label:'min-height (header item)',value:'44px',token:'--token-scale-1100'},
+      {label:'padding (header item)',value:'8px 16px',token:'--token-scale-200 / --token-scale-400'},
+      {label:'content padding-top',value:'24px',token:'--token-scale-600'},
+      {label:'indicator height',value:'2px',token:'--token-border-size-050'},
+    ],
+    Colors:[
+      {label:'tab (inactive)',value:'#626262',token:'--token-text-subtlest'},
+      {label:'tab (active)',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'tab (hover)',value:'#242424',token:'--token-text-default'},
+      {label:'tab (disabled)',value:'#a2a2a2',token:'--token-text-disabled'},
+      {label:'indicator',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'separator',value:'#d5d5d5',token:'--token-border-default'},
+    ],
+    Border:[
+      {label:'separator width',value:'1px',token:'--token-border-size-025'},
+    ],
+    Motion:[
+      {label:'duration (indicator)',value:'200ms',token:'--token-duration-moderate'},
+      {label:'easing',value:'ease',token:'--token-easing-standard'},
+    ],
+  }, vars:[
+    {name:'--osui-tabs-border-color',mapsTo:'--token-border-default',resolved:'#d5d5d5'},
+    {name:'--osui-tabs-header-item-color',mapsTo:'--token-text-subtlest',resolved:'#626262'},
+    {name:'--osui-tabs-header-item-color-active',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+    {name:'--osui-tabs-header-item-color-hover',mapsTo:'--token-text-default',resolved:'#242424'},
+    {name:'--osui-tabs-header-item-color-disabled',mapsTo:'--token-text-disabled',resolved:'#a2a2a2'},
+    {name:'--osui-tabs-indicator-color',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+    {name:'--tabs-indicator-size',mapsTo:'(custom)',resolved:'varies'},
+  ]},
+
+  {id:'submenu', name:'Submenu', group:'Navigation', props:{
+    Dimensions:[
+      {label:'padding (items block)',value:'0 24px',token:'--token-scale-600'},
+      {label:'padding (row)',value:'8px 16px',token:'--token-scale-200 / --token-scale-400'},
+      {label:'gap (icon + text)',value:'12px',token:'--token-scale-300'},
+    ],
+    Colors:[
+      {label:'background (popup)',value:'via --side-menu-background',token:'--token-bg-surface-default'},
+      {label:'item color',value:'#626262',token:'--token-text-subtlest'},
+      {label:'header color',value:'#242424',token:'--token-text-default'},
+      {label:'row hover',value:'#f3f3f3',token:'--token-bg-surface-hover'},
+      {label:'active background',value:'#e9ecfc',token:'--token-bg-primary-subtle-default'},
+      {label:'active text',value:'#105cef',token:'--token-semantics-primary-base'},
+    ],
+    Border:[
+      {label:'border-radius',value:'8px',token:'--token-border-radius-200'},
+    ],
+    Elevation:[
+      {label:'popup shadow',value:'elevation-2',token:'--token-elevation-2'},
+    ],
+  }, vars:[
+    {name:'--osui-submenu-items-background',mapsTo:'--side-menu-background → --token-bg-surface-default',resolved:'#ffffff'},
+    {name:'--osui-submenu-header-color',mapsTo:'--token-text-default',resolved:'#242424'},
+    {name:'--osui-submenu-item-color',mapsTo:'--token-text-subtlest',resolved:'#626262'},
+    {name:'--osui-submenu-active-border-color',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+    {name:'--osui-submenu-items-shadow',mapsTo:'--token-elevation-2',resolved:'shadow'},
+    {name:'--osui-submenu-max-height',mapsTo:'calc(100dvh - 80px)',resolved:'dynamic'},
+  ]},
+
+  {id:'pagination', name:'Pagination', group:'Navigation', props:{
+    Dimensions:[
+      {label:'button size',value:'40px',token:'--token-scale-1000'},
+      {label:'padding-x',value:'16px',token:'--token-scale-400'},
+      {label:'gap',value:'4px',token:'--token-scale-100'},
+    ],
+    Text:[
+      {label:'font-weight (active)',value:'500',token:'--token-font-weight-medium'},
+    ],
+    Colors:[
+      {label:'button color',value:'#626262',token:'--token-text-subtlest'},
+      {label:'button (active)',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'button hover bg',value:'#f3f3f3',token:'--token-bg-surface-hover'},
+    ],
+    Border:[
+      {label:'border-radius',value:'8px',token:'--token-border-radius-200'},
+      {label:'border-width',value:'1px',token:'--token-border-size-025'},
+      {label:'border-width (active)',value:'3px',token:'--token-border-size-075'},
+      {label:'border (default)',value:'#d5d5d5',token:'--token-border-default'},
+      {label:'border (active)',value:'#105cef',token:'--token-semantics-primary-base'},
+    ],
+    Motion:[
+      {label:'duration',value:'100ms',token:'--token-duration-fast'},
+      {label:'easing',value:'ease',token:'--token-easing-standard'},
+    ],
+  }, vars:[
+    {name:'--osui-pagination-button-size',mapsTo:'--token-scale-1000',resolved:'40px'},
+    {name:'--osui-pagination-active-color',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+    {name:'--osui-pagination-button-hover-background',mapsTo:'--token-bg-surface-hover',resolved:'#f3f3f3'},
+    {name:'--osui-pagination-counter-color',mapsTo:'--token-text-subtlest',resolved:'#626262'},
+  ]},
+
+  {id:'bottom-bar', name:'Bottom Bar Item', group:'Navigation', props:{
+    Dimensions:[
+      {label:'padding',value:'1px 8px',token:'--token-scale-025 / --token-scale-200'},
+    ],
+    Text:[
+      {label:'font-size (label)',value:'18px / 1.125rem',token:'--token-font-size-450'},
+    ],
+    Colors:[
+      {label:'background',value:'#ffffff',token:'--token-bg-surface-default'},
+      {label:'item color',value:'#626262',token:'--token-text-subtlest'},
+      {label:'item (active)',value:'#105cef',token:'--token-semantics-primary-base'},
+    ],
+    Border:[
+      {label:'border-top width',value:'1px',token:'--token-border-size-025'},
+    ],
+  }, vars:[
+    {name:'--osui-bottom-bar-background',mapsTo:'--token-bg-surface-default',resolved:'#ffffff'},
+    {name:'--osui-bottom-bar-border-color',mapsTo:'--token-border-default',resolved:'#d5d5d5'},
+    {name:'--osui-bottom-bar-item-color',mapsTo:'--token-text-subtlest',resolved:'#626262'},
+    {name:'--osui-bottom-bar-item-active-color',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+  ]},
+
+  {id:'alert', name:'Alert', group:'Feedback', props:{
+    Dimensions:[
+      {label:'padding',value:'12px 16px',token:'--token-scale-300 / --token-scale-400'},
+      {label:'gap (icon + text)',value:'8px',token:'--token-scale-200'},
+      {label:'icon size',value:'20px',token:'--token-scale-500'},
+    ],
+    Text:[
+      {label:'message font-size',value:'14px / 0.875rem',token:'--token-font-size-350'},
+      {label:'message font-weight',value:'500',token:'--token-font-weight-medium'},
+      {label:'icon font-size',value:'20px / 1.25rem',token:'--token-font-size-500'},
+    ],
+    Colors:[
+      {label:'bg (info)',value:'#e9ecfc',token:'--token-bg-info-subtle-default'},
+      {label:'bg (success)',value:'#e2f9e4',token:'--token-bg-success-subtle-default'},
+      {label:'bg (error)',value:'#fde1e1',token:'--token-bg-danger-subtle-default'},
+      {label:'bg (warning)',value:'#fff0c7',token:'--token-bg-warning-subtle-default'},
+      {label:'text (info)',value:'#0d4bc3',token:'--token-text-info'},
+      {label:'text (success)',value:'#126f23',token:'--token-text-success'},
+      {label:'text (error)',value:'#991b1b',token:'--token-text-danger'},
+      {label:'text (warning)',value:'#704b02',token:'--token-text-warning'},
+    ],
+    Border:[
+      {label:'border-radius',value:'8px',token:'--token-border-radius-200'},
+    ],
+    Motion:[
+      {label:'duration',value:'100ms',token:'--token-duration-fast'},
+      {label:'easing',value:'ease',token:'--token-easing-standard'},
+    ],
+  }, vars:[
+    {name:'--osui-alert-background',mapsTo:'varies by type',resolved:'subtle bg'},
+    {name:'--osui-alert-accent-color',mapsTo:'varies by type',resolved:'semantic color'},
+    {name:'--osui-alert-border-radius',mapsTo:'--token-border-radius-200',resolved:'8px'},
+    {name:'--osui-alert-color',mapsTo:'varies by type',resolved:'semantic text'},
+    {name:'--osui-alert-padding',mapsTo:'--token-scale-300 --token-scale-400',resolved:'12px 16px'},
+  ]},
+
+  {id:'feedback-msg', name:'Feedback Message', group:'Feedback', props:{
+    Dimensions:[
+      {label:'padding',value:'4px 16px',token:'--token-scale-075 / --token-scale-400'},
+      {label:'gap',value:'4px',token:'--token-scale-100'},
+    ],
+    Text:[
+      {label:'icon font-size',value:'18px / 1.125rem',token:'--token-font-size-450'},
+      {label:'message font-size',value:'20px / 1.25rem',token:'--token-font-size-500'},
+      {label:'font-weight',value:'400',token:'--token-font-weight-regular'},
+    ],
+    Colors:[
+      {label:'bg (info)',value:'semantic info',token:'--token-semantics-info-base'},
+      {label:'bg (success)',value:'semantic success',token:'--token-semantics-success-base'},
+      {label:'bg (error)',value:'semantic danger',token:'--token-semantics-danger-base'},
+      {label:'bg (warning)',value:'semantic warning',token:'--token-semantics-warning-base'},
+      {label:'text (on color)',value:'#ffffff',token:'--token-text-inverse'},
+    ],
+    Border:[
+      {label:'border-radius',value:'4px',token:'--token-border-radius-100'},
+      {label:'accent left border',value:'3px',token:'--token-border-size-075'},
+    ],
+  }, vars:[
+    {name:'--osui-feedback-message-background',mapsTo:'varies by type',resolved:'semantic color'},
+    {name:'--osui-feedback-message-color',mapsTo:'--token-text-inverse',resolved:'#ffffff'},
+    {name:'--osui-feedback-message-border-radius',mapsTo:'--token-border-radius-100',resolved:'4px'},
+  ]},
+
+  {id:'notification', name:'Notification', group:'Feedback', props:{
+    Dimensions:[
+      {label:'padding',value:'16px 24px',token:'--token-scale-400 / --token-scale-600'},
+      {label:'gap',value:'8px',token:'--token-scale-200'},
+    ],
+    Colors:[
+      {label:'background',value:'#ffffff',token:'--token-bg-surface-default'},
+      {label:'text',value:'#242424',token:'--token-text-default'},
+      {label:'border',value:'#d5d5d5',token:'--token-border-default'},
+    ],
+    Border:[
+      {label:'border-radius',value:'8px',token:'--token-border-radius-200'},
+      {label:'border-width',value:'1px',token:'--token-border-size-025'},
+    ],
+    Elevation:[
+      {label:'shadow',value:'elevation-3',token:'--token-elevation-3'},
+    ],
+  }, vars:[
+    {name:'--osui-notification-background',mapsTo:'--token-bg-surface-default',resolved:'#ffffff'},
+    {name:'--osui-notification-border-color',mapsTo:'--token-border-default',resolved:'#d5d5d5'},
+    {name:'--osui-notification-border-radius',mapsTo:'--token-border-radius-200',resolved:'8px'},
+    {name:'--osui-notification-shadow',mapsTo:'--token-elevation-3',resolved:'shadow'},
+    {name:'--osui-notification-layer',mapsTo:'z-index',resolved:'high'},
+  ]},
+
+  {id:'badge', name:'Badge', group:'Feedback', props:{
+    Dimensions:[
+      {label:'height (small)',value:'16px',token:'--token-scale-400'},
+      {label:'height (medium)',value:'20px',token:'--token-scale-500'},
+      {label:'height (large)',value:'28px',token:'--token-scale-700'},
+      {label:'padding-x',value:'4px / 6px',token:'--token-scale-100 / --token-scale-150'},
+    ],
+    Text:[
+      {label:'font-size (small)',value:'10px / 0.625rem',token:'--token-font-size-200'},
+      {label:'font-size (medium)',value:'12px / 0.75rem',token:'--token-font-size-300'},
+      {label:'font-size (large)',value:'14px / 0.875rem',token:'--token-font-size-350'},
+      {label:'font-weight',value:'600',token:'--token-font-weight-semi-bold'},
+      {label:'line-height',value:'full',token:'--token-font-line-height-full'},
+    ],
+    Colors:[
+      {label:'bg (primary)',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'text (on primary)',value:'#ffffff',token:'--token-text-inverse'},
+    ],
+  }, vars:[
+    {name:'--osui-badge-color',mapsTo:'--token-text-default',resolved:'#242424'},
+    {name:'--osui-badge-on-light-color',mapsTo:'--token-text-default',resolved:'#242424'},
+    {name:'--osui-badge-primary-color',mapsTo:'--token-text-inverse',resolved:'#ffffff'},
+  ]},
+
+  {id:'progress', name:'Progress Bar', group:'Feedback', props:{
+    Dimensions:[
+      {label:'height (default)',value:'8px',token:'--token-scale-200'},
+      {label:'height (thin)',value:'2px',token:'--token-scale-050'},
+    ],
+    Colors:[
+      {label:'track background',value:'#e5e5e5',token:'--token-primitives-neutral-300'},
+      {label:'bar fill',value:'#105cef',token:'--token-semantics-primary-base'},
+    ],
+    Border:[
+      {label:'border-radius',value:'full',token:'--token-border-radius-full'},
+      {label:'border-width (focus)',value:'2px',token:'--token-border-size-050'},
+    ],
+  }, vars:[]},
+
+  {id:'popup', name:'Popup', group:'Overlays', props:{
+    Dimensions:[
+      {label:'padding',value:'24px',token:'--token-scale-600'},
+      {label:'gap (header)',value:'16px',token:'--token-scale-400'},
+    ],
+    Colors:[
+      {label:'background',value:'#ffffff',token:'--token-bg-surface-default'},
+      {label:'backdrop',value:'rgba overlay',token:'--token-backdrop'},
+    ],
+    Border:[
+      {label:'border-radius',value:'8px',token:'--token-border-radius-200'},
+      {label:'border-width',value:'1px',token:'--token-border-size-025'},
+    ],
+    Elevation:[
+      {label:'shadow',value:'elevation-4',token:'--token-elevation-4'},
+    ],
+  }, vars:[
+    {name:'--osui-popup-background',mapsTo:'--token-bg-surface-default',resolved:'#ffffff'},
+    {name:'--osui-popup-border-radius',mapsTo:'--token-border-radius-200',resolved:'8px'},
+    {name:'--osui-popup-shadow',mapsTo:'--token-elevation-4',resolved:'shadow'},
+    {name:'--osui-popup-padding',mapsTo:'--token-scale-600',resolved:'24px'},
+    {name:'--osui-popup-layer',mapsTo:'z-index',resolved:'high'},
+  ]},
+
+  {id:'bottom-sheet', name:'Bottom Sheet', group:'Overlays', props:{
+    Dimensions:[
+      {label:'padding',value:'24px',token:'--token-scale-600'},
+      {label:'drag handle',value:'4px / 32px',token:'--token-scale-100 / --token-scale-800'},
+    ],
+    Colors:[
+      {label:'background',value:'#ffffff',token:'--token-bg-surface-default'},
+      {label:'backdrop',value:'rgba overlay',token:'--token-backdrop'},
+    ],
+    Elevation:[
+      {label:'shadow',value:'elevation-3',token:'--token-elevation-3'},
+    ],
+  }, vars:[
+    {name:'--osui-bottom-sheet-background',mapsTo:'--token-bg-surface-default',resolved:'#ffffff'},
+    {name:'--osui-bottom-sheet-shadow',mapsTo:'--token-elevation-3',resolved:'shadow'},
+    {name:'--osui-bottom-sheet-padding',mapsTo:'--token-scale-600',resolved:'24px'},
+    {name:'--osui-bottom-sheet-layer',mapsTo:'z-index',resolved:'high'},
+  ]},
+
+  {id:'sidebar', name:'Sidebar', group:'Overlays', props:{
+    Dimensions:[
+      {label:'padding-x',value:'24px',token:'--token-scale-600'},
+      {label:'padding-y',value:'16px',token:'--token-scale-400'},
+    ],
+    Colors:[
+      {label:'background',value:'#ffffff',token:'--token-bg-surface-default'},
+      {label:'text',value:'#242424',token:'--token-text-default'},
+      {label:'backdrop',value:'rgba overlay',token:'--token-backdrop'},
+    ],
+    Border:[
+      {label:'border-width (edge)',value:'2px',token:'--token-border-size-050'},
+    ],
+    Elevation:[
+      {label:'shadow',value:'elevation-3',token:'--token-elevation-3'},
+    ],
+  }, vars:[
+    {name:'--osui-sidebar-background',mapsTo:'--token-bg-surface-default',resolved:'#ffffff'},
+    {name:'--osui-sidebar-color',mapsTo:'--token-text-default',resolved:'#242424'},
+    {name:'--osui-sidebar-padding-x',mapsTo:'--token-scale-600',resolved:'24px'},
+    {name:'--osui-sidebar-padding-y',mapsTo:'--token-scale-400',resolved:'16px'},
+    {name:'--osui-sidebar-shadow',mapsTo:'--token-elevation-3',resolved:'shadow'},
+  ]},
+
+  {id:'tooltip', name:'Tooltip', group:'Overlays', props:{
+    Dimensions:[
+      {label:'padding',value:'4px 8px',token:'--token-scale-100 / --token-scale-200'},
+    ],
+    Text:[
+      {label:'font-size',value:'14px / 0.875rem',token:'--token-font-size-350'},
+      {label:'font-weight',value:'400',token:'--token-font-weight-regular'},
+    ],
+    Colors:[
+      {label:'background',value:'#242424',token:'--token-primitives-neutral-1200'},
+      {label:'text',value:'#ffffff',token:'--token-text-inverse'},
+    ],
+    Border:[
+      {label:'border-radius',value:'4px',token:'--token-border-radius-100'},
+    ],
+  }, vars:[
+    {name:'--osui-tooltip-background',mapsTo:'--token-primitives-neutral-1200',resolved:'#242424'},
+    {name:'--osui-tooltip-color',mapsTo:'--token-text-inverse',resolved:'#ffffff'},
+    {name:'--osui-tooltip-font-size',mapsTo:'--token-font-size-350',resolved:'14px'},
+    {name:'--osui-tooltip-border-radius',mapsTo:'--token-border-radius-100',resolved:'4px'},
+    {name:'--osui-tooltip-padding',mapsTo:'--token-scale-100 --token-scale-200',resolved:'4px 8px'},
+  ]},
+
+  {id:'balloon', name:'Balloon', group:'Overlays', props:{
+    Colors:[
+      {label:'background',value:'#ffffff',token:'--token-bg-surface-default'},
+    ],
+    Elevation:[
+      {label:'shadow',value:'elevation-1',token:'--token-elevation-1'},
+    ],
+  }, vars:[
+    {name:'--osui-balloon-background',mapsTo:'--token-bg-surface-default',resolved:'#ffffff'},
+    {name:'--osui-balloon-shadow',mapsTo:'--token-elevation-1',resolved:'shadow'},
+  ]},
+
+  {id:'card', name:'Card', group:'Content', props:{
+    Dimensions:[
+      {label:'padding',value:'24px',token:'--token-scale-600'},
+      {label:'padding (native)',value:'16px',token:'--token-scale-400'},
+    ],
+    Colors:[
+      {label:'background',value:'#ffffff',token:'--token-bg-surface-default'},
+    ],
+    Border:[
+      {label:'border-radius',value:'8px',token:'--token-border-radius-200'},
+      {label:'border',value:'none (removed)',token:'—'},
+    ],
+    Elevation:[
+      {label:'shadow (rest)',value:'elevation-1',token:'--token-elevation-1'},
+      {label:'shadow (hover)',value:'elevation-2',token:'--token-elevation-2'},
+    ],
+    Motion:[
+      {label:'duration',value:'150ms',token:'--token-duration-base'},
+      {label:'easing',value:'ease',token:'--token-easing-standard'},
+    ],
+  }, vars:[
+    {name:'--osui-card-background',mapsTo:'--token-bg-surface-default',resolved:'#ffffff'},
+    {name:'--osui-card-border-radius',mapsTo:'--token-border-radius-200',resolved:'8px'},
+    {name:'--osui-card-border-width',mapsTo:'0 (removed)',resolved:'none'},
+    {name:'--osui-card-padding',mapsTo:'--token-scale-600',resolved:'24px'},
+    {name:'--osui-card-shadow',mapsTo:'--token-elevation-1',resolved:'shadow'},
+  ]},
+
+  {id:'table', name:'Table', group:'Content', props:{
+    Dimensions:[
+      {label:'cell padding',value:'8px 24px',token:'--token-scale-200 / --token-scale-600'},
+    ],
+    Text:[
+      {label:'header font-size',value:'14px / 0.875rem',token:'--token-font-size-350'},
+      {label:'header font-weight',value:'600',token:'--token-font-weight-semi-bold'},
+    ],
+    Colors:[
+      {label:'header background',value:'#f3f3f3',token:'--token-bg-neutral-subtlest-default'},
+      {label:'row background',value:'#ffffff',token:'--token-bg-surface-default'},
+      {label:'row (hover)',value:'#f3f3f3',token:'--token-bg-surface-hover'},
+      {label:'row (selected)',value:'#e9ecfc',token:'--token-bg-primary-subtle-default'},
+      {label:'sort active',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'border',value:'#d5d5d5',token:'--token-border-default'},
+    ],
+    Border:[
+      {label:'border-radius',value:'8px',token:'--token-border-radius-200'},
+      {label:'border-width',value:'1px',token:'--token-border-size-025'},
+    ],
+    Motion:[
+      {label:'duration',value:'100ms',token:'--token-duration-fast'},
+      {label:'easing',value:'ease',token:'--token-easing-standard'},
+    ],
+  }, vars:[
+    {name:'--osui-table-header-background',mapsTo:'--token-bg-neutral-subtlest-default',resolved:'#f3f3f3'},
+    {name:'--osui-table-cell-background',mapsTo:'--token-bg-surface-default',resolved:'#ffffff'},
+    {name:'--osui-table-row-hover-background',mapsTo:'--token-bg-surface-hover',resolved:'#f3f3f3'},
+    {name:'--osui-table-row-selected-background',mapsTo:'--token-bg-primary-subtle-default',resolved:'#e9ecfc'},
+    {name:'--osui-table-border-color',mapsTo:'--token-border-default',resolved:'#d5d5d5'},
+    {name:'--osui-table-border-radius',mapsTo:'--token-border-radius-200',resolved:'8px'},
+  ]},
+
+  {id:'tag', name:'Tag', group:'Content', props:{
+    Dimensions:[
+      {label:'height (small)',value:'16px',token:'--token-scale-400'},
+      {label:'height (medium)',value:'20px',token:'--token-scale-500'},
+      {label:'height (large)',value:'28px',token:'--token-scale-700'},
+      {label:'padding-x',value:'6px / 8px',token:'--token-scale-150 / --token-scale-200'},
+    ],
+    Text:[
+      {label:'font-size (small)',value:'10px / 0.625rem',token:'--token-font-size-200'},
+      {label:'font-size (medium)',value:'12px / 0.75rem',token:'--token-font-size-300'},
+      {label:'font-weight',value:'500',token:'--token-font-weight-medium'},
+      {label:'line-height',value:'full',token:'--token-font-line-height-full'},
+    ],
+    Colors:[
+      {label:'bg (primary)',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'text (on primary)',value:'#ffffff',token:'--token-text-inverse'},
+    ],
+  }, vars:[
+    {name:'--osui-tag-color',mapsTo:'--token-text-default',resolved:'#242424'},
+    {name:'--osui-tag-on-light-color',mapsTo:'varies',resolved:'semantic'},
+    {name:'--osui-tag-primary-color',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+  ]},
+
+  {id:'avatar', name:'User Avatar', group:'Content', props:{
+    Dimensions:[
+      {label:'size (small)',value:'24px',token:'--token-scale-600'},
+      {label:'size (medium)',value:'32px',token:'--token-scale-800'},
+      {label:'size (large)',value:'40px',token:'--token-scale-1000'},
+    ],
+    Text:[
+      {label:'font-size (small)',value:'10px / 0.625rem',token:'--token-font-size-200'},
+      {label:'font-size (medium)',value:'12px / 0.75rem',token:'--token-font-size-300'},
+      {label:'font-size (large)',value:'16px / 1rem',token:'--token-font-size-400'},
+      {label:'font-weight',value:'600',token:'--token-font-weight-semi-bold'},
+    ],
+    Colors:[
+      {label:'bg (subtle)',value:'#e9ecfc',token:'--token-bg-primary-subtle-default'},
+      {label:'text (subtle)',value:'#105cef',token:'--token-semantics-primary-base'},
+    ],
+  }, vars:[
+    {name:'--osui-avatar-color',mapsTo:'--token-text-inverse',resolved:'#ffffff'},
+    {name:'--osui-avatar-primary-color',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+    {name:'--osui-avatar-on-light-color',mapsTo:'--token-text-default',resolved:'#242424'},
+  ]},
+
+  {id:'accordion', name:'Accordion Item', group:'Content', props:{
+    Dimensions:[
+      {label:'padding (header)',value:'16px 24px',token:'--token-scale-400 / --token-scale-600'},
+      {label:'padding (content)',value:'24px',token:'--token-scale-600'},
+      {label:'gap',value:'8px',token:'--token-scale-200'},
+      {label:'icon size',value:'20px',token:'--token-scale-500'},
+    ],
+    Text:[
+      {label:'header font-size',value:'16px / 1rem',token:'--token-font-size-400'},
+      {label:'header font-size (large)',value:'20px / 1.25rem',token:'--token-font-size-500'},
+      {label:'header font-weight',value:'600',token:'--token-font-weight-semi-bold'},
+    ],
+    Colors:[
+      {label:'background',value:'#ffffff',token:'--token-bg-surface-default'},
+      {label:'text',value:'#242424',token:'--token-text-default'},
+      {label:'indicator (active)',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'border',value:'#d5d5d5',token:'--token-border-default'},
+    ],
+    Border:[
+      {label:'border-radius',value:'8px',token:'--token-border-radius-200'},
+      {label:'border-width',value:'1px',token:'--token-border-size-025'},
+    ],
+    Motion:[
+      {label:'duration',value:'slow',token:'--token-duration-slow'},
+      {label:'easing',value:'expressive',token:'--token-easing-expressive'},
+    ],
+  }, vars:[
+    {name:'--osui-accordion-item-background',mapsTo:'--token-bg-surface-default',resolved:'#ffffff'},
+    {name:'--osui-accordion-item-border-color',mapsTo:'--token-border-default',resolved:'#d5d5d5'},
+    {name:'--osui-accordion-item-border-radius',mapsTo:'--token-border-radius-200',resolved:'8px'},
+    {name:'--osui-accordion-item-active-indicator-color',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+    {name:'--osui-accordion-item-color',mapsTo:'--token-text-default',resolved:'#242424'},
+  ]},
+
+  {id:'range-slider', name:'Range Slider', group:'Content', props:{
+    Dimensions:[
+      {label:'track height',value:'4px',token:'--token-scale-100'},
+      {label:'thumb size',value:'16px',token:'--token-scale-400'},
+      {label:'thumb focus ring',value:'40px',token:'--token-scale-1000'},
+    ],
+    Colors:[
+      {label:'track background',value:'#e5e5e5',token:'--token-bg-neutral-subtle-default'},
+      {label:'track fill',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'thumb background',value:'#ffffff',token:'--token-bg-surface-default'},
+      {label:'thumb border',value:'#105cef',token:'--token-semantics-primary-base'},
+      {label:'tooltip background',value:'#242424',token:'--token-bg-neutral-boldest-default'},
+    ],
+    Border:[
+      {label:'track border-radius',value:'4px',token:'--token-border-radius-100'},
+      {label:'thumb border-radius',value:'full',token:'--token-border-radius-full'},
+      {label:'thumb border-width',value:'2px',token:'--token-border-size-050'},
+    ],
+    Elevation:[
+      {label:'thumb shadow',value:'elevation-1',token:'--token-elevation-1'},
+    ],
+    Motion:[
+      {label:'duration',value:'150ms',token:'--token-duration-base'},
+    ],
+  }, vars:[
+    {name:'--osui-range-slider-track-color',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+    {name:'--osui-range-slider-handle-background',mapsTo:'--token-bg-surface-default',resolved:'#ffffff'},
+    {name:'--osui-range-slider-handle-border-color',mapsTo:'--token-semantics-primary-base',resolved:'#105cef'},
+    {name:'--osui-range-slider-handle-shadow',mapsTo:'--token-elevation-1',resolved:'shadow'},
+    {name:'--osui-range-slider-disabled-color',mapsTo:'--token-text-disabled',resolved:'#a2a2a2'},
+    {name:'--osui-range-slider-disabled-track-color',mapsTo:'--token-bg-input-disabled',resolved:'#f3f3f3'},
+  ]},
+];
+
+// ─── TOKEN VIEW DATA ────────────────────────────────────────────────────────────
+
+function buildTokenViewData() {
+  // Collect all token→usages
+  const map = {};
+  COMPONENTS.forEach(comp => {
+    Object.entries(comp.props).forEach(([cat, items]) => {
+      items.forEach(item => {
+        if (!item.token || item.token === '—') return;
+        if (!map[item.token]) map[item.token] = {value: item.value, usages: []};
+        // Avoid duplicate (same token used twice in same component)
+        if (!map[item.token].usages.find(u => u.comp === comp.name && u.prop === item.label)) {
+          map[item.token].usages.push({comp: comp.name, prop: item.label, cat});
+        }
+      });
+    });
+  });
+  return map;
+}
+
+const TOKEN_CATEGORIES = {
+  Typography: {
+    'Font Size': [
+      '--token-font-size-200','--token-font-size-275','--token-font-size-300',
+      '--token-font-size-350','--token-font-size-400','--token-font-size-450',
+      '--token-font-size-500','--token-font-size-550',
+    ],
+    'Font Weight': [
+      '--token-font-weight-regular','--token-font-weight-medium',
+      '--token-font-weight-semi-bold','--token-font-weight-bold',
+    ],
+    'Line Height': [
+      '--token-font-line-height-full','--token-font-line-height-default','--token-line-height-full',
+    ],
+  },
+  Spacing: {
+    'Scale Tokens': [
+      '--token-scale-025','--token-scale-050','--token-scale-075','--token-scale-100',
+      '--token-scale-150','--token-scale-200','--token-scale-300','--token-scale-400',
+      '--token-scale-500','--token-scale-600','--token-scale-700','--token-scale-800',
+      '--token-scale-900','--token-scale-1000','--token-scale-1100','--token-scale-1200',
+    ],
+  },
+  Color: {
+    'Semantic': [
+      '--token-semantics-primary-base','--token-semantics-danger-base',
+      '--token-semantics-warning-base','--token-semantics-info-base',
+      '--token-semantics-success-base',
+    ],
+    'Backgrounds': [
+      '--token-bg-input-default','--token-bg-input-disabled',
+      '--token-bg-surface-default','--token-bg-surface-hover',
+      '--token-bg-primary-subtle-default','--token-bg-neutral-subtlest-default',
+      '--token-bg-neutral-subtle-default','--token-bg-neutral-boldest-default',
+      '--token-bg-info-subtle-default','--token-bg-success-subtle-default',
+      '--token-bg-danger-subtle-default','--token-bg-warning-subtle-default',
+      '--token-backdrop',
+    ],
+    'Text': [
+      '--token-text-default','--token-text-subtle','--token-text-subtlest',
+      '--token-text-disabled','--token-text-inverse',
+      '--token-text-info','--token-text-success','--token-text-danger','--token-text-warning',
+    ],
+    'Primitives': [
+      '--token-primitives-neutral-1200','--token-primitives-neutral-600',
+      '--token-primitives-neutral-400','--token-primitives-neutral-300',
+      '--token-primitives-base-white','--token-primitives-neutral-100',
+      '--token-rating-empty-color','--token-opacity-disabled',
+    ],
+  },
+  Border: {
+    'Radius': [
+      '--token-border-radius-0','--token-border-radius-100',
+      '--token-border-radius-200','--token-border-radius-full',
+    ],
+    'Width': [
+      '--token-border-size-025','--token-border-size-050','--token-border-size-075',
+    ],
+    'Color': [
+      '--token-border-default','--token-border-input-default',
+      '--token-border-input-press','--token-border-subtle',
+    ],
+  },
+  Elevation: {
+    'Shadow Scale': [
+      '--token-elevation-25','--token-elevation-50','--token-elevation-1',
+      '--token-elevation-2','--token-elevation-3','--token-elevation-4',
+    ],
+  },
+  Motion: {
+    'Duration': [
+      '--token-duration-fast','--token-duration-base','--token-duration-moderate',
+      '--token-duration-slow','--token-transition-time-200',
+    ],
+    'Easing': [
+      '--token-easing-standard','--token-easing-expressive',
+    ],
+  },
+};
+
+const TOKEN_VALUES = {
+  '--token-font-size-200':'10px / 0.625rem','--token-font-size-275':'11px / 0.6875rem',
+  '--token-font-size-300':'12px / 0.75rem','--token-font-size-350':'14px / 0.875rem',
+  '--token-font-size-400':'16px / 1rem','--token-font-size-450':'18px / 1.125rem',
+  '--token-font-size-500':'20px / 1.25rem','--token-font-size-550':'22px / 1.375rem',
+  '--token-font-weight-regular':'400','--token-font-weight-medium':'500',
+  '--token-font-weight-semi-bold':'600','--token-font-weight-bold':'700',
+  '--token-font-line-height-full':'1','--token-font-line-height-default':'1.5',
+  '--token-scale-025':'1px','--token-scale-050':'2px','--token-scale-075':'3px',
+  '--token-scale-100':'4px','--token-scale-150':'6px','--token-scale-200':'8px',
+  '--token-scale-300':'12px','--token-scale-400':'16px','--token-scale-500':'20px',
+  '--token-scale-600':'24px','--token-scale-700':'28px','--token-scale-800':'32px',
+  '--token-scale-900':'36px','--token-scale-1000':'40px','--token-scale-1100':'44px',
+  '--token-scale-1200':'48px',
+  '--token-semantics-primary-base':'#105cef','--token-semantics-danger-base':'#e52929',
+  '--token-semantics-warning-base':'amber','--token-semantics-info-base':'blue',
+  '--token-semantics-success-base':'green',
+  '--token-bg-input-default':'#ffffff','--token-bg-input-disabled':'#f3f3f3',
+  '--token-bg-surface-default':'#ffffff','--token-bg-surface-hover':'#f3f3f3',
+  '--token-bg-primary-subtle-default':'#e9ecfc','--token-bg-neutral-subtlest-default':'#f3f3f3',
+  '--token-bg-neutral-subtle-default':'#e5e5e5','--token-bg-neutral-boldest-default':'#242424',
+  '--token-bg-info-subtle-default':'#e9ecfc','--token-bg-success-subtle-default':'#e2f9e4',
+  '--token-bg-danger-subtle-default':'#fde1e1','--token-bg-warning-subtle-default':'#fff0c7',
+  '--token-text-default':'#242424','--token-text-subtle':'#4e4e4e',
+  '--token-text-subtlest':'#626262','--token-text-disabled':'#a2a2a2',
+  '--token-text-inverse':'#ffffff','--token-text-info':'#0d4bc3',
+  '--token-text-success':'#126f23','--token-text-danger':'#991b1b','--token-text-warning':'#704b02',
+  '--token-primitives-neutral-1200':'#242424','--token-primitives-neutral-600':'#a2a2a2',
+  '--token-primitives-neutral-400':'#d5d5d5','--token-primitives-neutral-300':'#e5e5e5',
+  '--token-primitives-base-white':'#ffffff','--token-primitives-neutral-100':'#f3f3f3',
+  '--token-border-radius-0':'0','--token-border-radius-100':'4px',
+  '--token-border-radius-200':'8px','--token-border-radius-full':'9999px',
+  '--token-border-size-025':'1px','--token-border-size-050':'2px','--token-border-size-075':'3px',
+  '--token-border-default':'#d5d5d5','--token-border-input-default':'#8c8c8c',
+  '--token-border-input-press':'#105cef','--token-border-subtle':'rgba(0,0,0,.06)',
+  '--token-elevation-25':'xs shadow','--token-elevation-50':'sm shadow',
+  '--token-elevation-1':'card shadow','--token-elevation-2':'overlay shadow',
+  '--token-elevation-3':'drawer shadow','--token-elevation-4':'dialog shadow',
+  '--token-duration-fast':'100ms','--token-duration-base':'150ms',
+  '--token-duration-moderate':'200ms','--token-duration-slow':'400ms',
+  '--token-transition-time-200':'200ms','--token-easing-standard':'ease',
+  '--token-easing-expressive':'cubic-bezier(.4,0,.2,1)',
+  '--token-opacity-disabled':'0.45',
+};
+
+// ─── TREE BUILDER ──────────────────────────────────────────────────────────────
+
+function buildComponentTree() {
+  const root = {label:'OutSystems UI Tokens', icon:'🎨', level:0, children:[]};
+  GROUPS.forEach(group => {
+    const comps = COMPONENTS.filter(c => c.group === group);
+    if (!comps.length) return;
+    const groupNode = {label: group, icon: groupIcon(group), level:1, children:[]};
+    comps.forEach(comp => {
+      const compNode = {label: comp.name, icon:'▪', level:2, id: comp.id, children:[]};
+      // Property categories
+      Object.entries(comp.props).forEach(([cat, items]) => {
+        const catNode = {label: cat, icon: catIcon(cat), level:3, category: cat, children:[]};
+        items.forEach(item => {
+          catNode.children.push({
+            label: item.label,
+            value: item.value,
+            token: item.token,
+            level:4,
+            type:'property',
+          });
+        });
+        compNode.children.push(catNode);
+      });
+      // Component vars table
+      if (comp.vars && comp.vars.length) {
+        compNode.children.push({
+          label: 'Component Variables',
+          icon: '⚙️',
+          level:3,
+          type:'vars-table',
+          vars: comp.vars,
+        });
+      }
+      groupNode.children.push(compNode);
+    });
+    root.children.push(groupNode);
+  });
+  return root;
+}
+
+function buildTokenTree() {
+  const usageMap = buildTokenViewData();
+  const root = {label:'OutSystems UI Tokens', icon:'🎨', level:0, children:[]};
+
+  Object.entries(TOKEN_CATEGORIES).forEach(([catName, subcats]) => {
+    const catNode = {label: catName, icon: catIcon(catName), level:1, children:[]};
+
+    Object.entries(subcats).forEach(([subName, tokens]) => {
+      const subNode = {label: subName, level:2, children:[]};
+      tokens.forEach(tok => {
+        const info = usageMap[tok];
+        if (!info || !info.usages.length) return; // skip unused tokens
+        const val = TOKEN_VALUES[tok] || '—';
+        const tokNode = {
+          label: tok,
+          value: val,
+          level:3,
+          type:'token',
+          children: info.usages.map(u => ({
+            label: u.comp,
+            detail: u.prop,
+            level:4,
+            type:'usage',
+          })),
+        };
+        subNode.children.push(tokNode);
+      });
+      if (subNode.children.length) catNode.children.push(subNode);
+    });
+    if (catNode.children.length) root.children.push(catNode);
+  });
+  return root;
+}
+
+function groupIcon(g) {
+  return {
+    'Form Controls':'📝','Actions':'⚡','Navigation':'🧭',
+    'Feedback':'💬','Overlays':'🪟','Content':'📦',
+  }[g] || '📁';
+}
+function catIcon(c) {
+  return {
+    'Dimensions':'📐','Text':'🔤','Colors':'🎨','Border':'🔲',
+    'Motion':'✨','Elevation':'🌤','Typography':'🔤',
+    'Spacing':'📏','Color':'🎨','Elevation':'🌤',
+    'Motion':'✨','Component Variables':'⚙️',
+  }[c] || '▸';
+}
+
+// ─── RENDERING ──────────────────────────────────────────────────────────────────
+
+let currentView = 'component';
+
+function isColorValue(v) {
+  return v && (v.startsWith('#') || v.startsWith('rgb') || v.startsWith('rgba'));
+}
+
+function renderNode(node, searchQuery) {
+  const li = document.createElement('li');
+  li.className = 'tree-node';
+
+  // vars-table node
+  if (node.type === 'vars-table') {
+    const row = document.createElement('div');
+    row.className = 'node-row clickable';
+    row.innerHTML = `<span class="toggle-spacer"></span><span class="node-icon">⚙️</span><span class="node-label"><span class="name level-3">Component Variables</span></span>`;
+    const wrap = document.createElement('div');
+    wrap.className = 'vars-table-wrap';
+    wrap.style.display = 'none';
+    const tbl = document.createElement('table');
+    tbl.className = 'vars-table';
+    tbl.innerHTML = `<thead><tr><th>Variable</th><th>Maps to</th><th>Resolved value</th></tr></thead>`;
+    const tbody = document.createElement('tbody');
+    node.vars.forEach(v => {
+      const tr = document.createElement('tr');
+      const colorDot = isColorValue(v.resolved) ? `<span class="color-dot" style="background:${v.resolved}"></span>` : '';
+      tr.innerHTML = `<td class="var-name">${v.name}</td><td class="var-maps">${v.mapsTo}</td><td class="var-val">${colorDot}${v.resolved}</td>`;
+      tbody.appendChild(tr);
+    });
+    tbl.appendChild(tbody);
+    wrap.appendChild(tbl);
+    row.addEventListener('click', () => {
+      const open = wrap.style.display !== 'none';
+      wrap.style.display = open ? 'none' : 'block';
+      row.querySelector('.toggle') && (row.querySelector('.toggle').style.transform = open ? '' : 'rotate(90deg)');
+    });
+    li.appendChild(row);
+    li.appendChild(wrap);
+    return li;
+  }
+
+  const hasChildren = node.children && node.children.length > 0;
+  const row = document.createElement('div');
+  row.className = 'node-row' + (hasChildren ? ' clickable' : '');
+  row.dataset.label = (node.label + ' ' + (node.token||'') + ' ' + (node.value||'')).toLowerCase();
+
+  // Toggle
+  if (hasChildren) {
+    const toggle = document.createElement('span');
+    toggle.className = 'toggle';
+    toggle.textContent = '▶';
+    row.appendChild(toggle);
+  } else {
+    const sp = document.createElement('span');
+    sp.className = 'toggle-spacer';
+    row.appendChild(sp);
+  }
+
+  // Icon
+  if (node.icon) {
+    const ic = document.createElement('span');
+    ic.className = 'node-icon';
+    ic.textContent = node.icon;
+    row.appendChild(ic);
+  }
+
+  // Label
+  const lbl = document.createElement('span');
+  lbl.className = `node-label level-${node.level}`;
+
+  if (node.type === 'property') {
+    const colorDot = isColorValue(node.value) ? `<span class="color-dot" style="background:${node.value}"></span>` : '';
+    lbl.innerHTML = `<span class="name">${hl(node.label, searchQuery)}</span> <span class="detail">→ <span class="value-badge">${colorDot}${node.value}</span><span class="token-name">${hl(node.token||'', searchQuery)}</span></span>`;
+  } else if (node.type === 'token') {
+    const colorDot = isColorValue(node.value) ? `<span class="color-dot" style="background:${node.value}"></span>` : '';
+    lbl.innerHTML = `<span class="token-name">${hl(node.label, searchQuery)}</span> <span class="detail"><span class="value-badge">${colorDot}${node.value}</span></span>`;
+  } else if (node.type === 'usage') {
+    lbl.innerHTML = `<span class="name">${hl(node.label, searchQuery)}</span> <span class="detail">— ${node.detail}</span>`;
+  } else {
+    lbl.innerHTML = `<span class="name">${hl(node.label, searchQuery)}</span>`;
+  }
+  row.appendChild(lbl);
+
+  li.appendChild(row);
+
+  // Children
+  if (hasChildren) {
+    const ul = document.createElement('ul');
+    ul.className = 'tree-children';
+    node.children.forEach(child => ul.appendChild(renderNode(child, searchQuery)));
+    li.appendChild(ul);
+
+    row.addEventListener('click', () => {
+      const isOpen = ul.classList.contains('open');
+      ul.classList.toggle('open', !isOpen);
+      row.querySelector('.toggle').classList.toggle('open', !isOpen);
+    });
+  }
+
+  return li;
+}
+
+function hl(text, query) {
+  if (!query || !text) return text;
+  const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return text.replace(re, '<mark>$1</mark>');
+}
+
+// ─── SEARCH ────────────────────────────────────────────────────────────────────
+
+let searchTimeout;
+function getAncestorRow(rowEl) {
+  // Walk up: rowEl → li.tree-node → ul.tree-children → li.tree-node (ancestor)
+  let el = rowEl.parentElement; // li.tree-node
+  while (el) {
+    el = el.parentElement; // ul.tree-children
+    if (!el) break;
+    el = el.parentElement; // li.tree-node ancestor
+    if (!el) break;
+    const row = el.querySelector(':scope > .node-row');
+    if (row) return row;
+  }
+  return null;
+}
+
+function hasMatchingAncestor(rowEl) {
+  let el = rowEl.parentElement; // li.tree-node
+  while (el) {
+    el = el.parentElement; // ul.tree-children
+    if (!el) break;
+    el = el.parentElement; // li.tree-node ancestor
+    if (!el) break;
+    const row = el.querySelector(':scope > .node-row');
+    if (row && row.classList.contains('match')) return true;
+  }
+  return false;
+}
+
+function applySearch(query) {
+  const q = query.trim().toLowerCase();
+  const allRows = document.querySelectorAll('.node-row');
+  const countEl = document.getElementById('search-count');
+
+  if (!q) {
+    allRows.forEach(r => r.classList.remove('hidden','match'));
+    document.querySelectorAll('.tree-children').forEach(ul => ul.classList.remove('open'));
+    document.querySelectorAll('.toggle').forEach(t => t.classList.remove('open'));
+    countEl.style.display = 'none';
+    return;
+  }
+
+  let matches = 0;
+
+  // Pass 1 — mark direct matches
+  allRows.forEach(r => {
+    const txt = (r.dataset.label || '').toLowerCase();
+    if (txt.includes(q)) {
+      r.classList.add('match');
+      r.classList.remove('hidden');
+      matches++;
+    } else {
+      r.classList.remove('match');
+    }
+  });
+
+  // Pass 2 — open ancestors of matches + open children of matches
+  allRows.forEach(r => {
+    if (!r.classList.contains('match')) return;
+
+    // Open all ancestor tree-children
+    let el = r.parentElement;
+    while (el) {
+      if (el.classList.contains('tree-children')) {
+        el.classList.add('open');
+        const parentRow = el.previousElementSibling;
+        if (parentRow?.classList.contains('node-row')) {
+          parentRow.querySelector('.toggle')?.classList.add('open');
+        }
+      }
+      el = el.parentElement;
+    }
+
+    // Also open this match's own children so they're explorable
+    const ownChildren = r.parentElement?.querySelector(':scope > .tree-children');
+    if (ownChildren) {
+      ownChildren.classList.add('open');
+      r.querySelector('.toggle')?.classList.add('open');
+    }
+  });
+
+  // Pass 3 — show/hide non-matching rows
+  allRows.forEach(r => {
+    if (r.classList.contains('match')) return;
+
+    // If any ancestor is a match, keep this row visible (child of a result)
+    if (hasMatchingAncestor(r)) {
+      r.classList.remove('hidden');
+      return;
+    }
+
+    // Otherwise, show only if it has matching descendants
+    const li = r.parentElement;
+    const children = li?.querySelector(':scope > .tree-children');
+    const hasMatchingDescendant = children && children.querySelector('.match');
+    r.classList.toggle('hidden', !hasMatchingDescendant);
+  });
+
+  countEl.style.display = 'inline';
+  countEl.textContent = `${matches} result${matches !== 1 ? 's' : ''}`;
+}
+
+// ─── RENDER TREE ──────────────────────────────────────────────────────────────
+
+function renderTree(view, searchQuery = '') {
+  const treeEl = document.getElementById('tree');
+  treeEl.innerHTML = '';
+  const data = view === 'component' ? buildComponentTree() : buildTokenTree();
+  const rootLi = renderNode(data, searchQuery);
+  // Auto-open root and first level
+  const rootChildren = rootLi.querySelector('.tree-children');
+  if (rootChildren) rootChildren.classList.add('open');
+  rootLi.querySelector('.toggle')?.classList.add('open');
+  treeEl.appendChild(rootLi);
+}
+
+// ─── CONTROLS ─────────────────────────────────────────────────────────────────
+
+document.querySelectorAll('.view-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentView = btn.dataset.view;
+    document.getElementById('search').value = '';
+    document.getElementById('search-count').style.display = 'none';
+    renderTree(currentView);
+  });
+});
+
+document.getElementById('btn-collapse').addEventListener('click', () => {
+  document.querySelectorAll('.tree-children').forEach(ul => ul.classList.remove('open'));
+  document.querySelectorAll('.toggle').forEach(t => t.classList.remove('open'));
+  // Keep root open
+  const root = document.querySelector('#tree > .tree-node > .tree-children');
+  if (root) {
+    root.classList.add('open');
+    root.previousElementSibling?.querySelector('.toggle')?.classList.add('open');
+  }
+});
+
+document.getElementById('btn-expand').addEventListener('click', () => {
+  document.querySelectorAll('.tree-children').forEach(ul => ul.classList.add('open'));
+  document.querySelectorAll('.toggle').forEach(t => t.classList.add('open'));
+});
+
+document.getElementById('search').addEventListener('input', e => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    const q = e.target.value.trim();
+    if (q.length > 1) {
+      // Re-render with highlights then apply visibility
+      renderTree(currentView, q);
+      applySearch(q);
+    } else {
+      renderTree(currentView);
+    }
+  }, 200);
+});
+
+// ─── INIT ──────────────────────────────────────────────────────────────────────
+renderTree('component');
+</script>
+</body>
+</html>

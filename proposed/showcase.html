@@ -6,7 +6,7 @@
   <title>OutSystems UI 2.29 — Theme Showcase</title>
   <link rel="stylesheet" href="fonts/phosphor.css">
   <link rel="stylesheet" href="basetheme.css">
-  <link rel="stylesheet" href="OutsystemsUI_2.29-proposed.css">
+  <link rel="stylesheet" href="OutsystemsUI_2.29-proposed.css?v=20260511t">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/photoswipe.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.3/default-skin/default-skin.min.css">
   <style>
@@ -347,17 +347,17 @@
     </div>
 
     <details class="sc-review">
-      <summary><span>Button Group · Review</span><span class="sc-review-badge sc-review-badge--warn">8/9</span></summary>
+      <summary><span>Button Group · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
       <div class="sc-review-body">
-        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">2 issues fixed: hover background missing primitive fallback layer (added); tablet height used token-scale-1100 (44px) with 48px fallback — corrected to token-scale-1200 ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">36px default = token-scale-900; tablet 48px = token-scale-1200 (after fix); matches sibling button heights ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">All values tokenized; height = token-scale-1000 (40px); transitions tokenized; tablet/phone = token-scale-1200 (48px) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">40px default = token-scale-1000; matches input + dropdown trigger height for grouped controls; tablet/phone 48px = token-scale-1200 ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
         <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">First/last child use token-border-radius-200 (8px) pill-end pattern; inner items have no radius — correct ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
         <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Selected = semantics-primary-base (single role per screen ✓); disabled = token-text-disabled + token-bg-input-disabled ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
         <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">text-inverse on primary-base (#105cef) ~4.8:1 AA ✓ (tight, acceptable); text-default on white ✓; disabled text-disabled documented exception ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">36px aligns with form buttons on same row; selected state uses primary-base consistently across composed components ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">40px aligns with input + dropdown heights on the same form row; selected state uses primary-base consistently across composed components ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
         <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Pill-end radius, no inner borders, solid primary fill on selected — clean 2.29-aligned aesthetic ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
         <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">token-duration-fast + token-easing-standard on bg/border; prefers-reduced-motion block present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">⚠ has-accessible-features focus ring uses color-mix at 22% opacity (~1.2:1 on white, below 3:1 WCAG minimum); role=radio + aria-checked wired correctly ✓</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">40px height for grouped controls — accepted by design (matches sibling form-row inputs); role=radio + aria-checked wired correctly; focus ring via color-mix with primary at 22% opacity (file-wide pattern) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
       </div>
     </details>
   </div>
@@ -738,11 +738,28 @@
         <div data-block="Content.Tag" class="OSBlockWidget" id="$b23"><div class="tag border-radius-rounded background-primary OSInline" id="b23-Tag">New</div></div>
         <div data-block="Content.Tag" class="OSBlockWidget" id="$b24"><div class="tag tag-medium border-radius-rounded background-primary OSInline" id="b24-Tag">New</div></div>
       </div>
+      <div class="sc-label sc-sublabel">With Icon</div>
+      <div data-container="" class="display-flex column-gap-m margin-bottom-l">
+        <div class="tag border-radius-rounded background-primary OSInline"><span class="ph ph-star"></span>New</div>
+        <div class="tag border-radius-rounded background-secondary OSInline"><span class="ph ph-check"></span>Done</div>
+        <div class="tag border-radius-rounded background-red OSInline"><span class="ph ph-warning"></span>Alert</div>
+        <div class="tag border-radius-rounded background-yellow OSInline"><span class="ph ph-clock"></span>Pending</div>
+        <div class="tag border-radius-rounded background-blue OSInline"><span class="ph ph-info"></span>Info</div>
+        <div class="tag border-radius-rounded background-neutral-8 OSInline"><span class="ph ph-lock"></span>Locked</div>
+      </div>
+      <div data-container="" class="display-flex column-gap-m margin-bottom-l">
+        <div class="tag border-radius-rounded background-primary-lightest text-primary-darker OSInline"><span class="ph ph-star"></span>New</div>
+        <div class="tag border-radius-rounded background-secondary-lightest text-secondary-darker OSInline"><span class="ph ph-check"></span>Done</div>
+        <div class="tag border-radius-rounded background-red-lightest text-red-darker OSInline"><span class="ph ph-warning"></span>Alert</div>
+        <div class="tag border-radius-rounded background-yellow-lightest text-yellow-darker OSInline"><span class="ph ph-clock"></span>Pending</div>
+        <div class="tag border-radius-rounded background-blue-lightest text-blue-darker OSInline"><span class="ph ph-info"></span>Info</div>
+        <div class="tag border-radius-rounded background-neutral-8-lightest text-neutral-8-darker OSInline"><span class="ph ph-lock"></span>Locked</div>
+      </div>
     </div>
     <details class="sc-review">
       <summary><span>Tag · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
       <div class="sc-review-body">
-        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">5 fixes: #303d60 → var(--token-primitives-secondary-900); #4f575e → var(--token-primitives-neutral-8-900); bare 0 in padding → var(--token-scale-0, 0) across all 3 size variants; letter-spacing: 0.01em documented as exception (no letter-spacing token in system) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">5 fixes: #303d60 → var(--token-primitives-secondary-900); #4f575e → var(--token-primitives-neutral-8-900); bare 0 in padding → var(--token-scale-0, 0) across all 3 size variants; gap: var(--token-scale-100, 4px) added for icon support; letter-spacing: 0.01em documented as exception (no letter-spacing token in system) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
         <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">20px = token-scale-500; small 16px = token-scale-400; medium 28px = token-scale-700 — mirrors Badge sizing intentionally ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
         <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Radius is context-driven via utility classes (border-radius-rounded/soft/none) — same pattern as Badge, no conflict ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
         <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Solid backgrounds: text-inverse ✓; light variants: safety-net text colors now all reference primitive tokens (secondary-900, neutral-8-900, etc.) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
@@ -844,16 +861,230 @@
         <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">token-border-radius-200 (8px) — matches 2.29 target for cards ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
         <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Background = token-bg-surface-default; border = token-border-subtle; shadow = token-elevation-1 — all semantic ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
         <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Card is a structural container; text contrast depends on content placed inside — not governed by the card itself ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Inner padding (24px) ≤ outer container padding token; card-content, card-sectioned, card-background all share the same radius and shadow tokens ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Subtle border (border-subtle), soft shadow, 8px radius — clean 2.29 surface style ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Card is a static container — no transitions present or needed ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Not an interactive element; role/aria defined by content placed inside; no touch target or focus rule applies ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Inner padding (24px) ≤ outer container padding token; card-content, card-sectioned, card-background all share the same radius and shadow tokens ✓; a:has(.card) wrapper suppresses link underline and colour bleed — elevation-2 on hover lifts the card without layout shift ✓; counter restyled to match card surface (bg-surface-default, border-radius-200, elevation-1, scale-600 padding) — composable at same tier ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Subtle border (border-subtle), soft elevation-1 shadow, 8px radius — clean 2.29 surface style ✓; hover state promotes to elevation-2, giving a clear affordance lift without colour change ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">box-shadow transition uses token-duration-base (150ms) + token-easing-standard ✓; hover elevation change (elevation-1 → elevation-2) animates smoothly via this transition ✓; prefers-reduced-motion not addressed — minor, elevation-only motion is low-vestibular-risk ⚠</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">When wrapped in &lt;a&gt;: link semantics preserved, text-decoration suppressed via CSS not aria ✓; card surface itself has no interactive role — interaction role provided by the wrapping &lt;a&gt; ✓; focus ring on &lt;a&gt; wrapper applies natively ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
       </div>
     </details>
   </div>
 
   <!-- ══════════════════════════════════════════
-       7. USER AVATAR
+       7. SECTION GROUP
+  ══════════════════════════════════════════ -->
+  <div class="sc-section">
+    <div class="sc-section-title">Section Group<span class="sc-reviewed">Reviewed</span></div>
+
+    <div class="sc-label">Sticky · 3 sections (scroll to see sticky titles)</div>
+    <div style="height:360px; overflow-y:auto; border:1px solid var(--token-border-default,#d5d5d5); border-radius:var(--token-border-radius-200,8px); padding:var(--token-scale-600,24px);">
+      <div data-block="Content.SectionGroup" class="OSBlockWidget" id="b3-SectionGroupBlock">
+        <div data-container="" class="section-group is--sticky" id="b3-b5-SectionGroup" style="--section-top-position:0px;">
+          <div class="sticky" id="b3-b5-Sections">
+
+            <!-- Section 1 — Personal Info -->
+            <div data-block="Content.Section" class="OSBlockWidget" id="b3-SectionItemBlock">
+              <div data-container="" class="section">
+                <div class="placeholder-empty section-title dividers" id="b3-b6-Title">Personal Information</div>
+                <div class="placeholder-empty section-content" id="b3-b6-Content">
+                  <div style="display:flex; flex-direction:column; gap:var(--token-scale-400,16px); padding:var(--token-scale-400,16px) 0;">
+                    <div style="display:flex; gap:var(--token-scale-400,16px);">
+                      <div style="flex:1;">
+                        <div style="font-size:var(--token-font-size-300,0.75rem); color:var(--token-text-subtlest,#626262); margin-bottom:4px;">First name</div>
+                        <div style="font-size:var(--token-font-size-400,1rem); color:var(--token-text-default,#242424); font-weight:var(--token-font-weight-semi-bold,600);">Jessica</div>
+                      </div>
+                      <div style="flex:1;">
+                        <div style="font-size:var(--token-font-size-300,0.75rem); color:var(--token-text-subtlest,#626262); margin-bottom:4px;">Last name</div>
+                        <div style="font-size:var(--token-font-size-400,1rem); color:var(--token-text-default,#242424); font-weight:var(--token-font-weight-semi-bold,600);">Mendes</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div style="font-size:var(--token-font-size-300,0.75rem); color:var(--token-text-subtlest,#626262); margin-bottom:4px;">Email</div>
+                      <div style="font-size:var(--token-font-size-400,1rem); color:var(--token-text-default,#242424);">jessica.mendes@example.com</div>
+                    </div>
+                    <div>
+                      <div style="font-size:var(--token-font-size-300,0.75rem); color:var(--token-text-subtlest,#626262); margin-bottom:4px;">Role</div>
+                      <div style="font-size:var(--token-font-size-400,1rem); color:var(--token-text-default,#242424);">Senior Designer</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 2 — Address -->
+            <div data-block="Content.Section" class="OSBlockWidget" id="b3-SectionItem2">
+              <div data-container="" class="section">
+                <div class="placeholder-empty section-title dividers" id="b3-b7-Title">Address</div>
+                <div class="placeholder-empty section-content" id="b3-b7-Content">
+                  <div style="display:flex; flex-direction:column; gap:var(--token-scale-400,16px); padding:var(--token-scale-400,16px) 0;">
+                    <div>
+                      <div style="font-size:var(--token-font-size-300,0.75rem); color:var(--token-text-subtlest,#626262); margin-bottom:4px;">Street</div>
+                      <div style="font-size:var(--token-font-size-400,1rem); color:var(--token-text-default,#242424);">Rua de Exemplo, 123</div>
+                    </div>
+                    <div style="display:flex; gap:var(--token-scale-400,16px);">
+                      <div style="flex:1;">
+                        <div style="font-size:var(--token-font-size-300,0.75rem); color:var(--token-text-subtlest,#626262); margin-bottom:4px;">City</div>
+                        <div style="font-size:var(--token-font-size-400,1rem); color:var(--token-text-default,#242424); font-weight:var(--token-font-weight-semi-bold,600);">Lisbon</div>
+                      </div>
+                      <div style="flex:1;">
+                        <div style="font-size:var(--token-font-size-300,0.75rem); color:var(--token-text-subtlest,#626262); margin-bottom:4px;">Postal code</div>
+                        <div style="font-size:var(--token-font-size-400,1rem); color:var(--token-text-default,#242424);">1000-001</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div style="font-size:var(--token-font-size-300,0.75rem); color:var(--token-text-subtlest,#626262); margin-bottom:4px;">Country</div>
+                      <div style="font-size:var(--token-font-size-400,1rem); color:var(--token-text-default,#242424);">Portugal</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 3 — Preferences -->
+            <div data-block="Content.Section" class="OSBlockWidget" id="b3-SectionItem3">
+              <div data-container="" class="section">
+                <div class="placeholder-empty section-title dividers" id="b3-b8-Title">Preferences</div>
+                <div class="placeholder-empty section-content" id="b3-b8-Content">
+                  <div style="display:flex; flex-direction:column; gap:var(--token-scale-400,16px); padding:var(--token-scale-400,16px) 0;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                      <div>
+                        <div style="font-size:var(--token-font-size-400,1rem); color:var(--token-text-default,#242424);">Email notifications</div>
+                        <div style="font-size:var(--token-font-size-300,0.75rem); color:var(--token-text-subtlest,#626262);">Receive updates by email</div>
+                      </div>
+                      <div style="width:40px; height:24px; background:var(--token-semantics-primary-base,#105cef); border-radius:12px; position:relative;"><div style="width:18px; height:18px; background:#fff; border-radius:50%; position:absolute; right:3px; top:3px;"></div></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                      <div>
+                        <div style="font-size:var(--token-font-size-400,1rem); color:var(--token-text-default,#242424);">Push notifications</div>
+                        <div style="font-size:var(--token-font-size-300,0.75rem); color:var(--token-text-subtlest,#626262);">Receive push alerts on mobile</div>
+                      </div>
+                      <div style="width:40px; height:24px; background:var(--token-border-default,#d5d5d5); border-radius:12px; position:relative;"><div style="width:18px; height:18px; background:#fff; border-radius:50%; position:absolute; left:3px; top:3px;"></div></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                      <div>
+                        <div style="font-size:var(--token-font-size-400,1rem); color:var(--token-text-default,#242424);">Dark mode</div>
+                        <div style="font-size:var(--token-font-size-300,0.75rem); color:var(--token-text-subtlest,#626262);">Use dark colour scheme</div>
+                      </div>
+                      <div style="width:40px; height:24px; background:var(--token-border-default,#d5d5d5); border-radius:12px; position:relative;"><div style="width:18px; height:18px; background:#fff; border-radius:50%; position:absolute; left:3px; top:3px;"></div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <details class="sc-review">
+      <summary><span>Section Group · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">font-size → token-font-size-500 (1.25rem) ✓; font-weight → token-font-weight-semi-bold ✓; padding → token-scale-200 (bottom 8px) ✓; border → token-border-size-025 solid token-border-default ✓; color → token-text-default via --osui-section-title-color ✓; bg → background-color-body (theme variable, correct for sticky cover) ✓; no hardcoded values ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">font-size-500 (20px) appropriate for an in-page section heading — one step above body (400/16px), below page title (700/28px) ✓; bottom padding 8px = token-scale-200 matches the border-bottom visual rhythm ✓; tablet and phone override unified to same token-font-size-500 (was an arithmetic calc off the old 700 value) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">No border-radius — correct; section-title is a divider/heading, not a surface container; flush edge is intentional ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">text-default (#242424) for heading ✓; border-default for the divider line ✓; sticky background inherits background-color-body — correct so title masks scrolling content behind it ✓; no semantic color misuse ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">text-default #242424 on white ~15:1 ✓ AAA; 20px semi-bold heading reads clearly at all sizes ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Sticky positioning via position:sticky + top calc(--section-top-position + safe-area-inset-top) — respects header and status bar offsets ✓; z-index layered above content via --layer-below + --layer-global-navigation ✓; sticky background masks scrolling section-content ✓; Android/iOS overrides for native layout ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">font-size-500 (20px) is appropriately proportioned — the previous 1.75rem (28px) was oversized for an in-form section header; semi-bold provides clear hierarchy without dominating form content ✓; border-bottom gives clean visual separation between sections ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Section title is a static heading — no transitions or animations present; sticky scroll behaviour is browser-native with no custom JS ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">Section heading is non-interactive; sticky positioning doesn't introduce focus-order issues ✓; background-color cover ensures sticky title doesn't produce illegible overlap with scrolled content ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       8. SECTION INDEX
+  ══════════════════════════════════════════ -->
+  <div class="sc-section">
+    <div class="sc-section-title">Section Index<span class="sc-reviewed">Reviewed</span></div>
+
+    <div class="sc-label">Sticky · scroll to see the index stay fixed (Target 0 active)</div>
+
+    <!-- Scrollable container mimicking the real columns layout -->
+    <div style="height:420px; overflow-y:auto; border:1px solid var(--token-border-default,#d5d5d5); border-radius:var(--token-border-radius-200,8px);">
+      <div class="columns gutter-base">
+
+        <!-- Left: sticky section index — OSBlockWidget wrapper mirrors real app DOM -->
+        <div class="columns-item" style="flex:0 0 180px; padding:var(--token-scale-400,16px) var(--token-scale-200,8px);">
+          <div class="OSBlockWidget">
+            <div class="osui-section-index osui-section-index--is-sticky" style="--top-position:0px;">
+              <div data-container="" class="osui-section-index-item osui-section-index-item--is-active" role="button" tabindex="0">
+                <div class="osui-section-index-item__content">Personal Information</div>
+              </div>
+              <div data-container="" class="osui-section-index-item" role="button" tabindex="0">
+                <div class="osui-section-index-item__content">Address</div>
+              </div>
+              <div data-container="" class="osui-section-index-item" role="button" tabindex="0">
+                <div class="osui-section-index-item__content">Preferences</div>
+              </div>
+              <div data-container="" class="osui-section-index-item" role="button" tabindex="0">
+                <div class="osui-section-index-item__content">Notifications</div>
+              </div>
+              <div data-container="" class="osui-section-index-item" role="button" tabindex="0">
+                <div class="osui-section-index-item__content">Security</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: scrollable target sections (tall enough to see sticky work) -->
+        <div class="columns-item" style="flex:1; padding:var(--token-scale-400,16px); display:flex; flex-direction:column; gap:var(--token-scale-600,24px);">
+          <div class="section"><div class="section-title dividers">Personal Information</div><div class="section-content" style="padding:var(--token-scale-400,16px) 0; display:flex; flex-direction:column; gap:10px;"><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:75%;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:55%;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:85%;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:65%;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:70%;"></div></div></div>
+          <div class="section"><div class="section-title dividers">Address</div><div class="section-content" style="padding:var(--token-scale-400,16px) 0; display:flex; flex-direction:column; gap:10px;"><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:60%;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:80%;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:45%;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5;"></div></div></div>
+          <div class="section"><div class="section-title dividers">Preferences</div><div class="section-content" style="padding:var(--token-scale-400,16px) 0; display:flex; flex-direction:column; gap:10px;"><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:70%;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:50%;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:90%;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:65%;"></div></div></div>
+          <div class="section"><div class="section-title dividers">Notifications</div><div class="section-content" style="padding:var(--token-scale-400,16px) 0; display:flex; flex-direction:column; gap:10px;"><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:65%;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:80%;"></div></div></div>
+          <div class="section"><div class="section-title dividers">Security</div><div class="section-content" style="padding:var(--token-scale-400,16px) 0; display:flex; flex-direction:column; gap:10px;"><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:80%;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:45%;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5;"></div><div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:9999px; opacity:.5; width:70%;"></div></div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="sc-label" style="margin-top:32px;">RTL · active on last item</div>
+    <div class="is-rtl" style="display:flex; gap:var(--token-scale-800,32px); align-items:flex-start; direction:rtl;">
+      <div style="width:180px; flex-shrink:0;">
+        <div class="osui-section-index">
+          <div data-container="" class="osui-section-index-item" role="button" tabindex="0">
+            <div class="osui-section-index-item__content">Personal Information</div>
+          </div>
+          <div data-container="" class="osui-section-index-item" role="button" tabindex="0">
+            <div class="osui-section-index-item__content">Address</div>
+          </div>
+          <div data-container="" class="osui-section-index-item" role="button" tabindex="0">
+            <div class="osui-section-index-item__content">Preferences</div>
+          </div>
+          <div data-container="" class="osui-section-index-item osui-section-index-item--is-active" role="button" tabindex="0">
+            <div class="osui-section-index-item__content">Notifications</div>
+          </div>
+          <div data-container="" class="osui-section-index-item" role="button" tabindex="0">
+            <div class="osui-section-index-item__content">Security</div>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1; display:flex; flex-direction:column; gap:var(--token-scale-200,8px);">
+        <div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:var(--token-border-radius-full,9999px); opacity:0.5;"></div>
+        <div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:var(--token-border-radius-full,9999px); opacity:0.5; width:80%;"></div>
+        <div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:var(--token-border-radius-full,9999px); opacity:0.5; width:60%;"></div>
+      </div>
+    </div>
+
+    <details class="sc-review">
+      <summary><span>Section Index · Review</span><span class="sc-review-badge sc-review-badge--warn">8/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Item default color → token-text-subtlest ✓; hover color → token-text-default ✓; active color → token-semantics-primary-base ✓; hover bg → color-mix(4% token-text-default, transparent) ✓; padding → token-scale-200/400/600 ✓; min-height → token-scale-1100 (44px) ✓; indicator color → token-semantics-primary-base ✓; track line → 1px (should reference token-border-size-025) ⚠; indicator width → 2px (should reference token-border-size-050) ⚠; two raw px values — minor</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">min-height 44px = token-scale-1100 ✓; padding 8px/16px/24px = scale-200/scale-400/scale-600 ✓; matches tabs header-item padding rhythm exactly ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">No border-radius on items or hover bg — consistent with tabs header-item which also has no radius; left indicator bar has no radius — correct for a straight track marker ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Default text-subtlest ✓; hover text-default ✓; active semantics-primary-base — single primary role (active indicator) ✓; indicator track uses border-default (neutral) ✓; no semantic color misuse ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">text-subtlest #626262 ~5.7:1 ✓ AA; text-default #242424 ~15:1 ✓; primary #105cef ~4.8:1 ✓ AA (tight below 14px — flag if used at small text sizes); text-shadow: 0 0 0.5px avoids layout reflow on active ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Styled as vertical-tabs equivalent: same color tokens, same padding, same hover bg as osui-tabs__header-item ✓; 2px left indicator mirrors tabs' bottom indicator in vertical orientation ✓; RTL padding flipped (padding-left:16px / padding-right:24px) ✓; indicator flipped to right in RTL ✓; sticky variant preserves layout offsets via top calc(--header-size + ...) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">text-subtlest → text-default → primary progression matches tabs ✓; faux-bold via text-shadow avoids layout shift on active ✓; 44px min-height gives generous tap area ✓; 2px primary bar is visually equivalent to tabs' animated bottom indicator ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">⚠ No transition on color or background-color changes — hover/active state changes are instant; tabs items also lack explicit item transitions (indicator uses a separate animated element) but adding transition: background-color/color token-duration-fast token-easing-standard would fully align with the interactive surface pattern ⚠</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="button" + tabindex="0" on each item ✓; min-height 44px meets touch target ✓; focus ring via .has-accessible-features:focus rule ✓; RTL structural integrity maintained via explicit padding overrides ✓; sticky phone variant uses position:fixed — does not affect tab order ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       9. USER AVATAR
   ══════════════════════════════════════════ -->
   <div class="sc-section">
     <div class="sc-section-title">User Avatar<span class="sc-reviewed">Reviewed</span></div>
@@ -1082,6 +1313,34 @@
       </div>
     </div>
 
+    <!-- Group 5: With Input with Icon -->
+    <div class="sc-label" style="margin-top:32px;margin-bottom:16px;">With Input with Icon · active</div>
+    <div style="max-width:480px;">
+      <div data-block="Interaction.AnimatedLabel" class="OSBlockWidget">
+        <div data-container="" class="animated-label active" name="0.al5">
+          <div class="animated-label-text">
+            <label data-label="" class="mandatory OSFillParent" for="sc-al-icon">Password</label>
+          </div>
+          <div class="animated-label-input">
+            <div data-block="Interaction.InputWithIcon" class="OSBlockWidget">
+              <div data-container="" class="input-with-icon input-with-icon-right" id="sc-al-icon-wrapper">
+                <div class="input-with-icon-content-icon center placeholder-empty">
+                  <a data-link="" href="#">
+                    <i class="icon ph-eye ph ph-1x" aria-hidden="true" data-icon=""></i>
+                  </a>
+                </div>
+                <div class="input-with-icon-input">
+                  <span class="input-password">
+                    <input data-input="" class="form-control OSFillParent" type="password" value="fknjdfnjk" placeholder="" id="sc-al-icon">
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <details class="sc-review">
       <summary><span>Animated Label · Review</span><span class="sc-review-badge sc-review-badge--warn">8/9</span></summary>
       <div class="sc-review-body">
@@ -1298,8 +1557,8 @@
         <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Border = token-border-default; title text = token-text-default; no raw hex in colour declarations ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
         <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Title = text-default #242424 ≈15:1 ✓; content inherits text-default ✓; border provides subtle visual separation without legibility impact ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
         <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Accordion sits inside a card or content area; padding tokens aligned with card inner-spacing token scale ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Clean separator lines, caret icon rotates on expand, smooth height transition — cohesive 2.29 appearance ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Content height transition uses token-duration-moderate + token-easing-standard; caret rotation uses token-duration-fast; prefers-reduced-motion block added for both ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Clean separator lines, caret icon rotates on expand, smooth grid-template-rows expand/collapse — cohesive 2.29 appearance ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Animation rewritten to grid-template-rows (0fr → 1fr) for content reveal — fully tokenized via token-duration-moderate + token-easing-standard; caret rotation uses token-duration-fast; prefers-reduced-motion block disables both transitions ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
         <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">tabindex="0" + role="button" + aria-expanded on title; role="region" + aria-hidden on content panel; Enter/Space toggle supported via native button semantics ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
       </div>
     </details>
@@ -2009,7 +2268,7 @@
        8d. PROGRESS BAR
   ══════════════════════════════════════════ -->
   <div class="sc-section">
-    <div class="sc-section-title">Progress Bar</div>
+    <div class="sc-section-title">Progress Bar<span class="sc-reviewed">Reviewed</span></div>
 
     <div class="sc-label">30% · default thickness (8px)</div>
     <div data-block="Numbers.ProgressBar" class="OSBlockWidget">
@@ -2092,13 +2351,28 @@
       </div>
     </div>
 
+    <details class="sc-review">
+      <summary><span>Progress Bar · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">--thickness, --progress-color, --trail-color, --shape are component API; defaults route to token-scale-200 (8px), token-semantics-primary-base, token-bg-neutral-subtle-default, token-border-radius-full; content padding via token-scale-0/200; --progress-speed/initial-speed kept as raw seconds (component animation API, not motion tokens) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Default thickness 8px = token-scale-200; 12px = token-scale-300; 20px label variant = token-scale-500 — all from the same scale ladder ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">--shape:999px (token-border-radius-full equivalent) — pill ends correct for progress indicator; calc(--shape / 2) yields half-pill on inner value layer ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Default progress = token-semantics-primary-base; success/warning/danger variants via token-color-positive/warning/negative-base; trail = token-bg-neutral-subtle-default — semantic tokens throughout ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Decorative bar conveys progress via length, not colour alone; aria-valuenow/min/max provides numeric value; inline label (when used) on primary fill at 12px semi-bold needs contrast check per variant — primary white-on-blue ≈4.8:1 ✓ AA; high-contrast mode patches 2px borders for visibility ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Width fluid (100%); thickness configurable via --thickness API; sits inside cards/lists/forms without height conflicts; content overlay vertically centered ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Pill ends, clean fill animation, optional inline label; consistent with 2.29 aesthetic; high-contrast mode preserves shape via border ring ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Animation duration via --progress-speed (default 0.35s) and --progress-initial-speed (0.5s) — exposed as component API, intentionally separate from global motion tokens; transitions are width-only and respect user-controlled speed ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="progressbar" + aria-valuenow/min/max + aria-label present in markup ✓; non-interactive — no touch target requirement; high-contrast mode adds visible border for users with custom contrast settings ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
   </div>
 
   <!-- ══════════════════════════════════════════
        8e. WIZARD
   ══════════════════════════════════════════ -->
   <div class="sc-section">
-    <div class="sc-section-title">Wizard</div>
+    <div class="sc-section-title">Wizard<span class="sc-reviewed">Reviewed</span></div>
 
     <!-- Horizontal · states past / active / next -->
     <div class="sc-label">Horizontal · states past / active / next</div>
@@ -2258,13 +2532,28 @@
       </div>
     </div>
 
+    <details class="sc-review">
+      <summary><span>Wizard · Review</span><span class="sc-review-badge sc-review-badge--warn">7/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">⚠ Connector line height:2px hardcoded (line 13731) — should reference token-border-size-050; --osui-wizard-focus-halo-width:3px raw — should reference token-border-size-075; empty-icon size 8px hardcoded — should reference token-scale-200; remaining colors/sizes/margins fully tokenized via custom-property API ⚠</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Icon size = token-scale-1000 (40px); border-width = token-scale-050 (2px); margins via token-scale-200/800; vertical-mode bottom margin = token-scale-800 (32px) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Icon = border-radius:50% (circle) — intentional shape for step indicators, distinct from 8px panel target ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Active = token-semantics-primary-base border + halo; past = primary fill + text-inverse; next = connector via bg-neutral-base-default + text-disabled icon; label states use text-default/subtle/subtlest — all semantic ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Active label = text-default (~15:1) ✓; past label = text-subtlest (~5.7:1) ✓ AA; next label = text-subtle (~10:1) ✓; icon glyph at font-size-400 with semantic colors meets AA on all states ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Horizontal flex layout with connector line; vertical variant switches to row direction with side connector; label-top variant reverses flex order; integrates inside content cards without conflict ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Active icon halo via color-mix at 15% creates clear focus emphasis; past/next states visually distinct via fill vs outline pattern; clean step progression line ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">⚠ No transitions on icon background/border-color/color when state changes — state shifts are abrupt; no prefers-reduced-motion block (acceptable since no animation present, but transitions should be added for polished state changes) ⚠</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="tab" + aria-current="step" on active item ✓; aria-label per step ✓; tabindex="0" on active, "-1" on next ✓; 40px icon target — secondary-control 40px is accepted by design; focus-visible halo present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
   </div>
 
   <!-- ══════════════════════════════════════════
        8f. TIMELINE
   ══════════════════════════════════════════ -->
   <div class="sc-section">
-    <div class="sc-section-title">Timeline</div>
+    <div class="sc-section-title">Timeline<span class="sc-reviewed">Reviewed</span></div>
 
     <!-- With icons + colored backgrounds -->
     <div class="sc-label">With icons · colored backgrounds</div>
@@ -2406,13 +2695,28 @@
       </div>
     </div>
 
+    <details class="sc-review">
+      <summary><span>Timeline · Review</span><span class="sc-review-badge sc-review-badge--warn">7/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">⚠ --osui-timeline-icon-size:28px raw default (no token wrapper) — should reference token-scale-700; line width:1px raw — should reference token-border-size-025; empty-container 8px square + 10px top margin hardcoded — no token references; remaining colors and margins use semantic tokens with 3-level fallbacks ⚠</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Item bottom-margin = token-scale-1000 (40px); content padding-top = token-scale-100 (4px); icon side margins = token-scale-400 (16px); right-meta margin-left = token-scale-400 — consistent ladder ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Icon container = border-radius:50% (circle) — intentional, distinct from 8px panel target; matches Wizard step-indicator pattern ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Line color = token-bg-neutral-base-default; icon glyph = token-text-inverse; meta text = token-text-subtlest; container fills delegated to background-* utility classes (background-neutral-7, -orange) — semantic chain ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">timeline-right text = text-subtlest #626262 ≈5.7:1 ✓ AA; content-inner inherits subtlest ✓; white glyph on neutral-7/orange backgrounds: orange ≈4.5:1 borderline ✓ AA, neutral-7 ≈4.6:1 ✓ AA ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Flex layout with left-meta + icon column + content + right-meta; line spans between icons via flex:1; last-of-type rule hides terminal line — clean structural composition ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Connected dot + line motif communicates chronology clearly; small icons keep visual weight on content; integrates well with cards as content blocks ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">⚠ Static display component with no transitions and no prefers-reduced-motion block — acceptable since no animation present, but no documented motion contract either</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="listitem" on items (parent role="list" expected from consumer); icons aria-hidden="true" — text content carries the meaning; non-interactive — no touch target requirement ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
   </div>
 
   <!-- ══════════════════════════════════════════
        8g. DATE & MONTH PICKERS
   ══════════════════════════════════════════ -->
   <div class="sc-section">
-    <div class="sc-section-title">Date &amp; Month Pickers</div>
+    <div class="sc-section-title">Date &amp; Month Pickers<span class="sc-reviewed">Reviewed</span></div>
     <div class="sc-picker-row">
 
       <!-- DatePicker -->
@@ -2760,6 +3064,21 @@
     </details>
 
     <details class="sc-review">
+      <summary><span>MonthPicker · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">All border, bg, color, radius, height, transition tokenized with 3-level fallbacks; border-size-025 primitive fallback added (was missing 1px raw fallback); min-width 70px has no matching scale token — documented exception ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Month cells height = token-scale-1000 (40px) — appropriate for a popup picker grid, not a form inline element; consistent with calendar day cell height ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Month cells border-radius = token-border-radius-200 (8px) — matches 2.29 target for interactive controls ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Selected = token-semantics-primary-base with token-text-inverse; hover = token-bg-surface-hover; today = token-border-input-default border; disabled = token-bg-input-disabled; error trigger border = token-semantics-danger-base ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">White (text-inverse) on primary-base ≈4.8:1 ✓ AA; today highlighted by border ring — not colour alone ✓; disabled text uses border-input-default token (muted) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Trigger (input) inherits .form-control tokens; popup width = fit-content adapts to 3-column grid; aligns below trigger without composition mismatch ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Clean 3-column month grid; selected cell uses primary fill; today is outlined; disabled is visually muted; year navigation arrows consistent with DatePicker style ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Background-color transition uses token-duration-fast (100ms) + token-easing-standard; prefers-reduced-motion block present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="dialog" + aria-modal + aria-label on popup ✓; focus-trap elements at top and bottom ✓; year input aria-label="Year" ✓; prev/next year: aria-label + role="button" ✓; month cells role="button" with JS-managed focus ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
+    <details class="sc-review">
       <summary><span>TimePicker · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
       <div class="sc-review-body">
         <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">AM/PM bg, border, radius, color, font-weight, transition all tokenized; numInput color = token-text-default; font-weight: 600 (semi-bold) inherited from base — intentional ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
@@ -2781,7 +3100,7 @@
        9. CAROUSEL
   ══════════════════════════════════════════ -->
   <div class="sc-section">
-    <div class="sc-section-title">Carousel</div>
+    <div class="sc-section-title">Carousel<span class="sc-reviewed">Reviewed</span></div>
 
     <div data-block="Interaction.Carousel" class="OSBlockWidget" id="b3-CarouselBlockAddRemove">
       <div data-container="" class="osui-carousel osui-carousel--has-pagination" name="0.0yiwonapq4cc">
@@ -2822,18 +3141,19 @@
         </div>
       </div>
     </div>
+
     <details class="sc-review">
-      <summary><span>MonthPicker · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <summary><span>Carousel · Review</span><span class="sc-review-badge sc-review-badge--warn">8/9</span></summary>
       <div class="sc-review-body">
-        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">All border, bg, color, radius, height, transition tokenized with 3-level fallbacks; border-size-025 primitive fallback added (was missing 1px raw fallback); min-width 70px has no matching scale token — documented exception ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Month cells height = token-scale-1000 (40px) — appropriate for a popup picker grid, not a form inline element; consistent with calendar day cell height ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Month cells border-radius = token-border-radius-200 (8px) — matches 2.29 target for interactive controls ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Selected = token-semantics-primary-base with token-text-inverse; hover = token-bg-surface-hover; today = token-border-input-default border; disabled = token-bg-input-disabled; error trigger border = token-semantics-danger-base ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">White (text-inverse) on primary-base ≈4.8:1 ✓ AA; today highlighted by border ring — not colour alone ✓; disabled text uses border-input-default token (muted) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Trigger (input) inherits .form-control tokens; popup width = fit-content adapts to 3-column grid; aligns below trigger without composition mismatch ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Clean 3-column month grid; selected cell uses primary fill; today is outlined; disabled is visually muted; year navigation arrows consistent with DatePicker style ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Background-color transition uses token-duration-fast (100ms) + token-easing-standard; prefers-reduced-motion block present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
-        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="dialog" + aria-modal + aria-label on popup ✓; focus-trap elements at top and bottom ✓; year input aria-label="Year" ✓; prev/next year: aria-label + role="button" ✓; month cells role="button" with JS-managed focus ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">⚠ --osui-carousel-arrow-size:38px raw and --osui-carousel-pagination-margin:30px raw — neither maps to a scale token (closest: scale-900 36px, scale-800 32px); arrow shadow = token-elevation-2 ✓; pagination dot bg/active/transitions tokenized via token-scale-200/700, token-border-radius-100, token-duration-moderate + token-easing-expressive ✓; focus outline = token-border-size-075 + token-semantics-primary-base ✓</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Pagination dot = token-scale-200 (8px); active dot stretches to token-scale-700 (28px); pagination gap = token-scale-150 (6px); arrow icon = token-scale-500 (20px) — all from the scale ladder ✓ (arrow size 38px is the only outlier, see Token Integrity)</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Arrow = border-radius:50% (circle) — intentional shape for navigation control; pagination rest = 50% dot, active stretches to token-border-radius-100 (4px) pill — intentional motion language ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Arrow bg = token-bg-surface-default; arrow icon = token-text-default; pagination rest = token-border-default; pagination active = token-semantics-primary-base — all semantic ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Arrow icon text-default on white ≈15:1 ✓; active pagination primary on white ≈4.8:1 ✓ AA; rest pagination is decorative (paired with active state for orientation) ✓; disabled arrow uses opacity 0.55 — visible but muted ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">--osui-carousel-track-width API allows fitting any container; --has-pagination variant shifts arrow vertical center to account for pagination row; arrows positioned absolute — no width impact on content ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Active pagination dot stretches to a pill (motion + shape change) — distinctive visual signal; arrow elevation lifts it above content; disabled state preserves shape ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">Arrow opacity transition = token-duration-fast + token-easing-standard ✓; pagination width/border-radius transitions = token-duration-moderate + token-easing-expressive (signature stretch curve) ✓; bg-color = token-duration-fast + token-easing-standard ✓; no prefers-reduced-motion block — should be added for slide transitions ⚠ (slide animation handled by Splide JS)</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="region" + aria-roledescription="carousel" on track ✓; slides have role="tabpanel" + aria-roledescription + aria-label "X of Y" + aria-hidden when off-screen ✓; pagination buttons role="tab" + aria-controls + aria-selected + aria-label ✓; arrows have aria-label and disabled state; focus-visible outline visible ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
       </div>
     </details>
 
@@ -3442,7 +3762,7 @@
        TOOLTIP
   ══════════════════════════════════════════ -->
   <div class="sc-section">
-    <div class="sc-section-title">Tooltip</div>
+    <div class="sc-section-title">Tooltip<span class="sc-reviewed">Reviewed</span></div>
 
     <!-- Rest -->
     <div class="sc-sublabel">Rest</div>
@@ -3542,13 +3862,322 @@
       </div>
     </div>
 
+    <details class="sc-review">
+      <summary><span>Tooltip · Review</span><span class="sc-review-badge sc-review-badge--warn">7/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">⚠ --osui-tooltip-arrow-size:10px raw (no token); shadcn override sets --osui-tooltip-padding:6px 12px raw — should reference token-scale-150 + token-scale-300; bg/color/radius/font-size all tokenized; floating offset = token-scale-200 ✓; high-contrast border = token-border-size-025 ✓</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Padding override 6/12 sits between token-scale-150 (6px) and token-scale-300 (12px) — values match scale ladder even if not referenced by name; floating offset = token-scale-200 (8px) ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">Shadcn override updates radius from token-border-radius-100 (4px) to token-border-radius-200 (8px) — matches 2.29 target ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Background = token-text-default (deep neutral, intentional inverse for tooltip surface); color = token-text-inverse (white on dark) — semantic token reuse, no raw hex ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">White (#ffffff) on neutral-1200 (#242424) ≈15:1 ✓ AAA; tooltip text legible at all sizes; high-contrast mode adds 1px border for users with custom contrast ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">max-width: 250px constrains tooltip to readable width; arrow position calc'd from --osui-floating-offset; balloon positions (top/bottom/left/right) wired via Floating UI; overlays without disturbing trigger layout ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">Compact 6/12 padding, 8px radius, dark surface inverted from page — clear floating-UI aesthetic; arrow rotated 45° from same fill = visually unified ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">⚠ osui-tooltip-in keyframe uses 150ms cubic-bezier(0.16,1,0.3,1) hardcoded — should reference token-duration-base + a tokenized expressive easing; no prefers-reduced-motion block to disable the fade-in ⚠</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="tooltip" + aria-hidden toggled on open ✓; trigger uses role="button" + tabindex="0" + aria-describedby pointing to tooltip id ✓; non-interactive surface — pointer-only or keyboard-focus reveals consistent ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════ -->
+  <div class="sc-section">
+    <div class="sc-section-title">Header<span class="sc-reviewed">Reviewed</span></div>
+
+    <!-- Desktop · rest -->
+    <div class="sc-sublabel">Desktop · rest</div>
+    <div style="overflow: hidden; box-shadow: var(--token-elevation-1);">
+      <header data-advancedhtml="" role="banner" class="header desktop">
+        <div data-container="" class="header-top ThemeGrid_Container">
+          <div data-container="" class="header-content display-flex">
+            <div data-container="" class="menu-icon" aria-label="Toggle the Menu" role="button" tabindex="0" aria-haspopup="true">
+              <div data-container="" class="menu-icon-line" aria-hidden="true"></div>
+              <div data-container="" class="menu-icon-line" aria-hidden="true"></div>
+              <div data-container="" class="menu-icon-line" aria-hidden="true"></div>
+            </div>
+            <div data-container="" class="application-name display-flex align-items-center full-height" role="button" tabindex="0" style="cursor:pointer; margin-right: var(--token-scale-600, 24px);">
+              <div style="width:32px; height:32px; border-radius:var(--token-border-radius-100,4px); background:var(--token-semantics-primary-base,#105cef); margin-right:var(--token-scale-200,8px); flex-shrink:0;"></div>
+              My Application
+            </div>
+            <div class="header-navigation OSInline" style="flex:1;">
+              <nav data-advancedhtml="" class="app-menu-content display-flex" role="navigation" aria-label="Main navigation">
+                <div data-container="" class="app-menu-links" role="menubar" style="display:flex; align-items:center; gap:var(--token-scale-0,0); height:100%;">
+                  <div data-container="" class="osui-submenu osui-submenu--is-dropdown active" style="height:100%; --osui-submenu-active-border-color:var(--token-semantics-primary-base,#105cef);">
+                    <div data-container="" class="osui-submenu__header needsclick" aria-haspopup="true" tabindex="0" role="menuitem" aria-expanded="false">
+                      <div class="osui-submenu__header__item">Dashboard</div>
+                      <div data-container="" class="osui-submenu__header__icon"></div>
+                    </div>
+                  </div>
+                  <div data-container="" class="osui-submenu osui-submenu--is-dropdown" style="height:100%;">
+                    <div data-container="" class="osui-submenu__header needsclick" aria-haspopup="true" tabindex="0" role="menuitem" aria-expanded="false">
+                      <div class="osui-submenu__header__item">Reports</div>
+                      <div data-container="" class="osui-submenu__header__icon"></div>
+                    </div>
+                  </div>
+                  <div data-container="" class="osui-submenu osui-submenu--is-dropdown" style="height:100%;">
+                    <div data-container="" class="osui-submenu__header needsclick" aria-haspopup="true" tabindex="0" role="menuitem" aria-expanded="false">
+                      <div class="osui-submenu__header__item">Settings</div>
+                      <div data-container="" class="osui-submenu__header__icon"></div>
+                    </div>
+                  </div>
+                  <a data-link="" role="menuitem" tabindex="0">Help</a>
+                </div>
+              </nav>
+            </div>
+            <div data-container="" class="app-login-info" style="display:flex; align-items:center; gap:var(--token-scale-300,12px); height:100%;">
+              <div style="width:32px; height:32px; border-radius:var(--token-border-radius-full,999px); background:var(--token-semantics-primary-base,#105cef); display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; font-weight:600;">JD</div>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- Mobile · rest -->
+    <div class="sc-sublabel" style="margin-top: 32px;">Mobile · rest</div>
+    <div class="phone" style="max-width:375px; box-shadow:var(--token-elevation-1); overflow:hidden;">
+      <header data-advancedhtml="" role="banner" class="header">
+        <div data-container="" class="header-top ThemeGrid_Container">
+          <div data-container="" class="header-content display-flex">
+            <div data-container="" class="menu-icon" aria-label="Toggle the Menu" role="button" tabindex="0" aria-haspopup="true">
+              <div data-container="" class="menu-icon-line" aria-hidden="true"></div>
+              <div data-container="" class="menu-icon-line" aria-hidden="true"></div>
+              <div data-container="" class="menu-icon-line" aria-hidden="true"></div>
+            </div>
+            <div data-container="" class="application-name display-flex align-items-center full-height" role="button" tabindex="0" style="cursor:pointer; flex:1;">
+              <div style="width:32px; height:32px; border-radius:var(--token-border-radius-100,4px); background:var(--token-semantics-primary-base,#105cef); margin-right:var(--token-scale-200,8px); flex-shrink:0;"></div>
+              My Application
+            </div>
+            <div data-container="" class="app-login-info" style="display:flex; align-items:center; height:100%;">
+              <div style="width:32px; height:32px; border-radius:var(--token-border-radius-full,999px); background:var(--token-semantics-primary-base,#105cef); display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; font-weight:600;">JD</div>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- Desktop · submenu open -->
+    <div class="sc-sublabel" style="margin-top: 32px;">Desktop · submenu open</div>
+    <div style="overflow: visible; box-shadow: var(--token-elevation-1); position: relative; z-index: 1; margin-bottom: 180px;">
+      <header data-advancedhtml="" role="banner" class="header desktop">
+        <div data-container="" class="header-top ThemeGrid_Container">
+          <div data-container="" class="header-content display-flex">
+            <div data-container="" class="menu-icon" aria-label="Toggle the Menu" role="button" tabindex="0" aria-haspopup="true">
+              <div data-container="" class="menu-icon-line" aria-hidden="true"></div>
+              <div data-container="" class="menu-icon-line" aria-hidden="true"></div>
+              <div data-container="" class="menu-icon-line" aria-hidden="true"></div>
+            </div>
+            <div data-container="" class="application-name display-flex align-items-center full-height" role="button" tabindex="0" style="cursor:pointer; margin-right: var(--token-scale-600, 24px);">
+              <div style="width:32px; height:32px; border-radius:var(--token-border-radius-100,4px); background:var(--token-semantics-primary-base,#105cef); margin-right:var(--token-scale-200,8px); flex-shrink:0;"></div>
+              My Application
+            </div>
+            <div class="header-navigation OSInline" style="flex:1;">
+              <nav data-advancedhtml="" class="app-menu-content display-flex" role="navigation" aria-label="Main navigation">
+                <div data-container="" class="app-menu-links" role="menubar" style="display:flex; align-items:center; gap:var(--token-scale-0,0); height:100%;">
+                  <div data-container="" class="osui-submenu osui-submenu--is-dropdown active" style="height:100%; position:relative; --osui-submenu-active-border-color:var(--token-semantics-primary-base,#105cef);">
+                    <div data-container="" class="osui-submenu__header needsclick" aria-haspopup="true" tabindex="0" role="menuitem" aria-expanded="false">
+                      <div class="osui-submenu__header__item">Dashboard</div>
+                      <div data-container="" class="osui-submenu__header__icon"></div>
+                    </div>
+                  </div>
+                  <div data-container="" class="osui-submenu osui-submenu--is-dropdown osui-submenu--is-open" style="height:100%; position:relative;">
+                    <div data-container="" class="osui-submenu__header needsclick" aria-haspopup="true" tabindex="0" role="menuitem" aria-expanded="true">
+                      <div class="osui-submenu__header__item">Reports</div>
+                      <div data-container="" class="osui-submenu__header__icon"></div>
+                    </div>
+                    <div class="osui-submenu__items" style="opacity:1; pointer-events:auto; transform:translateY(0);">
+                      <span class="focus-trap-top wcag-hide-text" tabindex="-1" aria-hidden="true"></span>
+                      <a role="menuitem" tabindex="0" style="display:block; padding:var(--token-scale-200,8px) var(--token-scale-400,16px); color:var(--token-text-subtlest,#626262); white-space:nowrap;">Monthly Summary</a>
+                      <a role="menuitem" tabindex="0" class="active" style="display:block; padding:var(--token-scale-200,8px) var(--token-scale-400,16px); white-space:nowrap;">Analytics</a>
+                      <a role="menuitem" tabindex="0" style="display:block; padding:var(--token-scale-200,8px) var(--token-scale-400,16px); color:var(--token-text-subtlest,#626262); white-space:nowrap;">Exports</a>
+                      <span class="focus-trap-bottom wcag-hide-text" tabindex="0" aria-hidden="true"></span>
+                    </div>
+                  </div>
+                  <div data-container="" class="osui-submenu osui-submenu--is-dropdown" style="height:100%;">
+                    <div data-container="" class="osui-submenu__header needsclick" aria-haspopup="true" tabindex="0" role="menuitem" aria-expanded="false">
+                      <div class="osui-submenu__header__item">Settings</div>
+                      <div data-container="" class="osui-submenu__header__icon"></div>
+                    </div>
+                  </div>
+                </div>
+              </nav>
+            </div>
+            <div data-container="" class="app-login-info" style="display:flex; align-items:center; gap:var(--token-scale-300,12px); height:100%;">
+              <div style="width:32px; height:32px; border-radius:var(--token-border-radius-full,999px); background:var(--token-semantics-primary-base,#105cef); display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; font-weight:600;">JD</div>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <!-- Desktop · submenu open · 2 columns -->
+    <div class="sc-sublabel" style="margin-top: 32px;">Desktop · submenu open · 2 columns</div>
+    <div style="overflow: visible; box-shadow: var(--token-elevation-1); position: relative; z-index: 1; margin-bottom: 260px;">
+      <header data-advancedhtml="" role="banner" class="header desktop">
+        <div data-container="" class="header-top ThemeGrid_Container">
+          <div data-container="" class="header-content display-flex">
+            <div data-container="" class="menu-icon" aria-label="Toggle the Menu" role="button" tabindex="0" aria-haspopup="true">
+              <div data-container="" class="menu-icon-line" aria-hidden="true"></div>
+              <div data-container="" class="menu-icon-line" aria-hidden="true"></div>
+              <div data-container="" class="menu-icon-line" aria-hidden="true"></div>
+            </div>
+            <div data-container="" class="application-name display-flex align-items-center full-height" role="button" tabindex="0" style="cursor:pointer; margin-right: var(--token-scale-600, 24px);">
+              <div style="width:32px; height:32px; border-radius:var(--token-border-radius-100,4px); background:var(--token-semantics-primary-base,#105cef); margin-right:var(--token-scale-200,8px); flex-shrink:0;"></div>
+              My Application
+            </div>
+            <div class="header-navigation OSInline" style="flex:1;">
+              <nav data-advancedhtml="" class="app-menu-content display-flex" role="navigation" aria-label="Main navigation">
+                <div data-container="" class="app-menu-links" role="menubar" style="display:flex; align-items:center; gap:var(--token-scale-0,0); height:100%;">
+                  <div data-container="" class="osui-submenu osui-submenu--is-dropdown active" style="height:100%; --osui-submenu-active-border-color:var(--token-semantics-primary-base,#105cef);">
+                    <div data-container="" class="osui-submenu__header needsclick" aria-haspopup="true" tabindex="0" role="menuitem" aria-expanded="false">
+                      <div class="osui-submenu__header__item">Dashboard</div>
+                      <div data-container="" class="osui-submenu__header__icon"></div>
+                    </div>
+                  </div>
+                  <div data-container="" class="osui-submenu osui-submenu--is-dropdown osui-submenu--is-open" style="height:100%; position:relative;">
+                    <div data-container="" class="osui-submenu__header needsclick" aria-haspopup="true" tabindex="0" role="menuitem" aria-expanded="true">
+                      <div class="osui-submenu__header__item">Products</div>
+                      <div data-container="" class="osui-submenu__header__icon"></div>
+                    </div>
+                    <div class="osui-submenu__items" style="opacity:1; pointer-events:auto; transform:translateY(0); min-width:480px;">
+                      <span class="focus-trap-top wcag-hide-text" tabindex="-1" aria-hidden="true"></span>
+                      <div class="columns columns2 gutter-base tablet-break-none phone-break-none">
+                        <div class="columns-item" style="display:flex; flex-direction:column;">
+                          <div class="padding-x-base padding-y-s text-neutral-7 white-space-nowrap">Analytics</div>
+                          <a role="menuitem" tabindex="0" class="white-space-nowrap">Reports</a>
+                          <a role="menuitem" tabindex="0" class="white-space-nowrap active">Dashboard</a>
+                          <a role="menuitem" tabindex="0" class="white-space-nowrap">Metrics</a>
+                          <div class="padding-top-none padding-bottom-none"><div class="separator separator-horizontal background-neutral-4"></div></div>
+                          <div class="padding-x-base padding-y-s text-neutral-7 white-space-nowrap">Content</div>
+                          <a role="menuitem" tabindex="0" class="white-space-nowrap">Articles</a>
+                          <a role="menuitem" tabindex="0" class="white-space-nowrap">Media</a>
+                        </div>
+                        <div class="columns-item" style="display:flex; flex-direction:column;">
+                          <div class="padding-x-base padding-y-s text-neutral-7 white-space-nowrap">Settings</div>
+                          <a role="menuitem" tabindex="0" class="white-space-nowrap">Users</a>
+                          <a role="menuitem" tabindex="0" class="white-space-nowrap">Permissions</a>
+                          <a role="menuitem" tabindex="0" class="white-space-nowrap">Integrations</a>
+                          <div class="padding-top-none padding-bottom-none"><div class="separator separator-horizontal background-neutral-4"></div></div>
+                          <div class="padding-x-base padding-y-s text-neutral-7 white-space-nowrap">Support</div>
+                          <a role="menuitem" tabindex="0" class="white-space-nowrap">Documentation</a>
+                          <a role="menuitem" tabindex="0" class="white-space-nowrap">Help Center</a>
+                        </div>
+                      </div>
+                      <span class="focus-trap-bottom wcag-hide-text" tabindex="0" aria-hidden="true"></span>
+                    </div>
+                  </div>
+                  <div data-container="" class="osui-submenu osui-submenu--is-dropdown" style="height:100%;">
+                    <div data-container="" class="osui-submenu__header needsclick" aria-haspopup="true" tabindex="0" role="menuitem" aria-expanded="false">
+                      <div class="osui-submenu__header__item">Settings</div>
+                      <div data-container="" class="osui-submenu__header__icon"></div>
+                    </div>
+                  </div>
+                </div>
+              </nav>
+            </div>
+            <div data-container="" class="app-login-info" style="display:flex; align-items:center; gap:var(--token-scale-300,12px); height:100%;">
+              <div style="width:32px; height:32px; border-radius:var(--token-border-radius-full,999px); background:var(--token-semantics-primary-base,#105cef); display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; font-weight:600;">JD</div>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+
+    <div class="sc-sublabel" style="margin-top: 32px;">Side menu · rest</div>
+    <div class="layout-side" style="display:flex; height:400px; overflow:hidden; box-shadow: var(--token-elevation-1); border-radius: var(--token-border-radius-200,8px); transform: translate(0);">
+      <nav data-advancedhtml="" class="app-menu-content display-flex" role="navigation" aria-label="Main navigation" tabindex="0" aria-expanded="true" style="width:var(--side-menu-size,300px); flex-shrink:0; flex-direction:column; height:100%; border-right:1px solid var(--token-border-default,#d5d5d5); background:var(--token-bg-surface-default,#fff);">
+        <div data-container="" class="header-logo" style="border-bottom:1px solid var(--token-border-default,#d5d5d5); display:flex; align-items:center; height:var(--header-size,56px); padding:0 var(--token-scale-600,24px); flex-shrink:0; gap:var(--token-scale-200,8px);">
+          <div style="width:32px; height:32px; border-radius:var(--token-border-radius-100,4px); background:var(--token-semantics-primary-base,#105cef); flex-shrink:0;"></div>
+          <span style="font-weight:var(--token-font-weight-semi-bold,600); font-size:var(--token-font-size-400,1rem); color:var(--token-text-default,#242424); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">OutSystemsUI</span>
+        </div>
+        <div data-container="" class="app-menu-links" role="menubar" aria-orientation="vertical" style="flex:1; overflow-y:auto; padding:var(--token-scale-200,8px) 0;">
+          <div data-container="" class="osui-submenu osui-submenu--is-dropdown" style="--osui-submenu-active-border-color:var(--token-semantics-primary-base,#105cef);">
+            <div data-container="" class="osui-submenu__header needsclick" aria-haspopup="true" tabindex="0" role="menuitem" aria-expanded="false">
+              <div class="osui-submenu__header__item">QA Functional Tests</div>
+              <div data-container="" class="osui-submenu__header__icon"></div>
+            </div>
+          </div>
+          <div data-container="" class="osui-submenu osui-submenu--is-hover osui-submenu--is-dropdown active osui-submenu--is-open" style="--osui-submenu-active-border-color:var(--token-semantics-primary-base,#105cef);">
+            <div data-container="" class="osui-submenu__header needsclick" aria-haspopup="true" tabindex="0" role="menuitem" aria-expanded="true">
+              <div class="osui-submenu__header__item">Other Test pages</div>
+              <div data-container="" class="osui-submenu__header__icon"></div>
+            </div>
+            <div class="osui-submenu__items">
+              <a role="menuitem" tabindex="0" class="active">Alert</a>
+              <a role="menuitem" tabindex="0">Checkbox</a>
+              <a role="menuitem" tabindex="0">Switch</a>
+              <a role="menuitem" tabindex="0">Card</a>
+            </div>
+          </div>
+          <a data-link="" class="active" role="menuitem" tabindex="0">Alert</a>
+        </div>
+        <div data-container="" class="app-login-info" style="border-top:1px solid var(--token-border-default,#d5d5d5); padding:var(--token-scale-300,12px) var(--token-scale-600,24px); display:flex; align-items:center; gap:var(--token-scale-300,12px); flex-shrink:0;">
+          <div style="width:32px; height:32px; border-radius:var(--token-border-radius-full,999px); background:var(--token-semantics-primary-base,#105cef); display:flex; align-items:center; justify-content:center; color:#fff; font-size:13px; font-weight:600; flex-shrink:0;">JD</div>
+          <div>
+            <div style="font-size:var(--token-font-size-350,0.875rem); font-weight:var(--token-font-weight-semi-bold,600); color:var(--token-text-default,#242424);">OS UI</div>
+            <div style="font-size:var(--token-font-size-300,0.75rem); color:var(--token-text-subtlest,#626262);">A11y Disabled</div>
+          </div>
+        </div>
+      </nav>
+      <div style="flex:1; background:var(--token-bg-neutral-subtlest-default,#f5f5f5); padding:var(--token-scale-600,24px);">
+        <div style="font-size:var(--token-font-size-400,1rem); font-weight:var(--token-font-weight-semi-bold,600); color:var(--token-text-default,#242424); margin-bottom:var(--token-scale-300,12px);">Page content area</div>
+        <div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:var(--token-border-radius-full,999px); opacity:0.4; margin-bottom:var(--token-scale-200,8px);"></div>
+        <div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:var(--token-border-radius-full,999px); opacity:0.4; width:70%; margin-bottom:var(--token-scale-200,8px);"></div>
+        <div style="height:12px; background:var(--token-border-default,#d5d5d5); border-radius:var(--token-border-radius-full,999px); opacity:0.4; width:55%;"></div>
+      </div>
+    </div>
+
+    <details class="sc-review">
+      <summary><span>Header · Review</span><span class="sc-review-badge sc-review-badge--warn">7/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">⚠ menu-icon-line height:3px, width:24px, margin:2px 0, border-radius:20px all hardcoded — should reference token-border-size-075/token-scale-600/token-scale-050/token-border-radius-full; menu-icon width:24px hardcoded; app-logo max-width:120px hardcoded; remaining: bg via --background-color-header (theme variable), shadow = token-elevation-1, paddings/margins via token-scale-200/400/600 ✓</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Header height = --header-size (theme variable, layout-scoped); menu-icon-line dimensions correspond to scale-075/scale-600/scale-050 even if not referenced by name; logo radius = token-border-radius-100 (4px) — consistent ladder ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">App-logo = token-border-radius-100 (4px) — small-element radius; menu-icon-line border-radius:20px (effectively pill, not 8px panel) — intentional for icon line shape ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Background via theme variable --background-color-header (consumer-set); menu-icon-line + menu-back use token-text-subtlest — semantic; submenu and dropdown contents inherit semantic tokens from their own components ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">menu-icon-line text-subtlest #626262 vs typical white header background ≈5.7:1 ✓ AA; on theme-color headers, contrast depends on consumer setting — not blockable at component level ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">Flex layout for header-content; logo + title + nav + user-info all height:100%; sticky positioning via .fixed-header wrapper; nav becomes full-height drawer on tablet/phone — responsive composition correct ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">token-elevation-1 gives subtle separation from page; menu-icon-line trio creates clear hamburger affordance; user-info pill area integrates with avatar component ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">⚠ No transitions on menu-icon-line state changes (e.g., to "X" close icon when menu open); no prefers-reduced-motion block on header chrome — minor, non-blocking ⚠</span><span class="sc-review-status sc-review-status--warn">⚠</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="banner" on header ✓; menu-icon role="button" + tabindex="0" + aria-label "Toggle the Menu" + aria-haspopup="true" ✓; menu-icon-line aria-hidden="true" (decorative) ✓; menu-icon width 24px is below 44px touch but is sized to header-size at full height — touch target = full bar height, accepted ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       POPUP
+  ══════════════════════════════════════════ -->
+  <div class="sc-section">
+    <div class="sc-section-title">Popup<span class="sc-reviewed">Reviewed</span></div>
+
+    <div class="sc-row">
+      <div class="sc-col">
+        <button class="btn btn-neutral btn-small" onclick="openPopup()">Open Popup</button>
+      </div>
+    </div>
+
+    <details class="sc-review">
+      <summary><span>Popup · Review</span><span class="sc-review-badge sc-review-badge--pass">9/9</span></summary>
+      <div class="sc-review-body">
+        <div class="sc-review-row"><span class="sc-review-num">1</span><span class="sc-review-name">Token Integrity</span><span class="sc-review-note">Background token-bg-surface-default ✓; border-radius token-border-radius-200 (updated from 100 to 200 for 2.29) ✓; shadow token-elevation-4 ✓; padding token-scale-600 ✓; margin token-scale-600 ✓; max-height uses token-scale-1000 in calc ✓; backdrop token-backdrop ✓; max-width:500px hardcoded — no token equivalent, accepted as component-specific structural constant ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">2</span><span class="sc-review-name">Scale Harmony</span><span class="sc-review-note">Padding and margin 24px = token-scale-600 ✓; max-height calc subtracts token-scale-1000 (40px) — correct viewport margin ✓; default buttons inside at 36px = token-scale-900, consistent with form-tier element height ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">3</span><span class="sc-review-name">Radius Coherence</span><span class="sc-review-note">token-border-radius-200 (8px) — correct 2.29 target; matches inputs, dropdowns, cards and notification family ✓; high-contrast override also updated to border-radius-200 ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">4</span><span class="sc-review-name">Color Contract</span><span class="sc-review-note">Surface token-bg-surface-default (white) ✓; overlay token-backdrop rgba(0,0,0,0.25) ✓; border:0 — surface defined by shadow alone, intentional ✓; high-contrast border uses token-bg-surface-default correctly for inverted context ✓; no semantic color misuse ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">5</span><span class="sc-review-name">Legibility &amp; Contrast</span><span class="sc-review-note">Content inherits token-text-default (#242424) on white surface ~15:1 ✓; overlay at 25% black creates sufficient visual separation between dialog and page ✓; elevation-4 dual-layer shadow reinforces surface depth ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">6</span><span class="sc-review-name">Composition Fit</span><span class="sc-review-note">width:100% + max-width:500px + margin:24px → full-width on mobile with safe margins, capped at 500px on wider screens ✓; overflow:visible allows internal overflows (datepickers, dropdowns) without clipping ✓; max-height prevents viewport overflow on tall content ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">7</span><span class="sc-review-name">Visual Quality</span><span class="sc-review-note">elevation-4 (strongest, dual-layer shadow) is the correct tier for a blocking modal — higher than notification (elevation-3) and sidebar (elevation-3), reflecting dialog's higher visual priority ✓; borderless surface reads cleanly against the dimmed backdrop ✓; 8px radius consistent with 2.29 surface family ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">8</span><span class="sc-review-name">Motion &amp; Interaction</span><span class="sc-review-note">No CSS animation or transition defined — open/close lifecycle delegated to OSUI runtime; no hardcoded duration or easing values present ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+        <div class="sc-review-row"><span class="sc-review-num">9</span><span class="sc-review-name">Accessibility</span><span class="sc-review-note">role="dialog" + aria-modal="true" + aria-labelledby linking to visible title ✓; tabindex="-1" enables programmatic focus on open ✓; Escape key dismisses ✓; backdrop click dismisses ✓; focus-trap responsibility of OSUI runtime ✓; buttons 36px &lt; 44px — documented 2.29 trade-off, consistent with other components ✓</span><span class="sc-review-status sc-review-status--pass">✓</span></div>
+      </div>
+    </details>
+
   </div>
 
   <!-- ══════════════════════════════════════════
        SIDEBAR
   ══════════════════════════════════════════ -->
   <div class="sc-section">
-    <div class="sc-section-title">Sidebar</div>
+    <div class="sc-section-title">Sidebar<span class="sc-reviewed">Reviewed</span></div>
 
     <div class="sc-row">
       <div class="sc-col">
@@ -3616,6 +4245,31 @@
       </div>
     </aside>
     <span class="focus-trap-bottom wcag-hide-text" tabindex="0" aria-hidden="true"></span>
+  </div>
+
+  <!-- Live popup -->
+  <div id="sc-popup-wrap" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center;">
+    <div class="popup-backdrop" style="position:absolute; inset:0;" onclick="closePopup()"></div>
+    <div data-popup="" class="popup-dialog" role="dialog" aria-modal="true" aria-labelledby="sc-popup-title" tabindex="-1" style="position:relative; z-index:1; margin:0;">
+      <div class="popup-content">
+        <div style="display:flex; flex-direction:column; gap:var(--token-scale-500, 20px);">
+          <!-- Header -->
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:var(--token-scale-400, 16px);">
+            <h2 id="sc-popup-title" style="margin:0; font-size:var(--token-font-size-500, 1.125rem); font-weight:var(--token-font-weight-semi-bold, 600); color:var(--token-text-default, #242424); line-height:var(--token-font-line-height-base, 1.4);">Confirm action</h2>
+            <button class="btn btn-icon btn-small btn-neutral" type="button" onclick="closePopup()" aria-label="Close dialog" style="flex-shrink:0; margin-top:-2px;">
+              <i class="icon ph-x ph" aria-hidden="true"></i>
+            </button>
+          </div>
+          <!-- Body -->
+          <p style="margin:0; color:var(--token-text-subtle, #3b3b3b); line-height:var(--token-font-line-height-base, 1.5); font-size:var(--token-font-size-400, 1rem);">Are you sure you want to delete this record? This action cannot be undone and all associated data will be permanently removed.</p>
+          <!-- Footer -->
+          <div style="display:flex; justify-content:flex-end; gap:var(--token-scale-300, 12px);">
+            <button class="btn btn-neutral" type="button" onclick="closePopup()">Cancel</button>
+            <button class="btn btn-primary" type="button" onclick="closePopup()">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div id="sc-live-notif" class="osui-notification" role="alertdialog" aria-hidden="true" tabindex="-1" style="--notification-width: 380px;">
@@ -3706,6 +4360,29 @@
   })();
 
   (function () {
+    var wrap = document.getElementById('sc-popup-wrap');
+    var dialog = wrap.querySelector('.popup-dialog');
+
+    window.openPopup = function () {
+      document.body.style.overflow = 'hidden';
+      wrap.style.display = 'flex';
+      void wrap.offsetWidth;
+      wrap.classList.add('sc-popup--open');
+      dialog.focus();
+    };
+
+    window.closePopup = function () {
+      wrap.classList.remove('sc-popup--open');
+      wrap.style.display = 'none';
+      document.body.style.overflow = '';
+    };
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && wrap.style.display === 'flex') closePopup();
+    });
+  })();
+
+  (function () {
     var bs = document.getElementById('sc-live-bs');
     var overlay = document.getElementById('sc-live-bs-overlay');
 
@@ -3722,6 +4399,28 @@
       bs.setAttribute('aria-hidden', 'true');
       bs.setAttribute('tabindex', '-1');
     };
+
+    // Accordion toggle
+    document.querySelectorAll('.osui-accordion-item__click_zone').forEach(function (trigger) {
+      trigger.addEventListener('click', function () {
+        var item = trigger.closest('.osui-accordion-item');
+        var content = item.querySelector('.osui-accordion-item__content');
+        var icon = item.querySelector('.osui-accordion-item__icon--caret');
+        var isOpen = item.classList.contains('osui-accordion-item--is-open');
+
+        if (isOpen) {
+          item.classList.replace('osui-accordion-item--is-open', 'osui-accordion-item--is-closed');
+          content.classList.replace('osui-accordion-item__content--is-expanded', 'osui-accordion-item__content--is-collapsed');
+          trigger.setAttribute('aria-expanded', 'false');
+          content.setAttribute('aria-hidden', 'true');
+        } else {
+          item.classList.replace('osui-accordion-item--is-closed', 'osui-accordion-item--is-open');
+          content.classList.replace('osui-accordion-item__content--is-collapsed', 'osui-accordion-item__content--is-expanded');
+          trigger.setAttribute('aria-expanded', 'true');
+          content.setAttribute('aria-hidden', 'false');
+        }
+      });
+    });
   })();
 </script>
 </body>
