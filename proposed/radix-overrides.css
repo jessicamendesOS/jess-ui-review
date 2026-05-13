@@ -1,0 +1,244 @@
+/*
+ * radix-overrides.css
+ * Radix Colors → OutSystems UI 2.29 primitive overrides.
+ * Load AFTER OutsystemsUI_2.29-proposed.css to apply.
+ *
+ * Primary  → Radix Indigo   Neutral → Radix Slate
+ * Danger   → Radix Red      Success → Radix Green
+ * Warning  → Radix Amber    Info    → Radix Blue (semantic override)
+ *
+ * Extended:
+ * Pumpkin  → Radix Tomato   Orange  → Radix Orange
+ * Lime     → Radix Lime     Teal    → Radix Teal
+ * Aqua     → Radix Cyan     Indigo  → Radix Iris
+ * Violet   → Radix Violet   Purple  → Radix Purple
+ * Magenta  → Radix Plum     Pink    → Radix Pink
+ */
+
+:root {
+
+  /* ── PRIMARY — Radix Indigo ──────────────────────────────────────────
+     Step 9 (#3e63dd) replaces OutSystems blue-700 (#105cef) as brand.   */
+  --token-primitives-blue-100:  #f7f9ff;   /* indigo-2  subtle bg         */
+  --token-primitives-blue-200:  #edf2fe;   /* indigo-3  ui bg             */
+  --token-primitives-blue-300:  #e1e9ff;   /* indigo-4  ui bg hover       */
+  --token-primitives-blue-400:  #d2deff;   /* indigo-5  ui bg active      */
+  --token-primitives-blue-500:  #c1d0ff;   /* indigo-6  subtle border     */
+  --token-primitives-blue-600:  #abbdf9;   /* indigo-7  ui border         */
+  --token-primitives-blue-700:  #3e63dd;   /* indigo-9  solid/brand ←     */
+  --token-primitives-blue-800:  #3358d4;   /* indigo-10 solid hover       */
+  --token-primitives-blue-900:  #3a5bc7;   /* indigo-11 low-contrast text */
+  --token-primitives-blue-1000: #3a5bc7;   /* indigo-11                   */
+  --token-primitives-blue-1100: #1f2d5c;   /* indigo-12 high-contrast     */
+  --token-primitives-blue-1200: #1f2d5c;   /* indigo-12                   */
+
+  /* ── NEUTRAL — Radix Slate ───────────────────────────────────────────
+     Cool blue-grey undertone; pairs naturally with Indigo primary.       */
+  --token-primitives-neutral-100:  #f9f9fb;  /* slate-2   subtle bg       */
+  --token-primitives-neutral-200:  #f0f0f3;  /* slate-3   ui bg           */
+  --token-primitives-neutral-300:  #e8e8ec;  /* slate-4   ui bg hover     */
+  --token-primitives-neutral-400:  #e0e1e6;  /* slate-5   ui bg active    */
+  --token-primitives-neutral-500:  #cdced6;  /* slate-7   subtle border   */
+  --token-primitives-neutral-600:  #b9bbc6;  /* slate-8   strong border   */
+  --token-primitives-neutral-700:  #8b8d98;  /* slate-9   solid/muted     */
+  --token-primitives-neutral-800:  #60646c;  /* slate-11  low-c text      */
+  --token-primitives-neutral-900:  #60646c;  /* slate-11                  */
+  --token-primitives-neutral-1000: #3e4248;  /* slate 11→12 midpoint      */
+  --token-primitives-neutral-1100: #2c2f36;  /* slate 11→12 near-dark     */
+  --token-primitives-neutral-1200: #1c2024;  /* slate-12  high-c text     */
+
+  /* ── DANGER — Radix Red ──────────────────────────────────────────────  */
+  --token-primitives-red-100:  #fff7f7;   /* red-2  subtle bg            */
+  --token-primitives-red-200:  #feebec;   /* red-3  ui bg                */
+  --token-primitives-red-300:  #ffdbdc;   /* red-4  ui bg hover          */
+  --token-primitives-red-400:  #ffcdce;   /* red-5  ui bg active         */
+  --token-primitives-red-500:  #fdbdbe;   /* red-6  subtle border        */
+  --token-primitives-red-600:  #f4a9aa;   /* red-7  ui border            */
+  --token-primitives-red-700:  #e5484d;   /* red-9  solid/brand ←        */
+  --token-primitives-red-800:  #dc3e42;   /* red-10 solid hover          */
+  --token-primitives-red-900:  #ce2c31;   /* red-11 low-contrast text    */
+  --token-primitives-red-1000: #ce2c31;   /* red-11                      */
+  --token-primitives-red-1100: #641723;   /* red-12 high-contrast        */
+  --token-primitives-red-1200: #641723;   /* red-12                      */
+
+  /* ── SUCCESS — Radix Green ───────────────────────────────────────────  */
+  --token-primitives-green-100:  #f4fbf6;  /* green-2  subtle bg         */
+  --token-primitives-green-200:  #e6f6eb;  /* green-3  ui bg             */
+  --token-primitives-green-300:  #d6f1df;  /* green-4  ui bg hover       */
+  --token-primitives-green-400:  #c4e8d1;  /* green-5  ui bg active      */
+  --token-primitives-green-500:  #adddc0;  /* green-6  subtle border     */
+  --token-primitives-green-600:  #8eceaa;  /* green-7  ui border         */
+  --token-primitives-green-700:  #30a46c;  /* green-9  solid/brand ←     */
+  --token-primitives-green-800:  #2b9a66;  /* green-10 solid hover       */
+  --token-primitives-green-900:  #218358;  /* green-11 low-contrast text */
+  --token-primitives-green-1000: #218358;  /* green-11                   */
+  --token-primitives-green-1100: #193b2d;  /* green-12 high-contrast     */
+  --token-primitives-green-1200: #193b2d;  /* green-12                   */
+
+  /* ── WARNING — Radix Amber (overrides yellow scale) ─────────────────
+     Note: step 9 (#ffc53d) is bright/saturated — warning solids will pop.
+     Text uses step 11 (#ab6400) which has sufficient contrast on white.  */
+  --token-primitives-yellow-100:  #fefbe9;  /* amber-2  subtle bg        */
+  --token-primitives-yellow-200:  #fff7c2;  /* amber-3  ui bg            */
+  --token-primitives-yellow-300:  #ffee9c;  /* amber-4  ui bg hover      */
+  --token-primitives-yellow-400:  #fbe577;  /* amber-5  ui bg active     */
+  --token-primitives-yellow-500:  #f3d673;  /* amber-6  subtle border    */
+  --token-primitives-yellow-600:  #e9c162;  /* amber-7  ui border        */
+  --token-primitives-yellow-700:  #ffc53d;  /* amber-9  solid/brand ←    */
+  --token-primitives-yellow-800:  #ffba18;  /* amber-10 solid hover      */
+  --token-primitives-yellow-900:  #ab6400;  /* amber-11 low-contrast text*/
+  --token-primitives-yellow-1000: #ab6400;  /* amber-11                  */
+  --token-primitives-yellow-1100: #4f3422;  /* amber-12 high-contrast    */
+  --token-primitives-yellow-1200: #4f3422;  /* amber-12                  */
+
+  /* ── INFO — Radix Blue (semantic override) ───────────────────────────
+     Blue primitives now resolve to Indigo; these 5 vars keep Info blue.  */
+  --token-semantics-info-base: #0090ff;    /* blue-9  solid               */
+  --token-semantics-info-700:  #0090ff;    /* blue-9                      */
+  --token-semantics-info-100:  #f4faff;    /* blue-2  subtle bg           */
+  --token-semantics-info-300:  #d5efff;    /* blue-4  bg hover            */
+  --token-semantics-info-900:  #0d74ce;    /* blue-11 text                */
+
+  /* ── EXTENDED: PUMPKIN → Radix Tomato ───────────────────────────────  */
+  --token-primitives-pumpkin-100:  #fff8f7;  /* tomato-2  */
+  --token-primitives-pumpkin-200:  #feebe7;  /* tomato-3  */
+  --token-primitives-pumpkin-300:  #ffdcd3;  /* tomato-4  */
+  --token-primitives-pumpkin-400:  #ffcdc2;  /* tomato-5  */
+  --token-primitives-pumpkin-500:  #fdbdaf;  /* tomato-6  */
+  --token-primitives-pumpkin-600:  #f5a898;  /* tomato-7  */
+  --token-primitives-pumpkin-700:  #e54d2e;  /* tomato-9  ← solid */
+  --token-primitives-pumpkin-800:  #dd4425;  /* tomato-10 */
+  --token-primitives-pumpkin-900:  #d13415;  /* tomato-11 */
+  --token-primitives-pumpkin-1000: #d13415;  /* tomato-11 */
+  --token-primitives-pumpkin-1100: #5c271f;  /* tomato-12 */
+  --token-primitives-pumpkin-1200: #5c271f;  /* tomato-12 */
+
+  /* ── EXTENDED: ORANGE → Radix Orange ────────────────────────────────  */
+  --token-primitives-orange-100:  #fff7ed;  /* orange-2  */
+  --token-primitives-orange-200:  #ffefd6;  /* orange-3  */
+  --token-primitives-orange-300:  #ffdfb5;  /* orange-4  */
+  --token-primitives-orange-400:  #ffd19a;  /* orange-5  */
+  --token-primitives-orange-500:  #ffc182;  /* orange-6  */
+  --token-primitives-orange-600:  #f5ae73;  /* orange-7  */
+  --token-primitives-orange-700:  #f76b15;  /* orange-9  ← solid */
+  --token-primitives-orange-800:  #ef5f00;  /* orange-10 */
+  --token-primitives-orange-900:  #cc4e00;  /* orange-11 */
+  --token-primitives-orange-1000: #cc4e00;  /* orange-11 */
+  --token-primitives-orange-1100: #582d1d;  /* orange-12 */
+  --token-primitives-orange-1200: #582d1d;  /* orange-12 */
+
+  /* ── EXTENDED: LIME → Radix Lime ────────────────────────────────────  */
+  --token-primitives-lime-100:  #f8fce9;  /* lime-2  */
+  --token-primitives-lime-200:  #edfabc;  /* lime-3  */
+  --token-primitives-lime-300:  #e2f4a5;  /* lime-4  */
+  --token-primitives-lime-400:  #d5ed7e;  /* lime-5  */
+  --token-primitives-lime-500:  #c9e351;  /* lime-6  */
+  --token-primitives-lime-600:  #bdd60a;  /* lime-7  */
+  --token-primitives-lime-700:  #99d52a;  /* lime-9  ← solid */
+  --token-primitives-lime-800:  #8ec520;  /* lime-10 */
+  --token-primitives-lime-900:  #6a9e14;  /* lime-11 */
+  --token-primitives-lime-1000: #6a9e14;  /* lime-11 */
+  --token-primitives-lime-1100: #37401c;  /* lime-12 */
+  --token-primitives-lime-1200: #37401c;  /* lime-12 */
+
+  /* ── EXTENDED: TEAL → Radix Teal ────────────────────────────────────  */
+  --token-primitives-teal-100:  #f3fbf9;  /* teal-2  */
+  --token-primitives-teal-200:  #e0f8f3;  /* teal-3  */
+  --token-primitives-teal-300:  #ccf3ea;  /* teal-4  */
+  --token-primitives-teal-400:  #b8eae0;  /* teal-5  */
+  --token-primitives-teal-500:  #a1ded2;  /* teal-6  */
+  --token-primitives-teal-600:  #83cdc1;  /* teal-7  */
+  --token-primitives-teal-700:  #12a594;  /* teal-9  ← solid */
+  --token-primitives-teal-800:  #0d9b8a;  /* teal-10 */
+  --token-primitives-teal-900:  #008573;  /* teal-11 */
+  --token-primitives-teal-1000: #008573;  /* teal-11 */
+  --token-primitives-teal-1100: #0d3d38;  /* teal-12 */
+  --token-primitives-teal-1200: #0d3d38;  /* teal-12 */
+
+  /* ── EXTENDED: AQUA → Radix Cyan ────────────────────────────────────  */
+  --token-primitives-aqua-100:  #f2fafb;  /* cyan-2  */
+  --token-primitives-aqua-200:  #def7f9;  /* cyan-3  */
+  --token-primitives-aqua-300:  #caf1f6;  /* cyan-4  */
+  --token-primitives-aqua-400:  #b5e9f0;  /* cyan-5  */
+  --token-primitives-aqua-500:  #9ddde7;  /* cyan-6  */
+  --token-primitives-aqua-600:  #7dcedc;  /* cyan-7  */
+  --token-primitives-aqua-700:  #00a2c7;  /* cyan-9  ← solid */
+  --token-primitives-aqua-800:  #0797b9;  /* cyan-10 */
+  --token-primitives-aqua-900:  #107d98;  /* cyan-11 */
+  --token-primitives-aqua-1000: #107d98;  /* cyan-11 */
+  --token-primitives-aqua-1100: #0d3c48;  /* cyan-12 */
+  --token-primitives-aqua-1200: #0d3c48;  /* cyan-12 */
+
+  /* ── EXTENDED: INDIGO → Radix Iris ──────────────────────────────────
+     Radix Indigo is used for Primary/blue, so extended "indigo" uses Iris. */
+  --token-primitives-indigo-100:  #f8f8ff;  /* iris-2  */
+  --token-primitives-indigo-200:  #f0f1fe;  /* iris-3  */
+  --token-primitives-indigo-300:  #e6e7ff;  /* iris-4  */
+  --token-primitives-indigo-400:  #dadcff;  /* iris-5  */
+  --token-primitives-indigo-500:  #cbcdff;  /* iris-6  */
+  --token-primitives-indigo-600:  #b8baf8;  /* iris-7  */
+  --token-primitives-indigo-700:  #5b5bd6;  /* iris-9  ← solid */
+  --token-primitives-indigo-800:  #5151cd;  /* iris-10 */
+  --token-primitives-indigo-900:  #5753c6;  /* iris-11 */
+  --token-primitives-indigo-1000: #5753c6;  /* iris-11 */
+  --token-primitives-indigo-1100: #272962;  /* iris-12 */
+  --token-primitives-indigo-1200: #272962;  /* iris-12 */
+
+  /* ── EXTENDED: VIOLET → Radix Violet ────────────────────────────────  */
+  --token-primitives-violet-100:  #faf8ff;  /* violet-2  */
+  --token-primitives-violet-200:  #f4f0fe;  /* violet-3  */
+  --token-primitives-violet-300:  #ece6fd;  /* violet-4  */
+  --token-primitives-violet-400:  #e3dafc;  /* violet-5  */
+  --token-primitives-violet-500:  #d7cef9;  /* violet-6  */
+  --token-primitives-violet-600:  #c4b7f6;  /* violet-7  */
+  --token-primitives-violet-700:  #6e56cf;  /* violet-9  ← solid */
+  --token-primitives-violet-800:  #654dc4;  /* violet-10 */
+  --token-primitives-violet-900:  #6550b9;  /* violet-11 */
+  --token-primitives-violet-1000: #6550b9;  /* violet-11 */
+  --token-primitives-violet-1100: #2f265f;  /* violet-12 */
+  --token-primitives-violet-1200: #2f265f;  /* violet-12 */
+
+  /* ── EXTENDED: PURPLE → Radix Purple ────────────────────────────────  */
+  --token-primitives-purple-100:  #fbf7fe;  /* purple-2  */
+  --token-primitives-purple-200:  #f7edfe;  /* purple-3  */
+  --token-primitives-purple-300:  #f2e2fc;  /* purple-4  */
+  --token-primitives-purple-400:  #ecd5fa;  /* purple-5  */
+  --token-primitives-purple-500:  #e2c5f6;  /* purple-6  */
+  --token-primitives-purple-600:  #d5b0f1;  /* purple-7  */
+  --token-primitives-purple-700:  #8e4ec6;  /* purple-9  ← solid */
+  --token-primitives-purple-800:  #8347be;  /* purple-10 */
+  --token-primitives-purple-900:  #8145b5;  /* purple-11 */
+  --token-primitives-purple-1000: #8145b5;  /* purple-11 */
+  --token-primitives-purple-1100: #402060;  /* purple-12 */
+  --token-primitives-purple-1200: #402060;  /* purple-12 */
+
+  /* ── EXTENDED: MAGENTA → Radix Plum ─────────────────────────────────
+     Plum is the closest Radix hue to magenta/fuchsia.                    */
+  --token-primitives-magenta-100:  #fdf8ff;  /* plum-2  */
+  --token-primitives-magenta-200:  #fbf0fe;  /* plum-3  */
+  --token-primitives-magenta-300:  #f7e4fb;  /* plum-4  */
+  --token-primitives-magenta-400:  #f0d9f5;  /* plum-5  */
+  --token-primitives-magenta-500:  #e8caea;  /* plum-6  */
+  --token-primitives-magenta-600:  #dcb4e2;  /* plum-7  */
+  --token-primitives-magenta-700:  #ab4aba;  /* plum-9  ← solid */
+  --token-primitives-magenta-800:  #a243b0;  /* plum-10 */
+  --token-primitives-magenta-900:  #9c3fa5;  /* plum-11 */
+  --token-primitives-magenta-1000: #9c3fa5;  /* plum-11 */
+  --token-primitives-magenta-1100: #53195d;  /* plum-12 */
+  --token-primitives-magenta-1200: #53195d;  /* plum-12 */
+
+  /* ── EXTENDED: PINK → Radix Pink ────────────────────────────────────  */
+  --token-primitives-pink-100:  #fef7fb;  /* pink-2  */
+  --token-primitives-pink-200:  #feecf6;  /* pink-3  */
+  --token-primitives-pink-300:  #fddded;  /* pink-4  */
+  --token-primitives-pink-400:  #fccee4;  /* pink-5  */
+  --token-primitives-pink-500:  #fbb9d5;  /* pink-6  */
+  --token-primitives-pink-600:  #f99dc0;  /* pink-7  */
+  --token-primitives-pink-700:  #d6409f;  /* pink-9  ← solid */
+  --token-primitives-pink-800:  #cf3897;  /* pink-10 */
+  --token-primitives-pink-900:  #c2298a;  /* pink-11 */
+  --token-primitives-pink-1000: #c2298a;  /* pink-11 */
+  --token-primitives-pink-1100: #651249;  /* pink-12 */
+  --token-primitives-pink-1200: #651249;  /* pink-12 */
+
+}
