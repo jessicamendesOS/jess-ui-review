@@ -1480,8 +1480,259 @@ document.getElementById('search').addEventListener('input', e => {
   }, 200);
 });
 
+// ─── SUGGESTED (missing) tokens per component ──────────────────────────────────
+const SUGGESTED = {
+  'input':          [
+    {name:'--osui-input-placeholder-color',  mapsTo:'--token-text-disabled',            purpose:'Cor do placeholder'},
+    {name:'--osui-input-label-color',        mapsTo:'--token-text-subtlest',            purpose:'Label do campo'},
+    {name:'--osui-input-helper-color',       mapsTo:'--token-text-subtlest',            purpose:'Texto de ajuda (hint) abaixo do input'},
+    {name:'--osui-input-disabled-color',     mapsTo:'--token-text-disabled',            purpose:'Texto quando disabled'},
+    {name:'--osui-input-hover-border-color', mapsTo:'--token-border-input-hover',       purpose:'Border no hover — entre default e focus', newToken:true},
+  ],
+  'checkbox':       [
+    {name:'--osui-checkbox-disabled-background', mapsTo:'--token-bg-input-disabled',   purpose:'Fundo quando disabled e não checked'},
+    {name:'--osui-checkbox-label-color',         mapsTo:'--token-text-default',         purpose:'Cor do label ao lado'},
+  ],
+  'radio':          [
+    {name:'--osui-radio-label-color', mapsTo:'--token-text-default',  purpose:'Cor do label ao lado'},
+    {name:'--osui-radio-size',        mapsTo:'--token-scale-400',      purpose:'Diâmetro — actualmente hardcoded'},
+  ],
+  'switch':         [
+    {name:'--osui-switch-focus-ring-color', mapsTo:'--token-semantics-primary-base', purpose:'Cor do focus ring'},
+    {name:'--osui-switch-label-color',      mapsTo:'--token-text-default',           purpose:'Cor do label ao lado'},
+  ],
+  'dropdown-widget':[
+    {name:'--osui-dropdown-placeholder-color', mapsTo:'--token-text-disabled',       purpose:'Cor do placeholder'},
+    {name:'--osui-dropdown-disabled-color',    mapsTo:'--token-text-disabled',       purpose:'Texto quando disabled'},
+  ],
+  'datepicker':     [
+    {name:'--osui-datepicker-placeholder-color',mapsTo:'--token-text-disabled',      purpose:'Cor do placeholder'},
+    {name:'--osui-datepicker-day-hover-background',mapsTo:'--token-bg-primary-subtle-default', purpose:'Fundo do dia no hover'},
+  ],
+  'button':         [
+    {name:'--osui-btn-font-size',            mapsTo:'--token-font-size-350',          purpose:'Tamanho do texto do botão'},
+    {name:'--osui-btn-font-weight',          mapsTo:'--token-font-weight-semi-bold',  purpose:'Peso da label'},
+    {name:'--osui-btn-height',               mapsTo:'--token-scale-1000',             purpose:'Altura mínima — actualmente hardcoded'},
+    {name:'--osui-btn-disabled-background',  mapsTo:'--token-bg-input-disabled',      purpose:'Fundo no estado disabled'},
+    {name:'--osui-btn-disabled-color',       mapsTo:'--token-text-disabled',          purpose:'Texto no estado disabled'},
+    {name:'--osui-btn-neutral-color',        mapsTo:'--token-text-default',           purpose:'Cor do botão ghost/neutro'},
+  ],
+  'rating':         [
+    {name:'--osui-rating-hover-color', mapsTo:'--token-semantics-primary-base', purpose:'Cor das estrelas no hover'},
+  ],
+  'tabs':           [
+    {name:'--osui-tabs-font-size',           mapsTo:'--token-font-size-350',          purpose:'Tamanho do texto da tab'},
+    {name:'--osui-tabs-font-weight-active',  mapsTo:'--token-font-weight-semi-bold',  purpose:'Peso da tab activa'},
+    {name:'--osui-tabs-header-background',   mapsTo:'--token-bg-surface-default',     purpose:'Fundo da barra de tabs'},
+  ],
+  'pagination':     [
+    {name:'--osui-pagination-font-size',       mapsTo:'--token-font-size-300',        purpose:'Tamanho dos números de página'},
+    {name:'--osui-pagination-disabled-color',  mapsTo:'--token-text-disabled',        purpose:'Cor dos botões desactivados'},
+  ],
+  'bottom-bar':     [
+    {name:'--osui-bottom-bar-item-font-size',           mapsTo:'--token-font-size-200',              purpose:'Label abaixo do ícone'},
+    {name:'--osui-bottom-bar-item-active-background',   mapsTo:'--token-bg-primary-subtle-default',  purpose:'Fundo do item activo (pill)'},
+  ],
+  'alert':          [
+    {name:'--osui-alert-warning-background', mapsTo:'--token-bg-warning-subtle-default', purpose:'Fundo warning — actualmente calculado inline'},
+    {name:'--osui-alert-danger-background',  mapsTo:'--token-bg-danger-subtle-default',  purpose:'Fundo danger'},
+    {name:'--osui-alert-success-background', mapsTo:'--token-bg-success-subtle-default', purpose:'Fundo success'},
+    {name:'--osui-alert-info-background',    mapsTo:'--token-bg-info-subtle-default',    purpose:'Fundo info'},
+  ],
+  'feedback-msg':   [
+    {name:'--osui-feedback-message-icon-color', mapsTo:'--token-text-inverse', purpose:'Cor do ícone na feedback message'},
+  ],
+  'notification':   [
+    {name:'--osui-notification-title-font-weight', mapsTo:'--token-font-weight-semi-bold', purpose:'Peso do título'},
+    {name:'--osui-notification-close-color',       mapsTo:'--token-text-subtlest',          purpose:'Cor do × de fechar'},
+  ],
+  'badge':          [
+    {name:'--osui-badge-font-size',  mapsTo:'--token-font-size-200',         purpose:'Tamanho do texto'},
+    {name:'--osui-badge-font-weight',mapsTo:'--token-font-weight-semi-bold', purpose:'Peso do número/label'},
+    {name:'--osui-badge-min-size',   mapsTo:'--token-scale-500',             purpose:'Tamanho mínimo (pill height)'},
+  ],
+  'progress':       [
+    {name:'--osui-progress-background',    mapsTo:'--token-bg-neutral-subtle-default', purpose:'Fundo da track (parte não preenchida)'},
+    {name:'--osui-progress-label-color',   mapsTo:'--token-text-subtlest',             purpose:'Cor da percentagem / label'},
+  ],
+  'popup':          [
+    {name:'--osui-popup-overlay-background', mapsTo:'--token-bg-overlay',       purpose:'Scrim/backdrop', newToken:true},
+    {name:'--osui-popup-header-font-size',   mapsTo:'--token-font-size-500',    purpose:'Tamanho do título'},
+    {name:'--osui-popup-close-color',        mapsTo:'--token-text-subtlest',    purpose:'Cor do ícone de fechar'},
+  ],
+  'bottom-sheet':   [
+    {name:'--osui-bottom-sheet-overlay-background', mapsTo:'--token-bg-overlay',           purpose:'Scrim atrás da bottom sheet', newToken:true},
+    {name:'--osui-bottom-sheet-handle-color',        mapsTo:'--token-primitives-neutral-400', purpose:'Pega de drag no topo'},
+  ],
+  'sidebar':        [
+    {name:'--osui-sidebar-overlay-background', mapsTo:'--token-bg-overlay', purpose:'Scrim quando aberta', newToken:true},
+  ],
+  'tooltip':        [
+    {name:'--osui-tooltip-font-size',  mapsTo:'--token-font-size-300',       purpose:'Tamanho do texto'},
+    {name:'--osui-tooltip-max-width',  mapsTo:'(sem token disponível)',       purpose:'Largura máxima — actualmente hardcoded'},
+  ],
+  'balloon':        [
+    {name:'--osui-balloon-font-size', mapsTo:'--token-font-size-300', purpose:'Tamanho do texto'},
+  ],
+  'card':           [
+    {name:'--osui-card-hover-background',    mapsTo:'--token-bg-surface-hover',       purpose:'Fundo no hover (quando clickable)'},
+    {name:'--osui-card-hover-shadow',        mapsTo:'--token-elevation-2',            purpose:'Elevação no hover'},
+    {name:'--osui-card-title-font-weight',   mapsTo:'--token-font-weight-semi-bold',  purpose:'Peso do título do card'},
+  ],
+  'table':          [
+    {name:'--osui-table-header-background',       mapsTo:'--token-bg-neutral-subtlest-default',  purpose:'Fundo da linha de cabeçalho'},
+    {name:'--osui-table-header-color',            mapsTo:'--token-text-subtlest',                purpose:'Cor do texto do header'},
+    {name:'--osui-table-header-font-weight',      mapsTo:'--token-font-weight-semi-bold',        purpose:'Peso das colunas do header'},
+    {name:'--osui-table-row-hover-background',    mapsTo:'--token-bg-surface-hover',             purpose:'Fundo da linha no hover'},
+    {name:'--osui-table-row-selected-background', mapsTo:'--token-bg-primary-subtle-default',    purpose:'Fundo da linha seleccionada'},
+  ],
+  'tag':            [
+    {name:'--osui-tag-font-size',         mapsTo:'--token-font-size-250',      purpose:'Tamanho do texto'},
+    {name:'--osui-tag-remove-color',      mapsTo:'--token-text-subtlest',      purpose:'Cor do × de remover'},
+    {name:'--osui-tag-remove-hover-color',mapsTo:'--token-semantics-danger-base', purpose:'Cor do × no hover'},
+  ],
+  'avatar':         [
+    {name:'--osui-avatar-font-size',    mapsTo:'--token-font-size-350',         purpose:'Tamanho das iniciais'},
+    {name:'--osui-avatar-font-weight',  mapsTo:'--token-font-weight-semi-bold', purpose:'Peso das iniciais'},
+    {name:'--osui-avatar-border-color', mapsTo:'--token-border-default',        purpose:'Border para variante com contorno'},
+  ],
+  'accordion':      [
+    {name:'--osui-accordion-title-font-weight', mapsTo:'--token-font-weight-semi-bold', purpose:'Peso do título'},
+    {name:'--osui-accordion-icon-color',        mapsTo:'--token-text-subtlest',          purpose:'Cor do chevron/seta'},
+    {name:'--osui-accordion-hover-background',  mapsTo:'--token-bg-surface-hover',       purpose:'Fundo do header no hover'},
+  ],
+  'range-slider':   [
+    {name:'--osui-range-slider-tooltip-color',     mapsTo:'--token-text-inverse',    purpose:'Cor do texto no tooltip'},
+    {name:'--osui-range-slider-tooltip-font-size', mapsTo:'--token-font-size-250',   purpose:'Tamanho do texto no tooltip'},
+  ],
+};
+
+const SUGGESTED_GLOBAL = [
+  {name:'--token-bg-overlay',         value:'rgba(0, 0, 0, 0.5)',               components:'Popup, Bottom Sheet, Sidebar — todos usam scrim sem token'},
+  {name:'--token-border-input-hover', value:'--token-primitives-neutral-700',   components:'Input, Textarea, Dropdown — hover entre default e focus'},
+  {name:'--token-bg-surface-pressed', value:'--token-primitives-neutral-200',   components:'Card (pressed), Button ghost (pressed)'},
+  {name:'--token-font-size-label',    value:'--token-font-size-300 (12px)',      components:'Labels de campos, helper text, captions'},
+  {name:'--token-font-size-caption',  value:'--token-font-size-250 (11px)',      components:'Badge, Tag, Tooltip text, Slider tooltip'},
+];
+
+function renderSuggestions() {
+  const root = document.getElementById('suggestions-root');
+  if (!root) return;
+
+  // Group components
+  const groups = {};
+  COMPONENTS.forEach(c => { if (!groups[c.group]) groups[c.group] = []; groups[c.group].push(c); });
+
+  const mono = s => `<span style="font-family:'SF Mono',Monaco,monospace;font-size:11px">${s}</span>`;
+  const pill = (txt, cls) => `<span class="${cls}">${txt}</span>`;
+
+  let html = `<div class="suggestions">
+  <div class="suggestions-header">
+    <h2>Token Coverage</h2>
+    <p>Tokens existentes e sugestões de novos tokens por componente</p>
+  </div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px;font-size:12px;color:#8c8c8c;line-height:1.8">
+    <span>${pill('token','sug-exists')} &nbsp;existe</span>
+    <span>${pill('token','sug-missing')} &nbsp;em falta <span class="sug-badge-missing">em falta</span></span>
+    <span>${pill('--token-*','sug-maps-to')} &nbsp;mapeia para (semântico existente)</span>
+    <span>${pill('--token-*','sug-maps-new')} &nbsp;token semântico também em falta <span class="sug-badge-new">token novo</span></span>
+  </div>`;
+
+  Object.entries(groups).forEach(([groupName, comps]) => {
+    html += `<div class="sug-group"><div class="sug-group-title">${groupName}</div>`;
+
+    comps.forEach(comp => {
+      const existing  = comp.vars || [];
+      const suggested = SUGGESTED[comp.id] || [];
+      if (!existing.length && !suggested.length) return;
+
+      html += `<div class="sug-comp-section">
+        <div class="sug-comp-name">${comp.name}</div>
+        <table class="sug-table"><thead><tr>
+          <th style="width:44%">Token de componente</th>
+          <th style="width:34%">Mapeia para</th>
+          <th>Propósito</th>
+        </tr></thead><tbody>`;
+
+      existing.forEach(v => {
+        const purpose = v.name.replace(/^--osui-[^-]+-?/, '').replace(/-/g, ' ').trim();
+        html += `<tr>
+          <td>${pill(v.name,'sug-exists')}</td>
+          <td>${pill(v.mapsTo,'sug-maps-to')}</td>
+          <td class="sug-purpose">${purpose}</td>
+        </tr>`;
+      });
+
+      suggested.forEach(s => {
+        html += `<tr class="sug-row-missing">
+          <td>${pill(s.name,'sug-missing')} <span class="sug-badge-missing">em falta</span></td>
+          <td>${pill(s.mapsTo, s.newToken ? 'sug-maps-new' : 'sug-maps-to')}${s.newToken ? ' <span class="sug-badge-new">token novo</span>' : ''}</td>
+          <td class="sug-purpose">${s.purpose}</td>
+        </tr>`;
+      });
+
+      html += `</tbody></table></div>`;
+    });
+
+    html += `</div>`;
+  });
+
+  html += `<div class="sug-group">
+    <div class="sug-group-title">Tokens Semânticos Globais em Falta</div>
+    <table class="sug-table"><thead><tr>
+      <th style="width:44%">Token proposto</th>
+      <th style="width:34%">Valor sugerido</th>
+      <th>Componentes afectados</th>
+    </tr></thead><tbody>`;
+
+  SUGGESTED_GLOBAL.forEach(g => {
+    html += `<tr class="sug-row-missing">
+      <td>${pill(g.name,'sug-maps-new')} <span class="sug-badge-new">token novo</span></td>
+      <td class="sug-purpose" style="font-family:'SF Mono',Monaco,monospace;font-size:11px">${g.value}</td>
+      <td class="sug-purpose">${g.components}</td>
+    </tr>`;
+  });
+
+  html += `</tbody></table></div></div>`;
+  root.innerHTML = html;
+}
+
 // ─── INIT ──────────────────────────────────────────────────────────────────────
 renderTree('component');
+// renderSuggestions called after DOM via script below
 </script>
+
+<!-- suggestions styles -->
+<style>
+.suggestions{max-width:1100px;padding:32px 20px 64px;margin-top:4px}
+.suggestions-header{border-top:2px solid #ebebeb;padding-top:28px;margin-bottom:12px;display:flex;align-items:baseline;gap:12px}
+.suggestions-header h2{font-size:15px;font-weight:700;color:#242424}
+.suggestions-header p{font-size:12px;color:#a2a2a2}
+.sug-group{margin-bottom:28px}
+.sug-group-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#a2a2a2;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid #f0f0f0}
+.sug-comp-section{margin-bottom:16px}
+.sug-comp-name{font-size:12px;font-weight:600;color:#626262;margin-bottom:5px;padding-left:2px}
+.sug-table{width:100%;border-collapse:collapse;margin-bottom:2px}
+.sug-table th{text-align:left;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#a2a2a2;padding:6px 10px;border-bottom:1px solid #ebebeb;background:#fafafa;white-space:nowrap}
+.sug-table td{padding:6px 10px;border-bottom:1px solid #f5f5f5;vertical-align:middle;font-size:12px;line-height:1.4}
+.sug-table tr:last-child td{border-bottom:none}
+.sug-table tbody tr:hover td{background:#f9f9f9}
+.sug-row-missing td{background:#fffcf5}
+.sug-row-missing:hover td{background:#fff8e8!important}
+.sug-purpose{color:#8c8c8c}
+
+/* token pills */
+.sug-exists  {font-family:'SF Mono',Monaco,monospace;font-size:11px;color:#0f766e;background:#f0fdf9;padding:2px 6px;border-radius:3px;white-space:nowrap}
+.sug-missing {font-family:'SF Mono',Monaco,monospace;font-size:11px;color:#9a3412;background:#fff7ed;padding:2px 6px;border-radius:3px;white-space:nowrap}
+.sug-maps-to {font-family:'SF Mono',Monaco,monospace;font-size:11px;color:#7c3aed;background:#f5f0ff;padding:2px 6px;border-radius:3px;white-space:nowrap}
+.sug-maps-new{font-family:'SF Mono',Monaco,monospace;font-size:11px;color:#9a3412;background:#fff7ed;padding:2px 6px;border-radius:3px;white-space:nowrap}
+
+/* badges */
+.sug-badge-missing{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:1px 5px;border-radius:10px;background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;margin-left:3px;vertical-align:middle}
+.sug-badge-new    {display:inline-block;font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:1px 5px;border-radius:10px;background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;margin-left:3px;vertical-align:middle}
+</style>
+
+<div id="suggestions-root"></div>
+<script>renderSuggestions();</script>
 </body>
 </html>
